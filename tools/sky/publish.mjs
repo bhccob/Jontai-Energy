@@ -41,9 +41,20 @@ for (const name of ['solar', 'power', 'cooling', 'light', 'security', 'furniture
   const file = join(src, `island-${name}.png`);
   if (!(await exists(file))) continue;
   const trimmed = await sharp(file).trim({ threshold: 1 }).toBuffer();
-  for (const w of [1400, 800]) {
-    await sharp(trimmed).resize(w).webp({ quality: 86, alphaQuality: 90 }).toFile(join(out, `island-${name}-${w}.webp`));
+  for (const w of [1200, 700]) {
+    await sharp(trimmed).resize(w).webp({ quality: 78, alphaQuality: 80 }).toFile(join(out, `island-${name}-${w}.webp`));
   }
   const m = await sharp(trimmed).metadata();
   console.log(`island-${name}`, m.width, 'x', m.height);
+}
+
+// The foreground grass along the bottom of the first view: the blades only, transparent above.
+const grass = join(src, 'grass-front.png');
+if (await exists(grass)) {
+  const trimmed = await sharp(grass).trim({ threshold: 1 }).toBuffer();
+  for (const w of [2560, 1280]) {
+    await sharp(trimmed).resize(w).webp({ quality: 80, alphaQuality: 85 }).toFile(join(out, `grass-front-${w}.webp`));
+  }
+  const m = await sharp(trimmed).metadata();
+  console.log('grass-front', m.width, 'x', m.height);
 }

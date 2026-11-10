@@ -213,11 +213,14 @@
 }
 .hero__note {
   position: absolute;
+  z-index: 3;
   right: var(--gutter);
   bottom: calc(clamp(64px, 8vh, 80px) + 74px);
   margin: 0;
   color: var(--sky-muted);
   font-size: 0.85rem;
+  /* Over the grass close to the eye. */
+  text-shadow: 0 1px 10px rgb(10 30 20 / 0.6);
 }
 
 /* The six ranges on one ruled line. The rule over the one under the pointer lights up. */

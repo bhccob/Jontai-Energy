@@ -11,3 +11,16 @@ Originals go in `source/` (not committed, about 6 MB each; download them again b
 | `valley-green.png` (job b1f5af85) | 21:9, 4K, high; the page's backdrop since Bob asked for green as the main colour | Wide panoramic photograph of lush green hills rolling into soft morning mist: layered ridges of deep green grass and trees fading paler with distance, a thin band of pale hazy sky along the very top, rich deep green grass in the foreground across the bottom, gentle warm sunlight from the upper left catching the ridge lines. Calm, premium, natural colours dominated by greens, crisp detail, high dynamic range. No buildings, roads, people, animals or text. |
 
 These are illustrations: the site labels them "Illustrations, not specific stock".
+
+## Second batch (approved by Bob on 2026-11-10, "Yes, make them")
+
+All 1:1, 2K, high, transparent, GPT Image 2.6, with the island wording above and these products; references are the Blender renders in `tools/blender/products/out/ref-*-square.png` (the bulb uses `public/catalog/bulb.webp`).
+
+| File | Job | On the island |
+| --- | --- | --- |
+| `island-power.png` | 7ca9f5a4 | the portable power station: graphite case, silver corner caps and handles, colour screen, four outlets, two light bars |
+| `island-cooling.png` | 1ce3ab8f | the split air conditioner: the outdoor unit on the grass, the indoor unit on a short weathered wooden post |
+| `island-light.png` | bc447568 | a slim dark wooden lamp post with a short arm, the clear filament LED bulb hanging lit on a black cord |
+| `island-security.png` | 72cd0cd6 | the solar site camera: galvanised pole, white bullet camera on a bracket, small tilted solar panel on top |
+| `island-furniture.png` | 276737ac | the oak lounge chair with sage-green boucle cushions |
+| `grass-front.png` | 3e8fea6b | 21:9, 2K, high, transparent: tall wild grass blades and seed heads along the bottom edge, out of focus, backlit |

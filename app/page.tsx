@@ -2,10 +2,9 @@ import type { Viewport } from 'next';
 import { CatalogProvider } from '@/components/catalog/CatalogProvider';
 import { Header } from '@/components/ui/Header';
 import { Hero } from '@/components/home/Hero';
+import { Rewards } from '@/components/home/Rewards';
+import { Islands } from '@/components/home/Islands';
 import { Statement } from '@/components/home/Statement';
-import { Showroom } from '@/components/home/Showroom';
-import { Numbers } from '@/components/home/Numbers';
-import { Loyalty } from '@/components/sections/Loyalty';
 import { Visit } from '@/components/sections/Visit';
 import { Footer } from '@/components/sections/Footer';
 import { SkyScope } from '@/components/sky/SkyScope';
@@ -14,22 +13,22 @@ import { SkyScope } from '@/components/sky/SkyScope';
 export const viewport: Viewport = { themeColor: '#173d2c' };
 
 /**
- * Round 9 in open air (Bob, 2026-11-10: "use nature too since its related to clean energy"). Built in steps: the
- * first view under the sky is the test; Rewards, the islands of products and the store sections come next, and until
- * then the earlier sections follow the first view as they are.
+ * Round 9 in open air, green first (Bob, 2026-11-10: "use nature too since its related to clean energy", "i do want
+ * the main color to be green tho"). The first view in a green valley with the solar island; Jontai Rewards next; the
+ * six ranges as islands lower down; the store's three promises; the visit; the original footer. Bundle offers sit in
+ * the header.
  */
 export default function Home() {
   return (
     <CatalogProvider>
       <Header sky />
-      <main id="main">
+      <main id="main" className="air">
         <SkyScope>
           <Hero />
         </SkyScope>
+        <Rewards />
+        <Islands />
         <Statement />
-        <Showroom />
-        <Numbers />
-        <Loyalty />
         <Visit />
       </main>
       <Footer />

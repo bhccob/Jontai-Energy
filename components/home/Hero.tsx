@@ -38,12 +38,12 @@ export function Hero() {
         <div className="hero__float">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/sky/island-solar-1400.webp"
-            srcSet="/sky/island-solar-800.webp 800w, /sky/island-solar-1400.webp 1400w"
+            src="/sky/island-solar-1200.webp"
+            srcSet="/sky/island-solar-700.webp 700w, /sky/island-solar-1200.webp 1200w"
             sizes="(max-width: 40rem) 92vw, 46vw"
             alt=""
-            width={1400}
-            height={1293}
+            width={1200}
+            height={1108}
             decoding="async"
           />
         </div>
@@ -64,6 +64,19 @@ export function Hero() {
       <p className="hero__note" data-hero style={at(1100)}>
         {hero.note}
       </p>
+      {/* Out-of-focus grass close to the eye, in front of the island and under the ranges. */}
+      <div className="hero__grass" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/sky/grass-front-1280.webp"
+          srcSet="/sky/grass-front-1280.webp 1280w, /sky/grass-front-2560.webp 2560w"
+          sizes="100vw"
+          alt=""
+          width={1280}
+          height={304}
+          decoding="async"
+        />
+      </div>
       <RangeIndex />
       <HeroSkyMotion />
     </section>

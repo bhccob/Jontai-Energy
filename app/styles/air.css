@@ -1,0 +1,440 @@
+/* The home page below the first view, in open air and green first (round 9; the first view itself is in sky.css).
+   Rhythm: light leaf green for Jontai Rewards, the valley again for the islands, light leaf for the store's promises,
+   forest for the visit. Type: the same huge thin wide capitals as the first view for each section's one line, Archivo
+   for everything read. No boxes: rules, colour fields and space; the loyalty card and the islands are the objects. */
+
+:root {
+  /* A light leaf green between the owner's light green #B8D8A8 and the page white: big fields that stay calm. */
+  --leaf: #d7e8cc;
+  --leaf-2: #c5dcb6;
+  --leaf-ink: #173d2c;
+  --leaf-muted: rgb(23 61 44 / 0.74);
+  --leaf-rule: rgb(23 61 44 / 0.2);
+}
+
+main.air {
+  background: var(--leaf);
+}
+
+/* The one-line headings: huge, thin and wide, as the first view's. */
+.air-display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2.7rem, 6vw, 6.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.air-display > span {
+  display: block;
+}
+
+/* ---------- The first view's foreground grass ---------- */
+
+.hero__grass {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+.hero__grass img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* In the shade close to the eye, so the ranges over it stay readable. */
+  filter: brightness(0.62) saturate(1.05);
+}
+
+/* ---------- Jontai Rewards ---------- */
+
+.rewards-air {
+  position: relative;
+  z-index: 1;
+  padding: clamp(100px, 16vh, 180px) var(--gutter) clamp(90px, 14vh, 160px);
+  background: var(--leaf);
+  color: var(--leaf-ink);
+}
+.rewards-air__name {
+  margin: 0 0 22px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--leaf-muted);
+}
+.rewards-air__title > span + span {
+  color: #2e6b45;
+}
+.rewards-air__play {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 110px);
+  margin-top: clamp(56px, 9vh, 96px);
+}
+.rewards-air__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 6px;
+  font-weight: 600;
+}
+.rewards-air__spend {
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-stretch: var(--stretch-narrow);
+}
+.rewards-air__slider {
+  --track: linear-gradient(90deg, var(--leaf-ink) var(--fill, 0%), var(--leaf-rule) var(--fill, 0%));
+  --thumb: var(--leaf-ink);
+  --halo: rgb(23 61 44 / 0.14);
+}
+.rewards-air__result {
+  margin: 10px 0 30px;
+  font-size: clamp(1.15rem, 0.4vw + 1rem, 1.35rem);
+  line-height: 1.45;
+  min-height: 2.9em;
+}
+.rewards-air .btn--primary {
+  --btn-fill: #2e6b45;
+  background: var(--leaf-ink);
+  color: #f7f5ec;
+}
+.rewards-air .btn--ghost {
+  --btn-fill: var(--leaf-ink);
+  color: var(--leaf-ink);
+  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
+}
+@media (hover: hover) and (pointer: fine) {
+  .rewards-air .btn--ghost:hover {
+    color: #f7f5ec;
+    box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
+  }
+}
+.rewards-air__card {
+  justify-self: center;
+  width: min(100%, 31rem);
+}
+.rewards-air__steps,
+.rewards-air__facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rewards-air__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(24px, 4vw, 64px);
+  margin-top: clamp(72px, 11vh, 120px);
+  counter-reset: step;
+}
+.rewards-air__steps li {
+  padding-top: 20px;
+  border-top: 1.5px solid var(--leaf-ink);
+}
+.rewards-air__steps h3 {
+  margin: 0 0 10px;
+  font-size: clamp(1.3rem, 1vw + 1rem, 1.6rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.rewards-air__steps p,
+.rewards-air__facts li {
+  margin: 0;
+  max-width: 26em;
+  color: var(--leaf-muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.rewards-air__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(24px, 4vw, 64px);
+  margin-top: clamp(40px, 6vh, 64px);
+}
+.rewards-air__facts li {
+  max-width: none;
+  padding: 16px 0;
+  border-top: 1px solid var(--leaf-rule);
+}
+.rewards-air :focus-visible {
+  outline-color: var(--leaf-ink);
+}
+
+/* ---------- The islands ---------- */
+
+.islands {
+  position: relative;
+  z-index: 1;
+  background: var(--night-deep);
+  color: #fbfcf8;
+}
+.islands__intro {
+  position: relative;
+  z-index: 2;
+  /* The same leaf field runs on from Rewards, so a little less space before it. */
+  padding: clamp(48px, 8vh, 96px) var(--gutter) clamp(40px, 7vh, 72px);
+  background: var(--leaf);
+  color: var(--leaf-ink);
+}
+.islands__lead {
+  max-width: 34em;
+  margin: 26px 0 0;
+  color: var(--leaf-muted);
+  font-size: clamp(1.1rem, 0.3vw + 1rem, 1.25rem);
+  line-height: 1.5;
+}
+.islands__rail {
+  position: relative;
+  overflow: clip;
+}
+/* The valley again, deeper and quieter, so the islands and their words lead. */
+.islands__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgb(15 40 29 / 0.72), rgb(15 40 29 / 0.38) 40%, rgb(15 40 29 / 0.55) 75%, rgb(15 40 29 / 0.85)),
+    linear-gradient(to right, rgb(15 40 29 / 0.6), rgb(15 40 29 / 0) 60%),
+    url('/sky/valley-green-1920.webp') center 45% / cover no-repeat;
+}
+.islands__track {
+  position: relative;
+  z-index: 1;
+}
+/* Stacked (phones, reduced motion, no scripts): the valley stays one screen tall behind the islands as they pass,
+   instead of one picture stretched down the whole list. overflow: clip on the rail leaves sticky working. */
+.islands:not([data-walk='true']) .islands__bg {
+  position: sticky;
+  inset: 0 auto auto;
+  width: 100%;
+  height: 100svh;
+}
+.islands:not([data-walk='true']) .islands__track {
+  margin-top: -100svh;
+}
+.island {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 72px);
+  padding: clamp(80px, 12vh, 120px) var(--gutter);
+}
+.island:focus {
+  outline: none;
+}
+.island__name {
+  font-size: clamp(2.6rem, 5.4vw, 6.2rem);
+}
+.island__line {
+  max-width: 28em;
+  margin: 26px 0 0;
+  color: rgb(251 252 248 / 0.9);
+  font-size: clamp(1.1rem, 0.35vw + 1rem, 1.3rem);
+  line-height: 1.5;
+}
+.island__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  gap: 0 clamp(20px, 3vw, 44px);
+  margin: 30px 0 0;
+}
+.island__facts > div {
+  padding-top: 12px;
+  border-top: 1px solid rgb(251 252 248 / 0.34);
+}
+.island__facts dt {
+  order: 2;
+  margin-top: 6px;
+  color: rgb(251 252 248 / 0.76);
+  font-size: 0.9rem;
+}
+.island__facts > div {
+  display: flex;
+  flex-direction: column;
+}
+.island__facts dd {
+  margin: 0;
+  font-size: clamp(1.7rem, 2.4vw, 2.5rem);
+}
+.island__note {
+  max-width: 34em;
+  margin: 22px 0 0;
+  color: rgb(251 252 248 / 0.72);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.island__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-top: 30px;
+}
+.islands .textlink {
+  --link-line: var(--color-mint);
+  color: #fbfcf8;
+}
+.islands :focus-visible {
+  outline-color: var(--color-mint);
+}
+.island__pic {
+  margin: 0;
+  justify-self: center;
+  filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.45));
+}
+.island__pic img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: min(64vh, 640px);
+  object-fit: contain;
+}
+@keyframes island-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .island__float {
+    animation: island-bob 7s ease-in-out infinite;
+  }
+  .island:nth-child(2n) .island__float {
+    animation-delay: -2.4s;
+  }
+  .island:nth-child(3n) .island__float {
+    animation-delay: -4.6s;
+  }
+}
+
+/* The six names along the bottom; on the walk they show where you are and jump there. */
+.islands__index {
+  display: none;
+}
+.islands[data-walk='true'] .islands__index {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(56px, 8vh, 80px);
+}
+.islands__index ul {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgb(251 252 248 / 0.3);
+}
+.islands__index a {
+  position: relative;
+  display: block;
+  padding: 16px 12px 6px 0;
+  color: rgb(251 252 248 / 0.66);
+  font-weight: 500;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: color 300ms ease;
+}
+.islands__index a::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 24px;
+  height: 2px;
+  background: var(--color-mint);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 600ms var(--ease-out);
+}
+.islands__index a[aria-current='true'],
+.islands__index a:is(:hover, :focus-visible) {
+  color: #fbfcf8;
+}
+.islands__index a[aria-current='true']::before {
+  transform: none;
+}
+
+/* On the walk: the islands side by side, one screen each, held still while the scroll moves them. */
+.islands[data-walk='true'] .islands__rail {
+  height: 100svh;
+}
+.islands[data-walk='true'] .islands__track {
+  display: flex;
+  width: calc(100% * 6);
+  height: 100%;
+}
+.islands[data-walk='true'] .island {
+  flex: 0 0 calc(100% / 6);
+  height: 100%;
+  padding-bottom: clamp(120px, 18vh, 170px);
+}
+
+/* ---------- The store's three promises ---------- */
+
+.air .statement {
+  position: relative;
+  z-index: 1;
+  background: var(--leaf);
+  color: var(--leaf-ink);
+}
+/* Lighter and wider, in the voice of the headings above it. */
+.air .statement__big {
+  font-weight: 400;
+  font-stretch: 108%;
+  letter-spacing: -0.03em;
+}
+.air .statement__big .soft {
+  color: rgb(23 61 44 / 0.6);
+}
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 60rem) {
+  .rewards-air__play {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rewards-air__card {
+    order: -1;
+  }
+  .rewards-air__steps,
+  .rewards-air__facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rewards-air__steps li + li {
+    margin-top: 28px;
+  }
+  .island {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 64px;
+  }
+  /* Full width, so each picture's box is known before it loads and nothing below it jumps. */
+  .island__pic {
+    order: -1;
+    justify-self: stretch;
+  }
+  .island__pic img {
+    height: auto;
+    width: min(100%, 30rem);
+    margin-inline: auto;
+  }
+  .island__facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 40rem) {
+  .rewards-air .actions .btn {
+    flex: 1 1 auto;
+  }
+  .island__facts dd {
+    font-size: 1.5rem;
+  }
+}
