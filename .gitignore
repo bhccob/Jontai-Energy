@@ -16,3 +16,7 @@ tools/blender/film/day.blend1
 # Verification screenshots (tools/shots/shoot.mjs)
 tools/shots/out/
 .next-build/
+
+# Blender product builds (round 9): Python caches and Blender backups stay local
+tools/blender/products/__pycache__/
+*.blend1
