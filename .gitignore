@@ -20,3 +20,6 @@ tools/shots/out/
 # Blender product builds (round 9): Python caches and Blender backups stay local
 tools/blender/products/__pycache__/
 *.blend1
+
+# Higgsfield originals (6 MB each); job ids in tools/sky/prompts.md
+tools/sky/source/

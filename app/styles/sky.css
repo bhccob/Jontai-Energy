@@ -1,0 +1,507 @@
+/* Open air (round 9, nature direction; Bob 2026-11-10, after novair and l-elite templates and his "Energy reimagined"
+   picture). One real-looking sky holds behind the first sections; the products stand on floating islands of rock and
+   grass; the type is huge and thin across the sky. No boxes, no frames, no shapes: type on the sky, thin rules, and
+   glass only on what floats (the header bar and the bundle panel). Nature images: tools/sky/prompts.md. */
+
+:root {
+  --sky-top: #1c63c9;
+  --sky-ink: #fbfcfd;
+  --sky-soft: rgb(251 252 253 / 0.88);
+  --sky-muted: rgb(251 252 253 / 0.76);
+  --sky-rule: rgb(251 252 253 / 0.38);
+  /* The ground the islands float over: the brand's deep forest, as light falls off toward the earth. */
+  --ground: 15 40 29;
+}
+:root:has(.sky-scope) {
+  background: var(--sky-top);
+}
+
+/* ---------- The sky ---------- */
+
+.sky-scope {
+  position: relative;
+  overflow: clip;
+  background: var(--sky-top);
+  color: var(--sky-ink);
+}
+.sky {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100lvh;
+  margin-bottom: -100lvh;
+  overflow: clip;
+  pointer-events: none;
+}
+.sky__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  transform-origin: 50% 0;
+}
+/* Toward the bottom the light falls toward the green of the ground, so the words there stay readable on the clouds. */
+.sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--ground) / 0) 46%,
+    rgb(var(--ground) / 0.38) 70%,
+    rgb(var(--ground) / 0.8) 92%,
+    rgb(var(--ground) / 0.88) 100%
+  );
+}
+.sky-scope > :not(.sky) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Buttons on the sky ---------- */
+
+.sky-scope .btn--primary {
+  --btn-fill: #fff;
+  background: var(--sky-ink);
+  color: var(--color-forest);
+}
+/* Over clouds an outline alone goes missing, so the outlined button floats on a little frosted glass. */
+.sky-scope .btn--ghost {
+  --btn-fill: var(--sky-ink);
+  background: rgb(15 40 29 / 0.18);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  color: var(--sky-ink);
+  box-shadow: inset 0 0 0 1.5px rgb(251 252 253 / 0.6);
+}
+.sky-scope :focus-visible {
+  outline-color: var(--sky-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sky-scope .btn--ghost:hover {
+    color: var(--color-forest);
+    box-shadow: inset 0 0 0 1.5px var(--sky-ink);
+  }
+}
+
+/* ---------- The first view ---------- */
+
+/* The entrance, once, as the page paints: CSS only, so it never waits for scripts (--d, in ms, set in Hero and
+   RangeIndex). Nothing fades out again: the next section scrolls over the first view instead. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+@keyframes hero-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(70px) scale(0.94);
+  }
+}
+/* The island's slow bob, as if it were held by the air. */
+@keyframes island-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(-0.6deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #hero [data-hero] {
+    animation: hero-rise 1100ms var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * 1ms + 120ms);
+  }
+  #hero .hero__island img {
+    animation: hero-arrive 1600ms var(--ease-out) 300ms both;
+  }
+  #hero .hero__float {
+    animation: island-float 7.5s ease-in-out 1.9s infinite;
+  }
+  .ranges li {
+    --d: calc(900 + var(--i, 0) * 60);
+  }
+}
+
+/* The words keep to the clear blue at the top; the clouds below are left to the island and the ranges. */
+.hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+  grid-template-rows: auto auto 1fr auto;
+  column-gap: var(--gutter);
+  padding: calc(var(--nav-h) + clamp(20px, 5vh, 56px)) var(--gutter) clamp(64px, 8vh, 80px);
+}
+.hero__display {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(3.1rem, 7vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+.hero__line {
+  display: block;
+}
+.hero__line--two {
+  padding-left: 0.04em;
+}
+.hero__aside {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  margin-top: 0.6vw;
+  color: var(--sky-soft);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.hero__aside p {
+  margin: 0 0 14px;
+}
+.hero__status {
+  color: var(--sky-ink);
+  font-weight: 600;
+}
+.hero__status[data-open='true'] i {
+  background: #9fe08a;
+  box-shadow: 0 0 0 4px rgb(159 224 138 / 0.3);
+}
+/* The island floats just under the headline on the right, close enough to touch it, as near things do. */
+.hero__island {
+  position: absolute;
+  z-index: 2;
+  right: clamp(8px, 5vw, 120px);
+  top: calc(var(--nav-h) + clamp(20px, 5vh, 56px) + 1.62 * clamp(3.1rem, 7vw, 8rem));
+  width: min(41vw, 60vh, 780px);
+  margin: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 40px 50px rgb(var(--ground) / 0.28));
+}
+.hero__island img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.hero__foot {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  max-width: 30rem;
+  margin-top: clamp(28px, 4.5vh, 48px);
+}
+.hero__lead {
+  margin: 0 0 26px;
+  color: var(--sky-soft);
+  font-size: clamp(1.1rem, 0.3vw + 1rem, 1.25rem);
+  line-height: 1.5;
+}
+.hero__note {
+  position: absolute;
+  right: var(--gutter);
+  bottom: calc(clamp(64px, 8vh, 80px) + 74px);
+  margin: 0;
+  color: var(--sky-muted);
+  font-size: 0.85rem;
+}
+
+/* The six ranges on one ruled line. The rule over the one under the pointer lights up. */
+.ranges {
+  position: relative;
+  z-index: 3;
+  grid-column: 1 / -1;
+  grid-row: 4;
+}
+.ranges ul {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--sky-rule);
+}
+.ranges a {
+  position: relative;
+  display: block;
+  padding: 18px 12px 6px 0;
+  color: var(--sky-soft);
+  font-size: clamp(1.05rem, 1.2vw, 1.375rem);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  text-decoration: none;
+  transition: color 300ms ease;
+}
+.ranges a::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 24px;
+  height: 2px;
+  background: var(--sky-ink);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 600ms var(--ease-out);
+}
+.ranges a:focus-visible {
+  outline-offset: 6px;
+}
+.ranges a:is(:hover, :focus-visible) {
+  color: var(--sky-ink);
+}
+.ranges a:is(:hover, :focus-visible)::before {
+  transform: none;
+}
+
+/* ---------- Header over the sky ---------- */
+
+.nav[data-sky] {
+  color: var(--sky-ink);
+}
+/* Once you leave the top, the bar turns frosted white with the forest ink, over sky and page alike. */
+.nav[data-sky][data-solid='true'] {
+  color: var(--color-ink);
+}
+.nav[data-sky] :focus-visible {
+  outline-color: currentColor;
+}
+@media (max-width: 40rem) {
+  .nav[data-sky] .nav__support {
+    display: none;
+  }
+}
+.offer-pill__short {
+  display: none;
+}
+@media (max-width: 27rem) {
+  .offer-pill__long {
+    display: none;
+  }
+  .offer-pill__short {
+    display: inline;
+  }
+  .nav[data-sky] .nav__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .nav[data-sky] .nav__end {
+    gap: 14px;
+  }
+  .nav[data-sky] .nav__menu {
+    min-width: 44px;
+    justify-content: center;
+  }
+}
+
+/* ---------- Bundle offers: the pill and its panel (light glass over the sky) ---------- */
+
+.offer-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint);
+  color: var(--color-forest);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 250ms ease,
+    scale 120ms ease-out;
+}
+.offer-pill:active {
+  scale: 0.97;
+}
+.offer-pill[aria-expanded='true'] {
+  background: #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer-pill:hover {
+    background: #cfe6c3;
+  }
+}
+.offer {
+  position: fixed;
+  top: calc(var(--nav-h) + 10px);
+  right: var(--gutter);
+  width: min(25rem, calc(100vw - 2 * var(--gutter)));
+  padding: 20px 24px 22px;
+  border-radius: 22px;
+  background: var(--glass-paper-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow:
+    var(--glass-edge),
+    0 30px 60px -30px rgb(15 40 29 / 0.45);
+  color: var(--color-ink);
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  transform-origin: 90% 0;
+  visibility: hidden;
+  transition:
+    opacity 260ms ease,
+    transform 500ms var(--ease-out),
+    visibility 0s linear 500ms;
+}
+.offer[data-open='true'] {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition:
+    opacity 260ms ease,
+    transform 500ms var(--ease-out);
+}
+.offer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.offer__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+.offer__title:focus {
+  outline: none;
+}
+.offer__close {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-right: -10px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer__close:hover {
+    background: rgb(23 61 44 / 0.08);
+    color: var(--color-ink);
+  }
+}
+.offer__list {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-rule);
+}
+.offer__list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 2px 16px;
+  padding: 14px 0 15px;
+  border-bottom: 1px solid var(--color-rule);
+}
+.offer__name {
+  margin: 0;
+  font-weight: 650;
+  font-size: 1.05rem;
+}
+.offer__save {
+  margin: 0;
+  color: var(--color-green-ink);
+  font-size: 1.85rem;
+}
+.offer__save span {
+  font-size: 0.9rem;
+  font-stretch: 100%;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.offer__items {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.offer__ask {
+  width: 100%;
+  margin-top: 18px;
+}
+.offer__note {
+  margin: 12px 0 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+/* ---------- Narrow screens: the words, the island under them, the ranges ---------- */
+
+@media (max-width: 60rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    padding-bottom: 40px;
+  }
+  .hero__display {
+    font-size: clamp(2.7rem, 11.5vw, 5.4rem);
+  }
+  .hero__aside {
+    grid-column: 1;
+    grid-row: auto;
+    max-width: 30rem;
+  }
+  .hero__island {
+    position: relative;
+    inset: auto;
+    width: min(100%, 34rem);
+    margin: 8px auto 0;
+    justify-self: center;
+  }
+  .hero__foot {
+    grid-column: 1;
+    grid-row: auto;
+    margin: 12px 0 0;
+  }
+  .hero__note {
+    position: static;
+    margin: 0 0 18px;
+  }
+  .ranges {
+    grid-row: auto;
+    margin-top: 8px;
+  }
+  .ranges ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap-columns);
+  }
+  .ranges li {
+    border-bottom: 1px solid var(--sky-rule);
+  }
+  .ranges a {
+    padding: 16px 0 14px;
+  }
+}
+@media (max-width: 40rem) {
+  .hero {
+    padding-top: calc(var(--nav-h) + 28px);
+  }
+  .hero .actions .btn {
+    flex: 1 1 auto;
+  }
+}

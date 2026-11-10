@@ -21,9 +21,9 @@ const LINKS = [
  * The header: the store's mark, Support and Menu, nothing else. A slim bar gathers it once you leave the top; it steps
  * out of the way while you read down and comes back as soon as you scroll up or tab into it. Menu opens the sections
  * and the ways to reach the store full screen, on every screen size. `base` is '/' on other pages, so the section
- * links lead back home. `night` (the home page, round 9) sets it in sand on the dark stage and adds the bundle offers.
+ * links lead back home. `sky` (the home page, round 9) sets it in white over the sky and adds the bundle offers.
  */
-export function Header({ base = '', night = false }: { base?: string; night?: boolean }) {
+export function Header({ base = '', sky = false }: { base?: string; sky?: boolean }) {
   const pathname = usePathname();
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -72,14 +72,14 @@ export function Header({ base = '', night = false }: { base?: string; night?: bo
 
   return (
     <>
-      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open} data-night={night || undefined}>
+      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open} data-sky={sky || undefined}>
         <a href={base || '#top'} className="brand" aria-label={base ? 'Jontai Energy, home' : 'Jontai Energy, back to the top'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon-192.png" alt="" width={30} height={30} />
           Jontai Energy
         </a>
         <div className="nav__end">
-          {night && <BundleOffer hidden={open} />}
+          {sky && <BundleOffer hidden={open} />}
           <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
             Support
           </a>
