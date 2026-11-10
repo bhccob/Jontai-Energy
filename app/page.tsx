@@ -10,8 +10,8 @@ import { Visit } from '@/components/sections/Visit';
 import { Footer } from '@/components/sections/Footer';
 import { SkyScope } from '@/components/sky/SkyScope';
 
-/** The browser's own bars match the top of the sky on the home page. */
-export const viewport: Viewport = { themeColor: '#1c63c9' };
+/** The browser's own bars match the forest green at the top of the home page. */
+export const viewport: Viewport = { themeColor: '#173d2c' };
 
 /**
  * Round 9 in open air (Bob, 2026-11-10: "use nature too since its related to clean energy"). Built in steps: the

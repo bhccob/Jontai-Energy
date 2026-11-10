@@ -14,20 +14,26 @@ const exists = async (p) => !!(await stat(p).catch(() => null));
 
 await mkdir(out, { recursive: true });
 
-// The sky: wide for desktop, and a portrait slice (clouds and blue) for phones.
-const sky = join(src, 'sky-day.png');
-if (await exists(sky)) {
+// The backdrops: wide for desktop, and a portrait slice for phones (`phoneAt` is where the slice starts, as a share of
+// the width). The green valley is the page's (Bob, 2026-11-10: "i do want the main color to be green"); the blue sky
+// is kept for later sections.
+const BACKDROPS = [
+  { name: 'valley-green', phoneAt: 0.12 },
+  { name: 'sky-day', phoneAt: 0.55 },
+];
+for (const { name, phoneAt } of BACKDROPS) {
+  const file = join(src, `${name}.png`);
+  if (!(await exists(file))) continue;
   for (const w of [3200, 1920]) {
-    await sharp(sky).resize(w).webp({ quality: 80 }).toFile(join(out, `sky-day-${w}.webp`));
+    await sharp(file).resize(w).webp({ quality: w > 2000 ? 70 : 78 }).toFile(join(out, `${name}-${w}.webp`));
   }
-  const { width, height } = await sharp(sky).metadata();
-  const cropW = Math.round(height * 0.62);
-  await sharp(sky)
-    .extract({ left: Math.round(width * 0.55), top: 0, width: cropW, height })
+  const { width, height } = await sharp(file).metadata();
+  await sharp(file)
+    .extract({ left: Math.round(width * phoneAt), top: 0, width: Math.round(height * 0.62), height })
     .resize(900)
     .webp({ quality: 80 })
-    .toFile(join(out, 'sky-day-phone.webp'));
-  console.log('sky done');
+    .toFile(join(out, `${name}-phone.webp`));
+  console.log(name, 'done');
 }
 
 // Islands: trimmed to their own edges, then two widths with their transparency kept.
