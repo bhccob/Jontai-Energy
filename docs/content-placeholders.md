@@ -48,10 +48,15 @@ Drafted 2026-10-28 from the store's current site: `pages/warranty` (policy dated
 
 The quote page (`/quote`) sends each request to the store by email through Resend (resend.com), with Reply-To set to the visitor so a reply goes straight to them. To switch it on, set `RESEND_API_KEY` and `QUOTE_FROM` (an address on a domain verified in Resend) where the site is hosted; `QUOTE_TO` overrides the inbox, which defaults to jontai@qq.com. See `.env.example`. Until then the page does not pretend to send: it says it could not, and opens the same message in the visitor's own email app instead.
 
+## Bundle offers (round 9, sample)
+
+The header's "Bundle offers" panel (`lib/bundles.ts`) shows three sample bundles: Starter Solar Kit (solar panels, a hybrid inverter and a power station) 20% off, Home Security Bundle (two solar cameras) 15% off, Outdoor Lighting Pack (a street lamp, garden lights and an LED floodlight) 15% off. None of these is confirmed by the owner; the panel says "Sample offers. Ask in store for this month's bundles." No prices are shown. Replace the names, contents and savings with the store's real bundles, or remove the panel.
+
 ## Illustrative material to replace
 
 | What | Where | Replace with |
 | --- | --- | --- |
+| 3D products (round 9, `public/models/showroom.v1.glb`, built in Blender from `tools/blender/products`) | The home page's stage and its stills (`public/stage`) | Modelled after the catalogue pictures, so they show the kind of product carried, not specific stock; the page says "3D illustrations, not specific stock". The inverter's and power station's screen readouts are decoration |
 | Catalogue pictures (GPT Image, `public/catalog`) | The home page's product chapters and stage, the hero list's disc, and the product panel for each category | Studio-style illustrations of the kinds of products carried; the panels, AC, inverter, power station, generator, camera, sofa and chair follow the store's photos, the LED items and the site camera are representative. The LED strip (`led-strip.webp`, 2026-10-28) is a three.js render made for this site, not GPT Image. The home page labels them "Illustration, not specific stock"; the panel says "Pictures show the kind of products we carry". Swap in real product photos any time, same file names, square, on a plain light background so the stage colour still meets their edges |
 
 Removed on purpose: the Blender day film of the home page (retired 2026-10-27 for the type-led redesign; `tools/blender/film` stays in the repo, unshipped), the Seedance staircase clip of a store interior (the owner said it looked nothing like the real store) and the earlier real-time 3D models.

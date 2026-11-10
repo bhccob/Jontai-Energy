@@ -47,6 +47,15 @@ test('the family-owned point leads the statement, with the team still to come', 
   assert.ok(!home.statement.points.some((p: { label: string }) => p.label === 'Rewards'));
 });
 
+test('the first view says what the store sells, that it is family-owned and where it is', () => {
+  const { hero } = home;
+  assert.match(hero.title, /solar/i);
+  assert.match(hero.lead, /family-owned/);
+  assert.match(hero.lead, /Cumana 73, Oranjestad/);
+  assert.match(hero.lead, /[Ff]urniture/);
+  assert.match(hero.note, /not specific stock/);
+});
+
 test('the film copy is gone', () => {
   assert.equal(data.film, undefined);
 });

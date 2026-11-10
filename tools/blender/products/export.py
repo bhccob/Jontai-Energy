@@ -33,6 +33,11 @@ def bake_shadow(root_name, size=(0.9, 0.6), px=768):
              scene.world, scene.cycles.samples, stage.hide_render if stage else None)
     if stage:
         stage.hide_render = True
+    # Every product is built at the origin, so all the others must leave the render or they shadow this one's floor.
+    others = [c for c in scene.collection.children if c.name not in (root_name, "stage")]
+    others_hidden = [c.hide_render for c in others]
+    for c in others:
+        c.hide_render = True
     sky = bpy.data.worlds.get("shadow_sky") or bpy.data.worlds.new("shadow_sky")
     sky.use_nodes = True
     sky.node_tree.nodes["Background"].inputs["Color"].default_value = (1, 1, 1, 1)
@@ -77,6 +82,8 @@ def bake_shadow(root_name, size=(0.9, 0.6), px=768):
      scene.world, scene.cycles.samples, hidden) = saved
     if stage:
         stage.hide_render = hidden
+    for c, h in zip(others, others_hidden):
+        c.hide_render = h
     scene.render.image_settings.color_mode = "RGB"
     return path
 

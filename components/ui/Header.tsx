@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useLenis } from 'lenis/react';
 import { DIRECTIONS_URL, whatsappLink } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
+import { BundleOffer } from './BundleOffer';
 
 /** The home page's sections, as the menu lists them. */
 const LINKS = [
@@ -20,9 +21,9 @@ const LINKS = [
  * The header: the store's mark, Support and Menu, nothing else. A slim bar gathers it once you leave the top; it steps
  * out of the way while you read down and comes back as soon as you scroll up or tab into it. Menu opens the sections
  * and the ways to reach the store full screen, on every screen size. `base` is '/' on other pages, so the section
- * links lead back home.
+ * links lead back home. `night` (the home page, round 9) sets it in sand on the dark stage and adds the bundle offers.
  */
-export function Header({ base = '' }: { base?: string }) {
+export function Header({ base = '', night = false }: { base?: string; night?: boolean }) {
   const pathname = usePathname();
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -71,13 +72,14 @@ export function Header({ base = '' }: { base?: string }) {
 
   return (
     <>
-      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open}>
+      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open} data-night={night || undefined}>
         <a href={base || '#top'} className="brand" aria-label={base ? 'Jontai Energy, home' : 'Jontai Energy, back to the top'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon-192.png" alt="" width={30} height={30} />
           Jontai Energy
         </a>
         <div className="nav__end">
+          {night && <BundleOffer hidden={open} />}
           <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
             Support
           </a>
@@ -93,7 +95,7 @@ export function Header({ base = '' }: { base?: string }) {
               <i />
               <i />
             </span>
-            {open ? 'Close' : 'Menu'}
+            <span className="nav__label">{open ? 'Close' : 'Menu'}</span>
           </button>
           {/* Without scripts the button cannot open the menu; this link opens it instead (shell.css, :target). */}
           <a href="#menu" className="nav__menu nav__menu--plain">

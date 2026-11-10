@@ -9,7 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { NodeIO } from '@gltf-transform/core';
 import { ALL_EXTENSIONS, EXTTextureWebP } from '@gltf-transform/extensions';
-import { dedup, meshopt, mergeDocuments, prune, unpartition, weld } from '@gltf-transform/functions';
+import { dedup, join as joinPrimitives, meshopt, mergeDocuments, prune, unpartition, weld } from '@gltf-transform/functions';
 import { MeshoptDecoder, MeshoptEncoder } from 'meshoptimizer';
 
 // gltf-transform/functions already loads its own sharp (through ndarray-pixels). Two copies of libvips in one process
@@ -23,7 +23,10 @@ const out = join(here, 'out');
 const VERSION = 'v1';
 
 /** The products in the stage, in the order the page meets them. Missing exports are skipped with a note. */
-const PRODUCTS = ['inverter'];
+const PRODUCTS = ['inverter', 'solar_panel', 'power_station', 'ac_indoor', 'ac_outdoor', 'site_camera', 'lounge_chair', 'loyalty_card'];
+
+/** Textures that carry fine print keep more pixels (the big panel's busbars vanish at 1024). */
+const maxSize = (name) => (/panel-cells/.test(name) ? 2048 : 1024);
 
 await MeshoptDecoder.ready;
 await MeshoptEncoder.ready;
@@ -51,14 +54,50 @@ for (const s of rest) {
 }
 doc.getRoot().setDefaultScene(scene);
 
-await doc.transform(unpartition(), dedup(), prune(), weld());
+// Fewer draw calls: every part of a product moves up to sit directly under the product's root (keeping where it is),
+// then parts that share a material are joined into one mesh. The roots stay separate, so each product still moves on
+// its own in the stage.
+const mul = (a, b) => {
+  const o = new Array(16).fill(0);
+  for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) o[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+  return o;
+};
+const invertAffine = (m) => {
+  // Rotation-scale block inverse by cofactors, then the translation.
+  const [a, b, c, , d, e, f, , g, h, i] = m;
+  const A = e * i - f * h, B = -(d * i - f * g), C = d * h - e * g;
+  const det = a * A + b * B + c * C;
+  const inv = [
+    A / det, -(b * i - c * h) / det, (b * f - c * e) / det, 0,
+    B / det, (a * i - c * g) / det, -(a * f - c * d) / det, 0,
+    C / det, -(a * h - b * g) / det, (a * e - b * d) / det, 0,
+    0, 0, 0, 1,
+  ];
+  const t = [m[12], m[13], m[14]];
+  for (let r = 0; r < 3; r++) inv[12 + r] = -(inv[r] * t[0] + inv[4 + r] * t[1] + inv[8 + r] * t[2]);
+  return inv;
+};
+for (const productRoot of scene.listChildren()) {
+  const toRoot = invertAffine(productRoot.getWorldMatrix());
+  const meshes = [];
+  productRoot.traverse((n) => {
+    if (n !== productRoot && n.getMesh()) meshes.push([n, mul(toRoot, n.getWorldMatrix())]);
+  });
+  for (const [n, local] of meshes) {
+    productRoot.addChild(n);
+    n.setMatrix(local);
+  }
+}
+
+await doc.transform(unpartition(), dedup(), prune(), weld(), joinPrimitives({ keepNamed: false }), prune());
 
 // Textures to WebP, at most 1024 px.
 doc.createExtension(EXTTextureWebP).setRequired(true);
 for (const tex of doc.getRoot().listTextures()) {
   const image = tex.getImage();
   if (!image) continue;
-  const webp = await sharp(Buffer.from(image)).resize(1024, 1024, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 90 }).toBuffer();
+  const max = maxSize(`${tex.getName()} ${tex.getURI()}`);
+  const webp = await sharp(Buffer.from(image)).resize(max, max, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 90 }).toBuffer();
   tex.setImage(new Uint8Array(webp)).setMimeType('image/webp');
   tex.setURI(tex.getURI().replace(/\.png$/i, '.webp'));
 }

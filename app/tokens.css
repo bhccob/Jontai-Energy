@@ -82,6 +82,30 @@
   --glass-edge-dark: inset 0 1px 0 rgb(255 255 255 / 0.16), inset 0 0 0 1px rgb(247 245 236 / 0.12);
   --glass-shadow: 0 24px 48px -28px rgb(15 40 29 / 0.45);
 }
+/* After hours (round 9, 2026-11-10): the home page's night. The owner's deep forest is the ground, sand is the ink,
+   mint marks what can be pressed. Scoped to .night, so the other pages and the light panels keep the day tokens. */
+:root {
+  --night-deep: #0f281d;
+  --night-forest: #173d2c;
+  --night-ink: #f7f5ec;
+  --night-soft: rgb(247 245 236 / 0.76);
+  --night-muted: rgb(247 245 236 / 0.62);
+  --night-rule: rgb(247 245 236 / 0.16);
+  --night-accent: #b8d8a8;
+  --glass-night: rgb(15 40 29 / 0.62);
+  --glass-night-strong: rgb(15 40 29 / 0.86);
+}
+.night {
+  --color-ink: var(--night-ink);
+  --color-muted: var(--night-muted);
+  --color-rule: var(--night-rule);
+  --link-line: var(--night-accent);
+  color: var(--night-ink);
+}
+.night :focus-visible {
+  outline-color: var(--night-accent);
+}
+
 /* Glass turns solid when the visitor asks for less transparency, or where blur behind an element is not supported. */
 @media (prefers-reduced-transparency: reduce) {
   :root {
@@ -89,6 +113,8 @@
     --glass-bar: var(--color-paper);
     --glass-paper-strong: var(--color-paper);
     --glass-forest: var(--color-forest);
+    --glass-night: var(--night-deep);
+    --glass-night-strong: var(--night-deep);
     --glass-blur: none;
   }
 }
@@ -98,6 +124,8 @@
     --glass-bar: var(--color-paper);
     --glass-paper-strong: var(--color-paper);
     --glass-forest: var(--color-forest);
+    --glass-night: var(--night-deep);
+    --glass-night-strong: var(--night-deep);
   }
 }
 :root {

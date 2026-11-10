@@ -132,6 +132,94 @@ def lathe(name, profile, col, material, segments=64):
     return ob
 
 
+def rounded_poly(corners, seg=10):
+    """A convex outline from [(x, z, radius)] corners in counter-clockwise order, each corner filleted by its radius."""
+    pts = []
+    n = len(corners)
+    for i in range(n):
+        x, z, r = corners[i]
+        px, pz, _ = corners[i - 1]
+        nx, nz, _ = corners[(i + 1) % n]
+        if r <= 0:
+            pts.append((x, z))
+            continue
+        a = (px - x, pz - z)
+        b = (nx - x, nz - z)
+        la, lb = math.hypot(*a), math.hypot(*b)
+        a = (a[0] / la, a[1] / la)
+        b = (b[0] / lb, b[1] / lb)
+        half = math.acos(max(-1.0, min(1.0, a[0] * b[0] + a[1] * b[1]))) / 2
+        t = r / math.tan(half)
+        p0 = (x + a[0] * t, z + a[1] * t)
+        p1 = (x + b[0] * t, z + b[1] * t)
+        bis = (a[0] + b[0], a[1] + b[1])
+        lbis = math.hypot(*bis)
+        d = r / math.sin(half)
+        cx, cz = x + bis[0] / lbis * d, z + bis[1] / lbis * d
+        a0 = math.atan2(p0[1] - cz, p0[0] - cx)
+        a1 = math.atan2(p1[1] - cz, p1[0] - cx)
+        while a1 - a0 > math.pi:
+            a1 -= 2 * math.pi
+        while a0 - a1 > math.pi:
+            a1 += 2 * math.pi
+        for k in range(seg + 1):
+            t2 = a0 + (a1 - a0) * k / seg
+            pts.append((cx + r * math.cos(t2), cz + r * math.sin(t2)))
+    return pts
+
+
+def prism_x(name, pts, x0, x1, col, materials=(), **kw):
+    """Like prism, but the (y, z) profile runs along X from x0 to x1 (an end-on profile, such as a side elevation)."""
+    ob = prism(name, pts, x0, x1, col, materials, **kw)
+    me = ob.data
+    for v in me.vertices:
+        px, py, pz = v.co
+        v.co = (py, px, pz)
+    me.flip_normals()
+    me.update()
+    return ob
+
+
+def rod(name, a, b, r, col, material, sides=12, r_end=None):
+    """A round bar from point a to point b (radius r, tapering to r_end), capped at both ends."""
+    from mathutils import Vector
+
+    a, b = Vector(a), Vector(b)
+    axis = b - a
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=sides, radius1=r, radius2=r_end if r_end is not None else r, depth=axis.length)
+    bm.to_mesh(me)
+    bm.free()
+    for p in me.polygons:
+        p.use_smooth = True
+    ob = bpy.data.objects.new(name, me)
+    col.objects.link(ob)
+    me.materials.append(material)
+    ob.location = (a + b) / 2
+    ob.rotation_mode = "QUATERNION"
+    ob.rotation_quaternion = axis.normalized().to_track_quat("Z", "Y")
+    return ob
+
+
+def box_uv(ob, scale=1.0):
+    """UVs by box projection in object space: each face takes the plane it faces most. `scale` is UV units per metre."""
+    me = ob.data
+    if not me.uv_layers:
+        me.uv_layers.new(name="UVMap")
+    uv = me.uv_layers.active.data
+    for poly in me.polygons:
+        nx, ny, nz = (abs(c) for c in poly.normal)
+        for li in poly.loop_indices:
+            co = me.vertices[me.loops[li].vertex_index].co
+            if nz >= nx and nz >= ny:
+                uv[li].uv = (co.x * scale, co.y * scale)
+            elif nx >= ny:
+                uv[li].uv = (co.y * scale, co.z * scale)
+            else:
+                uv[li].uv = (co.x * scale, co.z * scale)
+
+
 def bevel(ob, width, segments=5, angle=30, profile=0.5):
     m = ob.modifiers.new("Bevel", "BEVEL")
     m.width = width

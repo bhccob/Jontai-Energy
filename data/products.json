@@ -672,10 +672,11 @@
   ],
   "home": {
     "hero": {
-      "title": "Aruba sunlight, made useful.",
-      "lead": "Solar, power, lighting and everyday essentials, plus furniture upstairs at Jontai Energy.",
-      "primary": "Explore solar",
-      "secondary": "Visit the store"
+      "title": "Solar, power and light for every Aruban home.",
+      "lead": "Jontai Energy is a family-owned store at Cumana 73, Oranjestad. Furniture is one floor up.",
+      "primary": "Visit the store",
+      "secondary": "See what we sell",
+      "note": "3D illustrations, not specific stock."
     },
     "statement": {
       "label": "One store, two floors",

@@ -57,17 +57,17 @@ def build_stage():
         p.use_smooth = True
     cyc = bpy.data.objects.new("cyclorama", me)
     col.objects.link(cyc)
-    floor = material("je_stage_floor", tuple(c * 1.6 for c in DEEP), rough=0.55)
+    floor = material("je_stage_floor", tuple(c * 1.1 for c in DEEP), rough=0.7)
     me.materials.append(floor)
 
-    def area(name, size, power, color, loc, aim, shape="RECTANGLE", size_y=None):
+    def area(name, size, power, color, loc, aim, size_y=None, spread=180):
         light = bpy.data.lights.new(name, "AREA")
-        light.shape = shape
+        light.shape = "RECTANGLE"
         light.size = size
-        if size_y:
-            light.size_y = size_y
+        light.size_y = size_y or size
         light.energy = power
         light.color = color
+        light.spread = math.radians(spread)
         ob = bpy.data.objects.new(name, light)
         ob.location = loc
         direction = Vector(aim) - Vector(loc)
@@ -75,9 +75,11 @@ def build_stage():
         col.objects.link(ob)
         return ob
 
-    area("key", 1.4, 260, (1.0, 0.86, 0.70), (-1.5, -1.9, 1.9), (0, 0, 0.3), size_y=1.0)
-    area("rim", 0.5, 160, (0.66, 0.92, 0.74), (1.3, 1.1, 1.2), (0, 0, 0.35), size_y=1.6)
-    area("fill", 2.0, 22, (0.85, 0.92, 1.0), (2.0, -1.8, 0.6), (0, 0, 0.3), size_y=1.2)
+    # Tuned against the inverter (checkpoint A, 2026-11-10): a front-right key so the front reads white and the side
+    # falls into shade, a narrow mint rim from behind left, a faint cool fill. The web studio mirrors these.
+    area("key", 1.0, 14, (1.0, 0.94, 0.86), (0.9, -2.2, 1.9), (0, 0, 0.3), size_y=0.7, spread=60)
+    area("rim", 0.3, 7, (0.70, 0.95, 0.78), (-1.0, 1.0, 1.1), (-0.15, 0, 0.35), size_y=1.4, spread=35)
+    area("fill", 2.0, 1.5, (0.88, 0.94, 1.0), (-2.0, -1.4, 0.5), (0, 0, 0.3), size_y=1.2, spread=80)
 
     scene.render.engine = "CYCLES"
     scene.cycles.device = "GPU"
@@ -111,6 +113,18 @@ def frame(target_root, res=(1600, 1600), lens=70, azimuth=-32, elevation=10, dis
     scene.render.resolution_x, scene.render.resolution_y = res
     scene.render.resolution_percentage = 100
     return cam
+
+
+PRODUCTS = ("inverter", "solar_panel", "power_station", "ac_indoor", "ac_outdoor", "site_camera", "lounge_chair", "loyalty_card")
+
+
+def solo(*names):
+    """Render only these product collections (the stage stays)."""
+    for n in PRODUCTS:
+        c = bpy.data.collections.get(n)
+        if c:
+            c.hide_render = n not in names
+            c.hide_viewport = n not in names
 
 
 def render(path):

@@ -50,8 +50,7 @@ export const viewport: Viewport = {
 };
 
 const HEAD_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');
-try{var c=navigator.connection;if(location.pathname==='/'&&!sessionStorage.getItem('jontai-loader')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!(c&&c.saveData))d.classList.add('is-loading')}catch(e){}
-setTimeout(function(){if(!window.__jontaiReady){d.classList.remove('is-loading');d.classList.remove('js')}},8000)})()`;
+setTimeout(function(){if(!window.__jontaiReady)d.classList.remove('js')},8000)})()`;
 
 // Verified business facts only (lib/store.ts). Hours confirmed by the owner on 2026-10-27.
 const store = {
@@ -79,10 +78,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={archivo.variable} suppressHydrationWarning>
       <head>
-        {/* Before paint: mark scripting on, so motion's starting states apply only when motion will run, and on the
-            first home-page visit of the session (not with reduced motion or Save-Data) cover the page with the loader.
-            If the scripts never arrive (PageMotion sets __jontaiReady), both lift after 8 seconds and the page shows
-            complete, as it does without JavaScript. */}
+        {/* Before paint: mark scripting on, so motion's starting states apply only when motion will run. If the
+            scripts never arrive (PageMotion sets __jontaiReady), the mark lifts after 8 seconds and the page shows
+            complete, as it does without JavaScript. (Round 9 has no loader: the first view paints at once.) */}
         <script dangerouslySetInnerHTML={{ __html: HEAD_SCRIPT }} />
       </head>
       <body>
