@@ -6,7 +6,7 @@
 /* Green is the main colour (Bob, 2026-11-10): the backdrop is a green valley in mist, shaded toward the brand's deep
    forest top and bottom so white type stays readable; mint marks what can be pressed. */
 :root {
-  --sky-top: #173d2c;
+  --sky-top: #0e2219;
   --sky-ink: #fbfcf8;
   --sky-soft: rgb(251 252 248 / 0.9);
   --sky-muted: rgb(251 252 248 / 0.78);
@@ -62,40 +62,39 @@
     display: none;
   }
 }
-/* A forest shade over the bright misty sky at the top, where the headline sits, and the ground darkening at the
-   bottom under the name; the valley in the middle stays as the morning lit it. */
+/* The deep green over the valley. It multiplies: white letters let the valley through untouched, the green everywhere
+   else turns it into a quiet, barely moving deep green. JONTAI stands across the foot of the screen, cut by its edge. */
+.sky__ink {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 var(--gutter);
+  background: #17301f;
+  mix-blend-mode: multiply;
+}
+.sky__name {
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 125%;
+  font-size: 22vw;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  transform: translateY(14%);
+}
+.sky__name .c {
+  overflow: clip;
+}
+/* A soft light on the deep green behind the words, so the field reads as air, not flat paint. */
 .sky::after {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgb(var(--ground) / 0.7) 0%,
-      rgb(var(--ground) / 0.46) 24%,
-      rgb(var(--ground) / 0.14) 50%,
-      rgb(var(--ground) / 0) 62%,
-      rgb(var(--ground) / 0.3) 84%,
-      rgb(var(--ground) / 0.62) 100%
-    ),
-    linear-gradient(to right, rgb(var(--ground) / 0.35), rgb(var(--ground) / 0) 55%);
-}
-/* After sunset in Oranjestad (SunClock) the valley sinks into a deep green night; by day it is left as it is, so the
-   page keeps to its greens. */
-.sky::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  opacity: 0;
-  transition:
-    opacity 2s ease,
-    background-color 2s ease;
-  mix-blend-mode: multiply;
-}
-:root[data-daypart='night'] .sky::before {
-  background: linear-gradient(to bottom, rgb(10 30 28 / 0.62), rgb(15 40 29 / 0.4));
-  opacity: 1;
+  background: radial-gradient(60% 50% at 50% 24%, rgb(184 216 168 / 0.12), transparent 70%);
+  pointer-events: none;
 }
 .sky-scope > :not(.sky) {
   position: relative;
@@ -189,25 +188,25 @@
     animation: hero-line 1300ms var(--ease-out) both;
     animation-delay: calc(var(--d, 0) * 1ms + 120ms);
   }
-  #hero .hero__word .ci {
+  .sky__name .ci {
     animation: hero-letter 1500ms var(--ease-out) both;
   }
-  #hero .hero__word .c:nth-child(1) .ci {
+  .sky__name .c:nth-child(1) .ci {
     animation-delay: 700ms;
   }
-  #hero .hero__word .c:nth-child(2) .ci {
+  .sky__name .c:nth-child(2) .ci {
     animation-delay: 770ms;
   }
-  #hero .hero__word .c:nth-child(3) .ci {
+  .sky__name .c:nth-child(3) .ci {
     animation-delay: 840ms;
   }
-  #hero .hero__word .c:nth-child(4) .ci {
+  .sky__name .c:nth-child(4) .ci {
     animation-delay: 910ms;
   }
-  #hero .hero__word .c:nth-child(5) .ci {
+  .sky__name .c:nth-child(5) .ci {
     animation-delay: 980ms;
   }
-  #hero .hero__word .c:nth-child(6) .ci {
+  .sky__name .c:nth-child(6) .ci {
     animation-delay: 1050ms;
   }
   #hero .hero__island img {
@@ -215,9 +214,6 @@
   }
   #hero .hero__float {
     animation: island-float 8s ease-in-out 2.6s infinite;
-  }
-  #hero .hero__grass img {
-    animation: hero-grass 1800ms var(--ease-out) 500ms both;
   }
 }
 
@@ -357,8 +353,8 @@
 .hero__island {
   position: relative;
   z-index: 2;
-  width: min(44vw, 58vh, 760px);
-  margin: 6px 0 clamp(48px, 10vh, 110px);
+  width: min(40vw, 54vh, 720px);
+  margin: 6px 0 clamp(70px, 13vh, 140px);
   pointer-events: none;
 }
 .hero__float {
@@ -368,46 +364,7 @@
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 50px 50px rgb(var(--ground) / 0.32));
-}
-/* JONTAI across the whole width, its middle behind the island, its foot in the grass. */
-.hero__word {
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  bottom: clamp(0px, 3vh, 30px);
-  pointer-events: none;
-}
-.hero__word [data-fit] {
-  margin: 0;
-  color: rgb(236 244 228 / 0.92);
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-stretch: 125%;
-  font-size: 22vw;
-  line-height: 0.8;
-  letter-spacing: -0.03em;
-  text-shadow: 0 30px 80px rgb(var(--ground) / 0.25);
-}
-.hero__word .c {
-  overflow: clip;
-}
-
-/* It reaches a little below the view, so rising faster than the page as it scrolls never shows a gap under it. */
-.hero__grass {
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  right: 0;
-  bottom: -64px;
-  pointer-events: none;
-}
-.hero__grass img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: brightness(0.6) saturate(1.05);
+  filter: drop-shadow(0 60px 60px rgb(0 0 0 / 0.45));
 }
 /* Darkens as the next section slides over (HeroSkyMotion). */
 .hero__shade {
@@ -697,17 +654,12 @@
   }
 }
 
-/* ---------- Narrow screens: the words, then the island, then the name under it ---------- */
+/* ---------- Narrow screens: the words, then the island, the name at the foot of the screen ---------- */
 
 @media (max-width: 60rem) {
   .hero__island {
     width: min(88vw, 34rem);
-    margin: clamp(24px, 4vh, 40px) 0 0;
-  }
-  .hero__word {
-    position: relative;
-    bottom: auto;
-    margin: -7vw 0 clamp(28px, 6vh, 56px);
+    margin: clamp(24px, 4vh, 40px) 0 calc(24vw + 24px);
   }
 }
 @media (max-width: 40rem) {

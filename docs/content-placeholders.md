@@ -52,6 +52,11 @@ The quote page (`/quote`) sends each request to the store by email through Resen
 
 The header's "Bundle offers" panel (`lib/bundles.ts`) shows three sample bundles: Starter Solar Kit (solar panels, a hybrid inverter and a power station) 20% off, Home Security Bundle (two solar cameras) 15% off, Outdoor Lighting Pack (a street lamp, garden lights and an LED floodlight) 15% off. None of these is confirmed by the owner; the panel says "Sample offers. Ask in store for this month's bundles." No prices are shown. Replace the names, contents and savings with the store's real bundles, or remove the panel.
 
+## Added in round 12 (2026-11-11)
+
+- **Reviews** (`lib/reviews.ts`): four real Google reviews of the store, read from its Google Maps listing on 2026-11-11, with the listing's own 4.5 rating and 73-review count. Reviewer names are shortened to a first name and an initial; texts are the reviewers' own words with spacing and one spelling slip tidied and one cut marked. Update the rating, count and date together, and swap reviews freely.
+- **Team** (`lib/team.ts`, `public/team`): photos of Chakho Chung and Bob Chung supplied by Bob, cropped to head and shoulders. Titles (Concept & Technical Director, Creative Director) were worded from Bob's description of what each leads; confirm them.
+
 ## Illustrative material to replace
 
 | What | Where | Replace with |
@@ -64,4 +69,4 @@ Removed on purpose: the Blender day film of the home page (retired 2026-10-27 fo
 
 ## Not shown anywhere on purpose
 
-Prices, stock levels, reviews, customer counts, founding dates, awards, energy savings, installation services. Warranty periods appear only on the Support page, from the store's policy (above), besides the inverter datasheet's 24 months. The panel copy names silicon cells without claiming a cell type, because no supplied document states one.
+Prices, stock levels, invented reviews (only the real Google ones above), customer counts, founding dates, awards, energy savings, installation services. Warranty periods appear only on the Support page, from the store's policy (above), besides the inverter datasheet's 24 months. The panel copy names silicon cells without claiming a cell type, because no supplied document states one.

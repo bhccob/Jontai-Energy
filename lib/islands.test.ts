@@ -31,23 +31,3 @@ test('the island copy keeps the store rules', () => {
   assert.equal(ISLANDS.find((i) => i.id === 'upstairs')!.note, 'Large-item delivery available. Ask us about furniture delivery.');
 });
 
-// WCAG relative luminance of a #rrggbb colour.
-const lum = (hex: string) => {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
-const contrast = (a: string, b: string) => {
-  const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
-  return (x + 0.05) / (y + 0.05);
-};
-
-test('every moment of the day keeps its words readable (4.5:1 for the ink the walk uses on it)', () => {
-  for (const { id, day } of ISLANDS) {
-    const ink = day.ink === 'dark' ? '#173d2c' : '#f7f5ec';
-    assert.ok(contrast(ink, day.bg) >= 4.5, `${id}: ${contrast(ink, day.bg).toFixed(2)}`);
-  }
-});
-
-test('the day runs from morning to the weekend, labelled once each', () => {
-  assert.deepEqual(ISLANDS.map((i) => i.day.label), ['Morning', 'Midday', 'Evening', 'After dark', 'Night', 'Weekend']);
-});

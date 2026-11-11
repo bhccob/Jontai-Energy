@@ -11,8 +11,8 @@ const HOLDS = '(min-width: 961px) and (min-height: 640px)';
 const MOTION = '(prefers-reduced-motion: no-preference)';
 
 /**
- * As the first view scrolls away its layers come apart, each at its own distance: the grass nearest rushes up, the
- * island rises and turns, the name sinks back into the valley letter by letter, the words lag, the valley barely moves.
+ * As the first view scrolls away its layers come apart, each at its own distance: the island rises and turns, the name
+ * sinks letter by letter, the words lag, the valley inside the letters barely moves.
  * On wide screens the first view also holds still while Rewards slides up over it like a sheet, and it sinks back and
  * darkens under it; the island leans toward the pointer. Transforms only, scrubbed to the scroll; none with reduced
  * motion. (The entrance and the island's bob are CSS, sky.css.)
@@ -31,8 +31,7 @@ export function HeroSkyMotion() {
       const scrub = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true };
       gsap.to(hero.querySelector('.hero__island'), { yPercent: holds ? -30 : -8, rotate: holds ? -4 : -2, ease: 'none', scrollTrigger: scrub });
       gsap.to(hero.querySelector('.hero__top'), { yPercent: holds ? -18 : 0, opacity: holds ? 0.2 : 1, ease: 'none', scrollTrigger: scrub });
-      gsap.to(hero.querySelector('.hero__grass'), { y: -60, ease: 'none', scrollTrigger: scrub });
-      gsap.to(hero.querySelectorAll('.hero__word .c'), { yPercent: (i) => 18 + i * 9, ease: 'none', scrollTrigger: scrub });
+      gsap.to(scope.querySelectorAll('.sky__name .c'), { yPercent: (i) => 18 + i * 9, ease: 'none', scrollTrigger: scrub });
       if (media) gsap.fromTo(media, { scale: 1.04 }, { scale: 1.14, yPercent: -3, ease: 'none', scrollTrigger: scrub });
       if (!holds) return;
       // The sheet: the first view holds for a screen while Rewards rises over it, sinking back and darkening.

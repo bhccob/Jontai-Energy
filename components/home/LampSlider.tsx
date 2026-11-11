@@ -17,7 +17,7 @@ export function LampSlider() {
   const [k, setK] = useState(WARM);
 
   useEffect(() => {
-    const island = ref.current?.closest<HTMLElement>('.island');
+    const island = ref.current?.closest<HTMLElement>('[data-lamp]');
     if (!island) return;
     const [r, g, b] = kelvinToRgb(k);
     island.style.setProperty('--kelvin', `${r} ${g} ${b}`);

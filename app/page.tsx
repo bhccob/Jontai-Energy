@@ -3,20 +3,23 @@ import { CatalogProvider } from '@/components/catalog/CatalogProvider';
 import { Header } from '@/components/ui/Header';
 import { Hero } from '@/components/home/Hero';
 import { Rewards } from '@/components/home/Rewards';
-import { Islands } from '@/components/home/Islands';
-import { Statement } from '@/components/home/Statement';
+import { Why } from '@/components/home/Why';
+import { Collection } from '@/components/home/Collection';
+import { Offer } from '@/components/home/Offer';
+import { Team } from '@/components/home/Team';
+import { Reviews } from '@/components/home/Reviews';
 import { Visit } from '@/components/sections/Visit';
 import { Footer } from '@/components/sections/Footer';
 import { SkyScope } from '@/components/sky/SkyScope';
 
-/** The browser's own bars match the forest green at the top of the home page. */
-export const viewport: Viewport = { themeColor: '#173d2c' };
+/** The browser's own bars match the deep green at the top of the home page. */
+export const viewport: Viewport = { themeColor: '#0e2219' };
 
 /**
- * Round 9 in open air, green first (Bob, 2026-11-10: "use nature too since its related to clean energy", "i do want
- * the main color to be green tho"). The first view in a green valley with the solar island; Jontai Rewards next; the
- * six ranges as islands lower down; the store's three promises; the visit; the original footer. Bundle offers sit in
- * the header.
+ * Round 12, green first and in one voice (Bob, 2026-11-11, after squared-media and Novair): the first view on deep
+ * green with the valley inside JONTAI; Jontai Rewards sliding over it; why the store is different; the six ranges as
+ * a collection; what it offers; the people behind it; what customers say on Google; the visit; the footer. Each has
+ * its own character and its own way of arriving, in two greens and the same type. Bundle offers sit in the header.
  */
 export default function Home() {
   return (
@@ -27,8 +30,11 @@ export default function Home() {
           <Hero />
         </SkyScope>
         <Rewards />
-        <Islands />
-        <Statement />
+        <Why />
+        <Collection />
+        <Offer />
+        <Team />
+        <Reviews />
         <Visit />
       </main>
       <Footer />

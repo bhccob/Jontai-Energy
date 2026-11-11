@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react';
+import { FitText } from '@/components/ui/FitText';
 import { SkyVideo } from './SkyVideo';
 
 /**
- * The open-air first view (round 9, nature direction): one green valley in morning mist holds still behind it while it
- * scrolls, and leaves with it (clipped). The still paints first; the moving valley fades in over it (SkyVideo). The
- * light follows the sun over Oranjestad (html[data-daypart], set by SunClock). Phones get a portrait slice.
+ * The first view's backdrop (round 12, Bob: the valley and grass made it "cluttered"): a plain deep green, with the
+ * moving valley showing only through the letters of JONTAI across the foot of the screen. The valley (still, then the
+ * loop) sits at the back; over it a deep green layer multiplies, white where the letters are, so the valley comes
+ * through them and everywhere else is the green. Held still behind the first view while it scrolls (sticky), clipped
+ * to it. Phones get a portrait slice of the valley.
  */
 export function SkyScope({ children }: { children: ReactNode }) {
   return (
@@ -27,6 +30,9 @@ export function SkyScope({ children }: { children: ReactNode }) {
             />
           </picture>
           <SkyVideo />
+        </div>
+        <div className="sky__ink">
+          <FitText text="JONTAI" chars className="sky__name" />
         </div>
       </div>
       {children}

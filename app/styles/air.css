@@ -154,186 +154,991 @@ main.air {
   outline-color: var(--leaf-ink);
 }
 
-/* ---------- What we sell: the archipelago, then one Aruban day ---------- */
 
-/* Not the valley of the first view: here the air itself is the colour of a moment of the day (lib/islands, day), with
-   a soft light where the sun, a lamp or the moon would be. Words take their colour from the air (currentColor), so the
-   walk can carry them from dark on morning green to light on night green. */
-.islands {
+/* ---------- One voice (round 12): the old narrow bold labels and figures take the page's type ---------- */
+
+.label {
+  font-stretch: 100%;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+.figure {
+  font-stretch: 112%;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+.visit__street {
+  font-stretch: 125%;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+/* The small numbered kickers, after Novair's "(01) Projects". */
+:is(.why__kicker, .collection__kicker, .offer-list__kicker) {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+:is(.why__kicker, .collection__kicker, .offer-list__kicker) span {
+  margin-right: 6px;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Why Jontai (deep green) ---------- */
+
+.why {
   position: relative;
   z-index: 1;
-  background: var(--leaf);
-}
-/* The archipelago: the six ranges as islands around the title, on the deep green. By default (phones, short screens,
-   reduced motion) it is a plain index: the words, then the islands in rows with their names. */
-.archipelago {
-  position: relative;
-  z-index: 2;
+  padding: clamp(110px, 16vh, 180px) var(--gutter) clamp(90px, 14vh, 150px);
   background: var(--deep);
   color: var(--deep-ink);
 }
-.archipelago__inner {
-  position: relative;
-  padding: clamp(96px, 14vh, 150px) var(--gutter) clamp(72px, 10vh, 110px);
-  overflow: clip;
+.why__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
 }
-.archipelago__head {
-  position: relative;
-  z-index: 2;
-  max-width: 54rem;
-  margin: 0 auto;
-  text-align: center;
+.why__kicker {
+  color: var(--color-mint);
 }
-.archipelago__title {
-  font-size: clamp(2.8rem, 6.4vw, 7.2rem);
-}
-.archipelago__lead {
-  max-width: 34em;
-  margin: 26px auto 0;
+.why__side {
+  max-width: 22rem;
+  margin: 0;
   color: var(--deep-muted);
-  font-size: clamp(1.05rem, 0.3vw + 0.98rem, 1.2rem);
+  font-size: 0.95rem;
   line-height: 1.5;
+  text-align: right;
 }
-.archipelago__isles {
+/* The sentence, filled in word by word (PageMotion, data-fill), with the products set into it. */
+.why__big {
+  max-width: 21ch;
+  margin: clamp(40px, 7vh, 72px) 0 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 108%;
+  font-size: clamp(2.4rem, 5.2vw, 6rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+.why__big .soft {
+  color: var(--deep-muted);
+}
+.why__pic {
+  display: inline-block;
+  width: 1.9em;
+  height: 0.92em;
+  margin: 0 0.06em;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(circle at 50% 30%, #27523d, #173d2c);
+  vertical-align: -0.06em;
+}
+.why__pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  scale: 1.25;
+  translate: 0 6%;
+}
+.js .why__pic[data-reveal] {
+  transform: scale(0.2) rotate(-10deg);
+  transition:
+    opacity 700ms ease,
+    transform 1100ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(var(--i, 0) * 160ms + 150ms);
+}
+.js .why__pic[data-reveal].is-in {
+  transform: none;
+}
+.why__points {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 36px 20px;
+  gap: 0 clamp(24px, 4vw, 64px);
+  margin: clamp(80px, 12vh, 130px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.why__points li {
+  position: relative;
+}
+.why__points .rule {
+  margin-bottom: 22px;
+  color: rgb(244 246 239 / 0.3);
+}
+.why__num {
+  color: var(--color-mint);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.why__icon {
+  display: block;
+  margin: 18px 0 16px;
+  color: var(--color-mint);
+}
+.why__name {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: clamp(1.3rem, 1.4vw + 0.6rem, 1.8rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.why__points p {
+  max-width: 26em;
+  margin: 0;
+  color: var(--deep-muted);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+/* ---------- What we sell: the collection (deep green), after Novair's featured work ---------- */
+
+.collection {
+  position: relative;
+  z-index: 1;
+  background: var(--deep);
+  color: var(--deep-ink);
+}
+.collection__pin {
+  padding: clamp(60px, 10vh, 110px) var(--gutter) clamp(90px, 14vh, 140px);
+}
+.collection__track {
+  display: grid;
+  gap: 72px;
+}
+.collection__kicker {
+  color: var(--color-mint);
+}
+.collection__title {
+  margin-top: 20px;
+  font-size: clamp(2.6rem, 5vw, 5.6rem);
+}
+.collection__lead {
+  max-width: 26rem;
+  margin: 24px 0 0;
+  color: var(--deep-muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.collection__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  margin-top: 36px;
+}
+.collection__count {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.collection__count span {
+  color: var(--deep-muted);
+  font-variant-numeric: tabular-nums;
+}
+.collection__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1.5px rgb(244 246 239 / 0.35);
+  color: var(--deep-ink);
+  font-weight: 650;
+  text-decoration: none;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .collection__all:hover {
+    background: var(--deep-ink);
+    color: var(--deep);
+    box-shadow: none;
+  }
+}
+
+/* A range: its frame, then its name and figures under it, as a portfolio lists a piece. */
+.piece {
+  display: grid;
+  gap: 18px;
+  max-width: 30rem;
+}
+.piece:focus {
+  outline: none;
+}
+.piece__frame {
+  position: relative;
+  aspect-ratio: 5 / 6;
+  overflow: hidden;
+  border-radius: 6px;
+  background: radial-gradient(70% 60% at 50% 35%, #ffffff, var(--mist) 70%);
+  transform-style: preserve-3d;
+}
+.piece[data-night] .piece__frame {
+  background: radial-gradient(70% 60% at 50% 35%, #26503b, #12291e 75%);
+}
+.piece__count {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  left: 14px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgb(14 34 25 / 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--deep-ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.piece__open {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 12% 10%;
+  border: 0;
+  background: none;
+  cursor: none;
+}
+@media (hover: none), (pointer: coarse) {
+  .piece__open {
+    cursor: pointer;
+  }
+}
+.piece__open:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: -6px;
+}
+.piece__float {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.piece__float img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 30px rgb(5 20 12 / 0.28));
+  transition: scale 900ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .piece__frame:hover .piece__float img {
+    scale: 1.07;
+  }
+}
+.piece__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: clamp(1.7rem, 2.1vw, 2.3rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+.piece__line {
+  margin: 0;
+  color: var(--deep-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.piece__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+}
+.piece__facts > div {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.piece__facts dt {
+  color: var(--deep-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.piece__facts dd {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.piece__note {
+  margin: 0;
+  color: rgb(244 246 239 / 0.55);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+.piece__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+.piece__actions .textlink {
+  --link-line: rgb(184 216 168 / 0.5);
+  font-size: 0.92rem;
+}
+.collection :focus-visible {
+  outline-color: var(--color-mint);
+}
+.piece .lamp-slider {
+  margin: 4px 0 0;
+}
+.piece .lamp-slider__row {
+  font-size: 0.9rem;
+}
+.piece .lamp-slider__value .figure {
+  font-size: 1.25rem;
+}
+.piece .lamp-slider__ends {
+  font-size: 0.75rem;
+}
+
+/* The way out at the end of the row. */
+.collection__end {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--deep-ink);
+  text-decoration: none;
+}
+.collection__ring {
+  display: grid;
+  place-items: center;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgb(244 246 239 / 0.35);
+  transition:
+    background-color 400ms ease,
+    color 400ms ease,
+    rotate 600ms var(--ease-out);
+}
+.collection__end-text {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: 1.6rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+@media (hover: hover) and (pointer: fine) {
+  .collection__end:hover .collection__ring {
+    background: var(--color-mint);
+    color: var(--deep);
+    rotate: 45deg;
+  }
+}
+
+/* The row: wide screens with motion. It holds for the scroll and moves sideways (CollectionMotion), the frames at
+   staggered heights. */
+.collection[data-row] .collection__pin {
+  height: 100svh;
+  padding: 0;
+  overflow: clip;
+}
+.collection[data-row] .collection__track {
+  display: flex;
+  align-items: flex-start;
+  gap: 4.5vw;
+  width: max-content;
+  height: 100%;
+  padding: calc(var(--nav-h) + 4vh) 10vw 0 var(--gutter);
+}
+.collection[data-row] .collection__head {
+  flex: 0 0 min(36vw, 36rem);
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 7vh;
+}
+.collection[data-row] .collection__title {
+  font-size: clamp(2.4rem, 3.7vw, 4.6rem);
+}
+.collection[data-row] .collection__foot {
+  margin-top: auto;
+}
+.collection[data-row] .piece {
+  flex: 0 0 auto;
+  width: clamp(250px, 20vw, 340px);
+}
+.collection[data-row] .piece:nth-of-type(3n + 1) {
+  margin-top: 1vh;
+}
+.collection[data-row] .piece:nth-of-type(3n + 2) {
+  margin-top: 13vh;
+}
+.collection[data-row] .piece:nth-of-type(3n) {
+  margin-top: 6vh;
+}
+.collection[data-row] .collection__end {
+  align-self: center;
+}
+
+/* The round "View" that follows the pointer over a frame (CollectionMotion). */
+.view-cursor {
+  position: fixed;
+  z-index: 50;
+  top: -44px;
+  left: -44px;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--color-mint);
+  color: var(--deep);
+  font-weight: 700;
+  font-size: 0.9rem;
+  pointer-events: none;
+  scale: 0;
+  transition: scale 350ms var(--ease-out);
+}
+.view-cursor[data-on] {
+  scale: 1;
+}
+
+/* ---------- What we offer (mist), after Novair's services ---------- */
+
+.offer-list {
+  position: relative;
+  z-index: 1;
+  padding: clamp(110px, 16vh, 180px) var(--gutter) clamp(90px, 14vh, 150px);
+  background: var(--mist);
+  color: var(--leaf-ink);
+}
+.offer-list__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  align-items: end;
+  gap: 24px 40px;
+}
+.offer-list__kicker {
+  grid-column: 1 / -1;
+  color: var(--leaf-muted);
+}
+.offer-list__title {
+  font-size: clamp(2.6rem, 6vw, 6.6rem);
+}
+.offer-list__side {
+  margin: 0;
+  color: var(--leaf-muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.offer-list__rows {
+  margin: clamp(56px, 9vh, 96px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--leaf-rule);
+}
+.offer-list__rows li {
+  border-top: 1px solid var(--leaf-rule);
+}
+.offer-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1.05fr) minmax(0, 1fr) 56px;
+  align-items: center;
+  gap: 12px 28px;
+  padding: clamp(22px, 3.4vh, 34px) 0;
+  color: inherit;
+  text-decoration: none;
+}
+.offer-row__num {
+  color: var(--leaf-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: color 300ms ease;
+}
+.offer-row__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: clamp(1.6rem, 2.7vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  transition: translate 600ms var(--ease-out);
+}
+.offer-row__body {
+  display: grid;
+  gap: 12px;
+}
+.offer-row__text {
+  color: var(--leaf-muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.offer-row__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.offer-row__tags span {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--leaf-rule);
+  color: var(--leaf-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.offer-row__go {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
+  transition:
+    background-color 400ms ease,
+    color 400ms ease,
+    rotate 600ms var(--ease-out),
+    box-shadow 400ms ease;
+}
+.offer-row:focus-visible {
+  outline: 2px solid var(--leaf-ink);
+  outline-offset: 4px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer-row:hover .offer-row__title {
+    translate: 18px 0;
+  }
+  .offer-row:hover .offer-row__num {
+    color: var(--leaf-ink);
+  }
+  .offer-row:hover .offer-row__go {
+    background: var(--leaf-ink);
+    color: var(--mist);
+    box-shadow: none;
+    rotate: 45deg;
+  }
+}
+
+/* ---------- The people behind it (mist), after squared-media ---------- */
+
+.team {
+  position: relative;
+  z-index: 1;
+  padding: clamp(40px, 6vh, 70px) var(--gutter) clamp(100px, 15vh, 160px);
+  background: var(--mist);
+  color: var(--leaf-ink);
+}
+.team__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  align-items: end;
+  gap: 24px 40px;
+}
+.team__title {
+  font-size: clamp(2.6rem, 6vw, 6.6rem);
+}
+.team__title .team__indent {
+  padding-left: 1.4em;
+}
+.team__side {
+  margin: 0;
+  color: var(--leaf-muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.team__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
   margin: clamp(48px, 7vh, 72px) 0 0;
   padding: 0;
   list-style: none;
 }
-.isle {
+.person__frame {
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #cfd8c8;
+}
+.person__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+  scale: 1.02;
+  transition:
+    filter 900ms ease,
+    scale 1200ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .person:hover .person__frame img {
+    filter: grayscale(0) contrast(1);
+    scale: 1.06;
+  }
+}
+.person__name {
+  margin: 18px 0 4px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: clamp(1.5rem, 2vw, 2.1rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+.person__role {
+  margin: 0;
+  color: var(--leaf-muted);
+  font-size: 0.98rem;
+}
+.team__hello {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  color: inherit;
-  text-decoration: none;
+  aspect-ratio: 4 / 5;
+  padding: clamp(24px, 2.6vw, 38px);
+  border-radius: 20px;
+  background: var(--deep);
+  color: var(--deep-ink);
 }
-.isle__float {
-  display: block;
-  width: 100%;
-}
-.isle img {
-  display: block;
-  width: 100%;
-  max-height: 34vw;
-  object-fit: contain;
-  filter: drop-shadow(0 26px 26px rgb(0 0 0 / 0.35));
-  transition:
-    scale 700ms var(--ease-out),
-    translate 700ms var(--ease-out),
-    opacity 500ms ease;
-}
-.isle__name {
+.team__hello-kicker {
+  margin: 0;
+  color: var(--color-mint);
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.team__hello-title {
+  margin: 18px 0 14px;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.team__hello-text {
+  max-width: 22rem;
+  margin: 0;
+  color: var(--deep-muted);
   font-size: 1rem;
-  transition:
-    opacity 400ms ease,
-    transform 500ms var(--ease-out),
-    color 300ms ease;
+  line-height: 1.55;
 }
-.isle:focus-visible {
-  outline-color: var(--color-mint);
-  outline-offset: 8px;
+.team__hello-cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: auto;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  background: var(--deep-ink);
+  color: var(--deep);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: background-color 300ms ease;
 }
-.archipelago__dawn {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: var(--mist);
-  opacity: 0;
-  pointer-events: none;
-}
-@keyframes isle-bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
+@media (hover: hover) and (pointer: fine) {
+  .team__hello-cta:hover {
+    background: var(--color-mint);
   }
-  50% {
-    transform: translateY(-12px) rotate(0.8deg);
+}
+/* The photos and the panel arrive one after another. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .team__grid > li {
+    opacity: 0;
+    translate: 0 60px;
+    transition:
+      opacity 900ms ease,
+      translate 1100ms var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 120ms);
+  }
+  .js .team__grid.is-in > li {
+    opacity: 1;
+    translate: 0 0;
   }
 }
 
-/* Floating: wide and tall enough, and motion allowed. The words hold in the middle of the screen while the islands
-   drift around them; the extra height is the scroll they scatter over (ArchipelagoMotion). */
-@media (min-width: 961px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
-  .archipelago {
-    height: 240svh;
-  }
-  .archipelago__inner {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    display: grid;
-    place-items: center;
-    padding: 0 var(--gutter);
-  }
-  .archipelago__isles {
-    position: absolute;
-    inset: 0;
-    display: block;
-    margin: 0;
-  }
-  .archipelago__isles > li {
-    position: absolute;
-    left: var(--x);
-    top: var(--y);
-    width: 0;
-    height: 0;
-  }
-  .isle {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: calc(var(--w) * 1vw);
-    transform: translate(-50%, -50%);
-  }
-  .isle img {
-    max-height: none;
-    animation: isle-bob 7s ease-in-out infinite;
-    animation-delay: calc(var(--i) * -1.3s);
-  }
-  /* Its name comes up under an island the pointer is on; the others step back. */
-  .isle__name {
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    color: var(--color-mint);
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-stretch: 112%;
-    font-size: 1.15rem;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translate(-50%, 10px);
-  }
-  .isle:is(:hover, :focus-visible) .isle__name {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-  .isle:is(:hover, :focus-visible) img {
-    scale: 1.08;
-    translate: 0 -12px;
-  }
-  .archipelago__isles:has(.isle:hover) .isle:not(:hover) img {
-    opacity: 0.45;
+/* ---------- What customers say (deep green), on an arc after squared-media ---------- */
+
+.reviews {
+  position: relative;
+  z-index: 1;
+  overflow: clip;
+  padding: clamp(110px, 16vh, 170px) var(--gutter) clamp(90px, 13vh, 140px);
+  background: var(--deep);
+  color: var(--deep-ink);
+  text-align: center;
+}
+.reviews__title {
+  max-width: 24ch;
+  margin: 0 auto;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2.2rem, 4.6vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+.reviews__title .soft {
+  color: var(--deep-muted);
+}
+.reviews__title > span {
+  display: block;
+}
+.reviews__arc {
+  position: relative;
+  height: clamp(320px, 42vh, 400px);
+  margin: clamp(56px, 8vh, 80px) auto 0;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.reviews__arc:active {
+  cursor: grabbing;
+}
+.reviews__arc:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 8px;
+  border-radius: 24px;
+}
+/* Every card turns about a point far below the middle, so together they lie on a curve. */
+.review {
+  --w: min(360px, 76vw);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--w);
+  margin: 0 0 0 calc(var(--w) / -2);
+  padding: 26px 26px 22px;
+  border-radius: 22px;
+  background: #16301f;
+  box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.08);
+  text-align: left;
+  transform-origin: 50% 340%;
+  transform: rotate(calc(var(--o) * 11deg));
+  opacity: calc(1 - var(--d) * 0.3);
+  z-index: calc(10 - var(--d));
+  transition:
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 600ms ease,
+    background-color 600ms ease;
+}
+.review[data-at] {
+  background: #1d3f2d;
+}
+.review[style*='--d: 3'],
+.review[style*='--d: 4'] {
+  opacity: 0;
+  pointer-events: none;
+}
+.review__stars {
+  display: flex;
+  gap: 3px;
+  color: var(--color-mint);
+}
+.review__text {
+  margin: 16px 0 22px;
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+.review__who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgb(244 246 239 / 0.12);
+}
+.review__initial {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-mint);
+  color: var(--deep);
+  font-weight: 700;
+}
+.review__name {
+  display: block;
+  font-weight: 650;
+}
+.review__when {
+  display: block;
+  color: var(--deep-muted);
+  font-size: 0.82rem;
+}
+.reviews__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+.reviews__btn {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  box-shadow: inset 0 0 0 1.5px rgb(244 246 239 / 0.35);
+  color: var(--deep-ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    scale 120ms ease-out;
+}
+.reviews__btn--next {
+  background: var(--deep-ink);
+  color: var(--deep);
+  box-shadow: none;
+}
+.reviews__btn:active {
+  scale: 0.97;
+}
+@media (hover: hover) and (pointer: fine) {
+  .reviews__btn:hover {
+    background: var(--color-mint);
+    color: var(--deep);
+    box-shadow: none;
   }
 }
-@media (max-width: 40rem) {
-  .archipelago__isles {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.reviews__dots {
+  display: flex;
+  gap: 6px;
+}
+.reviews__dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(244 246 239 / 0.3);
+  transition:
+    background-color 300ms ease,
+    width 400ms var(--ease-out);
+}
+.reviews__dots i[data-on] {
+  width: 18px;
+  border-radius: 3px;
+  background: var(--color-mint);
+}
+.reviews__google {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 26px;
+  color: var(--deep-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.reviews__google:hover {
+  color: var(--deep-ink);
+}
+
+/* ---------- Footer, in the page's voice ---------- */
+
+.footer {
+  padding: clamp(90px, 14vh, 140px) var(--gutter) 28px;
+  background: var(--deep);
+  color: var(--deep-muted);
+  text-align: left;
+}
+.footer__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr);
+  align-items: start;
+  gap: 40px;
+}
+.footer__say {
+  margin: 0;
+  color: var(--deep-ink);
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2rem, 3.6vw, 3.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+.footer__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  justify-items: start;
+}
+.footer__nav ul {
+  display: grid;
+  justify-content: start;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.footer__head {
+  margin: 0 0 16px;
+  color: var(--color-mint);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.footer__nav :is(a, button) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  color: var(--deep-ink);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer__nav :is(a, button):hover {
+    color: var(--color-mint);
   }
-  .isle img {
-    max-height: 44vw;
-  }
+}
+.footer__mark {
+  margin: clamp(70px, 12vh, 130px) 0 0;
+  color: var(--deep-ink);
+  font-weight: 300;
+  font-stretch: 125%;
+  letter-spacing: -0.04em;
+}
+.footer__fine {
+  border-top-color: rgb(244 246 239 / 0.12);
+  color: var(--deep-muted);
 }
 
 /* ---------- The lighting island's bulb: its light in the slider's colour (LampSlider) ---------- */
 
-.island[data-lamp] {
+.piece[data-lamp] {
   --kelvin: 255 167 87;
 }
 .lamp {
@@ -424,268 +1229,6 @@ main.air {
   font-size: 0.85rem;
 }
 
-.islands__rail {
-  position: relative;
-  overflow: clip;
-  background: var(--day-bg);
-  color: var(--day-ink);
-}
-/* The light of the moment: a wide soft glow, never a shape with an edge. */
-.islands__air {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.islands__glow,
-.island::before {
-  position: absolute;
-  left: var(--day-x);
-  top: var(--day-y);
-  width: max(90vmax, 900px);
-  aspect-ratio: 1;
-  background: radial-gradient(closest-side, var(--day-glow), transparent);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.islands:not([data-walk='true']) .islands__air {
-  display: none;
-}
-.islands__track {
-  position: relative;
-  z-index: 1;
-}
-.island {
-  position: relative;
-  overflow: clip;
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  align-items: center;
-  gap: clamp(24px, 4vw, 72px);
-  padding: clamp(80px, 12vh, 120px) var(--gutter);
-  background: var(--day-bg);
-  color: var(--day-ink);
-}
-/* Stacked, each island brings its own light. */
-.island::before {
-  content: '';
-}
-.island > * {
-  position: relative;
-}
-.island:focus {
-  outline: none;
-}
-.island__when {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin: 0 0 18px;
-  font-weight: 600;
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
-}
-.island__count {
-  font-variant-numeric: tabular-nums;
-  opacity: 0.6;
-}
-.island__name {
-  font-size: clamp(2.6rem, 5.4vw, 6.2rem);
-}
-.island__line {
-  max-width: 28em;
-  margin: 26px 0 0;
-  color: color-mix(in srgb, currentColor 90%, transparent);
-  font-size: clamp(1.1rem, 0.35vw + 1rem, 1.3rem);
-  line-height: 1.5;
-}
-.island__facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, auto));
-  justify-content: start;
-  gap: 0 clamp(20px, 3vw, 44px);
-  margin: 30px 0 0;
-}
-.island__facts > div {
-  display: flex;
-  flex-direction: column;
-  padding-top: 12px;
-  border-top: 1px solid color-mix(in srgb, currentColor 34%, transparent);
-}
-.island__facts dt {
-  order: 2;
-  margin-top: 6px;
-  color: color-mix(in srgb, currentColor 76%, transparent);
-  font-size: 0.9rem;
-}
-.island__facts dd {
-  margin: 0;
-  font-size: clamp(1.7rem, 2.4vw, 2.5rem);
-}
-.island__note {
-  max-width: 34em;
-  margin: 22px 0 0;
-  color: color-mix(in srgb, currentColor 74%, transparent);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-.island__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 28px;
-  margin-top: 30px;
-}
-.islands__rail .textlink {
-  --link-line: color-mix(in srgb, currentColor 45%, transparent);
-}
-.islands__rail :focus-visible {
-  outline-color: currentColor;
-}
-.island__pic {
-  margin: 0;
-  justify-self: center;
-  filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.32));
-}
-/* The lamp island keeps its shadow on the picture, so the bulb's light does not cast one. */
-.island[data-lamp] .island__pic {
-  filter: none;
-}
-.island[data-lamp] .island__pic img {
-  filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.32));
-}
-.island__pic img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: min(64vh, 640px);
-  object-fit: contain;
-}
-@keyframes island-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .island__float {
-    animation: island-bob 7s ease-in-out infinite;
-  }
-  .island:nth-child(2n) .island__float {
-    animation-delay: -2.4s;
-  }
-  .island:nth-child(3n) .island__float {
-    animation-delay: -4.6s;
-  }
-}
-
-/* The six names along the bottom; on the walk they show where you are and jump there. */
-.islands__index {
-  display: none;
-}
-.islands[data-walk='true'] .islands__index {
-  display: block;
-  position: absolute;
-  z-index: 2;
-  left: var(--gutter);
-  right: var(--gutter);
-  bottom: clamp(48px, 7vh, 72px);
-}
-.islands__index ul {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid color-mix(in srgb, currentColor 28%, transparent);
-}
-.islands__index a {
-  position: relative;
-  display: block;
-  padding: 16px 12px 6px 0;
-  color: color-mix(in srgb, currentColor 62%, transparent);
-  font-weight: 500;
-  font-size: 1.05rem;
-  text-decoration: none;
-  transition: color 300ms ease;
-}
-.islands__index a::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 24px;
-  height: 2px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 600ms var(--ease-out);
-}
-.islands__index a[aria-current='true'],
-.islands__index a:is(:hover, :focus-visible) {
-  color: inherit;
-}
-.islands__index a[aria-current='true']::before {
-  transform: none;
-}
-
-/* On the walk: the islands side by side, one screen each, held still while the scroll moves them; the air and the light
-   belong to the rail, and blend from one moment to the next. */
-.islands[data-walk='true'] .islands__rail {
-  height: 100svh;
-}
-.islands[data-walk='true'] .islands__track {
-  display: flex;
-  width: calc(100% * 6);
-  height: 100%;
-}
-.islands[data-walk='true'] .island {
-  flex: 0 0 calc(100% / 6);
-  height: 100%;
-  padding-bottom: clamp(120px, 18vh, 170px);
-  background: none;
-  color: inherit;
-  overflow: visible;
-}
-.islands[data-walk='true'] .island::before {
-  display: none;
-}
-
-/* ---------- The store's three promises ---------- */
-
-/* Sunlight through a window, following the pointer (StatementLight). The registered properties let it ease along. */
-@property --mx {
-  syntax: '<length-percentage>';
-  inherits: false;
-  initial-value: 72%;
-}
-@property --my {
-  syntax: '<length-percentage>';
-  inherits: false;
-  initial-value: 30%;
-}
-.air .statement {
-  position: relative;
-  z-index: 1;
-  background:
-    radial-gradient(min(60vw, 720px) circle at var(--mx) var(--my), rgb(255 255 255 / 0.8), rgb(255 255 255 / 0) 70%),
-    var(--mist);
-  color: var(--leaf-ink);
-  transition:
-    --mx 1100ms var(--ease-out),
-    --my 1100ms var(--ease-out);
-}
-/* Lighter and wider, in the voice of the headings above it. */
-.air .statement__big {
-  font-weight: 400;
-  font-stretch: 108%;
-  letter-spacing: -0.03em;
-}
-.air .statement__big .soft {
-  color: rgb(23 61 44 / 0.6);
-}
-
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 60rem) {
@@ -702,29 +1245,58 @@ main.air {
   .rewards-air__steps li + li {
     margin-top: 28px;
   }
-  .island {
+  .why__top {
+    flex-direction: column;
+  }
+  .why__side {
+    text-align: left;
+  }
+  .why__points {
     grid-template-columns: minmax(0, 1fr);
-    padding-block: 64px;
+    gap: 40px;
   }
-  /* Full width, so each picture's box is known before it loads and nothing below it jumps. */
-  .island__pic {
-    order: -1;
-    justify-self: stretch;
+  .offer-list__top,
+  .team__top {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .island__pic img {
-    height: auto;
-    width: min(100%, 30rem);
-    margin-inline: auto;
+  .offer-row {
+    grid-template-columns: 3rem minmax(0, 1fr) 48px;
   }
-  .island__facts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .offer-row__body {
+    grid-column: 2 / -1;
+  }
+  .offer-row__go {
+    grid-row: 1;
+    grid-column: 3;
+    width: 44px;
+    height: 44px;
+  }
+  .team__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .team__hello {
+    grid-column: 1 / -1;
+    aspect-ratio: auto;
+    min-height: 260px;
+  }
+  .footer__top {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 40rem) {
   .rewards-air .actions .btn {
     flex: 1 1 auto;
   }
-  .island__facts dd {
-    font-size: 1.5rem;
+  .collection__track {
+    gap: 56px;
+  }
+  .team__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .footer__nav {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .reviews__nav {
+    gap: 10px;
   }
 }

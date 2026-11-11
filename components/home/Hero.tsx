@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react';
 import { ArrowDown, ArrowRight } from '@phosphor-icons/react/dist/ssr';
-import { FitText } from '@/components/ui/FitText';
 import { HOME_COPY } from '@/lib/products';
 import { HeroSkyMotion } from './HeroSkyMotion';
 import { SunClock } from './SunClock';
@@ -9,11 +8,10 @@ import { SunClock } from './SunClock';
 const at = (d: number) => ({ '--d': d }) as CSSProperties;
 
 /**
- * The first view, kept to a few things (Bob, round 11: "too cluttered"): the live line about the sun over the store,
- * the owner's line in thin wide capitals, one sentence that says what the store is, one way in. Under it the landscape:
- * the moving valley at the back (SkyScope), JONTAI standing in it across the whole width, the solar island floating in
- * front of the name and the grass nearest the eye. The valley opens like a window as the page arrives (sky.css), and
- * HeroSkyMotion pulls the layers apart as the next section slides over.
+ * The first view, kept to a few things on a plain deep green (Bob, rounds 11 and 12: "too cluttered"): the live line
+ * about the sun over the store, the owner's line in thin wide capitals, one sentence that says what the store is, one
+ * way in. Under it the solar island floats in front of JONTAI, whose letters show the moving valley (SkyScope).
+ * HeroSkyMotion pulls the layers apart as Rewards slides over.
  */
 export function Hero() {
   const { hero } = HOME_COPY;
@@ -58,7 +56,7 @@ export function Hero() {
             <img
               src="/sky/island-array-1200.webp"
               srcSet="/sky/island-array-700.webp 700w, /sky/island-array-1200.webp 1200w"
-              sizes="(max-width: 60rem) 88vw, 36vw"
+              sizes="(max-width: 60rem) 88vw, 40vw"
               alt=""
               width={1200}
               height={903}
@@ -67,24 +65,6 @@ export function Hero() {
             />
           </div>
         </figure>
-        {/* The name stands in the valley behind the island; decorative, the header already says it. */}
-        <div className="hero__word">
-          <FitText text="JONTAI" chars />
-        </div>
-      </div>
-
-      {/* Out-of-focus grass close to the eye, over the foot of the name and the island's shadow. */}
-      <div className="hero__grass" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/sky/grass-front-1280.webp"
-          srcSet="/sky/grass-front-1280.webp 1280w, /sky/grass-front-2560.webp 2560w"
-          sizes="100vw"
-          alt=""
-          width={1280}
-          height={304}
-          decoding="async"
-        />
       </div>
       <div className="hero__shade" aria-hidden="true" />
       <HeroSkyMotion />
