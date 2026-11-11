@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { scrollTargets } from '@/components/providers/scrollTargets';
+import { DAY_INK, dayVars, type Day } from '@/lib/islands';
 import { useSettle } from './useSettle';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -25,13 +26,15 @@ const NEAR = 0.22;
 interface Item {
   id: string;
   name: string;
+  day: Day;
 }
 
 /**
  * The island walk. On wide screens with motion the rail holds still and the scroll moves the islands sideways, one at a
  * time: each holds to be read, then the next drifts in from the right and a little below while the last one lifts away
  * up and to the left, and its words arrive with it as one block (never faded). A scroll that rests mid-drift settles
- * onto the next island in the direction it was going. The names along the bottom show where you are and jump there.
+ * onto the next island in the direction it was going. The air between them changes colour through the day and the
+ * light moves with it. The names along the bottom show where you are and jump there.
  * Elsewhere the islands stack and this adds nothing but the names.
  */
 export function IslandWalk({ items }: { items: Item[] }) {
@@ -51,12 +54,31 @@ export function IslandWalk({ items }: { items: Item[] }) {
     if (!rail || !section || !track) return;
     const slides = gsap.utils.toArray<HTMLElement>(track.children);
     const pics = slides.map((s) => s.querySelector<HTMLElement>('.island__pic'));
+    const words = slides.map((s) => gsap.utils.toArray<HTMLElement>(s.querySelectorAll('.island__text > *')));
     const n = slides.length;
     const held = (i: number) => i * (HOLD + MOVE);
     const total = held(n - 1) + HOLD;
 
+    // The colour of the air between two moments of the day, written straight onto the rail (GSAP reads unset custom
+    // properties as transparent, so they are mixed here instead).
+    const air = { k: 0 };
+    const drift = gsap.parseEase('power1.inOut');
+    const paint = () => {
+      const a = Math.max(0, Math.min(n - 1, Math.floor(air.k)));
+      const b = Math.min(n - 1, a + 1);
+      const t = air.k - a;
+      const [da, db] = [items[a].day, items[b].day];
+      rail.style.setProperty('--day-bg', mix(da.bg, db.bg, t));
+      rail.style.setProperty('--day-ink', mix(DAY_INK[da.ink], DAY_INK[db.ink], t));
+      rail.style.setProperty('--day-glow', mix(da.glow, db.glow, t));
+      rail.style.setProperty('--day-x', `${da.at[0] + (db.at[0] - da.at[0]) * t}%`);
+      rail.style.setProperty('--day-y', `${da.at[1] + (db.at[1] - da.at[1]) * t}%`);
+    };
+
     const walk = () => {
       section.dataset.walk = 'true';
+      air.k = 0;
+      paint();
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
@@ -69,6 +91,11 @@ export function IslandWalk({ items }: { items: Item[] }) {
           onUpdate: (self) => {
             const at = self.progress * total;
             setActive(Math.min(n - 1, Math.max(0, Math.round((at - HOLD / 2) / (HOLD + MOVE)))));
+            // The air follows the scroll itself: still through each hold, blending through each drift.
+            const i = Math.floor(at / (HOLD + MOVE));
+            const into = at - i * (HOLD + MOVE);
+            air.k = Math.min(n - 1, i + (into > HOLD ? drift((into - HOLD) / MOVE) : 0));
+            paint();
           },
         },
       });
@@ -77,12 +104,20 @@ export function IslandWalk({ items }: { items: Item[] }) {
         tl.fromTo(track, { xPercent: -((i - 1) * 100) / n }, { xPercent: -(i * 100) / n, duration: MOVE, ease: 'power1.inOut', immediateRender: i === 1 }, at);
         if (pics[i]) tl.fromTo(pics[i], { xPercent: 22, yPercent: 14, scale: 0.86 }, { xPercent: 0, yPercent: 0, scale: 1, duration: MOVE, ease: 'power2.out' }, at);
         if (pics[i - 1]) tl.fromTo(pics[i - 1], { xPercent: 0, yPercent: 0, scale: 1 }, { xPercent: -16, yPercent: -18, scale: 0.9, duration: MOVE, ease: 'power2.in', immediateRender: false }, at);
+        // The words come in layers: the label first, the name, then the rest, each a little further behind.
+        tl.fromTo(words[i], { x: (k: number) => 80 + k * 46 }, { x: 0, duration: MOVE, ease: 'power3.out', stagger: 0.03, immediateRender: i === 1 }, at);
+        tl.fromTo(words[i - 1], { x: 0 }, { x: (k: number) => -40 - k * 22, duration: MOVE, ease: 'power2.in', stagger: 0.02, immediateRender: false }, at);
       }
+      // The last island's hold, as time on the timeline: without it the timeline would end with the last drift and the
+      // scroll would stretch it over the hold too, so every island would sit off its own stretch of scroll.
+      tl.to({}, { duration: HOLD }, held(n - 1));
       const st = tl.scrollTrigger as ScrollTrigger;
       const y = (at: number) => st.start + ((st.end - st.start) * at) / total;
       rests.current = () => ({ holds: items.map((_, i) => [y(held(i)), y(held(i) + HOLD)]), end: st.end });
       items.forEach((it, i) => scrollTargets.set(it.id, () => y(held(i) + HOLD / 2)));
       return () => {
+        rail.removeAttribute('style');
+        Object.entries(dayVars(items[0].day)).forEach(([k, v]) => rail.style.setProperty(k, v));
         items.forEach((it) => scrollTargets.delete(it.id));
         rests.current = null;
         delete section.dataset.walk;
@@ -138,6 +173,17 @@ export function IslandWalk({ items }: { items: Item[] }) {
       </ul>
     </nav>
   );
+}
+
+/** Two colours mixed, t from 0 to 1 (hex or rgba, as lib/islands writes them). */
+function mix(a: string, b: string, t: number) {
+  const ca = gsap.utils.splitColor(a) as number[];
+  const cb = gsap.utils.splitColor(b) as number[];
+  const c = [0, 1, 2, 3].map((j) => {
+    const x = ca[j] ?? 1;
+    return x + ((cb[j] ?? 1) - x) * t;
+  });
+  return `rgba(${Math.round(c[0])}, ${Math.round(c[1])}, ${Math.round(c[2])}, ${c[3].toFixed(3)})`;
 }
 
 /** Mid-drift from `from` to `to`: on in the direction the scroll was going once PUSH of the way in, else back. */

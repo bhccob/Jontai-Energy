@@ -24,3 +24,19 @@ All 1:1, 2K, high, transparent, GPT Image 2.6, with the island wording above and
 | `island-security.png` | 72cd0cd6 | the solar site camera: galvanised pole, white bullet camera on a bracket, small tilted solar panel on top |
 | `island-furniture.png` | 276737ac | the oak lounge chair with sage-green boucle cushions |
 | `grass-front.png` | 3e8fea6b | 21:9, 2K, high, transparent: tall wild grass blades and seed heads along the bottom edge, out of focus, backlit |
+
+## Third batch (approved by Bob on 2026-11-11, round 10: "motion" and "no two views the same")
+
+| File | Job | Settings | Prompt |
+| --- | --- | --- | --- |
+| `island-array.png` | 02e3e351 | GPT Image 2.6, 1:1, 2K, high, transparent, reference = `island-solar.png` at 1024 px (2.75 credits) | The same style as the reference picture: a floating island of thick green grass and pale limestone rock with hanging roots, seen slightly from above, carrying a neat row of four ground-mounted solar panels on an aluminium frame, a few white and yellow wildflowers, soft daylight from the upper left. Transparent background, nothing else in the picture, no text. |
+| `valley-loop.mp4` | 89d9c069 | Kling 3.0 Pro, 5 s, 16:9, sound off; start and end image both the centre 16:9 crop of `valley-green.png` at 1920 × 1080, so the loop has no seam (8.75 credits) | Locked-off camera, nearly still. Soft morning mist drifts slowly through the green valleys, low clouds move gently from left to right, sunlight slowly brightens and fades across the hills, trees and grass sway slightly in a light breeze. No camera movement, no new objects, no people, no animals, no text. Photographic, natural colours. |
+
+The array island is the first view's; the panel-and-inverter island stays with the Solar range, so the two never repeat.
+
+The loop is published with ffmpeg (not a project dependency; `npm i ffmpeg-static` anywhere and use its binary):
+
+```bash
+ffmpeg -i tools/sky/source/valley-loop.mp4 -an -vf "scale=1920:-2,format=yuv420p" -c:v libx264 -preset slow -crf 25 -profile:v high -movflags +faststart public/sky/valley-loop-1920.mp4
+ffmpeg -i tools/sky/source/valley-loop.mp4 -an -vf "scale=1920:-2" -c:v libvpx-vp9 -b:v 0 -crf 36 -row-mt 1 -deadline good -cpu-used 2 public/sky/valley-loop-1920.webm
+```

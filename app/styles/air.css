@@ -32,22 +32,90 @@ main.air {
   display: block;
 }
 
-/* ---------- The first view's foreground grass ---------- */
+/* ---------- The ranges ticker, under the first view ---------- */
 
-.hero__grass {
-  position: absolute;
-  z-index: 2;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
+/* A band of forest with the six names running across it, slow and endless; it pauses under the pointer. */
+@keyframes ticker-run {
+  to {
+    transform: translateX(calc(-100% / 3));
+  }
 }
-.hero__grass img {
-  display: block;
-  width: 100%;
-  height: auto;
-  /* In the shade close to the eye, so the ranges over it stay readable. */
-  filter: brightness(0.62) saturate(1.05);
+.ticker {
+  position: relative;
+  z-index: 1;
+  overflow: clip;
+  padding: clamp(18px, 3vh, 30px) 0;
+  background: var(--night-deep, #0f281d);
+  color: #e3eed7;
+}
+.ticker__track {
+  display: flex;
+  width: max-content;
+}
+.ticker__row {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ticker__row li {
+  display: flex;
+  align-items: center;
+}
+.ticker a {
+  padding: 0 0.32em;
+  color: inherit;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2.4rem, 5vw, 5.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 300ms ease;
+}
+.ticker__sep {
+  padding: 0 0.25em;
+  color: var(--color-mint);
+  font-size: clamp(2.4rem, 5vw, 5.4rem);
+  line-height: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ticker a:hover {
+    color: var(--color-mint);
+  }
+  .ticker:hover .ticker__track {
+    animation-play-state: paused;
+  }
+}
+.ticker a:focus-visible {
+  outline-color: var(--color-mint);
+  outline-offset: -4px;
+}
+.ticker:focus-within .ticker__track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ticker__track {
+    animation: ticker-run 42s linear infinite;
+  }
+}
+/* Still: one copy, wrapped. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    width: auto;
+    flex-wrap: wrap;
+    padding: 0 var(--gutter);
+  }
+  .ticker__row {
+    flex-wrap: wrap;
+  }
+  .ticker__row[aria-hidden='true'] {
+    display: none;
+  }
 }
 
 /* ---------- Jontai Rewards ---------- */
@@ -117,6 +185,7 @@ main.air {
 .rewards-air__card {
   justify-self: center;
   width: min(100%, 31rem);
+  will-change: transform;
 }
 .rewards-air__steps,
 .rewards-air__facts {
@@ -131,9 +200,9 @@ main.air {
   margin-top: clamp(72px, 11vh, 120px);
   counter-reset: step;
 }
-.rewards-air__steps li {
-  padding-top: 20px;
-  border-top: 1.5px solid var(--leaf-ink);
+.rewards-air__steps .rule {
+  margin-bottom: 20px;
+  color: var(--leaf-ink);
 }
 .rewards-air__steps h3 {
   margin: 0 0 10px;
@@ -164,19 +233,21 @@ main.air {
   outline-color: var(--leaf-ink);
 }
 
-/* ---------- The islands ---------- */
+/* ---------- The islands: one Aruban day ---------- */
 
+/* Not the valley of the first view: here the air itself is the colour of a moment of the day (lib/islands, day), with
+   a soft light where the sun, a lamp or the moon would be. Words take their colour from the air (currentColor), so the
+   walk can carry them from dark on morning green to light on night green. */
 .islands {
   position: relative;
   z-index: 1;
-  background: var(--night-deep);
-  color: #fbfcf8;
+  background: var(--leaf);
 }
 .islands__intro {
   position: relative;
   z-index: 2;
   /* The same leaf field runs on from Rewards, so a little less space before it. */
-  padding: clamp(48px, 8vh, 96px) var(--gutter) clamp(40px, 7vh, 72px);
+  padding: clamp(48px, 8vh, 96px) var(--gutter) clamp(48px, 8vh, 88px);
   background: var(--leaf);
   color: var(--leaf-ink);
 }
@@ -190,40 +261,66 @@ main.air {
 .islands__rail {
   position: relative;
   overflow: clip;
+  background: var(--day-bg);
+  color: var(--day-ink);
 }
-/* The valley again, deeper and quieter, so the islands and their words lead. */
-.islands__bg {
+/* The light of the moment: a wide soft glow, never a shape with an edge. */
+.islands__air {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(to bottom, rgb(15 40 29 / 0.72), rgb(15 40 29 / 0.38) 40%, rgb(15 40 29 / 0.55) 75%, rgb(15 40 29 / 0.85)),
-    linear-gradient(to right, rgb(15 40 29 / 0.6), rgb(15 40 29 / 0) 60%),
-    url('/sky/valley-green-1920.webp') center 45% / cover no-repeat;
+  pointer-events: none;
+}
+.islands__glow,
+.island::before {
+  position: absolute;
+  left: var(--day-x);
+  top: var(--day-y);
+  width: max(90vmax, 900px);
+  aspect-ratio: 1;
+  background: radial-gradient(closest-side, var(--day-glow), transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.islands:not([data-walk='true']) .islands__air {
+  display: none;
 }
 .islands__track {
   position: relative;
   z-index: 1;
 }
-/* Stacked (phones, reduced motion, no scripts): the valley stays one screen tall behind the islands as they pass,
-   instead of one picture stretched down the whole list. overflow: clip on the rail leaves sticky working. */
-.islands:not([data-walk='true']) .islands__bg {
-  position: sticky;
-  inset: 0 auto auto;
-  width: 100%;
-  height: 100svh;
-}
-.islands:not([data-walk='true']) .islands__track {
-  margin-top: -100svh;
-}
 .island {
+  position: relative;
+  overflow: clip;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: center;
   gap: clamp(24px, 4vw, 72px);
   padding: clamp(80px, 12vh, 120px) var(--gutter);
+  background: var(--day-bg);
+  color: var(--day-ink);
+}
+/* Stacked, each island brings its own light. */
+.island::before {
+  content: '';
+}
+.island > * {
+  position: relative;
 }
 .island:focus {
   outline: none;
+}
+.island__when {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0 0 18px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+.island__count {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
 }
 .island__name {
   font-size: clamp(2.6rem, 5.4vw, 6.2rem);
@@ -231,7 +328,7 @@ main.air {
 .island__line {
   max-width: 28em;
   margin: 26px 0 0;
-  color: rgb(251 252 248 / 0.9);
+  color: color-mix(in srgb, currentColor 90%, transparent);
   font-size: clamp(1.1rem, 0.35vw + 1rem, 1.3rem);
   line-height: 1.5;
 }
@@ -243,18 +340,16 @@ main.air {
   margin: 30px 0 0;
 }
 .island__facts > div {
+  display: flex;
+  flex-direction: column;
   padding-top: 12px;
-  border-top: 1px solid rgb(251 252 248 / 0.34);
+  border-top: 1px solid color-mix(in srgb, currentColor 34%, transparent);
 }
 .island__facts dt {
   order: 2;
   margin-top: 6px;
-  color: rgb(251 252 248 / 0.76);
+  color: color-mix(in srgb, currentColor 76%, transparent);
   font-size: 0.9rem;
-}
-.island__facts > div {
-  display: flex;
-  flex-direction: column;
 }
 .island__facts dd {
   margin: 0;
@@ -263,7 +358,7 @@ main.air {
 .island__note {
   max-width: 34em;
   margin: 22px 0 0;
-  color: rgb(251 252 248 / 0.72);
+  color: color-mix(in srgb, currentColor 74%, transparent);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -273,17 +368,16 @@ main.air {
   gap: 14px 28px;
   margin-top: 30px;
 }
-.islands .textlink {
-  --link-line: var(--color-mint);
-  color: #fbfcf8;
+.islands__rail .textlink {
+  --link-line: color-mix(in srgb, currentColor 45%, transparent);
 }
-.islands :focus-visible {
-  outline-color: var(--color-mint);
+.islands__rail :focus-visible {
+  outline-color: currentColor;
 }
 .island__pic {
   margin: 0;
   justify-self: center;
-  filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.45));
+  filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.32));
 }
 .island__pic img {
   display: block;
@@ -323,7 +417,7 @@ main.air {
   z-index: 2;
   left: var(--gutter);
   right: var(--gutter);
-  bottom: clamp(56px, 8vh, 80px);
+  bottom: clamp(48px, 7vh, 72px);
 }
 .islands__index ul {
   display: grid;
@@ -331,13 +425,13 @@ main.air {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid rgb(251 252 248 / 0.3);
+  border-top: 1px solid color-mix(in srgb, currentColor 28%, transparent);
 }
 .islands__index a {
   position: relative;
   display: block;
   padding: 16px 12px 6px 0;
-  color: rgb(251 252 248 / 0.66);
+  color: color-mix(in srgb, currentColor 62%, transparent);
   font-weight: 500;
   font-size: 1.05rem;
   text-decoration: none;
@@ -350,20 +444,21 @@ main.air {
   left: 0;
   right: 24px;
   height: 2px;
-  background: var(--color-mint);
+  background: currentColor;
   transform: scaleX(0);
   transform-origin: 0 50%;
   transition: transform 600ms var(--ease-out);
 }
 .islands__index a[aria-current='true'],
 .islands__index a:is(:hover, :focus-visible) {
-  color: #fbfcf8;
+  color: inherit;
 }
 .islands__index a[aria-current='true']::before {
   transform: none;
 }
 
-/* On the walk: the islands side by side, one screen each, held still while the scroll moves them. */
+/* On the walk: the islands side by side, one screen each, held still while the scroll moves them; the air and the light
+   belong to the rail, and blend from one moment to the next. */
 .islands[data-walk='true'] .islands__rail {
   height: 100svh;
 }
@@ -376,6 +471,12 @@ main.air {
   flex: 0 0 calc(100% / 6);
   height: 100%;
   padding-bottom: clamp(120px, 18vh, 170px);
+  background: none;
+  color: inherit;
+  overflow: visible;
+}
+.islands[data-walk='true'] .island::before {
+  display: none;
 }
 
 /* ---------- The store's three promises ---------- */

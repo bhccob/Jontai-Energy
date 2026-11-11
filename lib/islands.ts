@@ -1,10 +1,27 @@
-// The six ranges as islands (round 9, open air), in the order the page walks them. Figures come only from the
+// The six ranges as islands (round 9, open air), in the order the page walks them: through one Aruban day, from the
+// morning sun on the panels to the weekend upstairs. Figures come only from the
 // manufacturer documents already used on the site (data/products.json chapters); ranges without a datasheet list
 // what is carried, with no invented specs. `panel` opens the range's product panel (components/catalog), `quote`
 // is the quote page's topic (lib/quote.ts). Pictures: public/sky/island-<image>-{700,1200}.webp.
 
 // Type-only, so Node's test runner never loads products.ts (it imports through the '@/' alias Node cannot resolve).
 import type { PanelId } from './products';
+
+/** One moment of the day: a short label, the colour of the air, whether words on it are dark or light, and where the
+ *  light comes from (a soft glow, x and y in % of the screen). */
+export interface Day {
+  label: string;
+  bg: string;
+  ink: 'dark' | 'light';
+  glow: string;
+  at: [number, number];
+}
+
+/** A moment of the day as CSS custom properties: the air's colour, the ink on it and where the light falls (air.css). */
+export const DAY_INK = { dark: '#173d2c', light: '#f7f5ec' } as const;
+export function dayVars(d: Day): Record<string, string> {
+  return { '--day-bg': d.bg, '--day-ink': DAY_INK[d.ink], '--day-glow': d.glow, '--day-x': `${d.at[0]}%`, '--day-y': `${d.at[1]}%` };
+}
 
 export interface Island {
   /** Anchor id: the footer and the menu link to these (keep solar, cooling, backup, light, upstairs). */
@@ -18,6 +35,8 @@ export interface Island {
   note?: string;
   actions: { label: string; panel: PanelId }[];
   quote: string;
+  /** Where in an Aruban day the range is shown, and the light the walk paints for it (air.css, IslandWalk). */
+  day: Day;
 }
 
 export const ISLANDS: Island[] = [
@@ -38,6 +57,23 @@ export const ISLANDS: Island[] = [
       { label: 'See solar panels', panel: 'solar' },
     ],
     quote: 'inverter',
+    day: { label: 'Morning', bg: '#e6edcd', ink: 'dark', glow: 'rgba(255, 212, 140, 0.85)', at: [16, 18] },
+  },
+  {
+    id: 'cooling',
+    name: 'Cooling',
+    image: 'cooling',
+    size: [1200, 1335],
+    line: 'Air conditioning that runs on sunlight while the sun is out, and on the grid only when it needs to.',
+    facts: [
+      { value: '9k–36k', label: 'BTU, by model' },
+      { value: 'Up to 100%', label: 'Solar while the sun is out' },
+      { value: 'No battery', label: 'Or separate inverter' },
+    ],
+    note: 'From the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
+    actions: [{ label: 'See solar air conditioners', panel: 'solar-ac' }],
+    quote: 'solar-ac',
+    day: { label: 'Midday', bg: '#cfe8d2', ink: 'dark', glow: 'rgba(255, 255, 236, 0.95)', at: [52, 0] },
   },
   {
     id: 'backup',
@@ -56,21 +92,7 @@ export const ISLANDS: Island[] = [
       { label: 'See generators', panel: 'generator' },
     ],
     quote: 'power-station',
-  },
-  {
-    id: 'cooling',
-    name: 'Cooling',
-    image: 'cooling',
-    size: [1200, 1335],
-    line: 'Air conditioning that runs on sunlight while the sun is out, and on the grid only when it needs to.',
-    facts: [
-      { value: '9k–36k', label: 'BTU, by model' },
-      { value: 'Up to 100%', label: 'Solar while the sun is out' },
-      { value: 'No battery', label: 'Or separate inverter' },
-    ],
-    note: 'From the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
-    actions: [{ label: 'See solar air conditioners', panel: 'solar-ac' }],
-    quote: 'solar-ac',
+    day: { label: 'Evening', bg: '#4f7040', ink: 'light', glow: 'rgba(255, 168, 92, 0.6)', at: [86, 78] },
   },
   {
     id: 'light',
@@ -81,6 +103,7 @@ export const ISLANDS: Island[] = [
     note: 'Stock changes often, so ask before you make the trip.',
     actions: [{ label: 'See lighting', panel: 'led' }],
     quote: 'led',
+    day: { label: 'After dark', bg: '#1d3a2d', ink: 'light', glow: 'rgba(255, 196, 110, 0.5)', at: [74, 38] },
   },
   {
     id: 'security',
@@ -90,6 +113,7 @@ export const ISLANDS: Island[] = [
     line: 'Security cameras that charge themselves from the sun, for the door, the yard or a site.',
     actions: [{ label: 'See security cameras', panel: 'cameras' }],
     quote: 'cameras',
+    day: { label: 'Night', bg: '#0d1f17', ink: 'light', glow: 'rgba(176, 222, 204, 0.24)', at: [80, 14] },
   },
   {
     id: 'upstairs',
@@ -100,5 +124,6 @@ export const ISLANDS: Island[] = [
     note: 'Large-item delivery available. Ask us about furniture delivery.',
     actions: [{ label: 'How delivery works', panel: 'furniture' }],
     quote: 'furniture',
+    day: { label: 'Weekend', bg: '#e2e9d2', ink: 'dark', glow: 'rgba(255, 224, 168, 0.7)', at: [24, 22] },
   },
 ];

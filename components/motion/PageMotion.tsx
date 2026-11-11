@@ -74,6 +74,16 @@ export function PageMotion() {
           );
         });
 
+        // An object swings up into place as it comes into view, as if lifted off a table: tilted back and low at first,
+        // upright by the time it is well on screen. Scrubbed, so it follows the scroll both ways.
+        gsap.utils.toArray<HTMLElement>('[data-swing]').forEach((el) => {
+          gsap.fromTo(
+            el,
+            { rotateX: 32, rotateZ: -7, yPercent: 26, scale: 0.9, transformPerspective: 1400, transformOrigin: '50% 100%' },
+            { rotateX: 0, rotateZ: 0, yPercent: 0, scale: 1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top bottom', end: 'center 62%', scrub: 0.6 } },
+          );
+        });
+
         // Figures count up the first time they are seen, holding their final width so nothing shifts.
         gsap.utils.toArray<HTMLElement>('[data-count]').forEach((el) => {
           const original = el.textContent ?? '';
