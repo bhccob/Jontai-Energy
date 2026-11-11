@@ -131,12 +131,6 @@
 .offer-pill[aria-expanded='true'] {
   background: var(--lg-glint), var(--lg-clear);
 }
-.piece__count {
-  background: rgb(14 34 25 / 0.32);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim-dark);
-}
 .concept {
   background: rgb(14 34 25 / 0.74);
   -webkit-backdrop-filter: var(--lg-blur);
@@ -200,35 +194,27 @@
   background: var(--lg-clear);
   box-shadow: var(--lg-rim);
 }
-.loyal__strip {
-  background: var(--lg-glint-wide), var(--lg-clear);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim), var(--lg-drop);
-}
+/* Under the two cards, how to join and a person to ask are open lines, not more panes (Bob, round 19). */
+.loyal__strip,
 .loyal__strip--soft {
-  background: var(--lg-glint-wide), linear-gradient(165deg, rgb(255 255 255 / 0.36), rgb(255 255 255 / 0.12));
+  margin-top: 0;
+  padding: 18px 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-bottom: 1px solid var(--leaf-rule);
+}
+.tiers + .loyal__strip {
+  margin-top: 28px;
+  border-top: 1px solid var(--leaf-rule);
 }
 .loyal__chip {
   background: var(--lg-mint);
   box-shadow: var(--lg-rim);
 }
 
-/* ---------- What we sell: each frame a pane of dark glass, lit where the pointer is ---------- */
+/* ---------- What we sell: the islands float free (air.css); only the round controls are glass ---------- */
 
-.piece__frame {
-  background:
-    radial-gradient(75% 60% at var(--lx) var(--ly), rgb(184 216 168 / 0.2), transparent 70%),
-    linear-gradient(165deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.02) 45%, rgb(184 216 168 / 0.06)),
-    linear-gradient(to bottom, #1d3f2e, #12291e);
-  border-radius: 22px;
-  box-shadow: var(--lg-rim-dark), var(--lg-drop-deep);
-}
-@media (hover: hover) and (pointer: fine) {
-  .piece__frame:hover {
-    box-shadow: var(--lg-rim-dark), inset 0 0 0 1px rgb(184 216 168 / 0.3), var(--lg-drop-deep);
-  }
-}
 .collection__all,
 .collection__ring {
   background: var(--lg-glint), var(--lg-deep);
@@ -243,7 +229,7 @@
   box-shadow: var(--lg-rim), var(--lg-drop);
 }
 
-/* ---------- What we offer, the team, the reviews, the visit ---------- */
+/* ---------- What we offer, the team, the reviews (the visit keeps its ruled lines) ---------- */
 
 .offer-row__go,
 .team__btn {
@@ -282,15 +268,6 @@
     inset 0 0 0 1px rgb(184 216 168 / 0.28),
     0 4px 8px rgb(14 34 25 / 0.1),
     0 44px 70px -30px rgb(14 34 25 / 0.6);
-}
-.visit__panel {
-  padding: 22px 24px 24px;
-  border-top: 0;
-  border-radius: 24px;
-  background: var(--lg-glint-dark), var(--lg-deep);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim-dark), var(--lg-drop-deep);
 }
 
 /* ---------- Reduced transparency: every pane solid ---------- */

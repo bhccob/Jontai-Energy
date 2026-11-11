@@ -673,48 +673,36 @@ main.air {
 .piece:focus {
   outline: none;
 }
-/* Every frame the same dark green (Bob, round 13), lit from where the pointer is (--lx/--ly, CollectionMotion). */
+/* Each range is its island alone, floating on the green: no frame (Bob, round 19: "not so much box styling"), only a
+   soft light behind it that gathers where the pointer is (--lx/--ly, CollectionMotion). */
 .piece__frame {
   --lx: 50%;
-  --ly: 32%;
+  --ly: 40%;
   position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border-radius: 8px;
-  background:
-    radial-gradient(75% 60% at var(--lx) var(--ly), rgb(184 216 168 / 0.22), transparent 70%),
-    linear-gradient(to bottom, #1d3f2e, #12291e);
-  box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.06);
+  isolation: isolate;
   transform-style: preserve-3d;
-  transition: box-shadow 500ms ease;
 }
-@media (hover: hover) and (pointer: fine) {
-  .piece__frame:hover {
-    box-shadow: inset 0 0 0 1px rgb(184 216 168 / 0.35);
-  }
+.piece__frame::before {
+  content: '';
+  position: absolute;
+  inset: -14% -16% -8%;
+  z-index: -1;
+  background: radial-gradient(closest-side at var(--lx) var(--ly), rgb(184 216 168 / 0.2), rgb(184 216 168 / 0.06) 55%, transparent);
+  pointer-events: none;
 }
 .piece__count {
-  position: absolute;
-  z-index: 2;
-  top: 14px;
-  left: 14px;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  background: rgb(14 34 25 / 0.55);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  color: var(--deep-ink);
-  font-size: 0.75rem;
+  margin: 0;
+  color: var(--color-mint);
+  font-size: 0.78rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 .piece__open {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 1% 2%;
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
   border: 0;
   background: none;
   cursor: none;
@@ -878,18 +866,18 @@ main.air {
 }
 .collection[data-row] .collection__track {
   display: flex;
-  align-items: flex-end;
-  gap: 4vw;
+  align-items: flex-start;
+  gap: 3.5vw;
   width: max-content;
   height: 100%;
-  padding: calc(var(--nav-h) + 3vh) 10vw 6vh var(--gutter);
+  padding: calc(var(--nav-h) + 3vh) 10vw 0 var(--gutter);
 }
 .collection[data-row] .collection__head {
   flex: 0 0 min(36vw, 36rem);
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  padding-bottom: 1vh;
+  padding-bottom: 7vh;
 }
 .collection[data-row] .collection__title {
   font-size: clamp(2.4rem, 3.7vw, 4.6rem);
@@ -897,28 +885,39 @@ main.air {
 .collection[data-row] .collection__foot {
   margin-top: auto;
 }
-/* Big (Bob, round 17), then a little smaller (round 18: "wayy too big"): each frame about four fifths of the screen's
-   height, its name and figures beside it at its foot like the label next to a picture on a wall, and the heights step
-   a little from one range to the next. */
+/* Smaller again and not lined up (Bob, round 19): each island floats at its own height and a little its own size,
+   its name and figures beside it at its foot. */
 .collection[data-row] .piece {
-  --fh: min((100svh - var(--nav-h) - 10vh) * 0.82, 51vw);
+  --pw: clamp(240px, min(24vw, 42vh), 420px);
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: auto minmax(0, 16.5rem);
+  grid-template-columns: auto minmax(0, 15rem);
   align-items: end;
-  gap: 0 clamp(20px, 2vw, 32px);
+  gap: 0 clamp(16px, 1.6vw, 26px);
   max-width: none;
 }
-.collection[data-row] .piece:nth-of-type(3n + 2) {
-  --fh: min((100svh - var(--nav-h) - 10vh) * 0.82 * 0.87, 51vw * 0.87);
-}
-.collection[data-row] .piece:nth-of-type(3n) {
-  --fh: min((100svh - var(--nav-h) - 10vh) * 0.82 * 0.94, 51vw * 0.94);
-}
 .collection[data-row] .piece__frame {
-  width: calc(var(--fh) * 6 / 7);
-  height: var(--fh);
-  aspect-ratio: auto;
+  width: var(--pw);
+}
+.collection[data-row] .piece:nth-of-type(6n + 1) {
+  margin-top: 6vh;
+}
+.collection[data-row] .piece:nth-of-type(6n + 2) {
+  --pw: clamp(220px, min(20vw, 36vh), 360px);
+  margin-top: 30vh;
+}
+.collection[data-row] .piece:nth-of-type(6n + 3) {
+  margin-top: 12vh;
+}
+.collection[data-row] .piece:nth-of-type(6n + 4) {
+  margin-top: 2vh;
+}
+.collection[data-row] .piece:nth-of-type(6n + 5) {
+  --pw: clamp(220px, min(21vw, 38vh), 380px);
+  margin-top: 26vh;
+}
+.collection[data-row] .piece:nth-of-type(6n) {
+  margin-top: 10vh;
 }
 .collection[data-row] .piece__meta {
   display: grid;
@@ -927,6 +926,14 @@ main.air {
 }
 .collection[data-row] .collection__end {
   align-self: center;
+}
+
+/* Stacked (phones, no motion): smaller islands that take turns left and right, so they never line up. */
+.collection:not([data-row]) .piece__frame {
+  width: min(78%, 24rem);
+}
+.collection:not([data-row]) .piece:nth-of-type(even) .piece__frame {
+  justify-self: end;
 }
 
 /* The round "View" that follows the pointer over a frame (CollectionMotion). */
