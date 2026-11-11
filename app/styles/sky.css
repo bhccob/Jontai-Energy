@@ -207,6 +207,22 @@
     transform: translateY(-16px) rotate(-0.6deg);
   }
 }
+/* The small islands (round 26): they rise into place a little after the main one, then each bobs at its own pace. */
+@keyframes isle-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(70px) scale(0.86);
+  }
+}
+@keyframes isle-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-11px) rotate(0.9deg);
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .sky {
     animation: sky-open 1500ms cubic-bezier(0.76, 0, 0.24, 1) both;
@@ -245,6 +261,33 @@
   }
   #hero .hero__float {
     animation: island-float 8s ease-in-out 2.6s infinite;
+  }
+  #hero .hero__arrive {
+    animation: isle-arrive 1600ms var(--ease-out) both;
+  }
+  .hero__small--lantern .hero__arrive {
+    animation-delay: 1250ms;
+  }
+  .hero__small--tree .hero__arrive {
+    animation-delay: 1100ms;
+  }
+  .hero__small--meadow .hero__arrive {
+    animation-delay: 1350ms;
+  }
+  .hero__small--panel .hero__arrive {
+    animation-delay: 1200ms;
+  }
+  .hero__small--lantern .hero__bob {
+    animation: isle-bob 7s ease-in-out -2s infinite;
+  }
+  .hero__small--tree .hero__bob {
+    animation: isle-bob 9.5s ease-in-out -5s infinite;
+  }
+  .hero__small--meadow .hero__bob {
+    animation: isle-bob 8s ease-in-out -1s infinite;
+  }
+  .hero__small--panel .hero__bob {
+    animation: isle-bob 10.5s ease-in-out -7s infinite;
   }
 }
 
@@ -365,9 +408,9 @@
 .hero__island {
   position: relative;
   z-index: 2;
-  /* The home on the island is nearly square (round 26), so its size follows the screen's height, and the first view
-     still ends where it did, with JONTAI standing behind the rock. */
-  width: min(40vw, 47vh, 680px);
+  /* The island is nearly square (round 26), so its size follows the screen's height, and the first view still ends
+     where it did, with JONTAI standing behind it. */
+  width: min(40vw, 46vh, 660px);
   margin: 6px 0 clamp(56px, 9vh, 110px);
   pointer-events: none;
 }
@@ -384,9 +427,51 @@
   filter: drop-shadow(0 50px 50px rgb(23 61 44 / 0.28));
 }
 
-/* The sunset (Bob, round 26: "Sunset, lights on"; HeroSkyMotion scrubs it on wide screens, hidden otherwise). Over the
-   house, inside its outline: a golden-hour tint, then a dusk blue, both multiplied; on top the house's own lights
-   (tools/sky/home-lights.mjs), which stay bright, and the glow they throw on the walls. */
+/* The small islands round the main one (Bob, round 26: "more sub floating islands"), at different depths: the far
+   ones smaller and a little soft, the near ones larger and lower. Clear of the words; HeroSkyMotion moves them. */
+.hero__small {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero__small .hero__day {
+  filter: drop-shadow(0 26px 24px rgb(23 61 44 / 0.22));
+}
+.hero__small--lantern {
+  top: 23%;
+  right: 8%;
+  width: clamp(70px, 7vw, 130px);
+}
+.hero__small--lantern .hero__day {
+  filter: blur(0.6px) drop-shadow(0 18px 18px rgb(23 61 44 / 0.16));
+}
+.hero__small--tree {
+  top: 33%;
+  left: 6%;
+  width: clamp(96px, 10vw, 180px);
+}
+.hero__small--meadow {
+  top: 69%;
+  left: 10%;
+  z-index: 3;
+  width: clamp(120px, 12.5vw, 230px);
+}
+.hero__small--panel {
+  top: 61%;
+  right: 13%;
+  z-index: 3;
+  width: clamp(130px, 13.5vw, 245px);
+}
+.hero__drift,
+.hero__arrive,
+.hero__bob {
+  position: relative;
+}
+
+/* The sunset (Bob, round 26: "Sunset, lights on"; HeroSkyMotion scrubs it on wide screens, hidden otherwise). Over
+   each island, inside its own outline (--mask, its picture), a tint is multiplied that HeroSkyMotion turns from white
+   to golden hour to a dusk blue; on top the lamp's bulb (tools/sky/hero-islands.mjs), which stays bright, and the
+   glow of the lamp and the garden lights. */
 .hero__tint,
 .hero__lights,
 .hero__glow {
@@ -396,15 +481,10 @@
 }
 .hero__tint {
   inset: 0;
-  -webkit-mask: url('/sky/island-home-700.webp') center / 100% 100% no-repeat;
-  mask: url('/sky/island-home-700.webp') center / 100% 100% no-repeat;
+  background-color: #fff;
+  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+  mask: var(--mask) center / 100% 100% no-repeat;
   mix-blend-mode: multiply;
-}
-.hero__tint--gold {
-  background: linear-gradient(100deg, #f9cf9c, #f0ad78);
-}
-.hero__tint--night {
-  background: linear-gradient(to bottom, #3c4a70, #2f3d52);
 }
 .hero__lights {
   inset: 0;
@@ -416,20 +496,19 @@
   mix-blend-mode: screen;
   transform: translate(-50%, -50%);
 }
-/* On the bulb and the window (the same points as in the picture: 475, 320 and 673, 342 of 1200 by 1125). */
+/* On the lamp's bulb (the same point as in the picture: 995, 134 of 1200 by 1172) and on the garden lights (placed in
+   Hero, in % of their islands). */
 .hero__glow--bulb {
-  left: 39.6%;
-  top: 28.4%;
-  width: 24%;
+  left: 83%;
+  top: 11.4%;
+  width: 26%;
   aspect-ratio: 1;
-  background: radial-gradient(closest-side, rgb(255 222 165 / 0.95), rgb(255 190 115 / 0.45) 32%, rgb(255 170 90 / 0.12) 64%, transparent);
+  background: radial-gradient(closest-side, rgb(255 224 170 / 0.95), rgb(255 192 118 / 0.45) 30%, rgb(255 170 90 / 0.12) 62%, transparent);
 }
-.hero__glow--window {
-  left: 56.1%;
-  top: 30.4%;
-  width: 34%;
-  height: 24%;
-  background: radial-gradient(closest-side, rgb(255 205 140 / 0.5), rgb(255 185 110 / 0.16) 62%, transparent);
+.hero__glow--lamp {
+  width: 70%;
+  aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgb(255 230 180 / 0.95), rgb(255 196 120 / 0.42) 26%, rgb(255 175 95 / 0.1) 60%, transparent);
 }
 /* The bulb's light, which swells from the bulb (brought to the middle of the screen) until it is all there is: warm
    at its edge, white at its heart, the white Rewards starts in. */
@@ -784,6 +863,23 @@
   .hero__island {
     width: min(78vw, 30rem);
     margin: clamp(24px, 4vh, 40px) 0 calc(24vw + 24px);
+  }
+  /* Two of the small islands, either side of the main one. */
+  .hero__small--lantern,
+  .hero__small--meadow {
+    display: none;
+  }
+  .hero__small--tree {
+    top: auto;
+    bottom: calc(24vw + 24px + min(52vw, 20rem));
+    left: 1%;
+    width: min(21vw, 9rem);
+  }
+  .hero__small--panel {
+    top: auto;
+    bottom: calc(24vw + 12px);
+    right: 1%;
+    width: min(24vw, 10rem);
   }
 }
 @media (max-width: 40rem) {
