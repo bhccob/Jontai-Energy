@@ -91,7 +91,8 @@ main.air {
   --lx: 70%;
   position: relative;
   min-height: clamp(460px, 62vh, 560px);
-  overflow: hidden;
+  /* clip, not hidden: a hidden box can still be scrolled from inside (by focus), which would shift the whole tile. */
+  overflow: clip;
   border-radius: 28px;
   padding: clamp(26px, 3vw, 40px);
   background:
@@ -114,9 +115,18 @@ main.air {
     linear-gradient(160deg, #1b3b2b, #0e2219);
   color: var(--deep-ink);
 }
+/* The tile is a column, so its button sits at its foot whatever the text above it. */
+.tier {
+  display: flex;
+  flex-direction: column;
+}
 .tier__text {
   position: relative;
   z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   max-width: min(19rem, 52%);
 }
 .tier__kicker {
@@ -173,7 +183,7 @@ main.air {
   line-height: 1.55;
 }
 .tier__meta {
-  margin: 16px 0 0;
+  margin: 16px 0 28px;
   opacity: 0.6;
   font-size: 0.75rem;
   font-weight: 600;
@@ -185,7 +195,7 @@ main.air {
   align-items: center;
   gap: 8px;
   min-height: 46px;
-  margin-top: 26px;
+  margin-top: auto;
   padding: 0 20px;
   border: 0;
   border-radius: var(--radius-pill);
@@ -214,7 +224,7 @@ main.air {
 }
 @media (hover: hover) and (pointer: fine) {
   .tier__cta:hover svg {
-    translate: 0 3px;
+    translate: 0 -3px;
   }
   .tier__cta:not(.tier__cta--fill):hover {
     background: var(--leaf-ink);
@@ -244,6 +254,127 @@ main.air {
 .tier:hover .tier__card {
   rotate: -4deg;
   translate: -4% -10%;
+}
+
+/* How it works, sliding up inside the tile from its foot; the rest of the tile dims behind it. */
+.tier__info {
+  position: absolute;
+  z-index: 4;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: clamp(20px, 2.4vw, 30px);
+  border-radius: 22px;
+  background: #fbfcf8;
+  box-shadow: 0 30px 60px -30px rgb(14 34 25 / 0.5);
+  color: var(--leaf-ink);
+  transform: translateY(calc(100% + 20px));
+  transition: transform 700ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+.tier--business .tier__info {
+  background: #f3f7ee;
+}
+.tier[data-open] .tier__info {
+  transform: none;
+}
+.tier::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: rgb(14 34 25 / 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+.tier[data-open]::after {
+  opacity: 1;
+}
+.tier__info-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.tier__info-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.tier__close {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(23 61 44 / 0.07);
+  color: var(--leaf-ink);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    rotate 400ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tier__close:hover {
+    background: rgb(23 61 44 / 0.14);
+    rotate: 90deg;
+  }
+}
+.tier__steps,
+.tier__facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tier__steps li,
+.tier__facts li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--leaf-rule);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.tier__steps span {
+  flex: none;
+  min-width: 1.6em;
+  color: var(--leaf-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.tier__facts li {
+  color: var(--leaf-muted);
+  font-size: 0.9rem;
+}
+.tier__facts svg {
+  flex: none;
+  translate: 0 2px;
+  color: #2e6b45;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tier__info li {
+    opacity: 0;
+    translate: 0 12px;
+    transition:
+      opacity 400ms ease,
+      translate 600ms var(--ease-out);
+  }
+  .tier[data-open] .tier__info li {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: calc(250ms + var(--i, 0) * 60ms);
+  }
+}
+.tier__info :focus-visible {
+  outline: 2px solid var(--leaf-ink);
+  outline-offset: 2px;
 }
 
 /* The two strips under them: how to join, and a person to ask. */
@@ -299,269 +430,6 @@ main.air {
   color: #f7f5ec;
 }
 
-/* How it works and what to know, beside the calculator. */
-.loyal__bottom {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(32px, 5vw, 80px);
-  margin-top: clamp(48px, 8vh, 80px);
-}
-.loyal__label {
-  margin: 0 0 16px;
-  color: var(--leaf-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.loyal__how,
-.loyal__facts {
-  margin: 0 0 32px;
-  padding: 0;
-  list-style: none;
-}
-.loyal__how li,
-.loyal__facts li {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid var(--leaf-rule);
-  font-size: 1rem;
-  line-height: 1.5;
-}
-.loyal__how span {
-  flex: none;
-  min-width: 1.6em;
-  color: var(--leaf-muted);
-  font-size: 0.8rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-.loyal__facts li {
-  color: var(--leaf-muted);
-}
-.loyal__facts svg {
-  flex: none;
-  translate: 0 2px;
-  color: #2e6b45;
-}
-
-/* The calculator. */
-.loyal__calc {
-  position: relative;
-  padding: clamp(24px, 2.6vw, 36px);
-  border-radius: 28px;
-  background: rgb(23 61 44 / 0.04);
-  box-shadow: inset 0 0 0 1px var(--leaf-rule);
-}
-.loyal__for {
-  position: relative;
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 4px;
-  border-radius: var(--radius-pill);
-  background: rgb(23 61 44 / 0.08);
-}
-.loyal__for button {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 0 20px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--leaf-ink);
-  font: inherit;
-  font-weight: 650;
-  cursor: pointer;
-  transition: color 400ms ease;
-}
-.loyal__for button[aria-checked='true'] {
-  color: #f4f6ef;
-}
-.loyal__for-ink {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  border-radius: var(--radius-pill);
-  background: var(--color-forest);
-  transition: translate 600ms cubic-bezier(0.76, 0, 0.24, 1);
-}
-.loyal__for-ink[data-at='business'] {
-  translate: 100% 0;
-}
-.loyal__for :focus-visible {
-  outline: 2px solid var(--leaf-ink);
-  outline-offset: 2px;
-}
-.loyal__ask {
-  display: block;
-  margin-top: 24px;
-  color: var(--leaf-muted);
-  font-weight: 600;
-}
-.loyal__value {
-  margin: 8px 0 16px;
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4vw, 3.8rem);
-  line-height: 1;
-}
-.loyal__picks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.loyal__picks button {
-  min-height: 38px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
-  color: var(--leaf-ink);
-  font: inherit;
-  font-weight: 650;
-  font-size: 0.88rem;
-  cursor: pointer;
-  transition:
-    background-color 300ms ease,
-    color 300ms ease,
-    box-shadow 300ms ease,
-    scale 120ms ease-out;
-}
-.loyal__picks button[data-on] {
-  background: var(--color-forest);
-  color: #f4f6ef;
-  box-shadow: none;
-}
-.loyal__picks button:active {
-  scale: 0.96;
-}
-@media (hover: hover) and (pointer: fine) {
-  .loyal__picks button:not([data-on]):hover {
-    box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
-  }
-}
-.loyal__slider {
-  --track: linear-gradient(90deg, var(--leaf-ink) var(--fill, 0%), var(--leaf-rule) var(--fill, 0%));
-  --thumb: var(--leaf-ink);
-  --halo: rgb(23 61 44 / 0.14);
-  margin-top: 12px;
-}
-.loyal__result {
-  position: relative;
-  margin-top: 10px;
-  padding-top: 18px;
-  border-top: 1px solid var(--leaf-rule);
-}
-.loyal__answer {
-  margin: 0;
-  font-size: 1.15rem;
-}
-.loyal__answer .figure {
-  margin-right: 4px;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 3vw, 2.8rem);
-}
-.loyal__meta {
-  margin: 10px 0 0;
-  color: var(--leaf-muted);
-  font-size: 0.95rem;
-}
-/* Ten suns for the home card's ten vouchers; the next one fills as the year goes on. */
-.loyal__suns {
-  display: flex;
-  gap: 8px;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.loyal__suns li {
-  position: relative;
-  flex: 1;
-  max-width: 34px;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
-  transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.loyal__suns li::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #ffd98a, #f2b33d);
-  clip-path: inset(calc(100% - var(--p, 0%)) 0 0 0);
-  transition: clip-path 500ms var(--ease-out);
-}
-.loyal__suns li[data-state='earned'] {
-  transform: scale(1.06);
-  box-shadow: none;
-}
-.loyal__suns li[data-state='earned']::after {
-  clip-path: inset(0);
-}
-/* The business goal, as one bar that fills to 5,000 points. */
-.loyal__goal {
-  position: relative;
-  display: block;
-  height: 10px;
-  margin-top: 18px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: var(--leaf-rule);
-}
-.loyal__goal i {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: var(--p);
-  border-radius: 10px;
-  background: linear-gradient(90deg, #2e6b45, var(--color-mint));
-  transition: width 500ms var(--ease-out);
-}
-/* A reward landing rises off the result. */
-.loyal__pop {
-  position: absolute;
-  z-index: 3;
-  top: 6px;
-  right: 0;
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  background: #f2b33d;
-  color: #2a1d02;
-  font-weight: 800;
-  font-size: 0.9rem;
-  box-shadow: 0 14px 30px -10px rgb(242 179 61 / 0.7);
-  pointer-events: none;
-  animation: voucher-pop 1600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes voucher-pop {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.6);
-  }
-  18% {
-    opacity: 1;
-    transform: translateY(0) scale(1.08);
-  }
-  30% {
-    transform: translateY(0) scale(1);
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-50px) scale(0.95);
-  }
-}
 /* The reward side of a card. */
 .loyal__back {
   display: flex;
@@ -847,7 +715,7 @@ main.air {
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 4% 4%;
+  padding: 1% 2%;
   border: 0;
   background: none;
   cursor: none;
@@ -1030,18 +898,29 @@ main.air {
 .collection[data-row] .collection__foot {
   margin-top: auto;
 }
+/* Bigger frames (Bob, round 16), a little wider than tall so the row still fits a screen, staggered gently. */
 .collection[data-row] .piece {
   flex: 0 0 auto;
-  width: clamp(290px, min(25vw, 50vh), 440px);
+  width: clamp(320px, min(29vw, 54vh), 520px);
+  gap: 12px;
+}
+.collection[data-row] .piece__frame {
+  aspect-ratio: 6 / 7;
 }
 .collection[data-row] .piece:nth-of-type(3n + 1) {
   margin-top: 0;
 }
 .collection[data-row] .piece:nth-of-type(3n + 2) {
-  margin-top: 8vh;
+  margin-top: 5vh;
 }
 .collection[data-row] .piece:nth-of-type(3n) {
-  margin-top: 3.5vh;
+  margin-top: 2.5vh;
+}
+.collection[data-row] .piece__note {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 /* In the row the figures and the note stay short, so the frames can be big. */
 .collection[data-row] .piece__line {
@@ -1466,15 +1345,17 @@ main.air {
   }
 }
 
-/* ---------- What customers say (deep green), on an arc after squared-media ---------- */
+/* ---------- What customers say, on an arc after squared-media ----------
+   The same mist as the team above it (Bob, round 16), so the two read as one field and the deep green cards sit on
+   it like cut-outs, each with its own soft shadow. */
 
 .reviews {
   position: relative;
   z-index: 1;
   overflow: clip;
-  padding: clamp(110px, 16vh, 170px) var(--gutter) clamp(90px, 13vh, 140px);
-  background: var(--deep);
-  color: var(--deep-ink);
+  padding: clamp(30px, 5vh, 60px) var(--gutter) clamp(100px, 15vh, 160px);
+  background: var(--mist);
+  color: var(--leaf-ink);
   text-align: center;
 }
 .reviews__title {
@@ -1489,7 +1370,7 @@ main.air {
   text-transform: uppercase;
 }
 .reviews__title .soft {
-  color: var(--deep-muted);
+  color: var(--leaf-muted);
 }
 .reviews__title > span {
   display: block;
@@ -1506,7 +1387,7 @@ main.air {
   cursor: grabbing;
 }
 .reviews__arc:focus-visible {
-  outline: 2px solid var(--color-mint);
+  outline: 2px solid var(--leaf-ink);
   outline-offset: 8px;
   border-radius: 24px;
 }
@@ -1520,8 +1401,14 @@ main.air {
   margin: 0 0 0 calc(var(--w) / -2);
   padding: 26px 26px 22px;
   border-radius: 22px;
-  background: #16301f;
-  box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.08);
+  background: #173d2c;
+  color: var(--deep-ink);
+  /* A soft shadow in the page's own green under each card, and a faint light along its top edge; both fade with the
+     card toward the ends of the wheel. */
+  box-shadow:
+    inset 0 1px 0 rgb(244 246 239 / 0.1),
+    0 2px 4px rgb(14 34 25 / calc(0.08 * (1 - var(--fade, 0)))),
+    0 22px 40px -22px rgb(14 34 25 / calc(0.45 * (1 - var(--fade, 0))));
   text-align: left;
   /* Turned by Reviews about a point far below, so the cards lie on a wheel. */
   transform-origin: 50% 360%;
@@ -1533,11 +1420,24 @@ main.air {
 .review > * {
   transition: translate 700ms var(--ease-out);
 }
+/* Toward the ends of the wheel a card fades into the mist but stays solid, so the cards behind never show through it
+   (Bob, round 16: cut-outs on the page, not panes of glass). Reviews sets --fade from 0 to 1. */
+.review::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--mist);
+  opacity: var(--fade, 0);
+  pointer-events: none;
+}
 .review[data-at] {
-  background: #1f4431;
+  background: #0e2219;
   box-shadow:
-    inset 0 0 0 1px rgb(184 216 168 / 0.35),
-    0 30px 60px -30px rgb(0 0 0 / 0.6);
+    inset 0 1px 0 rgb(244 246 239 / 0.12),
+    inset 0 0 0 1px rgb(184 216 168 / 0.3),
+    0 4px 8px rgb(14 34 25 / 0.1),
+    0 44px 70px -30px rgb(14 34 25 / 0.6);
 }
 .review[data-at] > * {
   translate: 0 -4px;
@@ -1589,43 +1489,9 @@ main.air {
   gap: 16px;
   margin-top: 8px;
 }
-.reviews__btn {
-  display: inline-grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  box-shadow: inset 0 0 0 1.5px rgb(244 246 239 / 0.35);
-  color: var(--deep-ink);
-  font: inherit;
-  font-weight: 650;
-  cursor: pointer;
-  transition:
-    background-color 300ms ease,
-    color 300ms ease,
-    scale 120ms ease-out;
-}
-.reviews__btn--next {
-  background: var(--deep-ink);
-  color: var(--deep);
-  box-shadow: none;
-}
 .reviews__score {
-  color: var(--color-mint);
+  color: var(--leaf-ink);
   font-size: 1rem;
-}
-.reviews__btn:active {
-  scale: 0.97;
-}
-@media (hover: hover) and (pointer: fine) {
-  .reviews__btn:hover {
-    background: var(--color-mint);
-    color: var(--deep);
-    box-shadow: none;
-  }
 }
 .reviews__dots {
   display: flex;
@@ -1640,7 +1506,7 @@ main.air {
   padding: 0;
   border: 0;
   border-radius: 8px;
-  background: rgb(244 246 239 / 0.3);
+  background: rgb(23 61 44 / 0.25);
   box-shadow: 0 0 0 10px transparent;
   cursor: pointer;
   transition:
@@ -1649,15 +1515,15 @@ main.air {
 }
 .reviews__dots button[data-on] {
   width: 32px;
-  background: var(--color-mint);
+  background: var(--leaf-ink);
 }
 @media (hover: hover) and (pointer: fine) {
   .reviews__dots button:not([data-on]):hover {
-    background: rgb(244 246 239 / 0.7);
+    background: rgb(23 61 44 / 0.6);
   }
 }
 .reviews__dots button:focus-visible {
-  outline: 2px solid var(--color-mint);
+  outline: 2px solid var(--leaf-ink);
   outline-offset: 4px;
 }
 .reviews__google {
@@ -1665,7 +1531,7 @@ main.air {
   align-items: center;
   gap: 6px;
   margin-top: 26px;
-  color: var(--deep-muted);
+  color: var(--leaf-muted);
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -1673,7 +1539,7 @@ main.air {
   text-decoration: none;
 }
 .reviews__google:hover {
-  color: var(--deep-ink);
+  color: var(--leaf-ink);
 }
 
 /* ---------- Footer, in the page's voice ---------- */
@@ -1761,46 +1627,63 @@ main.air {
   inset: 0;
   pointer-events: none;
 }
-.lamp__halo,
-.lamp__tint,
+/* Everything is placed on the bulb: --bx/--by its centre, --br its radius, in % of the picture's width. */
+.lamp__bloom,
+.lamp__filament,
+.lamp__inner,
 .lamp__core {
   position: absolute;
   left: var(--bx);
   top: var(--by);
-  aspect-ratio: 1;
   border-radius: 50%;
   transform: translate(-50%, -50%);
+  transition: background-color 300ms ease;
 }
-/* The light it throws on the air and the grass. */
-.lamp__halo {
-  width: calc(var(--br) * 8);
-  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.5), rgb(var(--kelvin) / 0.16) 45%, transparent);
-  mix-blend-mode: screen;
-}
-/* Layers cut to the picture's own pixels (the island is its own mask), so only the glass takes the light, never the
-   air around it. The blend is on the cut layer, so it mixes with the picture under it. */
-.lamp__glass {
+/* Layers cut to the picture's own pixels (the island is its own mask), so the light lands only on what is there:
+   the glass, the post, the grass and the rock. The blend is on the cut layer, so it mixes with the picture under it. */
+.lamp__glass,
+.lamp__spill {
   position: absolute;
   inset: 0;
   -webkit-mask: url('/sky/island-light-700.webp') 0 0 / 100% 100% no-repeat;
   mask: url('/sky/island-light-700.webp') 0 0 / 100% 100% no-repeat;
 }
-/* The glass and filaments take the light's colour, keeping their own shading. */
+/* The light falling on the island: warm at 2700K, cool at 6500K, strongest near the bulb. */
+.lamp__spill {
+  background: radial-gradient(circle at var(--bx) var(--by), rgb(var(--kelvin) / 0.95) 0, rgb(var(--kelvin) / 0.55) 14%, rgb(var(--kelvin) / 0.18) 34%, transparent 55%);
+  mix-blend-mode: soft-light;
+}
+/* Only the filaments take the light's colour; the glass keeps its own reflections. */
 .lamp__glass--tint {
   mix-blend-mode: color;
-  opacity: 0.75;
 }
-.lamp__tint {
-  width: calc(var(--br) * 2);
+.lamp__filament {
+  width: calc(var(--br) * 0.8);
+  aspect-ratio: 0.55;
   background: rgb(var(--kelvin));
 }
-/* The bright middle, where the filaments are. */
-.lamp__glass--core {
+/* The glass filling with light from inside. */
+.lamp__glass--glow {
   mix-blend-mode: screen;
 }
+.lamp__inner {
+  width: calc(var(--br) * 2.1);
+  aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.55), rgb(var(--kelvin) / 0.18) 65%, transparent);
+}
+/* The white-hot middle of the filaments, and the soft bloom it throws into the air. */
 .lamp__core {
-  width: calc(var(--br) * 1.5);
-  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.42), rgb(var(--kelvin) / 0.1) 60%, transparent);
+  width: calc(var(--br) * 0.9);
+  aspect-ratio: 0.6;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.85), rgb(var(--kelvin) / 0.65) 45%, transparent);
+  mix-blend-mode: screen;
+  filter: blur(2px);
+}
+.lamp__bloom {
+  width: calc(var(--br) * 7);
+  aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.5), rgb(var(--kelvin) / 0.16) 45%, transparent);
+  mix-blend-mode: screen;
 }
 @keyframes lamp-on {
   from {
@@ -1848,8 +1731,7 @@ main.air {
 
 @media (max-width: 60rem) {
   .loyal__top,
-  .tiers,
-  .loyal__bottom {
+  .tiers {
     grid-template-columns: minmax(0, 1fr);
   }
   .tier {

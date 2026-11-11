@@ -118,15 +118,18 @@ export function TeamRail({ count, children }: { count: number; children: ReactNo
   };
 
   const last = Math.min(count, first + shown);
-  // On wide screens "further" pushes the pictures right, so its arrow points right; on narrow ones the row moves left.
+  // The arrow points to where the next people are (Bob, round 16): on wide screens they wait to the left, so the left
+  // arrow brings them in (the pictures move right); on narrow screens they wait to the right, as usual.
+  const Further = wide ? ArrowLeft : ArrowRight;
+  const Back = wide ? ArrowRight : ArrowLeft;
   const further = (
-    <button type="button" className="team__btn" aria-label="More people" onClick={() => go(1)} disabled={last >= count}>
-      <ArrowRight size={18} weight="bold" aria-hidden="true" />
+    <button key="further" type="button" className="team__btn" aria-label="More people" onClick={() => go(1)} disabled={last >= count}>
+      <Further size={18} weight="bold" aria-hidden="true" />
     </button>
   );
   const back = (
-    <button type="button" className="team__btn" aria-label="Back" onClick={() => go(-1)} disabled={first <= 0}>
-      <ArrowLeft size={18} weight="bold" aria-hidden="true" />
+    <button key="back" type="button" className="team__btn" aria-label="Back" onClick={() => go(-1)} disabled={first <= 0}>
+      <Back size={18} weight="bold" aria-hidden="true" />
     </button>
   );
   return (
@@ -135,8 +138,7 @@ export function TeamRail({ count, children }: { count: number; children: ReactNo
         {children}
       </ul>
       <div className="team__nav">
-        {back}
-        {further}
+        {wide ? [further, back] : [back, further]}
         <span className="team__count" aria-live="polite">
           {first + 1}–{last} <span>of {count}</span>
         </span>

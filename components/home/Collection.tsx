@@ -80,15 +80,17 @@ export function Collection() {
                       decoding="async"
                     />
                     {it.lamp && (
-                      // The bulb's light in the slider's colour: a halo around the glass, the glass itself tinted, a bright core.
+                      // The bulb's light in the slider's colour: on the island around it, in the filaments and the glass, and in the air.
                       <span className="lamp">
-                        <span className="lamp__halo" />
+                        <span className="lamp__spill" />
                         <span className="lamp__glass lamp__glass--tint">
-                          <span className="lamp__tint" />
+                          <span className="lamp__filament" />
                         </span>
-                        <span className="lamp__glass lamp__glass--core">
-                          <span className="lamp__core" />
+                        <span className="lamp__glass lamp__glass--glow">
+                          <span className="lamp__inner" />
                         </span>
+                        <span className="lamp__bloom" />
+                        <span className="lamp__core" />
                       </span>
                     )}
                   </span>

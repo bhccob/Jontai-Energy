@@ -11,7 +11,7 @@ const COPIES = 3;
 const RING = Array.from({ length: COPIES }, () => REVIEWS).flat();
 const N = RING.length;
 /** Degrees between two cards on the wheel, and the whole wheel's span. */
-const STEP = 13;
+const STEP = 15;
 const SPAN = N * STEP;
 /** Degrees a second the wheel turns by itself. */
 const DRIFT = 3.2;
@@ -52,7 +52,11 @@ export function Reviews() {
         const a = fold(i * STEP + s.angle);
         const d = Math.abs(a);
         c.style.transform = `rotate(${a.toFixed(2)}deg)`;
-        c.style.opacity = String(gsap.utils.clamp(0, 1, 1 - (d - 16) / 26));
+        // Solid, like a cut-out on the page (Bob, round 16): toward the ends a card fades into the mist (its ::after),
+        // and once it has gone it is hidden, so it cannot catch the pointer.
+        const fade = gsap.utils.clamp(0, 1, (d - 18) / 26);
+        c.style.setProperty('--fade', fade.toFixed(3));
+        c.style.opacity = fade >= 1 ? '0' : '1';
         c.style.zIndex = String(100 - Math.round(d));
         if (d < bestA) {
           bestA = d;
