@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 /** Every pane of liquid glass (glass.css, letter.css) whose highlight follows the pointer. */
 const PANES =
-  '.nav, .btn, .chip, .sheet, .tier, .tier__info, .offer, .offer-pill, .sunclock, .team__you, .team__you-cta, .team__btn, .offer-row__go, .review, .collection__all, .collection__ring';
+  '.nav, .btn, .chip, .sheet, .tier, .tier__info, .offer, .offer-pill, .offer-row__go, .review, .collection__all, .collection__ring';
 
 /**
  * The light on the glass follows the pointer (Bob, round 18, liquid glass): over a pane it sets --gx/--gy, where the

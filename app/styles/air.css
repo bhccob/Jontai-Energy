@@ -43,7 +43,8 @@ main.air {
 .loyal {
   position: relative;
   z-index: 2;
-  padding: clamp(80px, 12vh, 140px) var(--gutter) clamp(80px, 12vh, 140px);
+  /* Starts just under the header (round 24), so where the zoom hands over the title and most of the cards show. */
+  padding: calc(var(--nav-h) + clamp(12px, 2.4vh, 28px)) var(--gutter) clamp(80px, 12vh, 140px);
   background: #fff;
   color: var(--leaf-ink);
 }
