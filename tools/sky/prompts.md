@@ -48,3 +48,13 @@ Bob, 2026-11-11: "the bulb gotta make sense since its not connected to the socke
 ## The bulb lit from inside (round 17, no credits)
 
 Bob, 2026-11-11: "switching the color doesnt make sense the brightness has to be inside the bulb". `tools/sky/bulb-light.mjs` (run after `publish.mjs`) bakes the lighting island's bulb at 2700, 3500, 4500, 5500 and 6500K from the photo itself: the filaments' own light takes the new colour and burns nearly white at the core, the glass fills with light from the filaments out and stays clear at the rim. Each temperature is `public/sky/island-light-k<K>-{1200,700}.webp`, the island's size and clear except the globe; one shared `island-light-halo-{1200,700}.webp` holds where the light falls round it, and the page paints it in the slider's colour. `--debug` writes check images to `source/`.
+
+## The home on the island (approved by Bob on 2026-11-11, round 26: "generate the first view page model now")
+
+| File | Job | Settings | Prompt |
+| --- | --- | --- | --- |
+| `island-home.png` | 6e4bcccf | GPT Image 2.6, 1:1, 2K, high, transparent, reference = the array island (job 02e3e351) (2.75 credits) | The same style as the reference picture: a floating island of thick green grass and pale limestone rock with hanging roots, seen slightly from above, soft daylight from the upper left. On the island stands a small, modern Aruban home: white walls, a flat roof with a low edge, mint-green front door and window frames, a small covered porch. A neat row of solar panels on an aluminium frame on the flat roof; a clear filament LED bulb hanging lit at the porch; a white outdoor air-conditioner unit on the side wall; a compact grey portable power station on the porch beside an oak lounge chair with sage-green cushions. Warm light glowing from the front window. A few white and yellow wildflowers. Transparent background, nothing else in the picture, no text, no people, no logos. |
+
+It is the first view's island now (`node tools/sky/publish.mjs island-home`). The array island stays as the solar panels' chip on the quote page.
+
+The sunset (round 26, Bob picked "Sunset, lights on", no credits): `tools/sky/home-lights.mjs` cuts the lit window panes and the porch bulb out of this picture into `public/sky/island-home-lights-{1200,700}.webp`, the island's size and clear elsewhere. As the scroll turns the day to dusk the house darkens under CSS tints and these lights stay bright; the zoom then flies into the bulb (`ZOOM` in `components/home/Hero.tsx`) and its light becomes Rewards.

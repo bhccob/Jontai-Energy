@@ -40,6 +40,11 @@ main.air {
 
 /* Rewards slides up over the first view like a sheet (HeroSkyMotion holds the view still under it on wide screens). */
 /* Rewards comes out of the first view's mist (round 18) on plain white (round 21), with no edge between them. */
+/* While the first view holds for its sunset (HeroSkyMotion sets .sky-holds on <html>), Rewards starts this much lower,
+   so it still arrives under the header just as the light fills the screen. */
+.sky-holds .loyal {
+  margin-top: 60vh;
+}
 .loyal {
   position: relative;
   z-index: 2;

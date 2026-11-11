@@ -1,6 +1,6 @@
 // Turns the Higgsfield images in tools/sky/source (GPT Image 2.6, prompts in tools/sky/prompts.md) into what the site
 // serves in public/sky: the sky at a few widths plus a portrait crop for phones, and each island as a transparent WebP.
-// Run from the repo root: node tools/sky/publish.mjs
+// Run from the repo root: node tools/sky/publish.mjs (or name one picture, e.g. `node tools/sky/publish.mjs island-home`)
 
 import { mkdir, stat } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
@@ -11,6 +11,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const src = join(here, 'source');
 const out = join(here, '..', '..', 'public', 'sky');
 const exists = async (p) => !!(await stat(p).catch(() => null));
+const only = process.argv[2];
+const wanted = (name) => !only || only === name;
 
 await mkdir(out, { recursive: true });
 
@@ -23,7 +25,7 @@ const BACKDROPS = [
 ];
 for (const { name, phoneAt } of BACKDROPS) {
   const file = join(src, `${name}.png`);
-  if (!(await exists(file))) continue;
+  if (!wanted(name) || !(await exists(file))) continue;
   for (const w of [3200, 1920]) {
     await sharp(file).resize(w).webp({ quality: w > 2000 ? 70 : 78 }).toFile(join(out, `${name}-${w}.webp`));
   }
@@ -37,7 +39,9 @@ for (const { name, phoneAt } of BACKDROPS) {
 }
 
 // Islands: trimmed to their own edges, then two widths with their transparency kept.
-for (const name of ['array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
+// `home` is the first view's: the home on the island, with the store's products on and around it.
+for (const name of ['home', 'array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
+  if (!wanted(`island-${name}`)) continue;
   // A fixed version wins where one exists (fix-bulb.mjs turns the lighting island's bulb the right way up).
   const fixed = join(src, `island-${name}-fixed.png`);
   const file = (await exists(fixed)) ? fixed : join(src, `island-${name}.png`);
@@ -52,7 +56,7 @@ for (const name of ['array', 'solar', 'power', 'cooling', 'light', 'security', '
 
 // The foreground grass along the bottom of the first view: the blades only, transparent above.
 const grass = join(src, 'grass-front.png');
-if (await exists(grass)) {
+if (wanted('grass-front') && (await exists(grass))) {
   const trimmed = await sharp(grass).trim({ threshold: 1 }).toBuffer();
   for (const w of [2560, 1280]) {
     await sharp(trimmed).resize(w).webp({ quality: 80, alphaQuality: 85 }).toFile(join(out, `grass-front-${w}.webp`));

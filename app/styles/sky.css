@@ -66,6 +66,20 @@
 }
 /* The morning over the valley. It screens: black letters let the valley through untouched, the pale green everywhere
    else turns it into soft morning light with the faintest movement. JONTAI stands across the foot of the screen. */
+/* The sunset over the valley (round 26), multiplied over the morning: golden hour, then dusk, which keeps the last of
+   the light along the horizon. Hidden unless the first view's scroll brings it (HeroSkyMotion). */
+.sky__dusk {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0;
+}
+.sky__dusk--gold {
+  background: linear-gradient(to bottom, #fbe0b4 0%, #f5bd84 58%, #ec9f68 100%);
+}
+.sky__dusk--night {
+  background: linear-gradient(to bottom, #18233b 0%, #2c3c5e 42%, #7b6676 63%, #2b3a3c 82%, #1d2b27 100%);
+}
 .sky__ink {
   position: absolute;
   inset: 0;
@@ -226,7 +240,7 @@
   .sky__name .c:nth-child(6) .ci {
     animation-delay: 1050ms;
   }
-  #hero .hero__island img {
+  #hero .hero__lean {
     animation: hero-arrive 1800ms var(--ease-out) 800ms both;
   }
   #hero .hero__float {
@@ -351,18 +365,87 @@
 .hero__island {
   position: relative;
   z-index: 2;
-  width: min(40vw, 54vh, 720px);
-  margin: 6px 0 clamp(70px, 13vh, 140px);
+  /* The home on the island is nearly square (round 26), so its size follows the screen's height, and the first view
+     still ends where it did, with JONTAI standing behind the rock. */
+  width: min(40vw, 47vh, 680px);
+  margin: 6px 0 clamp(56px, 9vh, 110px);
   pointer-events: none;
 }
 .hero__float {
   position: relative;
 }
-.hero__island img {
+.hero__lean {
+  position: relative;
+}
+.hero__day {
   display: block;
   width: 100%;
   height: auto;
   filter: drop-shadow(0 50px 50px rgb(23 61 44 / 0.28));
+}
+
+/* The sunset (Bob, round 26: "Sunset, lights on"; HeroSkyMotion scrubs it on wide screens, hidden otherwise). Over the
+   house, inside its outline: a golden-hour tint, then a dusk blue, both multiplied; on top the house's own lights
+   (tools/sky/home-lights.mjs), which stay bright, and the glow they throw on the walls. */
+.hero__tint,
+.hero__lights,
+.hero__glow {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.hero__tint {
+  inset: 0;
+  -webkit-mask: url('/sky/island-home-700.webp') center / 100% 100% no-repeat;
+  mask: url('/sky/island-home-700.webp') center / 100% 100% no-repeat;
+  mix-blend-mode: multiply;
+}
+.hero__tint--gold {
+  background: linear-gradient(100deg, #f9cf9c, #f0ad78);
+}
+.hero__tint--night {
+  background: linear-gradient(to bottom, #3c4a70, #2f3d52);
+}
+.hero__lights {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero__glow {
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%);
+}
+/* On the bulb and the window (the same points as in the picture: 475, 320 and 673, 342 of 1200 by 1125). */
+.hero__glow--bulb {
+  left: 39.6%;
+  top: 28.4%;
+  width: 24%;
+  aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgb(255 222 165 / 0.95), rgb(255 190 115 / 0.45) 32%, rgb(255 170 90 / 0.12) 64%, transparent);
+}
+.hero__glow--window {
+  left: 56.1%;
+  top: 30.4%;
+  width: 34%;
+  height: 24%;
+  background: radial-gradient(closest-side, rgb(255 205 140 / 0.5), rgb(255 185 110 / 0.16) 62%, transparent);
+}
+/* The bulb's light, which swells from the bulb (brought to the middle of the screen) until it is all there is: warm
+   at its edge, white at its heart, the white Rewards starts in. */
+.hero__flood {
+  position: absolute;
+  left: 50%;
+  top: 50vh;
+  z-index: 5;
+  width: 30vmax;
+  aspect-ratio: 1;
+  margin: -15vmax 0 0 -15vmax;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff 0%, #fff 34%, #fff1d8 52%, rgb(255 214 150 / 0.55) 72%, rgb(255 200 130 / 0) 100%);
+  opacity: 0;
+  transform: scale(0.1);
+  pointer-events: none;
 }
 /* The mist the scroll flies into at the end of the zoom (HeroSkyMotion): the white Rewards starts with. */
 .hero__mist {
@@ -699,7 +782,7 @@
 
 @media (max-width: 60rem) {
   .hero__island {
-    width: min(88vw, 34rem);
+    width: min(78vw, 30rem);
     margin: clamp(24px, 4vh, 40px) 0 calc(24vw + 24px);
   }
 }

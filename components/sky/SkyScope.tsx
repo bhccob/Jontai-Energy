@@ -34,6 +34,9 @@ export function SkyScope({ children }: { children: ReactNode }) {
         <div className="sky__ink">
           <FitText text="JONTAI" chars className="sky__name" />
         </div>
+        {/* The sunset the first view's scroll brings on wide screens (HeroSkyMotion): golden hour, then dusk. */}
+        <div className="sky__dusk sky__dusk--gold" />
+        <div className="sky__dusk sky__dusk--night" />
       </div>
       {children}
     </div>
