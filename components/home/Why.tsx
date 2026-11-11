@@ -1,42 +1,46 @@
 import type { CSSProperties } from 'react';
 import { ChatsCircle, HouseLine, Truck } from '@phosphor-icons/react/dist/ssr';
 import { Words } from '@/components/ui/Split';
+import { ISLANDS } from '@/lib/islands';
 import { HOME_COPY } from '@/lib/products';
-import { WhyStore } from './WhyStore';
+import { STORE } from '@/lib/store';
 
 const ICONS = [HouseLine, Truck, ChatsCircle];
 
-/** One run of the sentence, split into words that fill in with the scroll (PageMotion, data-fill). A `floor` makes it
- *  a key word: underlined, and under the pointer it lights its floor of the store beside it (WhyStore). */
-function Run({ text, soft, floor }: { text: string; soft?: boolean; floor?: 'ground' | 'upstairs' | 'street' }) {
-  const words = <Words text={text} />;
+/**
+ * The store in three figures, all from its own details: its floors, its ranges (lib/islands) and the days it opens
+ * (lib/store hours: Monday to Saturday, and Sunday).
+ */
+const FACTS = [
+  { n: 2, label: 'Floors', line: 'Power, light and cooling downstairs, furniture one flight up.' },
+  { n: ISLANDS.length, label: 'Ranges', line: ISLANDS.map((i) => i.name.toLowerCase()).join(', ').replace(/^./, (c) => c.toUpperCase()) + '.' },
+  { n: 7, label: 'Days a week', line: STORE.hours.map((h) => `${h.days}, ${h.time}`).join('. ') + '.' },
+];
+
+/** A digit that rolls up from 0 to `n` the first time it is seen (air.css, .tally__roll); without motion it just shows. */
+function Roll({ n }: { n: number }) {
   return (
-    <span className={soft ? 'soft' : undefined}>
-      {floor ? (
-        <span className="why__key" data-key={floor}>
-          {words}
+    <span className="tally__num" aria-hidden="true">
+      <span className="tally__zero">0</span>
+      <span className="tally__roll" style={{ '--n': n } as CSSProperties}>
+        <span>
+          {Array.from({ length: n + 1 }, (_, i) => (
+            <span key={i}>{i}</span>
+          ))}
         </span>
-      ) : (
-        words
-      )}
+      </span>
     </span>
   );
 }
 
 /**
- * What sets the store apart, after Novair's "why us" (redesigned in round 20): the sentence about the two floors,
- * filled in word by word as it scrolls, and beside it the store itself in two floors of glass with its ranges standing
- * on them (WhyStore); the key words and the floors light each other. Then the three things the store does
- * differently, each with its number in thin outlined capitals and its icon in a small glass lens. All from the store's
- * own words (data/products.json, statement).
+ * What sets the store apart, after Novair's "why us" (round 21: no products here, they have their own section, and no
+ * pictures on hover): the sentence about the two floors, filled in word by word as it scrolls, and beside it the store
+ * in three big figures that roll up as they arrive. Then the three things the store does differently, each with its
+ * number in thin outlined capitals and its icon in a small glass lens. All from the store's own words.
  */
 export function Why() {
   const { statement } = HOME_COPY;
-  const [ground, upstairs] = statement.strong.split('. ');
-  const [g1, ...gRest] = ground.split(' ');
-  const [u1, ...uRest] = upstairs.split(' ');
-  const soft = statement.soft.replace(/ at .*/, '');
-  const place = statement.soft.replace(/^.* at (.*)$/, '$1');
   return (
     <section id="why" className="why" aria-labelledby="why-title">
       <div className="why__top">
@@ -49,10 +53,27 @@ export function Why() {
       </div>
       <div className="why__main">
         <p className="why__big" data-fill>
-          <Run text={g1} floor="ground" /> <Run text={`${gRest.join(' ')}.`} /> <Run text={u1} floor="upstairs" /> <Run text={uRest.join(' ')} />{' '}
-          <Run text={`${soft} at`} soft /> <Run text={place} soft floor="street" />
+          <span>
+            <Words text={statement.strong} />
+          </span>{' '}
+          <span className="soft">
+            <Words text={statement.soft} />
+          </span>
         </p>
-        <WhyStore />
+        <dl className="tally">
+          {FACTS.map((f, i) => (
+            <div key={f.label} className="tally__row" data-reveal style={{ '--i': i } as CSSProperties}>
+              <dt>
+                <Roll n={f.n} />
+                <span className="tally__label">
+                  <span className="visually-hidden">{f.n} </span>
+                  {f.label}
+                </span>
+              </dt>
+              <dd>{f.line}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
       <ul className="why__points">
         {statement.points.map((p, i) => {

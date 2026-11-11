@@ -39,12 +39,12 @@ main.air {
 /* ---------- Jontai Rewards: laid out like a price list, two programs side by side (round 15) ---------- */
 
 /* Rewards slides up over the first view like a sheet (HeroSkyMotion holds the view still under it on wide screens). */
-/* Rewards comes out of the first view's mist (round 18): it starts in that colour, with no edge between them. */
+/* Rewards comes out of the first view's mist (round 18) on plain white (round 21), with no edge between them. */
 .loyal {
   position: relative;
   z-index: 2;
   padding: clamp(80px, 12vh, 140px) var(--gutter) clamp(80px, 12vh, 140px);
-  background: var(--sky-top);
+  background: #fff;
   color: var(--leaf-ink);
 }
 .loyal__top {
@@ -509,213 +509,116 @@ main.air {
   line-height: 1.5;
   text-align: right;
 }
-/* The sentence on the left, the store in two floors on the right (round 20). */
+/* The sentence on the left, the store in three figures on the right (round 21). */
 .why__main {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   align-items: end;
   gap: clamp(40px, 6vw, 110px);
   margin-top: clamp(40px, 7vh, 72px);
 }
 /* The sentence, filled in word by word (PageMotion, data-fill). */
 .why__big {
-  max-width: 21ch;
+  max-width: 20ch;
   margin: 0;
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 108%;
-  font-size: clamp(2.3rem, 4.3vw, 5rem);
-  line-height: 1.08;
+  font-size: clamp(2.4rem, 4.6vw, 5.4rem);
+  line-height: 1.06;
   letter-spacing: -0.03em;
 }
 .why__big .soft {
   color: var(--deep-muted);
 }
-/* The key words: a quiet mint underline that fills in under the pointer, or while their floor is lit. */
-.why__key {
-  background: linear-gradient(var(--color-mint), var(--color-mint)) 0 92% / 100% 0.06em no-repeat;
-  transition: background-size 500ms var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .why__key {
-    cursor: default;
-  }
-  .why__key:hover,
-  .why:has(.floor--ground:hover) [data-key='ground'],
-  .why:has(.floor--upstairs:hover) [data-key='upstairs'],
-  .why:has(.store-cut__street:hover) [data-key='street'] {
-    background-size: 100% 0.5em;
-    background-image: linear-gradient(rgb(184 216 168 / 0.24), rgb(184 216 168 / 0.24));
-  }
-}
 
-/* ---------- The store in two floors ---------- */
+/* ---------- The store in three figures ---------- */
 
-.store-cut {
+.tally {
+  margin: 0;
+}
+.tally__row {
   display: grid;
-  gap: 10px;
-  margin: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 6px clamp(18px, 2vw, 32px);
+  padding: 18px 0 20px;
+  border-top: 1px solid rgb(244 246 239 / 0.18);
 }
-.floor {
-  position: relative;
+.tally__row:last-child {
+  border-bottom: 1px solid rgb(244 246 239 / 0.18);
+}
+.tally__row dt {
+  display: contents;
+}
+.tally__row dd {
+  grid-column: 2;
+  margin: 0;
+  color: var(--deep-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+/* The figure: a quiet outlined 0, then the digit itself, solid, rolling up to its value. */
+.tally__num {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-stretch: 125%;
+  font-size: clamp(4rem, 7vw, 8rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  transition: translate 600ms var(--ease-out);
+}
+.tally__zero {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(184 216 168 / 0.55);
+}
+.tally__roll {
+  display: inline-block;
+  height: 0.8em;
   overflow: hidden;
-  padding: 16px 18px 0;
-  border-radius: 10px;
-  background:
-    var(--lg-glint-dark),
-    radial-gradient(60% 50% at 12% 0%, rgb(184 216 168 / 0.16), transparent 70%),
-    linear-gradient(165deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.02) 50%, rgb(184 216 168 / 0.05)),
-    #15301f;
-  box-shadow: var(--lg-rim-dark), var(--lg-drop-deep);
-  transition:
-    opacity 500ms ease,
-    box-shadow 500ms ease;
-}
-/* The floor the islands stand on: a lit edge along the foot of each pane. */
-.floor::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 22%;
-  background: linear-gradient(to top, rgb(184 216 168 / 0.16), transparent);
-  box-shadow: inset 0 -1px 0 rgb(184 216 168 / 0.35);
-  pointer-events: none;
-}
-.floor__label {
-  position: relative;
-  z-index: 1;
-  margin: 0;
   color: var(--deep-ink);
-  font-size: 0.85rem;
-  font-weight: 600;
 }
-.floor__label span {
-  margin-right: 8px;
-  color: var(--color-mint);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.floor__row {
-  position: relative;
-  z-index: 1;
+.tally__roll > span {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  gap: 4px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
+  flex-direction: column;
+  line-height: 0.8;
+  translate: 0 calc(var(--n) * -0.8em);
 }
-.floor--upstairs .floor__row {
-  justify-content: flex-start;
-  padding-left: 18%;
-}
-.floor__row li {
-  flex: 0 1 19%;
-  min-width: 0;
-}
-.floor--upstairs .floor__row li {
-  flex-basis: 30%;
-}
-.floor__item {
-  position: relative;
-  display: block;
-  padding-bottom: 8px;
-  color: var(--deep-ink);
-  text-decoration: none;
-}
-.floor__item img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 14px 12px rgb(0 0 0 / 0.4));
-  transition:
-    scale 600ms var(--ease-out),
-    translate 600ms var(--ease-out);
-}
-/* The island's name rises out of the floor under the pointer or keyboard focus. */
-.floor__name {
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  translate: -50% 4px;
-  padding: 3px 9px;
-  border-radius: var(--radius-pill);
-  background: rgb(14 34 25 / 0.6);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim-dark);
-  font-size: 0.72rem;
-  font-weight: 600;
-  white-space: nowrap;
-  opacity: 0;
-  transition:
-    opacity 300ms ease,
-    translate 400ms var(--ease-out);
-}
-.floor__item:is(:hover, :focus-visible) img {
-  scale: 1.12;
-  translate: 0 -6px;
-}
-.floor__item:is(:hover, :focus-visible) .floor__name {
-  opacity: 1;
-  translate: -50% 0;
-}
-.floor__item:focus-visible {
-  outline: 2px solid var(--color-mint);
-  outline-offset: 2px;
-  border-radius: 8px;
+.tally__roll > span > span {
+  height: 0.8em;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .floor__row li {
-    animation: piece-bob 6s ease-in-out infinite;
-    animation-delay: calc(var(--i, 0) * -1.3s);
+  .js .tally__row:not(.is-in) .tally__roll > span {
+    translate: 0 0;
+  }
+  .tally__roll > span {
+    transition: translate 1600ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(200ms + var(--i, 0) * 160ms);
   }
 }
-/* A key word, or the floor itself, lights that floor and lets the other one rest. */
-@media (hover: hover) and (pointer: fine) {
-  .why:has([data-key='ground']:hover) .floor--upstairs,
-  .why:has([data-key='upstairs']:hover) .floor--ground,
-  .why:has([data-key='street']:hover) .floor {
-    opacity: 0.45;
-  }
-  .why:has([data-key='ground']:hover) .floor--ground,
-  .why:has([data-key='upstairs']:hover) .floor--upstairs,
-  .floor:hover {
-    box-shadow: var(--lg-rim-dark), inset 0 0 0 1px rgb(184 216 168 / 0.4), var(--lg-drop-deep);
-  }
-  .why:has([data-key='street']:hover) .store-cut__street {
-    color: var(--color-mint);
-  }
-}
-.store-cut__street {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 14px;
-  padding: 12px 4px 0;
-  border-top: 1px solid rgb(244 246 239 / 0.22);
+.tally__label {
+  grid-column: 2;
+  align-self: end;
   color: var(--deep-ink);
-  font-weight: 600;
-  transition: color 400ms ease;
-}
-.store-cut__street > svg {
-  color: var(--color-mint);
-}
-.store-cut__address {
   font-family: var(--font-display);
   font-weight: 400;
   font-stretch: 112%;
-  font-size: 1.05rem;
+  font-size: clamp(1.2rem, 1.2vw + 0.6rem, 1.6rem);
   letter-spacing: -0.01em;
   text-transform: uppercase;
+  transition: color 400ms ease;
 }
-.store-cut__street .status {
-  margin-left: auto;
-  color: var(--deep-muted);
-  font-size: 0.85rem;
-  font-weight: 500;
+@media (hover: hover) and (pointer: fine) {
+  .tally__row:hover .tally__num {
+    translate: 10px 0;
+  }
+  .tally__row:hover .tally__roll,
+  .tally__row:hover .tally__label {
+    color: var(--color-mint);
+  }
 }
 
 /* ---------- The three things the store does differently ---------- */
