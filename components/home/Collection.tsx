@@ -9,14 +9,14 @@ import { CollectionMotion } from './CollectionMotion';
 import { LampSlider } from './LampSlider';
 
 /** How wide a picture shows: most of the width when the ranges stack, about a quarter of the screen in the row. */
-const SIZES = '(max-width: 60rem) 78vw, 26vw';
+const SIZES = '(max-width: 60rem) 76vw, 22vw';
 
 /**
  * What we sell, as a collection after Novair's featured work (Bob, round 12): the title and a few words on the left,
- * then the six ranges, each its island floating free with no frame (round 19), at its own height, with its number,
- * its name in wide capitals and the figures that matter beside it, the way a portfolio lists date, client and format.
- * On wide screens with motion the row holds still and the scroll carries it sideways (CollectionMotion); an island
- * leans toward the pointer and grows, and a round "View" follows the pointer over it. Picking one opens that range.
+ * then the six ranges, each in an upright frame of dark glass (round 20), small and at its own height (round 19), with
+ * its number, its name in wide capitals and the figures that matter beside it, the way a portfolio lists date, client
+ * and format. On wide screens with motion the row holds still and the scroll carries it sideways (CollectionMotion); a
+ * frame leans toward the pointer, its island grows, and a round "View" follows the pointer. Picking one opens it.
  * Lighting keeps its bulb and the 2700K to 6500K slider. Elsewhere the ranges stack, taking turns left and right.
  */
 export function Collection() {

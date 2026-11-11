@@ -153,7 +153,7 @@ main.air {
   color: rgb(244 246 239 / 0.8);
 }
 .tier__figure {
-  margin: clamp(26px, 5vh, 46px) 0 0;
+  margin: clamp(18px, 3vh, 32px) 0 0;
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
@@ -168,7 +168,7 @@ main.air {
   font-size: 0.95rem;
 }
 .tier__title {
-  margin: clamp(24px, 4vh, 36px) 0 10px;
+  margin: clamp(16px, 2.6vh, 26px) 0 8px;
   font-family: var(--font-display);
   font-weight: 500;
   font-stretch: 108%;
@@ -182,7 +182,7 @@ main.air {
   line-height: 1.55;
 }
 .tier__meta {
-  margin: 16px 0 28px;
+  margin: 12px 0 22px;
   opacity: 0.6;
   font-size: 0.75rem;
   font-weight: 600;
@@ -509,21 +509,29 @@ main.air {
   line-height: 1.5;
   text-align: right;
 }
-/* The sentence, filled in word by word (PageMotion, data-fill), with the products set into it. */
+/* The sentence on the left, the store in two floors on the right (round 20). */
+.why__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(40px, 6vw, 110px);
+  margin-top: clamp(40px, 7vh, 72px);
+}
+/* The sentence, filled in word by word (PageMotion, data-fill). */
 .why__big {
-  max-width: 23ch;
-  margin: clamp(40px, 7vh, 72px) 0 0;
+  max-width: 21ch;
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 108%;
-  font-size: clamp(2.4rem, 5.2vw, 6rem);
+  font-size: clamp(2.3rem, 4.3vw, 5rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
 }
 .why__big .soft {
   color: var(--deep-muted);
 }
-/* The key words: a quiet underline that fills in mint under the pointer, which calls up the picture (WhyHover). */
+/* The key words: a quiet mint underline that fills in under the pointer, or while their floor is lit. */
 .why__key {
   background: linear-gradient(var(--color-mint), var(--color-mint)) 0 92% / 100% 0.06em no-repeat;
   transition: background-size 500ms var(--ease-out);
@@ -532,66 +540,265 @@ main.air {
   .why__key {
     cursor: default;
   }
-  .why__key:hover {
+  .why__key:hover,
+  .why:has(.floor--ground:hover) [data-key='ground'],
+  .why:has(.floor--upstairs:hover) [data-key='upstairs'],
+  .why:has(.store-cut__street:hover) [data-key='street'] {
     background-size: 100% 0.5em;
-    background-image: linear-gradient(rgb(184 216 168 / 0.22), rgb(184 216 168 / 0.22));
+    background-image: linear-gradient(rgb(184 216 168 / 0.24), rgb(184 216 168 / 0.24));
   }
 }
-.why__float {
-  position: fixed;
-  z-index: 40;
-  top: 0;
-  left: 0;
-  width: clamp(200px, 18vw, 280px);
-  margin: -150px 0 0 24px;
+
+/* ---------- The store in two floors ---------- */
+
+.store-cut {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.floor {
+  position: relative;
+  overflow: hidden;
+  padding: 16px 18px 0;
+  border-radius: 10px;
+  background:
+    var(--lg-glint-dark),
+    radial-gradient(60% 50% at 12% 0%, rgb(184 216 168 / 0.16), transparent 70%),
+    linear-gradient(165deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.02) 50%, rgb(184 216 168 / 0.05)),
+    #15301f;
+  box-shadow: var(--lg-rim-dark), var(--lg-drop-deep);
+  transition:
+    opacity 500ms ease,
+    box-shadow 500ms ease;
+}
+/* The floor the islands stand on: a lit edge along the foot of each pane. */
+.floor::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 22%;
+  background: linear-gradient(to top, rgb(184 216 168 / 0.16), transparent);
+  box-shadow: inset 0 -1px 0 rgb(184 216 168 / 0.35);
   pointer-events: none;
 }
-.why__float img {
+.floor__label {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--deep-ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.floor__label span {
+  margin-right: 8px;
+  color: var(--color-mint);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.floor__row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 4px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.floor--upstairs .floor__row {
+  justify-content: flex-start;
+  padding-left: 18%;
+}
+.floor__row li {
+  flex: 0 1 19%;
+  min-width: 0;
+}
+.floor--upstairs .floor__row li {
+  flex-basis: 30%;
+}
+.floor__item {
+  position: relative;
+  display: block;
+  padding-bottom: 8px;
+  color: var(--deep-ink);
+  text-decoration: none;
+}
+.floor__item img {
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 30px 30px rgb(0 0 0 / 0.45));
+  filter: drop-shadow(0 14px 12px rgb(0 0 0 / 0.4));
+  transition:
+    scale 600ms var(--ease-out),
+    translate 600ms var(--ease-out);
 }
+/* The island's name rises out of the floor under the pointer or keyboard focus. */
+.floor__name {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  translate: -50% 4px;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: rgb(14 34 25 / 0.6);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  box-shadow: var(--lg-rim-dark);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition:
+    opacity 300ms ease,
+    translate 400ms var(--ease-out);
+}
+.floor__item:is(:hover, :focus-visible) img {
+  scale: 1.12;
+  translate: 0 -6px;
+}
+.floor__item:is(:hover, :focus-visible) .floor__name {
+  opacity: 1;
+  translate: -50% 0;
+}
+.floor__item:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .floor__row li {
+    animation: piece-bob 6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -1.3s);
+  }
+}
+/* A key word, or the floor itself, lights that floor and lets the other one rest. */
+@media (hover: hover) and (pointer: fine) {
+  .why:has([data-key='ground']:hover) .floor--upstairs,
+  .why:has([data-key='upstairs']:hover) .floor--ground,
+  .why:has([data-key='street']:hover) .floor {
+    opacity: 0.45;
+  }
+  .why:has([data-key='ground']:hover) .floor--ground,
+  .why:has([data-key='upstairs']:hover) .floor--upstairs,
+  .floor:hover {
+    box-shadow: var(--lg-rim-dark), inset 0 0 0 1px rgb(184 216 168 / 0.4), var(--lg-drop-deep);
+  }
+  .why:has([data-key='street']:hover) .store-cut__street {
+    color: var(--color-mint);
+  }
+}
+.store-cut__street {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 12px 4px 0;
+  border-top: 1px solid rgb(244 246 239 / 0.22);
+  color: var(--deep-ink);
+  font-weight: 600;
+  transition: color 400ms ease;
+}
+.store-cut__street > svg {
+  color: var(--color-mint);
+}
+.store-cut__address {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.store-cut__street .status {
+  margin-left: auto;
+  color: var(--deep-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ---------- The three things the store does differently ---------- */
+
 .why__points {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 clamp(24px, 4vw, 64px);
+  gap: 0;
   margin: clamp(80px, 12vh, 130px) 0 0;
   padding: 0;
   list-style: none;
 }
 .why__points li {
   position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0 clamp(16px, 1.6vw, 26px);
+  padding: 28px clamp(18px, 2.4vw, 40px) 8px;
+}
+.why__points li:first-child {
+  padding-left: 0;
+}
+.why__points li + li {
+  border-left: 1px solid rgb(244 246 239 / 0.14);
 }
 .why__points .rule {
-  margin-bottom: 22px;
+  position: absolute;
+  inset: 0 0 auto;
   color: rgb(244 246 239 / 0.3);
 }
+/* The number in thin outlined capitals, filling with mint under the pointer. */
 .why__num {
-  color: var(--color-mint);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-stretch: 125%;
+  font-size: clamp(3.2rem, 4.6vw, 5.4rem);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(184 216 168 / 0.6);
   font-variant-numeric: tabular-nums;
+  transition: color 500ms ease;
 }
-.why__icon {
-  display: block;
-  margin: 18px 0 16px;
+@media (hover: hover) and (pointer: fine) {
+  .why__points li:hover .why__num {
+    color: var(--color-mint);
+  }
+  .why__points li:hover .why__lens {
+    rotate: -8deg;
+  }
+}
+.why__point {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+/* The icon in a small round lens of glass. */
+.why__lens {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--lg-glint-dark), var(--lg-deep);
+  box-shadow: var(--lg-rim-dark), 0 10px 20px -12px rgb(0 0 0 / 0.6);
   color: var(--color-mint);
+  transition: rotate 600ms var(--ease-out);
 }
 .why__name {
-  margin: 0 0 10px;
+  margin: 4px 0 0;
   font-family: var(--font-display);
   font-weight: 400;
   font-stretch: 112%;
-  font-size: clamp(1.3rem, 1.4vw + 0.6rem, 1.8rem);
+  font-size: clamp(1.25rem, 1.2vw + 0.6rem, 1.7rem);
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
 .why__points p {
-  max-width: 26em;
+  max-width: 24em;
   margin: 0;
   color: var(--deep-muted);
-  font-size: 1.02rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
@@ -673,22 +880,16 @@ main.air {
 .piece:focus {
   outline: none;
 }
-/* Each range is its island alone, floating on the green: no frame (Bob, round 19: "not so much box styling"), only a
-   soft light behind it that gathers where the pointer is (--lx/--ly, CollectionMotion). */
+/* Each range in its own frame of dark glass (Bob, round 20: "the box styling was good for the six ranges ... a bit
+   more rectangle"): an upright rectangle with small corners, lit where the pointer is (--lx/--ly, CollectionMotion). */
 .piece__frame {
   --lx: 50%;
-  --ly: 40%;
+  --ly: 32%;
   position: relative;
-  isolation: isolate;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 10px;
   transform-style: preserve-3d;
-}
-.piece__frame::before {
-  content: '';
-  position: absolute;
-  inset: -14% -16% -8%;
-  z-index: -1;
-  background: radial-gradient(closest-side at var(--lx) var(--ly), rgb(184 216 168 / 0.2), rgb(184 216 168 / 0.06) 55%, transparent);
-  pointer-events: none;
 }
 .piece__count {
   margin: 0;
@@ -699,10 +900,11 @@ main.air {
   letter-spacing: 0.06em;
 }
 .piece__open {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 0;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 6% 7%;
   border: 0;
   background: none;
   cursor: none;
@@ -885,10 +1087,10 @@ main.air {
 .collection[data-row] .collection__foot {
   margin-top: auto;
 }
-/* Smaller again and not lined up (Bob, round 19): each island floats at its own height and a little its own size,
-   its name and figures beside it at its foot. */
+/* Small and not lined up (Bob, round 19), in their frames again (round 20): each frame at its own height and a little
+   its own size, its name and figures beside it at its foot. */
 .collection[data-row] .piece {
-  --pw: clamp(240px, min(24vw, 42vh), 420px);
+  --pw: clamp(240px, min(24vw, 40vh), 400px);
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: auto minmax(0, 15rem);
@@ -900,24 +1102,24 @@ main.air {
   width: var(--pw);
 }
 .collection[data-row] .piece:nth-of-type(6n + 1) {
-  margin-top: 6vh;
+  margin-top: 5vh;
 }
 .collection[data-row] .piece:nth-of-type(6n + 2) {
-  --pw: clamp(220px, min(20vw, 36vh), 360px);
-  margin-top: 30vh;
+  --pw: clamp(220px, min(20vw, 34vh), 340px);
+  margin-top: 24vh;
 }
 .collection[data-row] .piece:nth-of-type(6n + 3) {
-  margin-top: 12vh;
+  margin-top: 11vh;
 }
 .collection[data-row] .piece:nth-of-type(6n + 4) {
-  margin-top: 2vh;
+  margin-top: 1vh;
 }
 .collection[data-row] .piece:nth-of-type(6n + 5) {
-  --pw: clamp(220px, min(21vw, 38vh), 380px);
-  margin-top: 26vh;
+  --pw: clamp(220px, min(21vw, 36vh), 360px);
+  margin-top: 20vh;
 }
 .collection[data-row] .piece:nth-of-type(6n) {
-  margin-top: 10vh;
+  margin-top: 9vh;
 }
 .collection[data-row] .piece__meta {
   display: grid;
@@ -928,9 +1130,9 @@ main.air {
   align-self: center;
 }
 
-/* Stacked (phones, no motion): smaller islands that take turns left and right, so they never line up. */
+/* Stacked (phones, no motion): smaller frames that take turns left and right, so they never line up. */
 .collection:not([data-row]) .piece__frame {
-  width: min(78%, 24rem);
+  width: min(82%, 24rem);
 }
 .collection:not([data-row]) .piece:nth-of-type(even) .piece__frame {
   justify-self: end;
@@ -1711,9 +1913,19 @@ main.air {
   .why__side {
     text-align: left;
   }
+  .why__main {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .why__points {
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    gap: 12px;
+  }
+  .why__points li,
+  .why__points li:first-child {
+    padding: 24px 0 8px;
+  }
+  .why__points li + li {
+    border-left: 0;
   }
   .offer-list__top,
   .team__top {
