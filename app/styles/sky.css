@@ -66,20 +66,6 @@
 }
 /* The morning over the valley. It screens: black letters let the valley through untouched, the pale green everywhere
    else turns it into soft morning light with the faintest movement. JONTAI stands across the foot of the screen. */
-/* The sunset over the valley (round 26), multiplied over the morning: golden hour, then dusk, which keeps the last of
-   the light along the horizon. Hidden unless the first view's scroll brings it (HeroSkyMotion). */
-.sky__dusk {
-  position: absolute;
-  inset: 0;
-  mix-blend-mode: multiply;
-  opacity: 0;
-}
-.sky__dusk--gold {
-  background: linear-gradient(to bottom, #fbe0b4 0%, #f5bd84 58%, #ec9f68 100%);
-}
-.sky__dusk--night {
-  background: linear-gradient(to bottom, #18233b 0%, #2c3c5e 42%, #7b6676 63%, #2b3a3c 82%, #1d2b27 100%);
-}
 .sky__ink {
   position: absolute;
   inset: 0;
@@ -468,72 +454,25 @@
   position: relative;
 }
 
-/* The sunset (Bob, round 26: "Sunset, lights on"; HeroSkyMotion scrubs it on wide screens, hidden otherwise). Over
-   each island, inside its own outline (--mask, its picture), a tint is multiplied that HeroSkyMotion turns from white
-   to golden hour to a dusk blue; on top the lamp's bulb (tools/sky/hero-islands.mjs), which stays bright, and the
-   glow of the lamp and the garden lights. */
-.hero__tint,
-.hero__lights,
-.hero__glow {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.hero__tint {
-  inset: 0;
-  background-color: #fff;
-  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
-  mask: var(--mask) center / 100% 100% no-repeat;
-  mix-blend-mode: multiply;
-}
-.hero__lights {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.hero__glow {
-  border-radius: 50%;
-  mix-blend-mode: screen;
-  transform: translate(-50%, -50%);
-}
-/* On the lamp's bulb (the same point as in the picture: 995, 134 of 1200 by 1172) and on the garden lights (placed in
-   Hero, in % of their islands). */
-.hero__glow--bulb {
-  left: 83%;
-  top: 11.4%;
-  width: 26%;
-  aspect-ratio: 1;
-  background: radial-gradient(closest-side, rgb(255 224 170 / 0.95), rgb(255 192 118 / 0.45) 30%, rgb(255 170 90 / 0.12) 62%, transparent);
-}
-.hero__glow--lamp {
-  width: 70%;
-  aspect-ratio: 1;
-  background: radial-gradient(closest-side, rgb(255 230 180 / 0.95), rgb(255 196 120 / 0.42) 26%, rgb(255 175 95 / 0.1) 60%, transparent);
-}
-/* The bulb's light, which swells from the bulb (brought to the middle of the screen) until it is all there is: warm
-   at its edge, white at its heart, the white Rewards starts in. */
-.hero__flood {
-  position: absolute;
-  left: 50%;
-  top: 50vh;
-  z-index: 5;
-  width: 30vmax;
-  aspect-ratio: 1;
-  margin: -15vmax 0 0 -15vmax;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, #fff 0%, #fff 34%, #fff1d8 52%, rgb(255 214 150 / 0.55) 72%, rgb(255 200 130 / 0) 100%);
-  opacity: 0;
-  transform: scale(0.1);
-  pointer-events: none;
-}
-/* The mist the scroll flies into at the end of the zoom (HeroSkyMotion): the white Rewards starts with. */
+/* The mist the scroll flies into (HeroSkyMotion, round 26: no change of colour, Bob): it rises from below, the sky's
+   own pale white thickening until it is the white Rewards starts in. Twice the first view's height, clear at the top,
+   so it can climb up through it. */
 .hero__mist {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 5;
-  background: radial-gradient(circle at 50% 50%, #fff, #fff 40%, #f6f9f2);
+  height: 200%;
+  background: linear-gradient(to top, #fff 50%, rgb(255 255 255 / 0.9) 64%, rgb(255 255 255 / 0.45) 82%, rgb(255 255 255 / 0));
   opacity: 0;
   pointer-events: none;
+}
+/* While the first view holds (wide screens), the islands' bob is the script's, so it can settle as the camera moves
+   in (HeroSkyMotion). */
+.sky-holds #hero .hero__float,
+.sky-holds #hero .hero__bob {
+  animation: none;
 }
 
 /* ---------- Header over the sky ---------- */

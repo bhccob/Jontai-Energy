@@ -9,19 +9,32 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 /** Wide and tall enough for the first view to fit the screen, so it can hold while Rewards slides over it. */
 const HOLDS = '(min-width: 961px) and (min-height: 640px)';
 const MOTION = '(prefers-reduced-motion: no-preference)';
-/** How much longer than the first view is tall the hold runs, for the sunset, in screen heights (air.css: 60vh). */
-const EXTRA = 0.6;
+/** How much longer than the first view is tall the hold runs, in screen heights (air.css: 50vh). */
+const EXTRA = 0.5;
+/** How far into the hold the islands have stopped bobbing and leaning, so the camera moves in on a still scene. */
+const SETTLE = 0.08;
+
+/**
+ * The islands' bob while the first view holds, the same as the CSS one it replaces there (sky.css: island-float and
+ * isle-bob): how far it lifts (px) and turns (deg), how long one bob lasts and where it starts (s).
+ */
+const BOB_MAIN = { lift: 16, turn: -0.6, period: 8, start: 2.6 };
+const BOB_SMALL: Record<string, { period: number; start: number }> = {
+  lantern: { period: 7, start: -2 },
+  tree: { period: 9.5, start: -5 },
+  meadow: { period: 8, start: -1 },
+  panel: { period: 10.5, start: -7 },
+};
 
 /**
  * As the first view scrolls away its layers come apart, each at its own distance: the words lift away, the name sinks
  * letter by letter, the small islands rise at their own depths.
- * On wide screens the first view holds while the scroll plays a sunset over the islands (Bob, round 26: "Sunset, lights
- * on"; round 18: "seamless transition to the next page"): golden hour, then dusk over the valley and every island; the
- * garden lights on the small islands and then the main island's lamp switch on; the small islands rush past, and the
- * flight goes into the lamp's bulb (data-zoom-x/y on the figure, in % of the picture), brought to the middle of the
- * screen, whose light swells until the screen is the white Rewards starts in, so Rewards follows with no edge.
- * Transforms, opacity and the tints' colour only, scrubbed to the scroll; none with reduced motion. (The entrances and
- * the islands' bob are CSS, sky.css.)
+ * On wide screens the first view holds while one camera moves in (Bob, round 26: "i dont want the transition to change
+ * color ... more seamless so the island dont move ... when it arrive at loyalty like more smooth and blended"): the
+ * islands stop bobbing and leaning, then every one of them grows from the same point (data-zoom-x/y on the main island,
+ * in % of its picture), so nothing slides; the sky's own white mist rises through them; and Rewards, which has risen
+ * into place underneath, comes up out of the white as the mist clears. Transforms and opacity only, scrubbed to the
+ * scroll; none with reduced motion. (The entrances, and the bob elsewhere, are CSS, sky.css.)
  */
 export function HeroSkyMotion() {
   useGSAP(() => {
@@ -45,6 +58,9 @@ export function HeroSkyMotion() {
       }
       return { top, left };
     };
+    // Shared by the hold and the pointer: how still the islands are (1 free, 0 settled), and where the pointer was.
+    const state = { calm: 1, dx: 0, dy: 0 };
+    let lean = () => {};
     const mm = gsap.matchMedia();
 
     mm.add({ motion: MOTION, holds: HOLDS }, (ctx) => {
@@ -61,31 +77,51 @@ export function HeroSkyMotion() {
         return;
       }
 
+      // The camera's point: the main island's zoom point, on the screen. Each island grows from it (its own
+      // transform-origin set to that point), so together they grow as one picture would, and nothing slides.
       const zx = Number(island.dataset.zoomX ?? 50);
       const zy = Number(island.dataset.zoomY ?? 40);
-      // How far the zoom point has to travel to the middle of the screen.
-      const toMiddle = () => window.innerHeight * 0.5 - (offsetOf(island).top + (island.offsetHeight * zy) / 100);
-      const toCentre = () => scope.clientWidth * 0.5 - (offsetOf(island).left + (island.offsetWidth * zx) / 100);
-      // How far a small island moves away from the middle of the screen, the nearer the further: a little while the
-      // sun sets (so they part from the main island as it comes to the middle), then fast as the scroll flies in, so
-      // they have left the screen before the light fills it.
-      const away = (el: HTMLElement, axis: 'x' | 'y', reach: number) => {
-        const o = offsetOf(el);
-        const d =
-          axis === 'x'
-            ? o.left + el.offsetWidth / 2 - scope.clientWidth / 2
-            : o.top + el.offsetHeight / 2 - window.innerHeight / 2;
-        return d * reach * (0.4 + depth(el));
+      const origin = (el: HTMLElement) => {
+        const o = offsetOf(island);
+        const e = offsetOf(el);
+        return `${o.left + (island.offsetWidth * zx) / 100 - e.left}px ${o.top + (island.offsetHeight * zy) / 100 - e.top}px`;
       };
 
-      // The sunset needs room: the hold runs EXTRA screens longer than the first view is tall, and Rewards waits as
-      // much lower (.sky-holds .loyal), so it still arrives under the header just as the light fills the screen.
+      // The hold runs EXTRA screens longer than the first view is tall, and Rewards waits as much lower
+      // (.sky-holds .loyal, on white), so it is in place under the header just as the mist clears.
       const root = document.documentElement;
       root.classList.add('sky-holds');
 
+      // The bob, by script while the view holds (the CSS one is off, .sky-holds), so it can settle smoothly.
+      const float = island.querySelector<HTMLElement>('.hero__float');
+      const bobs = [
+        ...(float ? [{ el: float, lift: BOB_MAIN.lift, turn: BOB_MAIN.turn, period: BOB_MAIN.period, start: BOB_MAIN.start }] : []),
+        ...smalls.flatMap((el) => {
+          const bob = el.querySelector<HTMLElement>('.hero__bob');
+          const name = [...el.classList].find((c) => c.startsWith('hero__small--'))?.slice('hero__small--'.length) ?? '';
+          const b = BOB_SMALL[name];
+          return bob && b ? [{ el: bob, lift: 11, turn: 0.9, period: b.period, start: b.start }] : [];
+        }),
+      ].map((b) => ({ ...b, y: gsap.quickSetter(b.el, 'y', 'px'), r: gsap.quickSetter(b.el, 'rotation', 'deg') }));
+      let calm = 1;
+      const bob = () => {
+        calm += (state.calm - calm) * 0.1;
+        const now = performance.now() / 1000;
+        for (const b of bobs) {
+          // 0 at rest, 1 at the top of the bob, eased in and out like the CSS one.
+          const w = ((1 - Math.cos((2 * Math.PI * Math.max(0, now - b.start)) / b.period)) / 2) * calm;
+          b.y(-b.lift * w);
+          b.r(b.turn * w);
+        }
+      };
+      gsap.ticker.add(bob);
+
       // The first view holds on top while Rewards rises into place under it (pinSpacing off, sky-scope above .loyal):
-      // the light fills the screen just as Rewards reaches the top, the hold ends, and the page is on Rewards with no
-      // empty screen between (Bob, round 23: "gotta land on loyalty program").
+      // the mist clears just as Rewards reaches the top, the hold ends, and the page is on Rewards with no empty
+      // screen between (Bob, round 23: "gotta land on loyalty program").
+      const isles = [island, ...smalls];
+      const mist = all('.hero__mist');
+      const rewards = document.querySelectorAll<HTMLElement>('#rewards .loyal__top, #rewards .tiers');
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
@@ -94,61 +130,56 @@ export function HeroSkyMotion() {
           end: () => `+=${scope.offsetHeight + window.innerHeight * EXTRA}`,
           pin: true,
           pinSpacing: false,
-          scrub: 0.5,
+          scrub: 0.8,
           invalidateOnRefresh: true,
-          // Released without spacing, the first view would scroll on over Rewards; by then it is all light, so it
-          // steps aside (hidden) and comes back when the scroll returns into it.
-          onLeave: () => gsap.set(scope, { autoAlpha: 0 }),
-          onEnterBack: () => gsap.set(scope, { autoAlpha: 1 }),
+          onUpdate: (self) => {
+            state.calm = 1 - gsap.utils.clamp(0, 1, self.progress / SETTLE);
+            lean();
+          },
+          // Released without spacing, the first view would scroll on over Rewards; by then it is clear, so it steps
+          // aside and comes back when the scroll returns into it.
+          onLeave: () => gsap.set(scope, { visibility: 'hidden' }),
+          onEnterBack: () => gsap.set(scope, { visibility: 'visible' }),
         },
       });
-      const tints = all('.hero__tint');
-      tl.to(hero.querySelector('.hero__top'), { yPercent: -40, opacity: 0, duration: 0.3 }, 0)
-        .to(letters, { yPercent: (i) => 50 + i * 12, opacity: 0, duration: 0.45, stagger: 0.02 }, 0)
-        // The main island comes to the middle of the screen, its bulb at the centre, growing a little while the sun
-        // sets.
-        .to(island, { x: toCentre, y: toMiddle, duration: 0.5, ease: 'power2.out' }, 0)
-        .fromTo(island, { transformOrigin: `${zx}% ${zy}%`, scale: 1 }, { scale: 1.15, duration: 0.36 }, 0)
-        // Golden hour, then dusk: over the valley, and over every island inside its own outline.
-        .to(all('.sky__dusk--gold'), { opacity: 1, duration: 0.14 }, 0.03)
-        .fromTo(tints, { opacity: 1, backgroundColor: '#ffffff' }, { backgroundColor: '#f6c592', duration: 0.14 }, 0.03)
-        .to(all('.sky__dusk--night'), { opacity: 1, duration: 0.18 }, 0.16)
-        .to(tints, { backgroundColor: '#3d4b70', duration: 0.2 }, 0.17)
-        .to(all('.sky__dusk--gold'), { opacity: 0, duration: 0.12 }, 0.22)
-        // The lights come on, one by one: the garden lights, then the lamp.
-        .to(all('.hero__small--lantern .hero__glow'), { opacity: 1, duration: 0.03 }, 0.3)
-        .to(all('.hero__small--meadow .hero__glow'), { opacity: 1, duration: 0.03 }, 0.33)
-        .to(all('.hero__lights, .hero__glow--bulb'), { opacity: 1, duration: 0.04 }, 0.37)
-        // A beat on the lit islands, then into the bulb, faster and faster, while the small islands rush past; its
-        // light swells from it, warm at the edge and white at the heart, until the screen is white: Rewards.
-        .to(island, { scale: 14, duration: 0.64, ease: 'power2.in' }, 0.36)
-        .fromTo(all('.hero__flood'), { scale: 0.1, opacity: 0 }, { scale: 7, duration: 0.26, ease: 'power2.in' }, 0.66)
-        .to(all('.hero__flood'), { opacity: 1, duration: 0.05 }, 0.66)
-        .to(all('.hero__mist'), { opacity: 1, duration: 0.14, ease: 'power1.in' }, 0.86);
-      for (const el of smalls) {
-        tl.to(el, { x: () => away(el, 'x', 0.3), y: () => away(el, 'y', 0.12) - 26 * depth(el), duration: 0.36 }, 0).to(
-          el,
-          { x: () => away(el, 'x', 3), y: () => away(el, 'y', 3), scale: 1 + 2.6 * depth(el), duration: 0.48, ease: 'power2.in' },
-          0.4,
-        );
-      }
-      if (media) tl.fromTo(media, { scale: 1.04 }, { scale: 1.3, duration: 1 }, 0);
+      tl.to(hero.querySelector('.hero__top'), { yPercent: -30, opacity: 0, duration: 0.28 }, 0)
+        .to(letters, { yPercent: (i) => 40 + i * 10, opacity: 0, duration: 0.4, stagger: 0.02 }, 0)
+        // One camera moving in: slowly at first, then more surely, every island from the same point.
+        .fromTo(
+          isles,
+          { transformOrigin: (_i: number, el: HTMLElement) => origin(el), scale: 1 },
+          { scale: 3.2, duration: 0.8, ease: 'power2.in' },
+          0.06,
+        )
+        // The sky's white mist rises through the islands until it is all white…
+        .fromTo(mist, { y: 0, yPercent: 50, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.38, ease: 'power1.inOut' }, 0.42)
+        // …then clears, and Rewards, in place underneath on white, comes up out of it.
+        .to(scope, { opacity: 0, duration: 0.18, ease: 'power1.inOut' }, 0.82)
+        .fromTo(rewards, { opacity: 0, y: 48 }, { opacity: 1, y: 0, duration: 0.2, stagger: 0.04, ease: 'power2.out' }, 0.8);
+      if (media) tl.fromTo(media, { scale: 1.04 }, { scale: 1.2, duration: 1 }, 0);
 
-      return () => root.classList.remove('sky-holds');
+      return () => {
+        gsap.ticker.remove(bob);
+        gsap.set(
+          bobs.map((b) => b.el),
+          { clearProps: 'transform' },
+        );
+        root.classList.remove('sky-holds');
+      };
     });
 
     // The islands lean toward the pointer, as if the air moved them: the main one turns a little, the small ones drift
-    // by their depth, the near ones most.
+    // by their depth, the near ones most. They settle as the camera moves in (state.calm).
     mm.add(`${MOTION} and (hover: hover) and (pointer: fine) and (min-width: 961px)`, () => {
-      const lean = hero.querySelector<HTMLElement>('.hero__lean');
-      if (!lean) return;
-      const toX = gsap.quickTo(lean, 'x', { duration: 1.4, ease: 'power3' });
-      const toY = gsap.quickTo(lean, 'y', { duration: 1.4, ease: 'power3' });
-      const toR = gsap.quickTo(lean, 'rotationY', { duration: 1.4, ease: 'power3' });
+      const leanEl = hero.querySelector<HTMLElement>('.hero__lean');
+      if (!leanEl) return;
+      const toX = gsap.quickTo(leanEl, 'x', { duration: 1.4, ease: 'power3' });
+      const toY = gsap.quickTo(leanEl, 'y', { duration: 1.4, ease: 'power3' });
+      const toR = gsap.quickTo(leanEl, 'rotationY', { duration: 1.4, ease: 'power3' });
       // Resting values written out: left to itself GSAP would read the island's transform while the CSS entrance
       // still holds it at its start (120px down, 90%), keep that as the resting place, and the island would end
-      // there, low and small, off the zoom's aim (round 26).
-      gsap.set(lean, { x: 0, y: 0, scale: 1, rotationY: 0, transformPerspective: 1200 });
+      // there, low and small (round 26).
+      gsap.set(leanEl, { x: 0, y: 0, scale: 1, rotationY: 0, transformPerspective: 1200 });
       const drifts = smalls.flatMap((el) => {
         const drift = el.querySelector<HTMLElement>('.hero__drift');
         if (!drift) return [];
@@ -160,19 +191,26 @@ export function HeroSkyMotion() {
           },
         ];
       });
-      const move = (e: PointerEvent) => {
-        const dx = e.clientX / window.innerWidth - 0.5;
-        const dy = e.clientY / window.innerHeight - 0.5;
-        toX(dx * 30);
-        toY(dy * 18);
-        toR(dx * 10);
+      lean = () => {
+        const { dx, dy, calm } = state;
+        toX(dx * 30 * calm);
+        toY(dy * 18 * calm);
+        toR(dx * 10 * calm);
         for (const f of drifts) {
-          f.x(dx * 70 * f.d);
-          f.y(dy * 40 * f.d);
+          f.x(dx * 70 * f.d * calm);
+          f.y(dy * 40 * f.d * calm);
         }
       };
+      const move = (e: PointerEvent) => {
+        state.dx = e.clientX / window.innerWidth - 0.5;
+        state.dy = e.clientY / window.innerHeight - 0.5;
+        lean();
+      };
       window.addEventListener('pointermove', move, { passive: true });
-      return () => window.removeEventListener('pointermove', move);
+      return () => {
+        window.removeEventListener('pointermove', move);
+        lean = () => {};
+      };
     });
   });
   return null;
