@@ -21,10 +21,10 @@ test('the Google rating is the listing’s own, not rounded up', () => {
   assert.equal(GOOGLE_RATING.count, 73);
 });
 
-test('the team has its two people, each with a photo on disk', () => {
+test('the team row has its five people; every photo it names is on disk', () => {
   assert.deepEqual(
     TEAM.map((p) => p.name),
-    ['Chakho Chung', 'Bob Chung'],
+    ['Chakho Chung', 'Bob Chung', 'Lily', 'Chi Wai', 'Benny'],
   );
-  for (const p of TEAM) assert.ok(p.photo && existsSync(join(import.meta.dirname, '..', 'public', p.photo)), p.name);
+  for (const p of TEAM.filter((t) => t.photo)) assert.ok(existsSync(join(import.meta.dirname, '..', 'public', p.photo!)), p.name);
 });

@@ -64,6 +64,72 @@ main.air {
   font-size: clamp(1.05rem, 0.3vw + 1rem, 1.2rem);
   line-height: 1.55;
 }
+/* Who the rewards are for: home or business. The headline, the steps and the card follow the choice. */
+.loyal__for {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: clamp(32px, 5vh, 48px);
+}
+.loyal__for-label {
+  margin-right: 6px;
+  color: var(--leaf-muted);
+  font-weight: 600;
+}
+.loyal__for button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
+  color: var(--leaf-ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 350ms ease,
+    color 350ms ease,
+    box-shadow 350ms ease,
+    scale 120ms ease-out;
+}
+.loyal__for button[aria-checked='true'] {
+  background: var(--color-mint);
+  box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
+}
+.loyal__for button:active {
+  scale: 0.97;
+}
+@media (hover: hover) and (pointer: fine) {
+  .loyal__for button:hover {
+    box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
+  }
+}
+.loyal__for :focus-visible {
+  outline: 2px solid var(--leaf-ink);
+  outline-offset: 3px;
+}
+/* The headline changes with the choice: its words rise into place again. */
+@keyframes loyal-rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .loyal__title .wi {
+    animation: loyal-rise 900ms var(--ease-out) both;
+  }
+  .loyal__title > span:nth-of-type(2) .wi {
+    animation-delay: 120ms;
+  }
+  .loyal__how {
+    animation: hero-rise 600ms var(--ease-out) both;
+  }
+}
 .loyal__stage {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
@@ -1117,13 +1183,108 @@ li[data-on] .loyal__step-text > span {
   font-size: 1rem;
   line-height: 1.55;
 }
-.team__grid {
+/* One row: the team slides on the left, two at a time; You? holds still on the right (Bob, round 14). */
+.team__row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 48px 14px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
   margin: clamp(48px, 7vh, 72px) 0 0;
+}
+.team__rail {
+  min-width: 0;
+}
+.team__scroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 14px) / 2);
+  column-gap: 14px;
+  margin: 0;
   padding: 0;
   list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  cursor: grab;
+}
+.team__scroller::-webkit-scrollbar {
+  display: none;
+}
+.team__scroller > li {
+  scroll-snap-align: start;
+}
+.team__scroller[data-drag] {
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+.team__scroller:focus-visible {
+  outline: 2px solid var(--leaf-ink);
+  outline-offset: 4px;
+}
+.team__nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+.team__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
+  color: var(--leaf-ink);
+  cursor: pointer;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease,
+    opacity 300ms ease,
+    scale 120ms ease-out;
+}
+.team__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.team__btn:not(:disabled):active {
+  scale: 0.95;
+}
+@media (hover: hover) and (pointer: fine) {
+  .team__btn:not(:disabled):hover {
+    background: var(--leaf-ink);
+    color: var(--mist);
+    box-shadow: none;
+  }
+}
+.team__count {
+  margin-left: 6px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.team__count span {
+  color: var(--leaf-muted);
+  font-weight: 500;
+}
+.team__progress {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  margin-left: 12px;
+  border-radius: 2px;
+  background: var(--leaf-rule);
+}
+.team__progress i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: var(--leaf-ink);
+  transition: left 300ms ease-out;
 }
 .person__frame {
   aspect-ratio: 4 / 5;
@@ -1247,7 +1408,7 @@ li[data-on] .loyal__step-text > span {
 }
 /* The photos and the panel arrive one after another. */
 @media (prefers-reduced-motion: no-preference) {
-  .js .team__grid > li {
+  .js .team__row :is(.team__scroller > li, .person--you) {
     opacity: 0;
     translate: 0 60px;
     transition:
@@ -1255,7 +1416,7 @@ li[data-on] .loyal__step-text > span {
       translate 1100ms var(--ease-out);
     transition-delay: calc(var(--i, 0) * 120ms);
   }
-  .js .team__grid.is-in > li {
+  .js .team__row.is-in :is(.team__scroller > li, .person--you) {
     opacity: 1;
     translate: 0 0;
   }
@@ -1662,9 +1823,15 @@ li[data-on] .loyal__step-text > span {
     width: 44px;
     height: 44px;
   }
-  .team__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    row-gap: 32px;
+  .team__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .team__scroller {
+    grid-auto-columns: calc((100% - 14px) / 2);
+  }
+  .person--you {
+    max-width: 30rem;
   }
   .team__you {
     aspect-ratio: auto;
@@ -1684,8 +1851,8 @@ li[data-on] .loyal__step-text > span {
   .collection__track {
     gap: 56px;
   }
-  .team__grid {
-    grid-template-columns: minmax(0, 1fr);
+  .team__scroller {
+    grid-auto-columns: 82%;
   }
   .footer__nav {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

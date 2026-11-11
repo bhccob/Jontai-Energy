@@ -1,7 +1,5 @@
-// The people behind Jontai Energy (Bob, 2026-11-11). Titles from what each leads: Bob Chung the design, Chakho Chung
-// the ideas and the technical side, each at the top of it. Photos: public/team, cropped to head and shoulders.
-// The second row holds places for three more people (Bob, round 13: CEO / Founder, CTO, manager) until they have
-// names and photos; a place with no photo shows as a placeholder.
+// The people behind Jontai Energy (Bob, 2026-11-11). Titles as Bob gave them. Photos: public/team, cropped to head
+// and shoulders; a person without a photo yet shows a placeholder until one is added here.
 
 export interface Person {
   name: string;
@@ -9,16 +7,13 @@ export interface Person {
   photo?: string;
 }
 
+/** In the order the team row shows them: the two with photos first, the others slide in after them. */
 export const TEAM: Person[] = [
-  { name: 'Chakho Chung', role: 'Concept & Technical Director', photo: '/team/chakho-chung.webp' },
-  { name: 'Bob Chung', role: 'Creative Director', photo: '/team/bob-chung.webp' },
-];
-
-/** Places for people still to be named. */
-export const TEAM_TO_COME: Person[] = [
-  { name: 'CEO / Founder', role: 'Name and photo to come' },
-  { name: 'CTO', role: 'Name and photo to come' },
-  { name: 'Store Manager', role: 'Name and photo to come' },
+  { name: 'Chakho Chung', role: 'Chief Technology Officer', photo: '/team/chakho-chung.webp' },
+  { name: 'Bob Chung', role: 'Creative Designer', photo: '/team/bob-chung.webp' },
+  { name: 'Lily', role: 'Founder / CEO' },
+  { name: 'Chi Wai', role: 'Chief Financial Officer' },
+  { name: 'Benny', role: 'Chief Operating Officer' },
 ];
 
 /** The message an applicant sends on WhatsApp. */

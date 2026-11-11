@@ -55,7 +55,7 @@ The header's "Bundle offers" panel (`lib/bundles.ts`) shows three sample bundles
 ## Added in round 12 (2026-11-11)
 
 - **Reviews** (`lib/reviews.ts`): four real Google reviews of the store, read from its Google Maps listing on 2026-11-11, with the listing's own 4.5 rating and 73-review count. Reviewer names are shortened to a first name and an initial; texts are the reviewers' own words with spacing and one spelling slip tidied and one cut marked. Update the rating, count and date together, and swap reviews freely.
-- **Team** (`lib/team.ts`, `public/team`): photos of Chakho Chung and Bob Chung supplied by Bob, cropped to head and shoulders. Titles (Concept & Technical Director, Creative Director) were worded from Bob's description of what each leads; confirm them.
+- **Team** (`lib/team.ts`, `public/team`): photos of Chakho Chung and Bob Chung supplied by Bob, cropped to head and shoulders. Names and titles as Bob gave them (round 14): Chakho Chung, Chief Technology Officer; Bob Chung, Creative Designer; Lily, Founder / CEO; Chi Wai, Chief Financial Officer; Benny, Chief Operating Officer. Lily, Chi Wai and Benny show a "Photo to come" placeholder until photos are added.
 
 ## Illustrative material to replace
 
