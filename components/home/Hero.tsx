@@ -7,11 +7,14 @@ import { SunClock } from './SunClock';
 /** When each part of the entrance starts, in ms (sky.css, hero-rise). */
 const at = (d: number) => ({ '--d': d }) as CSSProperties;
 
+/** Where the scroll flies into the island (HeroSkyMotion), in % of the picture: the middle of the solar array. */
+const ZOOM = { x: 50, y: 34 };
+
 /**
  * The first view, kept to a few things on a plain deep green (Bob, rounds 11 and 12: "too cluttered"): the live line
  * about the sun over the store, the owner's line in thin wide capitals, one sentence that says what the store is, one
  * way in. Under it the solar island floats in front of JONTAI, whose letters show the moving valley (SkyScope).
- * HeroSkyMotion pulls the layers apart as Rewards slides over.
+ * HeroSkyMotion flies into the island and out into Rewards.
  */
 export function Hero() {
   const { hero } = HOME_COPY;
@@ -50,7 +53,7 @@ export function Hero() {
       </div>
 
       <div className="hero__stage">
-        <figure className="hero__island" aria-hidden="true">
+        <figure className="hero__island" aria-hidden="true" data-zoom-x={ZOOM.x} data-zoom-y={ZOOM.y}>
           <div className="hero__float">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -66,7 +69,8 @@ export function Hero() {
           </div>
         </figure>
       </div>
-      <div className="hero__shade" aria-hidden="true" />
+      {/* The morning mist the zoom flies into; Rewards starts in the same colour (HeroSkyMotion). */}
+      <div className="hero__mist" aria-hidden="true" />
       <HeroSkyMotion />
     </section>
   );

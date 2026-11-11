@@ -1,7 +1,7 @@
 // The bundle offers in the header's popup (round 9). Sample offers: the owner has not confirmed bundle contents or
 // savings, so the popup says so, and no prices are published (PRODUCT.md). Listed in docs/content-placeholders.md.
 
-import { whatsappLink } from './contact.ts';
+import { contactHref } from './message.ts';
 
 export interface Bundle {
   id: string;
@@ -20,8 +20,8 @@ export const BUNDLES: Bundle[] = [
 
 export const BUNDLE_NOTE = "Sample offers. Ask in store for this month's bundles.";
 
-/** One WhatsApp message asking about the bundles. */
-export const bundleQuestion = () => whatsappLink('Hello Jontai Energy, I would like to ask about your bundle offers.');
+/** A message about the bundles, from the contact page with its topic chosen (round 18: the website's own form). */
+export const bundleQuestion = () => contactHref('bundles');
 
 /** Whether the popup opens by itself: once per visit, near the top, never when it was already seen or closed. */
 export function shouldAutoOpen(seen: boolean, scrollY: number, viewport: number) {

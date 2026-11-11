@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLenis } from 'lenis/react';
-import { DIRECTIONS_URL, whatsappLink } from '@/lib/contact';
+import { DIRECTIONS_URL } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { BundleOffer } from './BundleOffer';
 
@@ -123,8 +123,8 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
           </li>
         </ul>
         <div className="actions">
-          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="btn btn--primary">
-            WhatsApp us
+          <a href="/contact" className="btn btn--primary">
+            Send a message
           </a>
           <a href="/quote" className="btn btn--ghost">
             {QUOTE_ACTION}

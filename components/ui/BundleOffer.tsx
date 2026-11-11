@@ -9,7 +9,7 @@ const SEEN = 'jontai-bundles-seen';
 
 /**
  * The header's "Bundle offers" pill and the small panel it opens under the header: three ruled rows (name, saving,
- * what is in it), one WhatsApp question, and the note that these are samples. Not a modal: the page stays usable and
+ * what is in it), one way to ask (the contact page), and the note that these are samples. Not a modal: the page stays usable and
  * focus stays where it was when it opens by itself (once per visit, near the top, a moment after load). Opened from
  * the pill, focus goes in; Escape or the close button closes it and focus returns to the pill. It also closes when the
  * menu opens (`hidden`) and, if it opened by itself, once the visitor scrolls on.
@@ -121,8 +121,8 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
             </li>
           ))}
         </ol>
-        <a href={bundleQuestion()} target="_blank" rel="noopener noreferrer" className="offer__ask">
-          Ask on WhatsApp <ArrowRight size={18} weight="bold" aria-hidden="true" />
+        <a href={bundleQuestion()} className="offer__ask">
+          Ask about a bundle <ArrowRight size={18} weight="bold" aria-hidden="true" />
         </a>
         <p className="offer__note">{BUNDLE_NOTE}</p>
       </div>

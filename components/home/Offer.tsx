@@ -21,9 +21,9 @@ const ROWS: Row[] = [
     href: '#products',
   },
   {
-    title: 'Quotes and WhatsApp',
-    text: 'Buy at the counter, on WhatsApp or with a quote. No cart, no checkout.',
-    tags: ['At the counter', 'WhatsApp', 'Quote request'],
+    title: 'Quotes and messages',
+    text: 'Buy at the counter, ask for a quote or send us a message. No cart, no checkout.',
+    tags: ['At the counter', 'Quote request', 'Message'],
     href: '/quote',
   },
   {
@@ -43,7 +43,6 @@ const ROWS: Row[] = [
     text: "Kits that cost less together. Sample offers; ask in store for this month's bundles.",
     tags: ['Solar kits', 'Security', 'Outdoor lighting'],
     href: bundleQuestion(),
-    external: true,
   },
   {
     title: 'Support after you buy',

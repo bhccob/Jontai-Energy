@@ -65,7 +65,7 @@ export const WARRANTY = {
     'Software or settings, unless a hardware fault causes it',
   ],
   claim: [
-    { title: 'Get in touch', line: 'Call, WhatsApp or email us, or come by the store.' },
+    { title: 'Get in touch', line: 'Call, email or send us a message from the contact page, or come by the store.' },
     { title: 'Bring the receipt', line: 'The original receipt or invoice, and the serial number where there is one.' },
     { title: 'Show us the fault', line: 'Photos or a short video help us assess it faster.' },
     { title: 'Hear back within 5 business days', line: 'We assess the claim and tell you the outcome and the next step.' },

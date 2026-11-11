@@ -2,11 +2,9 @@ import type { Metadata } from 'next';
 import { CatalogProvider } from '@/components/catalog/CatalogProvider';
 import { Header } from '@/components/ui/Header';
 import { Footer } from '@/components/sections/Footer';
+import { Letter } from '@/components/forms/Letter';
 import { QuoteForm } from '@/components/quote/QuoteForm';
-import { StoreCard } from '@/components/quote/StoreCard';
-import { Words } from '@/components/ui/Split';
 import { topicsFrom } from '@/lib/quote';
-import { SERVICE_LINE } from '@/lib/store';
 
 export const metadata: Metadata = {
   title: 'Request a quote | Jontai Energy',
@@ -18,24 +16,9 @@ export default function QuotePage({ searchParams }: { searchParams: { for?: stri
   return (
     <CatalogProvider>
       <Header base="/" />
-      <main id="main" className="quote">
-        <div className="container quote__grid">
-          {/* On phones the form comes straight after the heading, and the store's details follow it. */}
-          <div className="quote__intro">
-            <div className="quote__head">
-              <h1 className="h-section" data-words>
-                <Words text="Request a quote." />
-              </h1>
-              <p className="lead">Tell us what you need. Jontai Energy replies by email with current prices and what is in stock.</p>
-            </div>
-            <div className="quote__aside">
-              <StoreCard />
-              <p className="quote__service">{SERVICE_LINE}</p>
-            </div>
-          </div>
-          <QuoteForm initial={topicsFrom(searchParams.for)} />
-        </div>
-      </main>
+      <Letter kicker="(Quote)" title={['Request', 'a quote.']} lead="Tell us what you need. Jontai Energy replies by email with current prices and what is in stock.">
+        <QuoteForm initial={topicsFrom(searchParams.for)} />
+      </Letter>
       <Footer base="/" />
     </CatalogProvider>
   );

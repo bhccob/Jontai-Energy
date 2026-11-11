@@ -1,5 +1,4 @@
 import { OpenStatus } from '@/components/home/OpenStatus';
-import { whatsappLink } from '@/lib/contact';
 import { SERVICE_LINE, STORE } from '@/lib/store';
 
 /** The store's hours with the live open line, how to reach it and the service line, in three ruled columns on forest. */
@@ -26,9 +25,7 @@ export function StoreDetails() {
         </span>
         <div data-reveal>
           <a href={`tel:${STORE.phone.replace(/\s/g, '')}`}>{STORE.phone}</a>
-          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-            WhatsApp
-          </a>
+          <a href="/contact">Send a message</a>
           <a href={`mailto:${STORE.email}`}>{STORE.email}</a>
         </div>
       </div>

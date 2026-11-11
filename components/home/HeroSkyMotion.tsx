@@ -11,33 +11,56 @@ const HOLDS = '(min-width: 961px) and (min-height: 640px)';
 const MOTION = '(prefers-reduced-motion: no-preference)';
 
 /**
- * As the first view scrolls away its layers come apart, each at its own distance: the island rises and turns, the name
- * sinks letter by letter, the words lag, the valley inside the letters barely moves.
- * On wide screens the first view also holds still while Rewards slides up over it like a sheet, and it sinks back and
- * darkens under it; the island leans toward the pointer. Transforms only, scrubbed to the scroll; none with reduced
- * motion. (The entrance and the island's bob are CSS, sky.css.)
+ * As the first view scrolls away its layers come apart, each at its own distance: the words lift away, the name sinks
+ * letter by letter, the valley inside the letters barely moves.
+ * On wide screens (Bob, round 18: "when scroll it will zoom on the island and seamless transition to the next page") the
+ * first view holds while the scroll flies into the island: it grows toward its zoom point (data-zoom-x/y on the
+ * figure, in % of the picture) and brings that point to the middle of the screen, and the morning mist rises until
+ * the screen is the colour Rewards starts with, so Rewards follows with no edge. Transforms and opacity only, scrubbed
+ * to the scroll; none with reduced motion. (The entrance and the island's bob are CSS, sky.css.)
  */
 export function HeroSkyMotion() {
   useGSAP(() => {
     const hero = document.getElementById('hero');
     const scope = hero?.closest<HTMLElement>('.sky-scope');
     const media = document.querySelector<HTMLElement>('.sky__media');
-    if (!hero || !scope) return;
+    const island = hero?.querySelector<HTMLElement>('.hero__island');
+    if (!hero || !scope || !island) return;
     const mm = gsap.matchMedia();
 
     mm.add({ motion: MOTION, holds: HOLDS }, (ctx) => {
       const { motion, holds } = ctx.conditions as Record<string, boolean>;
       if (!motion) return;
-      const scrub = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true };
-      gsap.to(hero.querySelector('.hero__island'), { yPercent: holds ? -30 : -8, rotate: holds ? -4 : -2, ease: 'none', scrollTrigger: scrub });
-      gsap.to(hero.querySelector('.hero__top'), { yPercent: holds ? -18 : 0, opacity: holds ? 0.2 : 1, ease: 'none', scrollTrigger: scrub });
-      gsap.to(scope.querySelectorAll('.sky__name .c'), { yPercent: (i) => 18 + i * 9, ease: 'none', scrollTrigger: scrub });
-      if (media) gsap.fromTo(media, { scale: 1.04 }, { scale: 1.14, yPercent: -3, ease: 'none', scrollTrigger: scrub });
-      if (!holds) return;
-      // The sheet: the first view holds for a screen while Rewards rises over it, sinking back and darkening.
-      ScrollTrigger.create({ trigger: scope, start: 'top top', end: '+=100%', pin: true, pinSpacing: false });
-      gsap.fromTo(hero, { scale: 1 }, { scale: 0.92, transformOrigin: '50% 30%', ease: 'none', scrollTrigger: scrub });
-      gsap.fromTo(hero.querySelector('.hero__shade'), { opacity: 0 }, { opacity: 0.55, ease: 'none', scrollTrigger: scrub });
+      const letters = scope.querySelectorAll('.sky__name .c');
+      if (!holds) {
+        // Phones and short screens: the layers drift apart as the first view scrolls by.
+        const scrub = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true };
+        gsap.to(island, { yPercent: -8, rotate: -2, ease: 'none', scrollTrigger: scrub });
+        gsap.to(letters, { yPercent: (i) => 18 + i * 9, ease: 'none', scrollTrigger: scrub });
+        if (media) gsap.fromTo(media, { scale: 1.04 }, { scale: 1.14, yPercent: -3, ease: 'none', scrollTrigger: scrub });
+        return;
+      }
+
+      const zx = Number(island.dataset.zoomX ?? 50);
+      const zy = Number(island.dataset.zoomY ?? 40);
+      // How far the zoom point has to travel to reach the middle of the screen. Layout offsets, so the zoom's own
+      // transforms never skew the measure when it is taken again on resize.
+      const toMiddle = () => {
+        let top = 0;
+        for (let el: HTMLElement | null = island; el && el !== scope; el = el.offsetParent as HTMLElement | null) top += el.offsetTop;
+        return window.innerHeight * 0.5 - (top + (island.offsetHeight * zy) / 100);
+      };
+      const tl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: { trigger: scope, start: 'top top', end: '+=115%', pin: true, scrub: 0.6, invalidateOnRefresh: true },
+      });
+      tl.to(hero.querySelector('.hero__top'), { yPercent: -40, opacity: 0, duration: 0.3 }, 0)
+        .to(letters, { yPercent: (i) => 50 + i * 12, opacity: 0, duration: 0.45, stagger: 0.02 }, 0)
+        // First the island rises to the middle of the screen, then the flight in speeds up.
+        .to(island, { y: toMiddle, duration: 0.55, ease: 'power2.out' }, 0)
+        .fromTo(island, { transformOrigin: `${zx}% ${zy}%`, scale: 1 }, { scale: 10, duration: 1, ease: 'power3.in' }, 0)
+        .to(hero.querySelector('.hero__mist'), { opacity: 1, duration: 0.32, ease: 'power1.in' }, 0.66);
+      if (media) tl.fromTo(media, { scale: 1.04 }, { scale: 1.3, duration: 1 }, 0);
     });
 
     // The island leans toward the pointer, as if the air moved it.

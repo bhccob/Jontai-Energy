@@ -16,8 +16,8 @@ test('the popup says the offers are samples and never promises installation', ()
   assert.doesNotMatch(JSON.stringify(BUNDLES) + BUNDLE_NOTE, /install/i);
 });
 
-test('the question goes to the store on WhatsApp with the words typed in', () => {
-  assert.match(bundleQuestion(), /^https:\/\/wa\.me\/\d+\?text=.*bundle/);
+test('the question about bundles opens the contact page with its topic chosen', () => {
+  assert.equal(bundleQuestion(), '/contact?about=bundles');
 });
 
 test('the popup opens by itself once, and only near the top', () => {

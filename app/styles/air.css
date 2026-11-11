@@ -39,13 +39,12 @@ main.air {
 /* ---------- Jontai Rewards: laid out like a price list, two programs side by side (round 15) ---------- */
 
 /* Rewards slides up over the first view like a sheet (HeroSkyMotion holds the view still under it on wide screens). */
+/* Rewards comes out of the first view's mist (round 18): it starts in that colour, with no edge between them. */
 .loyal {
   position: relative;
   z-index: 2;
   padding: clamp(80px, 12vh, 140px) var(--gutter) clamp(80px, 12vh, 140px);
-  border-radius: 36px 36px 0 0;
-  background: #fbfcf8;
-  box-shadow: 0 -40px 80px -30px rgb(14 34 25 / 0.35);
+  background: var(--sky-top);
   color: var(--leaf-ink);
 }
 .loyal__top {
@@ -898,10 +897,11 @@ main.air {
 .collection[data-row] .collection__foot {
   margin-top: auto;
 }
-/* Bigger again (Bob, round 17): each frame stands nearly the height of the screen, its name and figures beside it at
-   its foot like the label next to a picture on a wall, and the heights step a little from one range to the next. */
+/* Big (Bob, round 17), then a little smaller (round 18: "wayy too big"): each frame about four fifths of the screen's
+   height, its name and figures beside it at its foot like the label next to a picture on a wall, and the heights step
+   a little from one range to the next. */
 .collection[data-row] .piece {
-  --fh: min(100svh - var(--nav-h) - 10vh, 62vw);
+  --fh: min((100svh - var(--nav-h) - 10vh) * 0.82, 51vw);
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: auto minmax(0, 16.5rem);
@@ -910,10 +910,10 @@ main.air {
   max-width: none;
 }
 .collection[data-row] .piece:nth-of-type(3n + 2) {
-  --fh: min((100svh - var(--nav-h) - 10vh) * 0.87, 62vw * 0.87);
+  --fh: min((100svh - var(--nav-h) - 10vh) * 0.82 * 0.87, 51vw * 0.87);
 }
 .collection[data-row] .piece:nth-of-type(3n) {
-  --fh: min((100svh - var(--nav-h) - 10vh) * 0.94, 62vw * 0.94);
+  --fh: min((100svh - var(--nav-h) - 10vh) * 0.82 * 0.94, 51vw * 0.94);
 }
 .collection[data-row] .piece__frame {
   width: calc(var(--fh) * 6 / 7);

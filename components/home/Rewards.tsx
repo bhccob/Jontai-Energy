@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUp, Briefcase, Check, House, X } from '@phosphor-icons
 import { BusinessFace, LoyaltyCard } from '@/components/sections/LoyaltyCard';
 import { MemberLogin } from '@/components/sections/MemberLogin';
 import { Words } from '@/components/ui/Split';
-import { whatsappLink } from '@/lib/contact';
+import { contactHref } from '@/lib/message';
 import { BUSINESS_DISCOUNT, BUSINESS_GOAL, REWARD_PER_STEP_AFL, REWARD_STEP_AFL, formatAfl, formatPoints, rewardFor } from '@/lib/loyalty';
 
 type Kind = 'home' | 'business';
@@ -230,8 +230,8 @@ export function Rewards() {
       </div>
       <div className="loyal__strip loyal__strip--soft" data-reveal>
         <p>Not sure which card fits? Ask us; a person answers.</p>
-        <a href={whatsappLink('Hello Jontai Energy, I have a question about Jontai Rewards.')} target="_blank" rel="noopener noreferrer" className="loyal__ask-link">
-          Ask on WhatsApp <ArrowRight size={16} weight="bold" aria-hidden="true" />
+        <a href={contactHref('rewards')} className="loyal__ask-link">
+          Send us a message <ArrowRight size={16} weight="bold" aria-hidden="true" />
         </a>
       </div>
     </section>

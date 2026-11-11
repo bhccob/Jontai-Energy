@@ -147,12 +147,12 @@
 /* ---------- The first view ---------- */
 
 /* The entrance, once, as the page paints: CSS only, so it never waits for scripts (--d, in ms, set in Hero). The valley
-   opens like a window out of the forest green, the name rises letter by letter out of the grass, the island drifts up
-   in front of it, then the words. Nothing fades out again: the next section slides over the first view instead. */
+   comes up out of the morning mist and settles (no window or box opening: Bob, round 18), the name rises letter by
+   letter out of the grass, the island drifts up in front of it, then the words. */
 @keyframes sky-open {
   from {
-    clip-path: inset(34% 30% 34% 30% round 40px);
-    transform: scale(1.12);
+    opacity: 0;
+    transform: scale(1.08);
   }
 }
 @keyframes hero-rise {
@@ -396,12 +396,13 @@
   height: auto;
   filter: drop-shadow(0 50px 50px rgb(23 61 44 / 0.28));
 }
-/* Darkens as the next section slides over (HeroSkyMotion). */
-.hero__shade {
+/* The mist the scroll flies into at the end of the zoom (HeroSkyMotion): brightest where the island was, the colour
+   Rewards starts with everywhere else. */
+.hero__mist {
   position: absolute;
   inset: 0;
   z-index: 5;
-  background: #173d2c;
+  background: radial-gradient(circle at 50% 50%, #fbfdf8, var(--sky-top) 70%);
   opacity: 0;
   pointer-events: none;
 }

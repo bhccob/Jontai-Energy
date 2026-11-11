@@ -16,5 +16,3 @@ export const TEAM: Person[] = [
   { name: 'Benny', role: 'Chief Operating Officer' },
 ];
 
-/** The message an applicant sends on WhatsApp. */
-export const APPLY_MESSAGE = 'Hello Jontai Energy, I would like to work with you. Here is a little about me:';
