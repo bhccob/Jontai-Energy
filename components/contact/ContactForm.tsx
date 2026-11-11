@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useRef, useState, type FormEvent } from 'react';
+import { CaretDown } from '@phosphor-icons/react/dist/ssr';
 import { ConceptNote, Failed, FieldError, Honeypot, Send, Sent, Step } from '@/components/forms/parts';
 import { MESSAGE_LIMITS, MESSAGE_TOPICS, checkMessage, messageMailto, type Message, type MessageErrors, type MessageField, type MessageTopic } from '@/lib/message';
 import { CONCEPT } from '@/lib/store';
@@ -65,7 +66,11 @@ export function ContactForm({ initial }: { initial: MessageTopic }) {
       <Sent
         title="Message sent."
         name={status.name}
-        email={status.email}
+        reply={
+          <>
+            to <strong>{status.email}</strong>
+          </>
+        }
         again="Write another message"
         refocus={(el) => el?.focus()}
         onAgain={() => setStatus({ kind: 'idle' })}
@@ -87,15 +92,28 @@ export function ContactForm({ initial }: { initial: MessageTopic }) {
   return (
     <form ref={form} className="sheet" onSubmit={submit} noValidate aria-busy={sending}>
       <Step n={1} id={`${id}-about`} title="What it is about">
-        <div className="chips" role="radiogroup" aria-labelledby={`${id}-about`} aria-describedby={errors.topic ? errId('topic') : undefined}>
-          {MESSAGE_TOPICS.map((t, i) => (
-            <label key={t.id} className="chip" data-on={topic === t.id || undefined}>
-              <input type="radio" name="topic" value={t.id} checked={topic === t.id} data-field={i === 0 ? 'topic' : undefined} onChange={() => setTopic(t.id)} />
-              <span className="chip__label">{t.label}</span>
-            </label>
-          ))}
+        {/* A dropdown (Bob, round 23), the browser's own, so it works the same with touch, keys and screen readers. */}
+        <div className="field">
+          <label htmlFor={`${id}-topic`} className="field__label">
+            Topic
+          </label>
+          <div className="select">
+            <select
+              {...input('topic')}
+              value={topic}
+              onChange={(e) => setTopic(e.currentTarget.value as MessageTopic)}
+              aria-describedby={errors.topic ? errId('topic') : undefined}
+            >
+              {MESSAGE_TOPICS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+            <CaretDown size={18} weight="bold" className="select__caret" aria-hidden="true" />
+          </div>
+          <FieldError id={errId('topic')} text={errors.topic} />
         </div>
-        <FieldError id={errId('topic')} text={errors.topic} />
       </Step>
 
       <Step n={2} id={`${id}-say`} title="Your message">

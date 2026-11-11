@@ -18,7 +18,7 @@ const INFO: Record<Kind, { steps: string[]; facts: string[] }> = {
   home: {
     steps: [
       'Join at the counter at Cumana 73 and take your card.',
-      'Shop as usual; what you spend in a year adds up on the card.',
+      'Shop as usual and show the card when you pay; what you spend in a year adds up on it, with nothing to log in to.',
       `Every full ${formatAfl(REWARD_STEP_AFL)} puts a ${formatAfl(REWARD_PER_STEP_AFL)} voucher on it, to spend on your next visit.`,
     ],
     facts: ['Vouchers are store credit and cannot be exchanged for cash.', 'Rewards start again one year after you join; full terms at the counter.'],
@@ -26,7 +26,7 @@ const INFO: Record<Kind, { steps: string[]; facts: string[] }> = {
   business: {
     steps: [
       'Open a business membership at the counter at Cumana 73.',
-      'What your business buys during the year earns points on its card.',
+      'Show the card when you pay; what your business buys during the year earns points on it.',
       `At ${formatPoints(BUSINESS_GOAL)}, everything is ${BUSINESS_DISCOUNT}% off until the account's anniversary.`,
     ],
     facts: [
@@ -193,7 +193,7 @@ export function Rewards() {
           </span>
         </h2>
         <p className="loyal__side" data-reveal>
-          One card for your home, one for your business. Join at the counter at Cumana 73; the code on your card is your member login.
+          One card for your home, one for your business. Join at the counter at Cumana 73, bring the card when you shop, and your rewards apply by themselves.
         </p>
       </div>
 
@@ -224,7 +224,7 @@ export function Rewards() {
 
       <div className="loyal__strip" data-reveal>
         <p>
-          <span className="loyal__strip-kicker">At the counter</span> Join in store at Cumana 73. Already a member? Log in with the code on your card.
+          <span className="loyal__strip-kicker">At the counter</span> Show your card when you pay and your rewards apply. Log in only to see your points.
         </p>
         <MemberLogin />
       </div>

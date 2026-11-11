@@ -24,6 +24,7 @@
 
 .sky-scope {
   position: relative;
+  z-index: 3;
   overflow: clip;
   background: var(--sky-top);
   color: var(--sky-ink);

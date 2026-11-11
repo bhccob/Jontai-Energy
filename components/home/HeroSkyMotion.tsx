@@ -50,16 +50,31 @@ export function HeroSkyMotion() {
         for (let el: HTMLElement | null = island; el && el !== scope; el = el.offsetParent as HTMLElement | null) top += el.offsetTop;
         return window.innerHeight * 0.5 - (top + (island.offsetHeight * zy) / 100);
       };
+      // The first view holds on top while Rewards rises into place under it (pinSpacing off, sky-scope above .loyal):
+      // the mist fills the screen just as Rewards reaches the top, the hold ends, and the page is on Rewards with no
+      // empty screen between (Bob, round 23: "gotta land on loyalty program").
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
-        scrollTrigger: { trigger: scope, start: 'top top', end: '+=115%', pin: true, scrub: 0.6, invalidateOnRefresh: true },
+        scrollTrigger: {
+          trigger: scope,
+          start: 'top top',
+          end: () => `+=${scope.offsetHeight}`,
+          pin: true,
+          pinSpacing: false,
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+          // Released without spacing, the first view would scroll on over Rewards; by then it is all mist, so it steps
+          // aside (hidden) and comes back when the scroll returns into it.
+          onLeave: () => gsap.set(scope, { autoAlpha: 0 }),
+          onEnterBack: () => gsap.set(scope, { autoAlpha: 1 }),
+        },
       });
       tl.to(hero.querySelector('.hero__top'), { yPercent: -40, opacity: 0, duration: 0.3 }, 0)
         .to(letters, { yPercent: (i) => 50 + i * 12, opacity: 0, duration: 0.45, stagger: 0.02 }, 0)
         // First the island rises to the middle of the screen, then the flight in speeds up.
         .to(island, { y: toMiddle, duration: 0.55, ease: 'power2.out' }, 0)
         .fromTo(island, { transformOrigin: `${zx}% ${zy}%`, scale: 1 }, { scale: 10, duration: 1, ease: 'power3.in' }, 0)
-        .to(hero.querySelector('.hero__mist'), { opacity: 1, duration: 0.32, ease: 'power1.in' }, 0.66);
+        .to(hero.querySelector('.hero__mist'), { opacity: 1, duration: 0.3, ease: 'power1.in' }, 0.55);
       if (media) tl.fromTo(media, { scale: 1.04 }, { scale: 1.3, duration: 1 }, 0);
     });
 

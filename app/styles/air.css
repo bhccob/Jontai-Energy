@@ -1041,6 +1041,24 @@ main.air {
   justify-self: end;
 }
 
+/* The "Other" frame: a thin plus in place of a picture, turning a quarter under the pointer. */
+.piece__open--other {
+  text-decoration: none;
+}
+.piece__plus {
+  color: var(--color-mint);
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(7rem, 12vw, 11rem);
+  line-height: 1;
+  transition: rotate 700ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .piece--other .piece__frame:hover .piece__plus {
+    rotate: 90deg;
+  }
+}
+
 /* The round "View" that follows the pointer over a frame (CollectionMotion). */
 .view-cursor {
   position: fixed;

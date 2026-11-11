@@ -87,7 +87,7 @@ export function MemberLogin() {
   return (
     <>
       <button type="button" className="btn btn--primary member__open" onClick={() => setOpen(true)} aria-haspopup="dialog">
-        Member login
+        See my points
       </button>
       <dialog ref={dialog} className="member" aria-labelledby={`${id}-title`} onClose={onClose} data-lenis-prevent>
         <button type="button" className="drawer__close member__close" onClick={() => setOpen(false)} aria-label="Close">
@@ -103,9 +103,11 @@ export function MemberLogin() {
         </div>
         <div className="member__side">
           <h2 id={`${id}-title`} className="h-title">
-            Member login
+            See my points
           </h2>
-          <p className="member__lead">Your loyalty code is printed on your card. Enter it with your name to see your points and rewards.</p>
+          <p className="member__lead">
+            You never need to log in to use your rewards: show your card at the counter and they apply. To see your points, enter the code printed on your card with your name.
+          </p>
           <form className="member__form" onSubmit={submit} noValidate>
             <div className="field">
               <label htmlFor={`${id}-code`} className="field__label">

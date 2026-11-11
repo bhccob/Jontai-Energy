@@ -1,15 +1,30 @@
 'use client';
 
 import { useId, useRef, useState, type FormEvent } from 'react';
+import { WhatsappLogo } from '@phosphor-icons/react/dist/ssr';
 import { ProductChips } from '@/components/forms/ProductChips';
-import { ConceptNote, Failed, FieldError, Honeypot, Send, Sent, Step } from '@/components/forms/parts';
-import { DELIVERY_TOPICS, QUOTE_LIMITS, checkQuote, quoteMailto, type QuoteErrors, type QuoteField, type QuoteRequest, type QuoteTopic } from '@/lib/quote';
+import { ConceptNote, Failed, FieldError, Honeypot, Send, Sent, Step, Switch } from '@/components/forms/parts';
+import {
+  DELIVERY_TOPICS,
+  QUOTE_LIMITS,
+  QUOTE_USES,
+  REPLY_BY,
+  checkQuote,
+  quoteMailto,
+  quoteWhatsapp,
+  type QuoteErrors,
+  type QuoteField,
+  type QuoteRequest,
+  type QuoteTopic,
+  type QuoteUse,
+  type ReplyBy,
+} from '@/lib/quote';
 import { CONCEPT } from '@/lib/store';
 
 type Status =
   | { kind: 'idle' }
   | { kind: 'sending' }
-  | { kind: 'sent'; name: string; email: string }
+  | { kind: 'sent'; name: string; email: string; phone: string; reply: ReplyBy }
   | { kind: 'failed'; request: QuoteRequest }
   | { kind: 'concept' };
 
@@ -23,6 +38,8 @@ const ORDER: QuoteField[] = ['topics', 'details', 'area', 'name', 'email', 'phon
 export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
   const id = useId();
   const [topics, setTopics] = useState<QuoteTopic[]>(initial);
+  const [use, setUse] = useState<QuoteUse>('personal');
+  const [reply, setReply] = useState<ReplyBy>('email');
   const [errors, setErrors] = useState<QuoteErrors>({});
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const form = useRef<HTMLFormElement>(null);
@@ -43,7 +60,7 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const text = (k: string) => String(data.get(k) ?? '');
-    const checked = checkQuote({ topics, details: text('details'), area: delivery ? text('area') : '', name: text('name'), email: text('email'), phone: text('phone') });
+    const checked = checkQuote({ topics, use, reply, details: text('details'), area: delivery ? text('area') : '', name: text('name'), email: text('email'), phone: text('phone') });
     if (!checked.ok) return showErrors(checked.errors);
 
     setErrors({});
@@ -56,7 +73,7 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
         body: JSON.stringify({ ...checked.value, website: text('website') }),
       });
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: QuoteErrors };
-      if (res.ok && json.ok) return setStatus({ kind: 'sent', name: checked.value.name, email: checked.value.email });
+      if (res.ok && json.ok) return setStatus({ kind: 'sent', name: checked.value.name, email: checked.value.email, phone: checked.value.phone, reply: checked.value.reply });
       if (res.status === 422 && json.errors) {
         setStatus({ kind: 'idle' });
         return showErrors(json.errors);
@@ -72,7 +89,17 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
       <Sent
         title="Request sent."
         name={status.name}
-        email={status.email}
+        reply={
+          status.reply === 'whatsapp' ? (
+            <>
+              on WhatsApp at <strong>{status.phone}</strong>
+            </>
+          ) : (
+            <>
+              to <strong>{status.email}</strong>
+            </>
+          )
+        }
         again="Send another request"
         refocus={(el) => el?.focus()}
         onAgain={() => {
@@ -97,8 +124,9 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
   return (
     <form ref={form} className="sheet" onSubmit={submit} noValidate aria-busy={sending}>
       <Step n={1} id={`${id}-for`} title="What it is for">
+        <Switch name="use" label="Who it is for" options={QUOTE_USES} value={use} onChange={setUse} />
         <p id={`${id}-topics-hint`} className="field__hint">
-          Pick one or more.
+          Pick one or more, or Something else.
         </p>
         <ProductChips labelId={`${id}-for`} value={topics} onChange={choose} error={errors.topics} describedBy={describe('topics', true)} />
         <FieldError id={errId('topics')} text={errors.topics} />
@@ -137,6 +165,7 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
       </Step>
 
       <Step n={3} id={`${id}-you`} title="Where to reply">
+        <Switch name="reply" label="Reply by" options={REPLY_BY} value={reply} onChange={setReply} />
         <div className="field-row">
           <div className="field">
             <label htmlFor={`${id}-name`} className="field__label">
@@ -147,17 +176,23 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
           </div>
           <div className="field">
             <label htmlFor={`${id}-email`} className="field__label">
-              Email
+              Email {reply === 'whatsapp' && <span className="field__optional">optional</span>}
             </label>
-            <input {...input('email')} type="email" inputMode="email" autoComplete="email" required maxLength={QUOTE_LIMITS.email} aria-describedby={describe('email')} />
+            <input {...input('email')} type="email" inputMode="email" autoComplete="email" required={reply === 'email'} maxLength={QUOTE_LIMITS.email} aria-describedby={describe('email')} />
             <FieldError id={errId('email')} text={errors.email} />
           </div>
         </div>
         <div className="field">
           <label htmlFor={`${id}-phone`} className="field__label">
-            Phone <span className="field__optional">optional, if you would rather we call</span>
+            {reply === 'whatsapp' ? (
+              'WhatsApp number'
+            ) : (
+              <>
+                Phone <span className="field__optional">optional, if you would rather we call</span>
+              </>
+            )}
           </label>
-          <input {...input('phone')} type="tel" autoComplete="tel" maxLength={QUOTE_LIMITS.phone} aria-describedby={describe('phone')} />
+          <input {...input('phone')} type="tel" autoComplete="tel" required={reply === 'whatsapp'} maxLength={QUOTE_LIMITS.phone} aria-describedby={describe('phone')} />
           <FieldError id={errId('phone')} text={errors.phone} />
         </div>
       </Step>
@@ -166,6 +201,22 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
       {status.kind === 'failed' && <Failed mailto={quoteMailto(status.request)} />}
       {status.kind === 'concept' && <ConceptNote what="ask Jontai Energy for a quote" />}
       <Send sending={sending} label="Send request" />
+      {/* WhatsApp as a way of its own (Bob, round 23): the same request, typed into a chat with the store. */}
+      <p className="sheet__or">
+        Rather chat?{' '}
+        <a
+          href={quoteWhatsapp({ topics, use })}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="sheet__wa"
+          onClick={(e) => {
+            const data = form.current ? new FormData(form.current) : null;
+            e.currentTarget.href = quoteWhatsapp({ topics, use, details: String(data?.get('details') ?? ''), name: String(data?.get('name') ?? '') });
+          }}
+        >
+          <WhatsappLogo size={18} weight="fill" aria-hidden="true" /> Send this request on WhatsApp
+        </a>
+      </p>
     </form>
   );
 }

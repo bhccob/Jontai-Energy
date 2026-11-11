@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { CheckCircle, WarningCircle } from '@phosphor-icons/react/dist/ssr';
+import { CheckCircle, WarningCircle, WhatsappLogo } from '@phosphor-icons/react/dist/ssr';
 import { CONCEPT, OFFICIAL_URL, STORE } from '@/lib/store';
 
 // Shared pieces of the two letters, the quote request and the message (Bob, round 18): numbered steps on one glass
@@ -89,14 +89,44 @@ export function Send({ sending, label }: { sending: boolean; label: string }) {
   );
 }
 
-/** After sending: thanks, where the reply will go, and the way back or to write again. */
-export function Sent({ title, name, email, again, onAgain, refocus }: { title: string; name: string; email: string; again: string; onAgain: () => void; refocus: (el: HTMLDivElement | null) => void }) {
+/**
+ * Two choices side by side, one picked (round 23: personal or business, email or WhatsApp): real radio buttons in a
+ * glass track, the picked one filled.
+ */
+export function Switch<T extends string>({
+  name,
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  name: string;
+  label: string;
+  options: readonly { id: T; label: string }[];
+  value: T;
+  onChange: (next: T) => void;
+}) {
+  return (
+    <div className="switch" role="radiogroup" aria-label={label}>
+      {options.map((o) => (
+        <label key={o.id} className="switch__opt" data-on={value === o.id || undefined}>
+          <input type="radio" name={name} value={o.id} checked={value === o.id} onChange={() => onChange(o.id)} />
+          {o.id === 'whatsapp' && <WhatsappLogo size={18} weight="fill" aria-hidden="true" />}
+          {o.label}
+        </label>
+      ))}
+    </div>
+  );
+}
+
+/** After sending: thanks, how the reply will come, and the way back or to write again. */
+export function Sent({ title, name, reply, again, onAgain, refocus }: { title: string; name: string; reply: ReactNode; again: string; onAgain: () => void; refocus: (el: HTMLDivElement | null) => void }) {
   return (
     <div ref={refocus} className="sheet sheet--sent" role="status" tabIndex={-1}>
       <CheckCircle size={44} weight="light" aria-hidden="true" />
       <h2 className="air-display sheet__done">{title}</h2>
       <p>
-        Thank you, {name}. Jontai Energy will reply to <strong>{email}</strong>.
+        Thank you, {name}. Jontai Energy will reply {reply}.
       </p>
       <div className="sheet__again">
         <a href="/" className="btn btn--primary">

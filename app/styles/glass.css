@@ -29,7 +29,10 @@
 /* ---------- The header: a clear bar at the top, a floating glass pill once you scroll ---------- */
 
 .nav {
+  width: 100%;
+  margin-inline: auto;
   transition:
+    width 600ms var(--ease-out),
     inset 600ms var(--ease-out),
     height 600ms var(--ease-out),
     border-radius 600ms var(--ease-out),
@@ -37,9 +40,11 @@
     box-shadow 300ms ease,
     transform 500ms var(--ease-out);
 }
+/* Not as wide (Bob, round 23): a compact bar in the middle, just wide enough for the mark and the links. */
 .nav[data-solid='true'],
 :root:not(.js) .nav {
-  inset: 8px max(12px, calc(var(--gutter) - 28px)) auto;
+  inset: 8px 0 auto;
+  width: min(42rem, calc(100% - 24px));
   height: calc(var(--nav-h) - 10px);
   padding-inline: 18px 14px;
   border-radius: var(--radius-pill);

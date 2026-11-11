@@ -1,7 +1,7 @@
-import { Check, GasCan } from '@phosphor-icons/react/dist/ssr';
+import { Check, DotsThree, GasCan } from '@phosphor-icons/react/dist/ssr';
 import { QUOTE_TOPICS, type QuoteTopic } from '@/lib/quote';
 
-/** The island picture that shows each product (public/sky, tools/sky/thumbs.mjs); the generator has none, so an icon. */
+/** The island picture that shows each product (public/sky, tools/sky/thumbs.mjs); the generator and "Something else" have none, so an icon. */
 const PICS: Partial<Record<QuoteTopic, string>> = {
   inverter: 'solar',
   'solar-panels': 'array',
@@ -48,6 +48,8 @@ export function ProductChips({
               {pic ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={`/sky/island-${pic}-160.webp`} alt="" width={80} height={80} loading="lazy" decoding="async" />
+              ) : t.id === 'other' ? (
+                <DotsThree size={26} weight="bold" />
               ) : (
                 <GasCan size={22} weight="light" />
               )}

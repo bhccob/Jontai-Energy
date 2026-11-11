@@ -4,6 +4,7 @@ import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
 import { ISLANDS } from '@/lib/islands';
 import { LAMP_STILLS } from '@/lib/kelvin';
+import { contactHref } from '@/lib/message';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { CollectionMotion } from './CollectionMotion';
 import { LampSlider } from './LampSlider';
@@ -137,16 +138,32 @@ export function Collection() {
             </article>
           ))}
 
-          <a href="/quote" className="collection__end">
-            <span className="collection__ring" aria-hidden="true">
-              <ArrowUpRight size={26} weight="light" />
-            </span>
-            <span className="collection__end-text">
-              Ask about
-              <br />
-              any range
-            </span>
-          </a>
+          {/* Anything outside the six (Bob, round 23: "other" in the ranges): its own frame, a plus in place of a picture. */}
+          <article id="other" className="piece piece--other" aria-labelledby="other-title" tabIndex={-1} style={{ '--i': n } as CSSProperties}>
+            <div className="piece__frame">
+              <a href={contactHref('question')} className="piece__open piece__open--other">
+                <span className="visually-hidden">Ask about something else</span>
+                <span className="piece__plus" aria-hidden="true">
+                  +
+                </span>
+              </a>
+            </div>
+            <div className="piece__meta">
+              <p className="piece__count">+ / {String(n).padStart(2, '0')}</p>
+              <h3 id="other-title" className="piece__name">
+                Other
+              </h3>
+              <p className="piece__line">Looking for something that is not one of these six? Ask us, and a person at the store tells you what is in stock.</p>
+              <div className="piece__actions">
+                <a href={contactHref('question')} className="textlink">
+                  Ask us <ArrowRight size={16} weight="bold" aria-hidden="true" />
+                </a>
+                <a href="/quote?for=other" className="textlink">
+                  {QUOTE_ACTION}
+                </a>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
       <CollectionMotion />
