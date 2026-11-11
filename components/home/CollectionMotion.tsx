@@ -44,6 +44,28 @@ export function CollectionMotion() {
         scrollTrigger: { trigger: pin, pin: true, start: 'top top', end: () => `+=${distance()}`, scrub: 0.4, invalidateOnRefresh: true },
       });
       const st = tween.scrollTrigger as ScrollTrigger;
+      // The pictures sway with the speed of the scroll and settle when it stops.
+      const sways = pieces.map((p) => {
+        const img = p.querySelector('.piece__float img');
+        return img ? gsap.quickTo(img, 'skewX', { duration: 0.6, ease: 'power3' }) : null;
+      });
+      const sway = ScrollTrigger.create({
+        trigger: pin,
+        start: () => st.start,
+        end: () => st.end,
+        onUpdate: (self) => {
+          const v = gsap.utils.clamp(-8, 8, self.getVelocity() / -250);
+          sways.forEach((s) => s?.(v));
+        },
+        onLeave: () => sways.forEach((s) => s?.(0)),
+        onLeaveBack: () => sways.forEach((s) => s?.(0)),
+      });
+      let still = 0;
+      const settle = () => {
+        window.clearTimeout(still);
+        still = window.setTimeout(() => sways.forEach((s) => s?.(0)), 120);
+      };
+      window.addEventListener('scroll', settle, { passive: true });
       // Each picture drifts against its frame while the row moves.
       pieces.forEach((p) => {
         const img = p.querySelector('.piece__float');
@@ -65,6 +87,9 @@ export function CollectionMotion() {
       return () => {
         pieces.forEach((p) => scrollTargets.delete(p.id));
         delete section.dataset.row;
+        sway.kill();
+        window.removeEventListener('scroll', settle);
+        window.clearTimeout(still);
       };
     });
 
@@ -85,8 +110,13 @@ export function CollectionMotion() {
         gsap.set(frame, { transformPerspective: 1100 });
         const move = (e: PointerEvent) => {
           const b = frame.getBoundingClientRect();
-          rx(((e.clientX - b.left) / b.width - 0.5) * 8);
-          ry(-((e.clientY - b.top) / b.height - 0.5) * 6);
+          const fx = (e.clientX - b.left) / b.width;
+          const fy = (e.clientY - b.top) / b.height;
+          rx((fx - 0.5) * 8);
+          ry(-(fy - 0.5) * 6);
+          // The light inside the frame follows the pointer.
+          frame.style.setProperty('--lx', `${Math.round(fx * 100)}%`);
+          frame.style.setProperty('--ly', `${Math.round(fy * 100)}%`);
           cx(e.clientX);
           cy(e.clientY);
         };
@@ -97,6 +127,8 @@ export function CollectionMotion() {
         const leave = () => {
           rx(0);
           ry(0);
+          frame.style.removeProperty('--lx');
+          frame.style.removeProperty('--ly');
           delete cursor.dataset.on;
         };
         frame.addEventListener('pointerenter', enter);

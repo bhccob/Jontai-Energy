@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { ArrowRight, Coins, IdentificationCard, Receipt, ShoppingBag, Storefront, Ticket } from '@phosphor-icons/react';
 import { LoyaltyCard } from '@/components/sections/LoyaltyCard';
 import { MemberLogin } from '@/components/sections/MemberLogin';
 import { Words } from '@/components/ui/Split';
@@ -9,23 +10,42 @@ import { BUSINESS_DISCOUNT, BUSINESS_GOAL, REWARD_PER_STEP_AFL, REWARD_STEP_AFL,
 /** The card face shows ten vouchers, so the slider runs to Afl. 5,000. */
 const MAX_SPEND = 5000;
 const SLOTS = MAX_SPEND / REWARD_STEP_AFL;
-/** Where the slider rests, and where the card fills to the first time it is seen. */
-const START_SPEND = 2000;
+/** Quick amounts for "Try your numbers". */
+const PICKS = [500, 1000, 2500, 5000];
+/** How long each step of "How it works" holds before the next, while no one has taken over. */
+const STEP_MS = 4200;
 
 const STEPS = [
-  { title: 'Join at the counter', text: 'Open your membership in store at Cumana 73 and collect your loyalty card. The code on the card is your member login.' },
-  { title: 'Shop as usual', text: `Every full ${formatAfl(REWARD_STEP_AFL)} you spend adds a ${formatAfl(REWARD_PER_STEP_AFL)} voucher to your card.` },
-  { title: 'Spend your vouchers', text: 'Use them as store credit on your next visit, on anything in the store.' },
+  {
+    icon: IdentificationCard,
+    title: 'Join at the counter',
+    text: 'Open your membership in store at Cumana 73 and take your card home. The code on it is your member login.',
+  },
+  {
+    icon: ShoppingBag,
+    title: 'Shop as usual',
+    text: 'Everything you buy in a year adds up on your card. Nothing to scan, nothing to remember.',
+  },
+  {
+    icon: Coins,
+    title: `Every ${formatAfl(REWARD_STEP_AFL)} earns ${formatAfl(REWARD_PER_STEP_AFL)}`,
+    text: `Each full ${formatAfl(REWARD_STEP_AFL)} you spend puts a ${formatAfl(REWARD_PER_STEP_AFL)} voucher on your card.`,
+  },
+  {
+    icon: Ticket,
+    title: 'Spend your vouchers',
+    text: 'Use them as store credit on your next visit, on anything in the store.',
+  },
 ];
 
 const FACTS = [
-  'Vouchers are store credit and cannot be exchanged for cash.',
-  'Your rewards build up through the year and start again one year after you join.',
-  `Business customers reach ${formatPoints(BUSINESS_GOAL)} for ${BUSINESS_DISCOUNT}% off for the rest of the year.`,
-  'Full terms and the exact reset date are confirmed at the counter.',
+  { icon: Receipt, text: 'Vouchers are store credit and cannot be exchanged for cash.' },
+  { icon: Coins, text: 'Your rewards build up through the year and start again one year after you join.' },
+  { icon: Storefront, text: `Business customers reach ${formatPoints(BUSINESS_GOAL)} for ${BUSINESS_DISCOUNT}% off for the rest of the year.` },
+  { icon: IdentificationCard, text: 'Full terms and the exact reset date are confirmed at the counter.' },
 ];
 
-/** The card, as a year of spending fills it: a sun for every voucher earned, the next one filling. */
+/** The card as a year of spending fills it: a sun for every voucher earned, the next one filling. */
 function VoucherFace({ spend }: { spend: number }) {
   const r = rewardFor(spend);
   return (
@@ -60,124 +80,248 @@ function VoucherFace({ spend }: { spend: number }) {
   );
 }
 
+/** The other side: one voucher, ready to spend. */
+function VoucherBack() {
+  return (
+    <div className="lcard__body loyal__back" data-tone="forest">
+      <div className="lcard__top">
+        <span className="lcard__brand">
+          Jontai <span>Energy</span>
+        </span>
+        <span className="lcard__tier">Voucher</span>
+      </div>
+      <p className="loyal__back-amount">{formatAfl(REWARD_PER_STEP_AFL)}</p>
+      <p className="loyal__back-text">Store credit on your next visit, on anything in the store.</p>
+    </div>
+  );
+}
+
+/** Runs a number from `from` to `to` over `ms`, eased, calling `set` each frame; returns a stop. */
+function run(from: number, to: number, ms: number, set: (v: number) => void) {
+  let raf = 0;
+  const t0 = performance.now();
+  const tick = (now: number) => {
+    const p = Math.min(1, (now - t0) / ms);
+    set(Math.round((from + (to - from) * (1 - Math.pow(1 - p, 3))) / 10) * 10);
+    if (p < 1) raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+  return () => cancelAnimationFrame(raf);
+}
+
 /**
- * Jontai Rewards, right after the first view: the one rule in huge type, then the card filling as you move a year's
- * spending, the three steps, the four facts that matter, and the member login. In florins throughout, since the
- * points rate per florin is not confirmed.
+ * Jontai Rewards, rebuilt so no one gets lost (Bob, round 13): the one rule in big type, then the card with two ways
+ * in. "How it works" walks through the four steps on the card itself (a blank card, the year adding up, a voucher
+ * landing, the voucher turned over to spend), one after another by itself while no one has taken over, with a bar
+ * showing how long each holds; any step can be picked. "Try your numbers" fills the card from a year's spending, with
+ * quick amounts and a slider, and says what comes back and how far the next voucher is. A "+ Afl. 25" rises off the
+ * card whenever a voucher lands. The small print sits under "Good to know". Reduced motion: no auto-play, no counting.
  */
 export function Rewards() {
   const id = useId();
-  const [spend, setSpend] = useState(START_SPEND);
-  const play = useRef<HTMLDivElement>(null);
-  const touched = useRef(false);
+  const [mode, setMode] = useState<'how' | 'try'>('how');
+  const [step, setStep] = useState(0);
+  const [auto, setAuto] = useState(true);
+  const [spend, setSpend] = useState(0);
+  const [pop, setPop] = useState(0);
+  const [seen, setSeen] = useState(false);
+  const section = useRef<HTMLElement>(null);
+  const last = useRef(0);
+  const calm = useRef(false);
 
-  // The first time the card comes into view it fills itself from nothing to Afl. 2,000, a voucher at a time, so the
-  // rule shows itself before anyone reads it. Touching the slider stops it; reduced motion skips it.
+  // A voucher landing: a "+ Afl. 25" rises off the card.
   useEffect(() => {
-    const el = play.current;
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let raf = 0;
-    let started = false;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (!e.isIntersecting || started || touched.current) return;
-        started = true;
-        io.disconnect();
-        const t0 = performance.now();
-        const run = (now: number) => {
-          if (touched.current) return;
-          const p = Math.min(1, (now - t0) / 2200);
-          const eased = 1 - Math.pow(1 - p, 3);
-          setSpend(Math.round((START_SPEND * eased) / 100) * 100);
-          if (p < 1) raf = requestAnimationFrame(run);
-        };
-        setSpend(0);
-        raf = requestAnimationFrame(run);
-      },
-      { threshold: 0.45 },
-    );
+    const v = rewardFor(spend).vouchers;
+    if (v > last.current) setPop((n) => n + 1);
+    last.current = v;
+  }, [spend]);
+
+  // Only plays while the section is on screen.
+  useEffect(() => {
+    calm.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const el = section.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold: 0.35 });
     io.observe(el);
-    return () => {
-      io.disconnect();
-      cancelAnimationFrame(raf);
-    };
+    return () => io.disconnect();
   }, []);
+
+  // What the card shows at each step of "How it works".
+  useEffect(() => {
+    if (mode !== 'how') return;
+    if (step === 0) setSpend(0);
+    if (step === 1) return calm.current ? setSpend(450) : run(0, 450, 1800, setSpend);
+    if (step === 2) return calm.current ? setSpend(500) : run(450, 500, 500, setSpend);
+    if (step === 3) setSpend(500);
+  }, [mode, step]);
+
+  // The steps move on by themselves while the section is in view and no one has taken over.
+  useEffect(() => {
+    if (mode !== 'how' || !auto || !seen || calm.current) return;
+    const t = window.setTimeout(() => setStep((s) => (s + 1) % STEPS.length), STEP_MS);
+    return () => window.clearTimeout(t);
+  }, [mode, step, auto, seen]);
+
+  const pick = useCallback((i: number) => {
+    setAuto(false);
+    setStep(i);
+  }, []);
+  const tryIt = (v: number) => {
+    setMode('try');
+    setSpend(v);
+  };
+
   const r = rewardFor(spend);
-  const result =
-    spend >= MAX_SPEND
-      ? `You get ${formatAfl(r.back)} back. Every voucher on this card is earned.`
-      : `You get ${formatAfl(r.back)} back. ${formatAfl(r.toNext)} more to the next ${formatAfl(REWARD_PER_STEP_AFL)}.`;
+  const flipped = mode === 'how' && step === 3;
+  const next = Math.min(SLOTS, r.vouchers + 1) * REWARD_STEP_AFL;
 
   return (
-    <section id="rewards" className="rewards-air" aria-labelledby="rewards-title">
-      <div className="rewards-air__head">
-        <p className="rewards-air__name" data-reveal>
-          Jontai Rewards
-        </p>
-        <h2 id="rewards-title" className="air-display rewards-air__title" data-words>
+    <section ref={section} id="rewards" className="loyal" aria-labelledby="rewards-title">
+      <div className="loyal__head">
+        <p className="loyal__kicker">Jontai Rewards</p>
+        <h2 id="rewards-title" className="air-display loyal__title" data-words>
           <span>
             <Words text={`Spend ${formatAfl(REWARD_STEP_AFL)}.`} />
           </span>{' '}
-          <span>
+          <span className="soft">
             <Words text={`Get ${formatAfl(REWARD_PER_STEP_AFL)} back.`} />
           </span>
         </h2>
+        <p className="loyal__sub" data-reveal>
+          A voucher for every {formatAfl(REWARD_STEP_AFL)} you spend in a year, to use on your next visit. See how it works, or try your own numbers.
+        </p>
       </div>
 
-      <div className="rewards-air__play" ref={play}>
-        <div className="rewards-air__calc" data-reveal>
-          <div className="rewards-air__row">
-            <label htmlFor={`${id}-spend`}>Spend in a year</label>
-            <output htmlFor={`${id}-spend`} className="rewards-air__spend figure">
-              {formatAfl(spend)}
-            </output>
+      <div className="loyal__stage">
+        <div className="loyal__panel">
+          <div className="loyal__tabs" role="tablist" aria-label="Jontai Rewards">
+            <button type="button" role="tab" id={`${id}-how`} aria-selected={mode === 'how'} aria-controls={`${id}-how-panel`} onClick={() => setMode('how')}>
+              How it works
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id={`${id}-try`}
+              aria-selected={mode === 'try'}
+              aria-controls={`${id}-try-panel`}
+              onClick={() => {
+                setMode('try');
+                setSpend(2000);
+              }}
+            >
+              Try your numbers
+            </button>
+            <span className="loyal__tabs-ink" data-at={mode} aria-hidden="true" />
           </div>
-          <input
-            id={`${id}-spend`}
-            className="slider rewards-air__slider"
-            type="range"
-            min={0}
-            max={MAX_SPEND}
-            step={100}
-            value={spend}
-            aria-valuetext={`${formatAfl(spend)} a year, ${formatAfl(r.back)} back`}
-            onChange={(e) => {
-              touched.current = true;
-              setSpend(Number(e.target.value));
-            }}
-            style={{ '--fill': `${(spend / MAX_SPEND) * 100}%` } as CSSProperties}
-          />
-          <p className="rewards-air__result" aria-live={touched.current ? 'polite' : 'off'}>
-            {result}
-          </p>
-          <div className="actions">
+
+          {mode === 'how' ? (
+            <div id={`${id}-how-panel`} role="tabpanel" aria-labelledby={`${id}-how`} className="loyal__how">
+              <ol className="loyal__steps">
+                {STEPS.map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <li key={s.title} data-on={i === step || undefined} data-done={i < step || undefined}>
+                      <button type="button" className="loyal__step" aria-current={i === step ? 'step' : undefined} onClick={() => pick(i)}>
+                        <span className="loyal__step-bar" aria-hidden="true">
+                          <i style={{ '--ms': `${STEP_MS}ms` } as CSSProperties} data-run={(i === step && auto && seen) || undefined} />
+                        </span>
+                        <span className="loyal__step-head">
+                          <Icon size={22} weight="light" aria-hidden="true" />
+                          <span className="loyal__step-num">{String(i + 1).padStart(2, '0')}</span>
+                          <span className="loyal__step-title">{s.title}</span>
+                        </span>
+                        <span className="loyal__step-text">
+                          <span>{s.text}</span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+              <button type="button" className="loyal__next" onClick={() => pick((step + 1) % STEPS.length)}>
+                {step === STEPS.length - 1 ? 'Start again' : 'Next step'} <ArrowRight size={16} weight="bold" aria-hidden="true" />
+              </button>
+            </div>
+          ) : (
+            <div id={`${id}-try-panel`} role="tabpanel" aria-labelledby={`${id}-try`} className="loyal__try">
+              <label className="loyal__ask" htmlFor={`${id}-spend`}>
+                What do you spend at Jontai in a year?
+              </label>
+              <p className="loyal__spend figure">{formatAfl(spend)}</p>
+              <div className="loyal__picks" role="group" aria-label="Quick amounts">
+                {PICKS.map((v) => (
+                  <button key={v} type="button" data-on={spend === v || undefined} onClick={() => tryIt(v)}>
+                    {formatAfl(v)}
+                  </button>
+                ))}
+              </div>
+              <input
+                id={`${id}-spend`}
+                className="slider loyal__slider"
+                type="range"
+                min={0}
+                max={MAX_SPEND}
+                step={100}
+                value={spend}
+                aria-valuetext={`${formatAfl(spend)} a year, ${formatAfl(r.back)} back`}
+                onChange={(e) => setSpend(Number(e.target.value))}
+                style={{ '--fill': `${(spend / MAX_SPEND) * 100}%` } as CSSProperties}
+              />
+              <div className="loyal__result" aria-live="polite">
+                <p className="loyal__back-line">
+                  You get <strong className="figure">{formatAfl(r.back)}</strong> back
+                </p>
+                <p className="loyal__meta">
+                  {r.vouchers} {r.vouchers === 1 ? 'voucher' : 'vouchers'}
+                  {spend < MAX_SPEND ? ` · ${formatAfl(r.toNext)} more to the next one` : ' · every voucher on the card'}
+                </p>
+                {spend < MAX_SPEND && (
+                  <span className="loyal__next-bar" aria-hidden="true">
+                    <i style={{ '--p': `${100 - (r.toNext / REWARD_STEP_AFL) * 100}%` } as CSSProperties} />
+                    <span>{formatAfl(next)}</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="loyal__actions">
             <MemberLogin />
             <a href="#visit" className="btn btn--ghost">
-              Visit the store
+              Join at the counter
             </a>
           </div>
         </div>
-        <div className="rewards-air__card" data-swing>
-          <LoyaltyCard flipped={false} front={<VoucherFace spend={spend} />} back={<VoucherFace spend={spend} />} />
+
+        <div className="loyal__card" data-swing>
+          <LoyaltyCard flipped={flipped} front={<VoucherFace spend={spend} />} back={<VoucherBack />} />
+          {pop > 0 && (
+            <span key={pop} className="loyal__pop" aria-hidden="true">
+              + {formatAfl(REWARD_PER_STEP_AFL)}
+            </span>
+          )}
+          <p className="loyal__caption" aria-hidden="true">
+            {mode === 'how' ? `Step ${step + 1} of ${STEPS.length}` : `${formatAfl(spend)} spent this year`}
+          </p>
         </div>
       </div>
 
-      <ol className="rewards-air__steps">
-        {STEPS.map((s, i) => (
-          <li key={s.title} style={{ '--i': i } as CSSProperties}>
-            <span className="rule" data-line />
-            <h3 data-reveal>{s.title}</h3>
-            <p data-reveal>{s.text}</p>
-          </li>
-        ))}
-      </ol>
-      <ul className="rewards-air__facts">
-        {FACTS.map((f, i) => (
-          <li key={f} data-reveal style={{ '--i': i } as CSSProperties}>
-            {f}
-          </li>
-        ))}
-      </ul>
+      <details className="loyal__facts">
+        <summary>
+          Good to know <span aria-hidden="true">+</span>
+        </summary>
+        <ul>
+          {FACTS.map((f) => {
+            const Icon = f.icon;
+            return (
+              <li key={f.text}>
+                <Icon size={22} weight="light" aria-hidden="true" />
+                {f.text}
+              </li>
+            );
+          })}
+        </ul>
+      </details>
     </section>
   );
 }

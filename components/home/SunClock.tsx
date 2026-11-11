@@ -26,9 +26,18 @@ export function SunClock({ className = '' }: { className?: string }) {
   return (
     <p className={`sunclock ${className}`.trim()} data-up={now?.up}>
       <i aria-hidden="true" />
+      {/* Aruba's own welcome, in Papiamento. */}
+      <span className="sunclock__hi" lang="pap" title="Welcome, in Papiamento">
+        Bon bini
+      </span>
+      <span aria-hidden="true">·</span>
       {now ? (
         <span>
-          <span className="sunclock__time">{now.time} in Oranjestad</span> <span aria-hidden="true">·</span> {now.line}
+          <span className="sunclock__time">{now.time} in Oranjestad</span>
+          <span className="sunclock__line">
+            {' '}
+            <span aria-hidden="true">·</span> {now.line}
+          </span>
         </span>
       ) : (
         <span>Under the Aruba sun, Cumana 73</span>

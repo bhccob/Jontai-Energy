@@ -1,35 +1,41 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties } from 'react';
 import { ChatsCircle, HouseLine, Truck } from '@phosphor-icons/react/dist/ssr';
 import { Words } from '@/components/ui/Split';
 import { HOME_COPY } from '@/lib/products';
+import { WhyHover } from './WhyHover';
 
 const ICONS = [HouseLine, Truck, ChatsCircle];
 
-/** A small picture set into the sentence, between its words, that grows in as the sentence fills (Novair's idea). */
-function Pic({ src, i }: { src: string; i: number }) {
+/** One run of the sentence, split into words that fill in with the scroll (PageMotion, data-fill). A `pic` makes it a
+ *  key word: underlined, and under the pointer it calls up its picture (WhyHover). */
+function Run({ text, soft, pic }: { text: string; soft?: boolean; pic?: string }) {
+  const words = <Words text={text} />;
   return (
-    <span className="why__pic" aria-hidden="true" data-reveal style={{ '--i': i } as CSSProperties}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" width={140} height={100} loading="lazy" decoding="async" />
+    <span className={soft ? 'soft' : undefined}>
+      {pic ? (
+        <span className="why__key" data-pic={pic}>
+          {words}
+        </span>
+      ) : (
+        words
+      )}
     </span>
   );
 }
 
-/** One run of the sentence, split into words that fill in with the scroll (PageMotion, data-fill). */
-const Run = ({ text, soft }: { text: string; soft?: boolean }): ReactNode => (
-  <span className={soft ? 'soft' : undefined}>
-    <Words text={text} />
-  </span>
-);
-
 /**
  * What sets the store apart, after Novair's "why us": one sentence about the two floors, filled in word by word as it
- * scrolls, with the products set into it as small pictures; then the three things the store does differently, in
+ * scrolls. Its key words are underlined; point at one and its picture rises beside the pointer and follows it (the
+ * pictures no longer sit inside the sentence, Bob round 13). Then the three things the store does differently, in
  * columns with an icon each. All from the store's own words (data/products.json, statement).
  */
 export function Why() {
   const { statement } = HOME_COPY;
   const [ground, upstairs] = statement.strong.split('. ');
+  const [g1, ...gRest] = ground.split(' ');
+  const [u1, ...uRest] = upstairs.split(' ');
+  const soft = statement.soft.replace(/ at .*/, '');
+  const place = statement.soft.replace(/^.* at (.*)$/, '$1');
   return (
     <section id="why" className="why" aria-labelledby="why-title">
       <div className="why__top">
@@ -41,10 +47,8 @@ export function Why() {
         </p>
       </div>
       <p className="why__big" data-fill>
-        <Run text={ground.split(' ')[0]} /> <Pic src="/sky/island-solar-700.webp" i={0} /> <Run text={`${ground.split(' ').slice(1).join(' ')}.`} />{' '}
-        <Run text={upstairs.split(' ')[0]} /> <Pic src="/sky/island-furniture-700.webp" i={1} /> <Run text={upstairs.split(' ').slice(1).join(' ')} />{' '}
-        <Run text={statement.soft.replace(/ at .*/, '')} soft /> <Pic src="/sky/island-light-700.webp" i={2} />{' '}
-        <Run text={statement.soft.replace(/^.* (at .*)$/, '$1')} soft />
+        <Run text={g1} pic="/sky/island-solar-700.webp" /> <Run text={`${gRest.join(' ')}.`} /> <Run text={u1} pic="/sky/island-furniture-700.webp" />{' '}
+        <Run text={uRest.join(' ')} /> <Run text={`${soft} at`} soft /> <Run text={place} soft pic="/sky/island-array-700.webp" />
       </p>
       <ul className="why__points">
         {statement.points.map((p, i) => {
@@ -62,6 +66,7 @@ export function Why() {
           );
         })}
       </ul>
+      <WhyHover />
     </section>
   );
 }

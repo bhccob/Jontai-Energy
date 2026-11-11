@@ -36,124 +36,448 @@ main.air {
   display: block;
 }
 
-/* ---------- Jontai Rewards ---------- */
+/* ---------- Jontai Rewards: the rule, then the card with two ways in (round 13) ---------- */
 
 /* Rewards slides up over the first view like a sheet (HeroSkyMotion holds the view still under it on wide screens). */
-.rewards-air {
+.loyal {
   position: relative;
   z-index: 2;
+  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(80px, 12vh, 140px);
   border-radius: 36px 36px 0 0;
-  box-shadow: 0 -40px 80px -20px rgb(14 34 25 / 0.45);
-  padding: clamp(100px, 16vh, 180px) var(--gutter) clamp(90px, 14vh, 160px);
-  background: var(--leaf);
+  background: #fbfcf8;
+  box-shadow: 0 -40px 80px -30px rgb(14 34 25 / 0.35);
   color: var(--leaf-ink);
 }
-.rewards-air__name {
-  margin: 0 0 22px;
-  font-size: 1.05rem;
-  font-weight: 700;
+.loyal__kicker {
+  margin: 0 0 20px;
   color: var(--leaf-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
-.rewards-air__title > span + span {
-  color: rgb(23 61 44 / 0.5);
+.loyal__title .soft {
+  color: rgb(23 61 44 / 0.45);
 }
-.rewards-air__play {
+.loyal__sub {
+  max-width: 36rem;
+  margin: 26px 0 0;
+  color: var(--leaf-muted);
+  font-size: clamp(1.05rem, 0.3vw + 1rem, 1.2rem);
+  line-height: 1.55;
+}
+.loyal__stage {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   align-items: center;
   gap: clamp(32px, 6vw, 110px);
-  margin-top: clamp(56px, 9vh, 96px);
+  margin-top: clamp(48px, 8vh, 80px);
 }
-.rewards-air__row {
+
+/* The two ways in, as a switch with a sliding pill. */
+.loyal__tabs {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: rgb(23 61 44 / 0.07);
+}
+.loyal__tabs button {
+  position: relative;
+  z-index: 1;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--leaf-ink);
+  font: inherit;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 400ms ease;
+}
+.loyal__tabs button[aria-selected='true'] {
+  color: #f4f6ef;
+}
+.loyal__tabs-ink {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: var(--radius-pill);
+  background: var(--color-forest);
+  transition: translate 600ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+.loyal__tabs-ink[data-at='try'] {
+  translate: 100% 0;
+}
+.loyal__tabs :focus-visible {
+  outline: 2px solid var(--leaf-ink);
+  outline-offset: 2px;
+}
+
+/* How it works: four steps, the one on show open, a bar for how long it holds. */
+.loyal__steps {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.loyal__step {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 0 18px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.loyal__step-bar {
+  position: relative;
+  display: block;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--leaf-rule);
+}
+.loyal__step-bar i {
+  position: absolute;
+  inset: 0;
+  background: var(--color-forest);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+li[data-done] .loyal__step-bar i,
+li[data-on] .loyal__step-bar i {
+  transform: none;
+}
+.loyal__step-bar i[data-run] {
+  animation: step-run var(--ms) linear both;
+}
+@keyframes step-run {
+  from {
+    transform: scaleX(0);
+  }
+}
+.loyal__step-head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 6px;
+  align-items: center;
+  gap: 12px;
+  color: var(--leaf-muted);
+  transition: color 400ms ease;
+}
+li[data-on] .loyal__step-head {
+  color: var(--leaf-ink);
+}
+.loyal__step-num {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+.loyal__step-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 108%;
+  font-size: clamp(1.2rem, 1vw + 0.8rem, 1.55rem);
+  letter-spacing: -0.02em;
+}
+.loyal__step-text {
+  display: grid;
+  grid-template-rows: 0fr;
+  max-width: 30rem;
+  overflow: hidden;
+  color: var(--leaf-muted);
+  font-size: 1rem;
+  line-height: 1.55;
+  opacity: 0;
+  transition:
+    grid-template-rows 600ms var(--ease-out),
+    opacity 500ms ease;
+}
+li[data-on] .loyal__step-text {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.loyal__step-text > span {
+  min-height: 0;
+}
+.loyal__step {
+  row-gap: 0;
+}
+.loyal__step-head {
+  margin-top: 12px;
+}
+li[data-on] .loyal__step-text > span {
+  padding-top: 8px;
+}
+.loyal__step:focus-visible {
+  outline: 2px solid var(--leaf-ink);
+  outline-offset: 4px;
+}
+.loyal__next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--leaf-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.loyal__next svg {
+  transition: translate 450ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .loyal__next:hover svg {
+    translate: 4px 0;
+  }
+  .loyal__step:hover .loyal__step-head {
+    color: var(--leaf-ink);
+  }
+}
+
+/* Try your numbers. */
+.loyal__try {
+  margin-top: 28px;
+}
+.loyal__ask {
+  display: block;
+  color: var(--leaf-muted);
   font-weight: 600;
 }
-.rewards-air__spend {
-  font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-stretch: var(--stretch-narrow);
+.loyal__spend {
+  margin: 10px 0 18px;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 4.4vw, 4.2rem);
+  line-height: 1;
 }
-.rewards-air__slider {
+.loyal__picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.loyal__picks button {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
+  color: var(--leaf-ink);
+  font: inherit;
+  font-weight: 650;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease,
+    scale 120ms ease-out;
+}
+.loyal__picks button[data-on] {
+  background: var(--color-forest);
+  color: #f4f6ef;
+  box-shadow: none;
+}
+.loyal__picks button:active {
+  scale: 0.96;
+}
+@media (hover: hover) and (pointer: fine) {
+  .loyal__picks button:hover {
+    box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
+  }
+}
+.loyal__slider {
   --track: linear-gradient(90deg, var(--leaf-ink) var(--fill, 0%), var(--leaf-rule) var(--fill, 0%));
   --thumb: var(--leaf-ink);
   --halo: rgb(23 61 44 / 0.14);
+  margin-top: 14px;
 }
-.rewards-air__result {
-  margin: 10px 0 30px;
-  font-size: clamp(1.15rem, 0.4vw + 1rem, 1.35rem);
-  line-height: 1.45;
-  min-height: 2.9em;
+.loyal__result {
+  margin-top: 8px;
 }
-.rewards-air .btn--primary {
+.loyal__back-line {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.loyal__back-line strong {
+  margin: 0 4px;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+}
+.loyal__meta {
+  margin: 6px 0 0;
+  color: var(--leaf-muted);
+  font-size: 0.98rem;
+}
+.loyal__next-bar {
+  position: relative;
+  display: block;
+  height: 8px;
+  margin-top: 14px;
+  border-radius: 8px;
+  background: var(--leaf-rule);
+}
+.loyal__next-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--p);
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f2b33d, #ffd98a);
+  transition: width 500ms var(--ease-out);
+}
+.loyal__next-bar span {
+  position: absolute;
+  right: 0;
+  top: 14px;
+  color: var(--leaf-muted);
+  font-size: 0.8rem;
+}
+.loyal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 40px;
+}
+.loyal .btn--primary {
   --btn-fill: #2e6b45;
   background: var(--leaf-ink);
   color: #f7f5ec;
 }
-.rewards-air .btn--ghost {
+.loyal .btn--ghost {
   --btn-fill: var(--leaf-ink);
   color: var(--leaf-ink);
   box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
 }
 @media (hover: hover) and (pointer: fine) {
-  .rewards-air .btn--ghost:hover {
+  .loyal .btn--ghost:hover {
     color: #f7f5ec;
     box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
   }
 }
-.rewards-air__card {
+
+/* The card, with the voucher rising off it when one lands. */
+.loyal__card {
+  position: relative;
   justify-self: center;
-  width: min(100%, 31rem);
+  width: min(100%, 32rem);
   will-change: transform;
 }
-.rewards-air__steps,
-.rewards-air__facts {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.loyal__pop {
+  position: absolute;
+  z-index: 3;
+  top: 6%;
+  right: 6%;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: #f2b33d;
+  color: #2a1d02;
+  font-weight: 800;
+  box-shadow: 0 14px 30px -10px rgb(242 179 61 / 0.7);
+  pointer-events: none;
+  animation: voucher-pop 1600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.rewards-air__steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 clamp(24px, 4vw, 64px);
-  margin-top: clamp(72px, 11vh, 120px);
-  counter-reset: step;
+@keyframes voucher-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.6);
+  }
+  18% {
+    opacity: 1;
+    transform: translateY(0) scale(1.08);
+  }
+  30% {
+    transform: translateY(0) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.95);
+  }
 }
-.rewards-air__steps .rule {
-  margin-bottom: 20px;
-  color: var(--leaf-ink);
-}
-.rewards-air__steps h3 {
-  margin: 0 0 10px;
-  font-size: clamp(1.3rem, 1vw + 1rem, 1.6rem);
-  font-weight: 650;
-  letter-spacing: -0.02em;
-}
-.rewards-air__steps p,
-.rewards-air__facts li {
-  margin: 0;
-  max-width: 26em;
+.loyal__caption {
+  margin: 22px 0 0;
   color: var(--leaf-muted);
-  font-size: 1.05rem;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
 }
-.rewards-air__facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 clamp(24px, 4vw, 64px);
-  margin-top: clamp(40px, 6vh, 64px);
+.loyal__back {
+  display: flex;
+  flex-direction: column;
 }
-.rewards-air__facts li {
-  max-width: none;
-  padding: 16px 0;
-  border-top: 1px solid var(--leaf-rule);
+.loyal__back-amount {
+  margin: auto 0 6px;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
-.rewards-air :focus-visible {
-  outline-color: var(--leaf-ink);
+.loyal__back-text {
+  max-width: 18rem;
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.95rem;
 }
 
+/* The small print, folded. */
+.loyal__facts {
+  margin-top: clamp(56px, 9vh, 90px);
+  border-top: 1px solid var(--leaf-rule);
+  border-bottom: 1px solid var(--leaf-rule);
+}
+.loyal__facts summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 108%;
+  font-size: 1.35rem;
+  cursor: pointer;
+  list-style: none;
+}
+.loyal__facts summary::-webkit-details-marker {
+  display: none;
+}
+.loyal__facts summary span {
+  transition: rotate 400ms var(--ease-out);
+}
+.loyal__facts[open] summary span {
+  rotate: 45deg;
+}
+.loyal__facts ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 40px;
+  margin: 0;
+  padding: 0 0 26px;
+  list-style: none;
+}
+.loyal__facts li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--leaf-muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.loyal__facts li svg {
+  flex: none;
+  color: var(--leaf-ink);
+}
 
 /* ---------- One voice (round 12): the old narrow bold labels and figures take the page's type ---------- */
 
@@ -216,7 +540,7 @@ main.air {
 }
 /* The sentence, filled in word by word (PageMotion, data-fill), with the products set into it. */
 .why__big {
-  max-width: 21ch;
+  max-width: 23ch;
   margin: clamp(40px, 7vh, 72px) 0 0;
   font-family: var(--font-display);
   font-weight: 300;
@@ -228,33 +552,34 @@ main.air {
 .why__big .soft {
   color: var(--deep-muted);
 }
-.why__pic {
-  display: inline-block;
-  width: 1.9em;
-  height: 0.92em;
-  margin: 0 0.06em;
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: radial-gradient(circle at 50% 30%, #27523d, #173d2c);
-  vertical-align: -0.06em;
+/* The key words: a quiet underline that fills in mint under the pointer, which calls up the picture (WhyHover). */
+.why__key {
+  background: linear-gradient(var(--color-mint), var(--color-mint)) 0 92% / 100% 0.06em no-repeat;
+  transition: background-size 500ms var(--ease-out);
 }
-.why__pic img {
+@media (hover: hover) and (pointer: fine) {
+  .why__key {
+    cursor: default;
+  }
+  .why__key:hover {
+    background-size: 100% 0.5em;
+    background-image: linear-gradient(rgb(184 216 168 / 0.22), rgb(184 216 168 / 0.22));
+  }
+}
+.why__float {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  left: 0;
+  width: clamp(200px, 18vw, 280px);
+  margin: -150px 0 0 24px;
+  pointer-events: none;
+}
+.why__float img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  scale: 1.25;
-  translate: 0 6%;
-}
-.js .why__pic[data-reveal] {
-  transform: scale(0.2) rotate(-10deg);
-  transition:
-    opacity 700ms ease,
-    transform 1100ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition-delay: calc(var(--i, 0) * 160ms + 150ms);
-}
-.js .why__pic[data-reveal].is-in {
-  transform: none;
+  height: auto;
+  filter: drop-shadow(0 30px 30px rgb(0 0 0 / 0.45));
 }
 .why__points {
   display: grid;
@@ -377,16 +702,25 @@ main.air {
 .piece:focus {
   outline: none;
 }
+/* Every frame the same dark green (Bob, round 13), lit from where the pointer is (--lx/--ly, CollectionMotion). */
 .piece__frame {
+  --lx: 50%;
+  --ly: 32%;
   position: relative;
-  aspect-ratio: 5 / 6;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: 6px;
-  background: radial-gradient(70% 60% at 50% 35%, #ffffff, var(--mist) 70%);
+  border-radius: 8px;
+  background:
+    radial-gradient(75% 60% at var(--lx) var(--ly), rgb(184 216 168 / 0.22), transparent 70%),
+    linear-gradient(to bottom, #1d3f2e, #12291e);
+  box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.06);
   transform-style: preserve-3d;
+  transition: box-shadow 500ms ease;
 }
-.piece[data-night] .piece__frame {
-  background: radial-gradient(70% 60% at 50% 35%, #26503b, #12291e 75%);
+@media (hover: hover) and (pointer: fine) {
+  .piece__frame:hover {
+    box-shadow: inset 0 0 0 1px rgb(184 216 168 / 0.35);
+  }
 }
 .piece__count {
   position: absolute;
@@ -409,7 +743,7 @@ main.air {
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 12% 10%;
+  padding: 4% 4%;
   border: 0;
   background: none;
   cursor: none;
@@ -434,12 +768,28 @@ main.air {
   height: auto;
   max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 30px 30px rgb(5 20 12 / 0.28));
-  transition: scale 900ms var(--ease-out);
+  filter: drop-shadow(0 34px 30px rgb(0 0 0 / 0.4));
+  transition:
+    scale 900ms var(--ease-out),
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
+}
+@keyframes piece-bob {
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .piece__float {
+    animation: piece-bob 6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -1.1s);
+  }
 }
 @media (hover: hover) and (pointer: fine) {
   .piece__frame:hover .piece__float img {
-    scale: 1.07;
+    scale: 1.1;
+    translate: 0 -14px;
+    rotate: -1.5deg;
   }
 }
 .piece__name {
@@ -558,7 +908,7 @@ main.air {
 .collection[data-row] .collection__track {
   display: flex;
   align-items: flex-start;
-  gap: 4.5vw;
+  gap: 3.5vw;
   width: max-content;
   height: 100%;
   padding: calc(var(--nav-h) + 4vh) 10vw 0 var(--gutter);
@@ -578,16 +928,23 @@ main.air {
 }
 .collection[data-row] .piece {
   flex: 0 0 auto;
-  width: clamp(250px, 20vw, 340px);
+  width: clamp(290px, min(25vw, 50vh), 440px);
 }
 .collection[data-row] .piece:nth-of-type(3n + 1) {
-  margin-top: 1vh;
+  margin-top: 0;
 }
 .collection[data-row] .piece:nth-of-type(3n + 2) {
-  margin-top: 13vh;
+  margin-top: 8vh;
 }
 .collection[data-row] .piece:nth-of-type(3n) {
-  margin-top: 6vh;
+  margin-top: 3.5vh;
+}
+/* In the row the figures and the note stay short, so the frames can be big. */
+.collection[data-row] .piece__line {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .collection[data-row] .collection__end {
   align-self: center;
@@ -763,7 +1120,7 @@ main.air {
 .team__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 48px 14px;
   margin: clamp(48px, 7vh, 72px) 0 0;
   padding: 0;
   list-style: none;
@@ -807,7 +1164,8 @@ main.air {
   color: var(--leaf-muted);
   font-size: 0.98rem;
 }
-.team__hello {
+/* You?: a deep green place for the next person, with a WhatsApp to apply. */
+.team__you {
   display: flex;
   flex-direction: column;
   aspect-ratio: 4 / 5;
@@ -816,7 +1174,7 @@ main.air {
   background: var(--deep);
   color: var(--deep-ink);
 }
-.team__hello-kicker {
+.team__you-kicker {
   margin: 0;
   color: var(--color-mint);
   font-size: 0.8rem;
@@ -824,24 +1182,24 @@ main.air {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.team__hello-title {
+.team__you-title {
   margin: 18px 0 14px;
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 0.95;
+  font-size: clamp(1.8rem, 2.6vw, 2.7rem);
+  line-height: 0.98;
   letter-spacing: -0.03em;
   text-transform: uppercase;
 }
-.team__hello-text {
+.team__you-text {
   max-width: 22rem;
   margin: 0;
   color: var(--deep-muted);
   font-size: 1rem;
   line-height: 1.55;
 }
-.team__hello-cta {
+.team__you-cta {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
@@ -850,17 +1208,42 @@ main.air {
   margin-top: auto;
   padding: 0 18px;
   border-radius: var(--radius-pill);
-  background: var(--deep-ink);
+  background: var(--color-mint);
   color: var(--deep);
   font-weight: 700;
   font-size: 0.92rem;
   text-decoration: none;
-  transition: background-color 300ms ease;
+  transition:
+    background-color 300ms ease,
+    scale 120ms ease-out;
+}
+.team__you-cta:active {
+  scale: 0.97;
 }
 @media (hover: hover) and (pointer: fine) {
-  .team__hello-cta:hover {
-    background: var(--color-mint);
+  .team__you-cta:hover {
+    background: #cfe6c3;
   }
+}
+/* A place still to be filled: the frame waits, quietly. */
+.person__frame--soon {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgb(255 255 255 / 0.6), transparent 70%),
+    #dde5d4;
+  box-shadow: inset 0 0 0 1px var(--leaf-rule);
+  color: rgb(23 61 44 / 0.35);
+}
+.person__frame--soon span {
+  color: var(--leaf-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.person--soon .person__name {
+  color: rgb(23 61 44 / 0.6);
 }
 /* The photos and the panel arrive one after another. */
 @media (prefers-reduced-motion: no-preference) {
@@ -935,21 +1318,26 @@ main.air {
   background: #16301f;
   box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.08);
   text-align: left;
-  transform-origin: 50% 340%;
-  transform: rotate(calc(var(--o) * 11deg));
-  opacity: calc(1 - var(--d) * 0.3);
-  z-index: calc(10 - var(--d));
+  /* Turned by Reviews about a point far below, so the cards lie on a wheel. */
+  transform-origin: 50% 360%;
+  will-change: transform, opacity;
   transition:
-    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 600ms ease,
-    background-color 600ms ease;
+    background-color 600ms ease,
+    box-shadow 600ms ease;
+}
+.review > * {
+  transition: translate 700ms var(--ease-out);
 }
 .review[data-at] {
-  background: #1d3f2d;
+  background: #1f4431;
+  box-shadow:
+    inset 0 0 0 1px rgb(184 216 168 / 0.35),
+    0 30px 60px -30px rgb(0 0 0 / 0.6);
 }
-.review[style*='--d: 3'],
-.review[style*='--d: 4'] {
-  opacity: 0;
+.review[data-at] > * {
+  translate: 0 -4px;
+}
+.review[style*='opacity: 0;'] {
   pointer-events: none;
 }
 .review__stars {
@@ -997,8 +1385,11 @@ main.air {
   margin-top: 8px;
 }
 .reviews__btn {
-  min-height: 44px;
-  padding: 0 20px;
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
   border: 0;
   border-radius: var(--radius-pill);
   background: none;
@@ -1016,6 +1407,10 @@ main.air {
   background: var(--deep-ink);
   color: var(--deep);
   box-shadow: none;
+}
+.reviews__score {
+  color: var(--color-mint);
+  font-size: 1rem;
 }
 .reviews__btn:active {
   scale: 0.97;
@@ -1232,18 +1627,14 @@ main.air {
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 60rem) {
-  .rewards-air__play {
+  .loyal__stage {
     grid-template-columns: minmax(0, 1fr);
   }
-  .rewards-air__card {
+  .loyal__card {
     order: -1;
   }
-  .rewards-air__steps,
-  .rewards-air__facts {
+  .loyal__facts ul {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .rewards-air__steps li + li {
-    margin-top: 28px;
   }
   .why__top {
     flex-direction: column;
@@ -1273,19 +1664,22 @@ main.air {
   }
   .team__grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    row-gap: 32px;
   }
-  .team__hello {
-    grid-column: 1 / -1;
+  .team__you {
     aspect-ratio: auto;
-    min-height: 260px;
+    min-height: 300px;
   }
   .footer__top {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 40rem) {
-  .rewards-air .actions .btn {
+  .loyal__actions .btn {
     flex: 1 1 auto;
+  }
+  .loyal__tabs {
+    display: grid;
   }
   .collection__track {
     gap: 56px;

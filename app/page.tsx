@@ -12,8 +12,8 @@ import { Visit } from '@/components/sections/Visit';
 import { Footer } from '@/components/sections/Footer';
 import { SkyScope } from '@/components/sky/SkyScope';
 
-/** The browser's own bars match the deep green at the top of the home page. */
-export const viewport: Viewport = { themeColor: '#0e2219' };
+/** The browser's own bars match the pale morning green at the top of the home page. */
+export const viewport: Viewport = { themeColor: '#eef3e7' };
 
 /**
  * Round 12, green first and in one voice (Bob, 2026-11-11, after squared-media and Novair): the first view on deep
