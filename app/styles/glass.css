@@ -316,14 +316,8 @@
   box-shadow: var(--lg-rim), var(--lg-drop);
 }
 
-/* ---------- What we offer, the team, the reviews (the visit keeps its ruled lines) ---------- */
+/* ---------- The team and the reviews (the visit keeps its ruled lines) ---------- */
 
-.offer-row__go {
-  background: var(--lg-glint), var(--lg-clear);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim), var(--lg-drop);
-}
 /* The people behind it, flat (Bob, round 24): the "You?" tile a plain deep green with small corners, its button plain
    mint, the arrows simple outlined circles (air.css). */
 .team__you {

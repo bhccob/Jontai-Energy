@@ -5,7 +5,6 @@ import { Hero } from '@/components/home/Hero';
 import { Rewards } from '@/components/home/Rewards';
 import { Why } from '@/components/home/Why';
 import { Collection } from '@/components/home/Collection';
-import { Offer } from '@/components/home/Offer';
 import { Team } from '@/components/home/Team';
 import { Reviews } from '@/components/home/Reviews';
 import { Visit } from '@/components/sections/Visit';
@@ -16,9 +15,9 @@ import { SkyScope } from '@/components/sky/SkyScope';
 export const viewport: Viewport = { themeColor: '#eef3e7' };
 
 /**
- * Round 12, green first and in one voice (Bob, 2026-11-11, after squared-media and Novair): the first view on deep
- * green with the valley inside JONTAI; Jontai Rewards sliding over it; why the store is different; the six ranges as
- * a collection; what it offers; the people behind it; what customers say on Google; the visit; the footer. Each has
+ * The order (Bob, round 25): the first view, whose scroll flies into Jontai Rewards; why the store is different; the
+ * six ranges as a collection; what customers say on Google, right after the products; the people behind it; the
+ * visit; the footer. ("What we offer" is gone: it repeated what the page and the menu already show.) Each section has
  * its own character and its own way of arriving, in two greens and the same type. Bundle offers sit in the header.
  */
 export default function Home() {
@@ -32,9 +31,8 @@ export default function Home() {
         <Rewards />
         <Why />
         <Collection />
-        <Offer />
-        <Team />
         <Reviews />
+        <Team />
         <Visit />
       </main>
       <Footer />
