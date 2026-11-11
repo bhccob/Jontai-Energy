@@ -1,15 +1,19 @@
-/* The home page below the first view, in open air and green first (round 9; the first view itself is in sky.css).
-   Rhythm: light leaf green for Jontai Rewards, the valley again for the islands, light leaf for the store's promises,
-   forest for the visit. Type: the same huge thin wide capitals as the first view for each section's one line, Archivo
-   for everything read. No boxes: rules, colour fields and space; the loyalty card and the islands are the objects. */
+/* The home page below the first view (rounds 9 to 11; the first view itself is in sky.css). Two greens only, so each
+   section can have its own character without the page turning into a paint chart (Bob, round 11: "too much colors"):
+   a pale mist by day and a deep forest after dark, the brand's mint for what can be pressed, the photographs for the
+   rest. Type: the same huge thin wide capitals as the first view for each section's one line, Archivo for everything
+   read. No boxes: rules, colour fields and space; the loyalty card and the islands are the objects. */
 
 :root {
-  /* A light leaf green between the owner's light green #B8D8A8 and the page white: big fields that stay calm. */
-  --leaf: #d7e8cc;
-  --leaf-2: #c5dcb6;
+  --mist: #e9efe3;
+  --deep: #0e2219;
+  --leaf: var(--mist);
   --leaf-ink: #173d2c;
   --leaf-muted: rgb(23 61 44 / 0.74);
   --leaf-rule: rgb(23 61 44 / 0.2);
+  --deep-ink: #f4f6ef;
+  --deep-muted: rgb(244 246 239 / 0.72);
+  --deep-rule: rgb(244 246 239 / 0.18);
 }
 
 main.air {
@@ -32,97 +36,14 @@ main.air {
   display: block;
 }
 
-/* ---------- The ranges ticker, under the first view ---------- */
-
-/* A band of forest with the six names running across it, slow and endless; it pauses under the pointer. */
-@keyframes ticker-run {
-  to {
-    transform: translateX(calc(-100% / 3));
-  }
-}
-.ticker {
-  position: relative;
-  z-index: 1;
-  overflow: clip;
-  padding: clamp(18px, 3vh, 30px) 0;
-  background: var(--night-deep, #0f281d);
-  color: #e3eed7;
-}
-.ticker__track {
-  display: flex;
-  width: max-content;
-}
-.ticker__row {
-  display: flex;
-  flex: none;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.ticker__row li {
-  display: flex;
-  align-items: center;
-}
-.ticker a {
-  padding: 0 0.32em;
-  color: inherit;
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-stretch: 112%;
-  font-size: clamp(2.4rem, 5vw, 5.4rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 300ms ease;
-}
-.ticker__sep {
-  padding: 0 0.25em;
-  color: var(--color-mint);
-  font-size: clamp(2.4rem, 5vw, 5.4rem);
-  line-height: 1;
-}
-@media (hover: hover) and (pointer: fine) {
-  .ticker a:hover {
-    color: var(--color-mint);
-  }
-  .ticker:hover .ticker__track {
-    animation-play-state: paused;
-  }
-}
-.ticker a:focus-visible {
-  outline-color: var(--color-mint);
-  outline-offset: -4px;
-}
-.ticker:focus-within .ticker__track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ticker__track {
-    animation: ticker-run 42s linear infinite;
-  }
-}
-/* Still: one copy, wrapped. */
-@media (prefers-reduced-motion: reduce) {
-  .ticker__track {
-    width: auto;
-    flex-wrap: wrap;
-    padding: 0 var(--gutter);
-  }
-  .ticker__row {
-    flex-wrap: wrap;
-  }
-  .ticker__row[aria-hidden='true'] {
-    display: none;
-  }
-}
-
 /* ---------- Jontai Rewards ---------- */
 
+/* Rewards slides up over the first view like a sheet (HeroSkyMotion holds the view still under it on wide screens). */
 .rewards-air {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  border-radius: 36px 36px 0 0;
+  box-shadow: 0 -40px 80px -20px rgb(14 34 25 / 0.45);
   padding: clamp(100px, 16vh, 180px) var(--gutter) clamp(90px, 14vh, 160px);
   background: var(--leaf);
   color: var(--leaf-ink);
@@ -134,7 +55,7 @@ main.air {
   color: var(--leaf-muted);
 }
 .rewards-air__title > span + span {
-  color: #2e6b45;
+  color: rgb(23 61 44 / 0.5);
 }
 .rewards-air__play {
   display: grid;
@@ -233,7 +154,7 @@ main.air {
   outline-color: var(--leaf-ink);
 }
 
-/* ---------- The islands: one Aruban day ---------- */
+/* ---------- What we sell: the archipelago, then one Aruban day ---------- */
 
 /* Not the valley of the first view: here the air itself is the colour of a moment of the day (lib/islands, day), with
    a soft light where the sun, a lamp or the moon would be. Words take their colour from the air (currentColor), so the
@@ -243,21 +164,266 @@ main.air {
   z-index: 1;
   background: var(--leaf);
 }
-.islands__intro {
+/* The archipelago: the six ranges as islands around the title, on the deep green. By default (phones, short screens,
+   reduced motion) it is a plain index: the words, then the islands in rows with their names. */
+.archipelago {
   position: relative;
   z-index: 2;
-  /* The same leaf field runs on from Rewards, so a little less space before it. */
-  padding: clamp(48px, 8vh, 96px) var(--gutter) clamp(48px, 8vh, 88px);
-  background: var(--leaf);
-  color: var(--leaf-ink);
+  background: var(--deep);
+  color: var(--deep-ink);
 }
-.islands__lead {
+.archipelago__inner {
+  position: relative;
+  padding: clamp(96px, 14vh, 150px) var(--gutter) clamp(72px, 10vh, 110px);
+  overflow: clip;
+}
+.archipelago__head {
+  position: relative;
+  z-index: 2;
+  max-width: 54rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.archipelago__title {
+  font-size: clamp(2.8rem, 6.4vw, 7.2rem);
+}
+.archipelago__lead {
   max-width: 34em;
-  margin: 26px 0 0;
-  color: var(--leaf-muted);
-  font-size: clamp(1.1rem, 0.3vw + 1rem, 1.25rem);
+  margin: 26px auto 0;
+  color: var(--deep-muted);
+  font-size: clamp(1.05rem, 0.3vw + 0.98rem, 1.2rem);
   line-height: 1.5;
 }
+.archipelago__isles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px 20px;
+  margin: clamp(48px, 7vh, 72px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.isle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+.isle__float {
+  display: block;
+  width: 100%;
+}
+.isle img {
+  display: block;
+  width: 100%;
+  max-height: 34vw;
+  object-fit: contain;
+  filter: drop-shadow(0 26px 26px rgb(0 0 0 / 0.35));
+  transition:
+    scale 700ms var(--ease-out),
+    translate 700ms var(--ease-out),
+    opacity 500ms ease;
+}
+.isle__name {
+  font-weight: 600;
+  font-size: 1rem;
+  transition:
+    opacity 400ms ease,
+    transform 500ms var(--ease-out),
+    color 300ms ease;
+}
+.isle:focus-visible {
+  outline-color: var(--color-mint);
+  outline-offset: 8px;
+}
+.archipelago__dawn {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--mist);
+  opacity: 0;
+  pointer-events: none;
+}
+@keyframes isle-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(0.8deg);
+  }
+}
+
+/* Floating: wide and tall enough, and motion allowed. The words hold in the middle of the screen while the islands
+   drift around them; the extra height is the scroll they scatter over (ArchipelagoMotion). */
+@media (min-width: 961px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
+  .archipelago {
+    height: 240svh;
+  }
+  .archipelago__inner {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 0 var(--gutter);
+  }
+  .archipelago__isles {
+    position: absolute;
+    inset: 0;
+    display: block;
+    margin: 0;
+  }
+  .archipelago__isles > li {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 0;
+    height: 0;
+  }
+  .isle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(var(--w) * 1vw);
+    transform: translate(-50%, -50%);
+  }
+  .isle img {
+    max-height: none;
+    animation: isle-bob 7s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -1.3s);
+  }
+  /* Its name comes up under an island the pointer is on; the others step back. */
+  .isle__name {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    color: var(--color-mint);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-stretch: 112%;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  .isle:is(:hover, :focus-visible) .isle__name {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .isle:is(:hover, :focus-visible) img {
+    scale: 1.08;
+    translate: 0 -12px;
+  }
+  .archipelago__isles:has(.isle:hover) .isle:not(:hover) img {
+    opacity: 0.45;
+  }
+}
+@media (max-width: 40rem) {
+  .archipelago__isles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .isle img {
+    max-height: 44vw;
+  }
+}
+
+/* ---------- The lighting island's bulb: its light in the slider's colour (LampSlider) ---------- */
+
+.island[data-lamp] {
+  --kelvin: 255 167 87;
+}
+.lamp {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.lamp__halo,
+.lamp__tint,
+.lamp__core {
+  position: absolute;
+  left: var(--bx);
+  top: var(--by);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+/* The light it throws on the air and the grass. */
+.lamp__halo {
+  width: calc(var(--br) * 8);
+  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.5), rgb(var(--kelvin) / 0.16) 45%, transparent);
+  mix-blend-mode: screen;
+}
+/* Layers cut to the picture's own pixels (the island is its own mask), so only the glass takes the light, never the
+   air around it. The blend is on the cut layer, so it mixes with the picture under it. */
+.lamp__glass {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: url('/sky/island-light-700.webp') 0 0 / 100% 100% no-repeat;
+  mask: url('/sky/island-light-700.webp') 0 0 / 100% 100% no-repeat;
+}
+/* The glass and filaments take the light's colour, keeping their own shading. */
+.lamp__glass--tint {
+  mix-blend-mode: color;
+  opacity: 0.75;
+}
+.lamp__tint {
+  width: calc(var(--br) * 2);
+  background: rgb(var(--kelvin));
+}
+/* The bright middle, where the filaments are. */
+.lamp__glass--core {
+  mix-blend-mode: screen;
+}
+.lamp__core {
+  width: calc(var(--br) * 1.5);
+  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.42), rgb(var(--kelvin) / 0.1) 60%, transparent);
+}
+@keyframes lamp-on {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lamp {
+    animation: lamp-on 1.6s ease-out both;
+  }
+}
+
+.lamp-slider {
+  max-width: 26rem;
+  margin: 26px 0 0;
+}
+.lamp-slider__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: 600;
+}
+.lamp-slider__value {
+  color: color-mix(in srgb, currentColor 80%, transparent);
+  font-weight: 500;
+}
+.lamp-slider__value .figure {
+  margin-right: 6px;
+  color: rgb(var(--kelvin));
+  font-size: 1.6rem;
+}
+.lamp-slider__input {
+  --thumb: rgb(var(--kelvin));
+  --halo: rgb(var(--kelvin) / 0.25);
+}
+.lamp-slider__ends {
+  display: flex;
+  justify-content: space-between;
+  color: color-mix(in srgb, currentColor 60%, transparent);
+  font-size: 0.85rem;
+}
+
 .islands__rail {
   position: relative;
   overflow: clip;
@@ -379,6 +545,13 @@ main.air {
   justify-self: center;
   filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.32));
 }
+/* The lamp island keeps its shadow on the picture, so the bulb's light does not cast one. */
+.island[data-lamp] .island__pic {
+  filter: none;
+}
+.island[data-lamp] .island__pic img {
+  filter: drop-shadow(0 50px 60px rgb(5 20 12 / 0.32));
+}
 .island__pic img {
   display: block;
   width: auto;
@@ -481,11 +654,27 @@ main.air {
 
 /* ---------- The store's three promises ---------- */
 
+/* Sunlight through a window, following the pointer (StatementLight). The registered properties let it ease along. */
+@property --mx {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 72%;
+}
+@property --my {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 30%;
+}
 .air .statement {
   position: relative;
   z-index: 1;
-  background: var(--leaf);
+  background:
+    radial-gradient(min(60vw, 720px) circle at var(--mx) var(--my), rgb(255 255 255 / 0.8), rgb(255 255 255 / 0) 70%),
+    var(--mist);
   color: var(--leaf-ink);
+  transition:
+    --mx 1100ms var(--ease-out),
+    --my 1100ms var(--ease-out);
 }
 /* Lighter and wider, in the voice of the headings above it. */
 .air .statement__big {

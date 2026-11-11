@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { Words } from '@/components/ui/Split';
 import { HOME_COPY } from '@/lib/products';
+import { StatementLight } from './StatementLight';
 
 /**
  * One clear sentence about the store, filled in word by word as it scrolls up, and three ruled points under it. The
@@ -36,6 +37,7 @@ export function Statement() {
           </li>
         ))}
       </ul>
+      <StatementLight />
     </section>
   );
 }

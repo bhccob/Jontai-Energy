@@ -1,84 +1,79 @@
 import type { CSSProperties } from 'react';
-import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
+import { ArrowDown, ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { FitText } from '@/components/ui/FitText';
 import { HOME_COPY } from '@/lib/products';
 import { HeroSkyMotion } from './HeroSkyMotion';
-import { OpenStatus } from './OpenStatus';
 import { SunClock } from './SunClock';
 
 /** When each part of the entrance starts, in ms (sky.css, hero-rise). */
 const at = (d: number) => ({ '--d': d }) as CSSProperties;
 
 /**
- * The first view, in layers like a landscape: the moving valley at the back (SkyScope), the name JONTAI standing in it
- * across the whole width, the solar island floating in front of the name, and the grass nearest the eye over its foot.
- * The owner's line in thin wide capitals at the top left, under a live line about the sun over the store; what it sells
- * and whether it is open on the right; who and where with two ways in. The entrance is CSS (sky.css); HeroSkyMotion
- * pulls the layers apart as it scrolls away.
+ * The first view, kept to a few things (Bob, round 11: "too cluttered"): the live line about the sun over the store,
+ * the owner's line in thin wide capitals, one sentence that says what the store is, one way in. Under it the landscape:
+ * the moving valley at the back (SkyScope), JONTAI standing in it across the whole width, the solar island floating in
+ * front of the name and the grass nearest the eye. The valley opens like a window as the page arrives (sky.css), and
+ * HeroSkyMotion pulls the layers apart as the next section slides over.
  */
 export function Hero() {
   const { hero } = HOME_COPY;
   const [first, ...rest] = hero.title.split(', ');
   return (
     <section id="hero" className="hero" aria-labelledby="hero-title">
-      <div className="hero__eyebrow" data-hero style={at(40)}>
-        <SunClock />
-      </div>
-
-      <h1 id="hero-title" className="hero__display">
-        <span className="hero__mask">
-          <span className="hero__line" data-hero-line style={at(120)}>
-            {rest.length ? `${first},` : first}
-          </span>
-        </span>{' '}
-        {rest.length > 0 && (
+      <div className="hero__top">
+        <div className="hero__eyebrow" data-hero style={at(380)}>
+          <SunClock />
+        </div>
+        <h1 id="hero-title" className="hero__display">
           <span className="hero__mask">
-            <span className="hero__line hero__line--two" data-hero-line style={at(240)}>
-              {rest.join(', ')}
+            <span className="hero__line" data-hero-line style={at(520)}>
+              {rest.length ? `${first},` : first}
             </span>
-          </span>
-        )}
-      </h1>
-
-      <div className="hero__aside" data-hero style={at(560)}>
-        <p>{hero.aside}</p>
-        <OpenStatus className="hero__status" />
-      </div>
-
-      <div className="hero__foot" data-hero style={at(700)}>
-        <p className="hero__lead">{hero.lead}</p>
-        <div className="actions">
+          </span>{' '}
+          {rest.length > 0 && (
+            <span className="hero__mask">
+              <span className="hero__line" data-hero-line style={at(640)}>
+                {rest.join(', ')}
+              </span>
+            </span>
+          )}
+        </h1>
+        <p className="hero__lead" data-hero style={at(900)}>
+          {hero.lead}
+        </p>
+        <div className="hero__actions" data-hero style={at(1040)}>
           <a href="#visit" className="btn btn--primary">
             {hero.primary} <ArrowRight size={18} weight="bold" aria-hidden="true" />
           </a>
-          <a href="#products" className="btn btn--ghost">
-            {hero.secondary}
+          <a href="#products" className="hero__more">
+            {hero.secondary} <ArrowDown size={16} weight="bold" aria-hidden="true" />
           </a>
         </div>
       </div>
 
-      {/* The name stands in the valley, its foot in the grass; decorative, the header already says it. */}
-      <div className="hero__word">
-        <FitText text="JONTAI" chars />
+      <div className="hero__stage">
+        <figure className="hero__island" aria-hidden="true">
+          <div className="hero__float">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/sky/island-array-1200.webp"
+              srcSet="/sky/island-array-700.webp 700w, /sky/island-array-1200.webp 1200w"
+              sizes="(max-width: 60rem) 88vw, 36vw"
+              alt=""
+              width={1200}
+              height={903}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </div>
+        </figure>
+        {/* The name stands in the valley behind the island; decorative, the header already says it. */}
+        <div className="hero__word">
+          <FitText text="JONTAI" chars />
+        </div>
       </div>
 
-      <figure className="hero__island" aria-hidden="true">
-        <div className="hero__float">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/sky/island-array-1200.webp"
-            srcSet="/sky/island-array-700.webp 700w, /sky/island-array-1200.webp 1200w"
-            sizes="(max-width: 60rem) 92vw, 46vw"
-            alt=""
-            width={1200}
-            height={903}
-            fetchPriority="high"
-            decoding="async"
-          />
-        </div>
-      </figure>
-
-      {/* Out-of-focus grass close to the eye, in front of the island and the name. */}
+      {/* Out-of-focus grass close to the eye, over the foot of the name and the island's shadow. */}
       <div className="hero__grass" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -91,10 +86,7 @@ export function Hero() {
           decoding="async"
         />
       </div>
-
-      <p className="hero__note" data-hero style={at(1100)}>
-        {hero.note}
-      </p>
+      <div className="hero__shade" aria-hidden="true" />
       <HeroSkyMotion />
     </section>
   );

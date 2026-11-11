@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { useLenis } from 'lenis/react';
 import { ArrowRight, X } from '@phosphor-icons/react';
 import { BUNDLES, BUNDLE_NOTE, bundleQuestion, shouldAutoOpen } from '@/lib/bundles';
@@ -97,25 +97,31 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
       </button>
       <div ref={panel} id={`${id}-panel`} className="offer" role="dialog" aria-labelledby={`${id}-title`} data-open={open}>
         <div className="offer__head">
-          <h2 id={`${id}-title`} className="offer__title" tabIndex={-1}>
-            Save when you buy together
-          </h2>
+          <p className="offer__kicker">
+            Bundle offers <span>Samples</span>
+          </p>
           <button type="button" className="offer__close" aria-label="Close bundle offers" onClick={close}>
-            <X size={20} weight="bold" aria-hidden="true" />
+            <X size={18} weight="bold" aria-hidden="true" />
           </button>
         </div>
-        <ul className="offer__list">
-          {BUNDLES.map((b) => (
-            <li key={b.id}>
-              <p className="offer__name">{b.name}</p>
+        <h2 id={`${id}-title`} className="offer__title" tabIndex={-1}>
+          Buy together, pay less.
+        </h2>
+        <ol className="offer__list">
+          {BUNDLES.map((b, i) => (
+            <li key={b.id} style={{ '--i': i } as CSSProperties}>
               <p className="offer__save figure">
-                {b.save}%<span> off</span>
+                {b.save}
+                <span>% off</span>
               </p>
-              <p className="offer__items">{b.items}</p>
+              <div className="offer__what">
+                <p className="offer__name">{b.name}</p>
+                <p className="offer__items">{b.items}</p>
+              </div>
             </li>
           ))}
-        </ul>
-        <a href={bundleQuestion()} target="_blank" rel="noopener noreferrer" className="btn btn--primary btn--sm offer__ask">
+        </ol>
+        <a href={bundleQuestion()} target="_blank" rel="noopener noreferrer" className="offer__ask">
           Ask on WhatsApp <ArrowRight size={18} weight="bold" aria-hidden="true" />
         </a>
         <p className="offer__note">{BUNDLE_NOTE}</p>

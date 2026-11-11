@@ -40,3 +40,7 @@ The loop is published with ffmpeg (not a project dependency; `npm i ffmpeg-stati
 ffmpeg -i tools/sky/source/valley-loop.mp4 -an -vf "scale=1920:-2,format=yuv420p" -c:v libx264 -preset slow -crf 25 -profile:v high -movflags +faststart public/sky/valley-loop-1920.mp4
 ffmpeg -i tools/sky/source/valley-loop.mp4 -an -vf "scale=1920:-2" -c:v libvpx-vp9 -b:v 0 -crf 36 -row-mt 1 -deadline good -cpu-used 2 public/sky/valley-loop-1920.webm
 ```
+
+## The lighting island's bulb (round 11, no credits)
+
+Bob, 2026-11-11: "the bulb gotta make sense since its not connected to the socket". The generated island hung the bulb upside down: the cord's socket held the top of the glass and the screw base pointed at the grass. `tools/sky/fix-bulb.mjs` keeps the cord and socket, turns the glass and base over so the base goes up into the socket, and writes `source/island-light-fixed.png`, which `publish.mjs` now prefers. It prints where the glass ends up (lib/islands, `lamp`), for the page's 2700K to 6500K light.

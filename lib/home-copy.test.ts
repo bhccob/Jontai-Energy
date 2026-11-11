@@ -50,10 +50,10 @@ test('the family-owned point leads the statement, and no team page is promised y
 test('the first view says what the store sells, that it is family-owned and where it is', () => {
   const { hero } = home;
   assert.equal(hero.title, 'Aruba sunlight, made useful.');
-  for (const range of ['Solar', 'backup power', 'lighting', 'cooling', 'security', 'furniture']) assert.match(hero.aside, new RegExp(range, 'i'));
+  for (const range of ['Solar', 'backup power', 'lighting', 'cooling', 'security', 'furniture']) assert.match(hero.lead, new RegExp(range, 'i'));
   assert.match(hero.lead, /family-owned/);
   assert.match(hero.lead, /Cumana 73, Oranjestad/);
-  assert.match(hero.lead, /[Ff]urniture/);
+  assert.equal(hero.aside, undefined);
   assert.match(hero.note, /not specific stock/);
 });
 

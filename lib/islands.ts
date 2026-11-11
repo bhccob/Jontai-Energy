@@ -7,7 +7,7 @@
 // Type-only, so Node's test runner never loads products.ts (it imports through the '@/' alias Node cannot resolve).
 import type { PanelId } from './products';
 
-/** One moment of the day: a short label, the colour of the air, whether words on it are dark or light, and where the
+/** One moment of the day, in two greens only (the pale mist by day, the deep forest after dark): a short label, the colour of the air, whether words on it are dark or light, and where the
  *  light comes from (a soft glow, x and y in % of the screen). */
 export interface Day {
   label: string;
@@ -37,6 +37,8 @@ export interface Island {
   quote: string;
   /** Where in an Aruban day the range is shown, and the light the walk paints for it (air.css, IslandWalk). */
   day: Day;
+  /** Where the bulb's glass is, in % of the picture (x, y of its centre; r of the width), for the colour slider's light. */
+  lamp?: { x: number; y: number; r: number };
 }
 
 export const ISLANDS: Island[] = [
@@ -57,7 +59,7 @@ export const ISLANDS: Island[] = [
       { label: 'See solar panels', panel: 'solar' },
     ],
     quote: 'inverter',
-    day: { label: 'Morning', bg: '#e6edcd', ink: 'dark', glow: 'rgba(255, 212, 140, 0.85)', at: [16, 18] },
+    day: { label: 'Morning', bg: '#e9efe3', ink: 'dark', glow: 'rgba(255, 255, 255, 0.95)', at: [16, 14] },
   },
   {
     id: 'cooling',
@@ -73,7 +75,7 @@ export const ISLANDS: Island[] = [
     note: 'From the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
     actions: [{ label: 'See solar air conditioners', panel: 'solar-ac' }],
     quote: 'solar-ac',
-    day: { label: 'Midday', bg: '#cfe8d2', ink: 'dark', glow: 'rgba(255, 255, 236, 0.95)', at: [52, 0] },
+    day: { label: 'Midday', bg: '#e9efe3', ink: 'dark', glow: 'rgba(255, 255, 255, 1)', at: [52, 0] },
   },
   {
     id: 'backup',
@@ -92,7 +94,7 @@ export const ISLANDS: Island[] = [
       { label: 'See generators', panel: 'generator' },
     ],
     quote: 'power-station',
-    day: { label: 'Evening', bg: '#4f7040', ink: 'light', glow: 'rgba(255, 168, 92, 0.6)', at: [86, 78] },
+    day: { label: 'Evening', bg: '#e9efe3', ink: 'dark', glow: 'rgba(184, 216, 168, 0.7)', at: [86, 82] },
   },
   {
     id: 'light',
@@ -103,7 +105,9 @@ export const ISLANDS: Island[] = [
     note: 'Stock changes often, so ask before you make the trip.',
     actions: [{ label: 'See lighting', panel: 'led' }],
     quote: 'led',
-    day: { label: 'After dark', bg: '#1d3a2d', ink: 'light', glow: 'rgba(255, 196, 110, 0.5)', at: [74, 38] },
+    // From tools/sky/fix-bulb.mjs, which turned the bulb the right way up into its socket.
+    lamp: { x: 57.27, y: 32.63, r: 10.98 },
+    day: { label: 'After dark', bg: '#0e2219', ink: 'light', glow: 'rgba(184, 216, 168, 0.12)', at: [70, 40] },
   },
   {
     id: 'security',
@@ -113,7 +117,7 @@ export const ISLANDS: Island[] = [
     line: 'Security cameras that charge themselves from the sun, for the door, the yard or a site.',
     actions: [{ label: 'See security cameras', panel: 'cameras' }],
     quote: 'cameras',
-    day: { label: 'Night', bg: '#0d1f17', ink: 'light', glow: 'rgba(176, 222, 204, 0.24)', at: [80, 14] },
+    day: { label: 'Night', bg: '#0e2219', ink: 'light', glow: 'rgba(184, 216, 168, 0.16)', at: [80, 12] },
   },
   {
     id: 'upstairs',
@@ -124,6 +128,6 @@ export const ISLANDS: Island[] = [
     note: 'Large-item delivery available. Ask us about furniture delivery.',
     actions: [{ label: 'How delivery works', panel: 'furniture' }],
     quote: 'furniture',
-    day: { label: 'Weekend', bg: '#e2e9d2', ink: 'dark', glow: 'rgba(255, 224, 168, 0.7)', at: [24, 22] },
+    day: { label: 'Weekend', bg: '#e9efe3', ink: 'dark', glow: 'rgba(255, 255, 255, 0.95)', at: [24, 18] },
   },
 ];

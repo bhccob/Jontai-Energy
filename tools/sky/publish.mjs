@@ -38,7 +38,9 @@ for (const { name, phoneAt } of BACKDROPS) {
 
 // Islands: trimmed to their own edges, then two widths with their transparency kept.
 for (const name of ['array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
-  const file = join(src, `island-${name}.png`);
+  // A fixed version wins where one exists (fix-bulb.mjs turns the lighting island's bulb the right way up).
+  const fixed = join(src, `island-${name}-fixed.png`);
+  const file = (await exists(fixed)) ? fixed : join(src, `island-${name}.png`);
   if (!(await exists(file))) continue;
   const trimmed = await sharp(file).trim({ threshold: 1 }).toBuffer();
   for (const w of [1200, 700]) {

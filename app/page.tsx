@@ -3,7 +3,6 @@ import { CatalogProvider } from '@/components/catalog/CatalogProvider';
 import { Header } from '@/components/ui/Header';
 import { Hero } from '@/components/home/Hero';
 import { Rewards } from '@/components/home/Rewards';
-import { Ticker } from '@/components/home/Ticker';
 import { Islands } from '@/components/home/Islands';
 import { Statement } from '@/components/home/Statement';
 import { Visit } from '@/components/sections/Visit';
@@ -27,7 +26,6 @@ export default function Home() {
         <SkyScope>
           <Hero />
         </SkyScope>
-        <Ticker />
         <Rewards />
         <Islands />
         <Statement />
