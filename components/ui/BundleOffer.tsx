@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useLenis } from 'lenis/react';
 import { ArrowRight, X } from '@phosphor-icons/react';
 import { BUNDLES, BUNDLE_NOTE, bundleQuestion, shouldAutoOpen } from '@/lib/bundles';
@@ -8,18 +8,19 @@ import { BUNDLES, BUNDLE_NOTE, bundleQuestion, shouldAutoOpen } from '@/lib/bund
 const SEEN = 'jontai-bundles-seen';
 
 /**
- * The header's "Bundle offers" pill and the small panel it opens under the header: three ruled rows (name, saving,
- * what is in it), one way to ask (the contact page), and the note that these are samples. Not a modal: the page stays usable and
- * focus stays where it was when it opens by itself (once per visit, near the top, a moment after load). Opened from
- * the pill, focus goes in; Escape or the close button closes it and focus returns to the pill. It also closes when the
- * menu opens (`hidden`) and, if it opened by itself, once the visitor scrolls on.
+ * The header's "Bundle offers" pill and the offers it opens (Bob, round 22: "in the middle with more rectangular
+ * shaped"): a native dialog in the middle of the screen over a soft dimmed page, a wide rectangle with the three
+ * offers side by side (name, saving, what is in it), one way to ask (the contact page), and the note that these are
+ * samples. Being a dialog, it keeps keyboard focus inside while open and hands it back after; Escape, the close button
+ * or a click on the dimmed page closes it, and the page holds still behind it. It opens by itself once per visit, a
+ * moment after load while the visitor is still at the top, and closes when the menu opens (`hidden`).
  */
 export function BundleOffer({ hidden }: { hidden: boolean }) {
   const id = useId();
   const [open, setOpen] = useState(false);
-  const [byItself, setByItself] = useState(false);
   const pill = useRef<HTMLButtonElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const lenis = useLenis();
 
   const remember = () => {
     try {
@@ -39,7 +40,6 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
     }
     const timer = window.setTimeout(() => {
       if (!shouldAutoOpen(seen, window.scrollY, window.innerHeight)) return;
-      setByItself(true);
       setOpen(true);
       remember();
     }, 2400);
@@ -50,63 +50,79 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
     if (hidden) setOpen(false);
   }, [hidden]);
 
-  // Closed, the panel is out of the tab order and the accessibility tree.
+  // The dialog follows `open`; the page holds still behind it, and moves again only when this dialog lets it go (so it
+  // never wakes the scroll while the menu holds it).
+  const held = useRef(false);
   useEffect(() => {
-    if (panel.current) panel.current.inert = !open;
-  }, [open]);
+    const d = dialog.current;
+    if (!d) return;
+    if (open && !d.open) {
+      d.showModal();
+      d.querySelector<HTMLElement>('h2')?.focus();
+      lenis?.stop();
+      held.current = true;
+    } else if (!open) {
+      if (d.open) d.close();
+      if (held.current) {
+        held.current = false;
+        lenis?.start();
+      }
+    }
+  }, [open, lenis]);
 
-  // One that opened by itself leaves once the visitor scrolls well into the page.
-  useLenis(
-    (l) => {
-      if (open && byItself && l.scroll > window.innerHeight * 0.6) setOpen(false);
-    },
-    [open, byItself],
-  );
-
-  // Escape closes it, and focus goes back to the pill if it was inside.
+  // Closed by Escape (the browser's own) or by anything else: keep the state in step.
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      const inside = panel.current?.contains(document.activeElement);
-      setOpen(false);
-      if (inside) pill.current?.focus();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open]);
+    const d = dialog.current;
+    if (!d) return;
+    const onClose = () => setOpen(false);
+    d.addEventListener('close', onClose);
+    return () => d.removeEventListener('close', onClose);
+  }, []);
 
-  const toggle = () => {
-    remember();
-    setByItself(false);
-    setOpen((v) => {
-      if (!v) window.setTimeout(() => panel.current?.querySelector<HTMLElement>('h2')?.focus(), 30);
-      return !v;
-    });
-  };
-  const close = () => {
-    setOpen(false);
-    pill.current?.focus();
+  // A click on the dimmed page around it (the dialog's own box, outside its content) closes it.
+  const onDialogClick = (e: MouseEvent<HTMLDialogElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside) setOpen(false);
   };
 
   return (
     <>
-      <button ref={pill} type="button" className="offer-pill" aria-label="Bundle offers" aria-expanded={open} aria-controls={`${id}-panel`} onClick={toggle}>
+      <button
+        ref={pill}
+        type="button"
+        className="offer-pill"
+        aria-label="Bundle offers"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={`${id}-panel`}
+        onClick={() => {
+          remember();
+          setOpen(true);
+        }}
+      >
         <span className="offer-pill__long">Bundle offers</span>
         <span className="offer-pill__short">Bundles</span>
       </button>
-      <div ref={panel} id={`${id}-panel`} className="offer" role="dialog" aria-labelledby={`${id}-title`} data-open={open}>
+      <dialog ref={dialog} id={`${id}-panel`} className="offer" aria-labelledby={`${id}-title`} onClick={onDialogClick}>
         <div className="offer__head">
           <p className="offer__kicker">
             Bundle offers <span>Samples</span>
           </p>
-          <button type="button" className="offer__close" aria-label="Close bundle offers" onClick={close}>
+          <button type="button" className="offer__close" aria-label="Close bundle offers" onClick={() => setOpen(false)}>
             <X size={18} weight="bold" aria-hidden="true" />
           </button>
         </div>
-        <h2 id={`${id}-title`} className="offer__title" tabIndex={-1}>
-          Buy together, pay less.
-        </h2>
+        <div className="offer__lead">
+          <h2 id={`${id}-title`} className="offer__title" tabIndex={-1}>
+            Buy together,
+            <br />
+            pay less.
+          </h2>
+          <a href={bundleQuestion()} className="offer__ask">
+            Ask about a bundle <ArrowRight size={18} weight="bold" aria-hidden="true" />
+          </a>
+        </div>
         <ol className="offer__list">
           {BUNDLES.map((b, i) => (
             <li key={b.id} style={{ '--i': i } as CSSProperties}>
@@ -121,11 +137,8 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
             </li>
           ))}
         </ol>
-        <a href={bundleQuestion()} className="offer__ask">
-          Ask about a bundle <ArrowRight size={18} weight="bold" aria-hidden="true" />
-        </a>
         <p className="offer__note">{BUNDLE_NOTE}</p>
-      </div>
+      </dialog>
     </>
   );
 }

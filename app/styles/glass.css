@@ -140,12 +140,6 @@
 
 /* ---------- Pills: the sun line, the bundle offers, the range numbers, the concept notice ---------- */
 
-.sunclock {
-  background: var(--lg-glint), var(--lg-clear);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim), var(--lg-drop);
-}
 .offer-pill {
   background: var(--lg-glint), var(--lg-mint);
   -webkit-backdrop-filter: var(--lg-blur);
