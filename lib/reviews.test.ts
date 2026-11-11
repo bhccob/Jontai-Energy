@@ -24,7 +24,7 @@ test('the Google rating is the listing’s own, not rounded up', () => {
 test('the team row has its five people; every photo it names is on disk', () => {
   assert.deepEqual(
     TEAM.map((p) => p.name),
-    ['Chakho Chung', 'Bob Chung', 'Lily', 'Chi Wai', 'Benny'],
+    ['Bryan', 'Bob', 'Lily', 'Chi Wai', 'Benny'],
   );
   for (const p of TEAM.filter((t) => t.photo)) assert.ok(existsSync(join(import.meta.dirname, '..', 'public', p.photo!)), p.name);
 });

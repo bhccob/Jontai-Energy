@@ -30,7 +30,12 @@ export function Team() {
       <div className="team__row" data-reveal>
         <TeamRail count={TEAM.length}>
           {TEAM.map((p, i) => (
-            <li key={p.name} className={`person${p.photo ? '' : ' person--soon'}`} style={{ '--i': i } as CSSProperties}>
+            <li
+              key={p.name}
+              className={`person${p.photo ? '' : ' person--soon'}`}
+              // Wide screens lay the row out reversed, the first two staying in reading order at its right end (TeamRail).
+              style={{ '--i': i, '--order': i < 2 ? TEAM.length - 1 + i : TEAM.length - i } as CSSProperties}
+            >
               {p.photo ? (
                 <figure className="person__frame">
                   {/* eslint-disable-next-line @next/next/no-img-element */}

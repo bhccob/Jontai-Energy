@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { gsap } from 'gsap';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Star } from '@phosphor-icons/react';
+import { ArrowUpRight, Star } from '@phosphor-icons/react';
 import { Words } from '@/components/ui/Split';
 import { GOOGLE_RATING, GOOGLE_REVIEWS_URL, REVIEWS } from '@/lib/reviews';
 
@@ -23,12 +23,13 @@ const fold = (a: number) => ((((a + SPAN / 2) % SPAN) + SPAN) % SPAN) - SPAN / 2
  * What customers say, in their own words, from Google (lib/reviews), on a wheel after squared-media's arc, made to move
  * (Bob, round 13): the cards turn slowly and endlessly round a point far below, fading in at one edge and out at the
  * other; the one passing the middle stands upright and lights. Grab and throw it, and it glides on and settles; point
- * at it and it slows to a stop on the nearest card; click a card, the arrows or the buttons to bring one to the middle.
+ * at it and it slows to a stop on the nearest card; click a card, a dot or an arrow key to bring one to the middle.
  * Reduced motion: it holds still and moves only when asked, without gliding.
  */
 export function Reviews() {
   const arc = useRef<HTMLDivElement>(null);
   const turn = useRef<(by: number) => void>(() => {});
+  const show = useRef<(k: number) => void>(() => {});
   const [at, setAt] = useState(0);
 
   useEffect(() => {
@@ -78,6 +79,16 @@ export function Reviews() {
       snap = gsap.to(s, { angle: target, duration: 0.9, ease: 'power3.out', onUpdate: paint });
     };
     turn.current = (by: number) => glideTo(centred(s.angle) + by * STEP);
+    // Bring review `k` to the middle: whichever of its copies round the wheel is nearest.
+    show.current = (k: number) => {
+      let best = Infinity;
+      cards.forEach((_, j) => {
+        if (j % REVIEWS.length !== k) return;
+        const a = fold(j * STEP + s.angle);
+        if (Math.abs(a) < Math.abs(best)) best = a;
+      });
+      if (Number.isFinite(best)) glideTo(s.angle - best);
+    };
 
     const tick = (_t: number, dt: number) => {
       if (dragging || snap?.isActive()) return;
@@ -195,18 +206,13 @@ export function Reviews() {
         ))}
       </div>
 
+      {/* No arrows (Bob, round 15): the dots say which review is in the middle, and bring one there when picked. */}
       <div className="reviews__nav">
-        <button type="button" className="reviews__btn" aria-label="Previous review" onClick={() => turn.current(1)}>
-          <ArrowLeft size={18} weight="bold" aria-hidden="true" />
-        </button>
-        <span className="reviews__dots" aria-hidden="true">
-          {REVIEWS.map((_, i) => (
-            <i key={i} data-on={at === i || undefined} />
+        <span className="reviews__dots" role="group" aria-label="Pick a review">
+          {REVIEWS.map((r, i) => (
+            <button key={i} type="button" data-on={at === i || undefined} aria-label={`Review by ${r.name}`} aria-pressed={at === i} onClick={() => show.current(i)} />
           ))}
         </span>
-        <button type="button" className="reviews__btn reviews__btn--next" aria-label="Next review" onClick={() => turn.current(-1)}>
-          <ArrowRight size={18} weight="bold" aria-hidden="true" />
-        </button>
       </div>
       <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="reviews__google">
         <span className="reviews__score">{GOOGLE_RATING.score.toFixed(1)}</span> out of 5 · {GOOGLE_RATING.count} reviews on Google{' '}

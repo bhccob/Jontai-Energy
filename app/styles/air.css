@@ -36,121 +36,341 @@ main.air {
   display: block;
 }
 
-/* ---------- Jontai Rewards: the rule, then the card with two ways in (round 13) ---------- */
+/* ---------- Jontai Rewards: laid out like a price list, two programs side by side (round 15) ---------- */
 
 /* Rewards slides up over the first view like a sheet (HeroSkyMotion holds the view still under it on wide screens). */
 .loyal {
   position: relative;
   z-index: 2;
-  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(80px, 12vh, 140px);
+  padding: clamp(80px, 12vh, 140px) var(--gutter) clamp(80px, 12vh, 140px);
   border-radius: 36px 36px 0 0;
   background: #fbfcf8;
   box-shadow: 0 -40px 80px -30px rgb(14 34 25 / 0.35);
   color: var(--leaf-ink);
 }
-.loyal__kicker {
-  margin: 0 0 20px;
-  color: var(--leaf-muted);
-  font-size: 0.95rem;
-  font-weight: 600;
+.loyal__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  align-items: end;
+  gap: 18px 40px;
 }
-.loyal__title .soft {
-  color: rgb(23 61 44 / 0.45);
+.loyal__chip {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint);
+  color: var(--leaf-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
-.loyal__sub {
-  max-width: 36rem;
-  margin: 26px 0 0;
+.loyal__title {
+  font-size: clamp(2.8rem, 6.6vw, 7.4rem);
+}
+.loyal__indent {
+  padding-left: 1.3em;
+}
+.loyal__side {
+  margin: 0;
   color: var(--leaf-muted);
-  font-size: clamp(1.05rem, 0.3vw + 1rem, 1.2rem);
+  font-size: 1.02rem;
   line-height: 1.55;
 }
-/* Who the rewards are for: home or business. The headline, the steps and the card follow the choice. */
-.loyal__for {
+
+/* The two programs. Each is a field with a soft diagonal light, its number huge, its card in the corner. */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: clamp(40px, 6vh, 64px);
+}
+.tier {
+  --lx: 70%;
+  position: relative;
+  min-height: clamp(460px, 62vh, 560px);
+  overflow: hidden;
+  border-radius: 28px;
+  padding: clamp(26px, 3vw, 40px);
+  background:
+    linear-gradient(115deg, transparent 0 calc(var(--lx) - 18%), rgb(255 255 255 / 0.45) calc(var(--lx) - 6%), transparent calc(var(--lx) + 10%)),
+    linear-gradient(160deg, #e8efdd, #d6e3c9);
+  color: var(--leaf-ink);
+  transition: --lx 900ms var(--ease-out);
+}
+@property --lx {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 70%;
+}
+.tier:hover {
+  --lx: 40%;
+}
+.tier--business {
+  background:
+    linear-gradient(115deg, transparent 0 calc(var(--lx) - 18%), rgb(184 216 168 / 0.12) calc(var(--lx) - 6%), transparent calc(var(--lx) + 10%)),
+    linear-gradient(160deg, #1b3b2b, #0e2219);
+  color: var(--deep-ink);
+}
+.tier__text {
+  position: relative;
+  z-index: 2;
+  max-width: min(19rem, 52%);
+}
+.tier__kicker {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-top: clamp(32px, 5vh, 48px);
+  gap: 8px;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.75;
 }
-.loyal__for-label {
-  margin-right: 6px;
-  color: var(--leaf-muted);
+.tier__badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint);
+  color: var(--deep);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.tier--business .tier__kicker {
+  opacity: 1;
+  color: rgb(244 246 239 / 0.8);
+}
+.tier__figure {
+  margin: clamp(26px, 5vh, 46px) 0 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(3.6rem, 7vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  font-variant-numeric: lining-nums;
+}
+.tier__per {
+  margin: 10px 0 0;
+  opacity: 0.7;
+  font-size: 0.95rem;
+}
+.tier__title {
+  margin: clamp(24px, 4vh, 36px) 0 10px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-stretch: 108%;
+  font-size: clamp(1.3rem, 1.2vw + 0.8rem, 1.7rem);
+  letter-spacing: -0.02em;
+}
+.tier__body {
+  margin: 0;
+  opacity: 0.78;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.tier__meta {
+  margin: 16px 0 0;
+  opacity: 0.6;
+  font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-.loyal__for button {
+.tier__cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 48px;
+  min-height: 46px;
+  margin-top: 26px;
   padding: 0 20px;
   border: 0;
   border-radius: var(--radius-pill);
   background: none;
-  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
-  color: var(--leaf-ink);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  color: inherit;
   font: inherit;
-  font-weight: 650;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
   transition:
-    background-color 350ms ease,
-    color 350ms ease,
-    box-shadow 350ms ease,
+    background-color 300ms ease,
+    color 300ms ease,
     scale 120ms ease-out;
 }
-.loyal__for button[aria-checked='true'] {
+.tier__cta--fill {
   background: var(--color-mint);
-  box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
+  color: var(--deep);
+  box-shadow: none;
 }
-.loyal__for button:active {
+.tier__cta:active {
   scale: 0.97;
 }
+.tier__cta svg {
+  transition: translate 450ms var(--ease-out);
+}
 @media (hover: hover) and (pointer: fine) {
-  .loyal__for button:hover {
-    box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
+  .tier__cta:hover svg {
+    translate: 0 3px;
+  }
+  .tier__cta:not(.tier__cta--fill):hover {
+    background: var(--leaf-ink);
+    color: #f4f6ef;
+    box-shadow: none;
+  }
+  .tier__cta--fill:hover {
+    background: #cfe6c3;
   }
 }
-.loyal__for :focus-visible {
-  outline: 2px solid var(--leaf-ink);
+.tier :focus-visible {
+  outline: 2px solid currentColor;
   outline-offset: 3px;
 }
-/* The headline changes with the choice: its words rise into place again. */
-@keyframes loyal-rise {
-  from {
-    transform: translateY(110%);
-  }
+/* Its card, peeking out of the corner; under the pointer it lifts and turns over to show the reward. */
+.tier__card {
+  position: absolute;
+  z-index: 1;
+  right: -8%;
+  bottom: -14%;
+  width: min(54%, 27rem);
+  rotate: -9deg;
+  transition:
+    rotate 900ms var(--ease-out),
+    translate 900ms var(--ease-out);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .loyal__title .wi {
-    animation: loyal-rise 900ms var(--ease-out) both;
-  }
-  .loyal__title > span:nth-of-type(2) .wi {
-    animation-delay: 120ms;
-  }
-  .loyal__how {
-    animation: hero-rise 600ms var(--ease-out) both;
-  }
-}
-.loyal__stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  align-items: center;
-  gap: clamp(32px, 6vw, 110px);
-  margin-top: clamp(48px, 8vh, 80px);
+.tier:hover .tier__card {
+  rotate: -4deg;
+  translate: -4% -10%;
 }
 
-/* The two ways in, as a switch with a sliding pill. */
-.loyal__tabs {
+/* The two strips under them: how to join, and a person to ask. */
+.loyal__strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  margin-top: 16px;
+  padding: 16px 16px 16px 26px;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0 1px var(--leaf-rule);
+}
+.loyal__strip p {
+  margin: 0;
+  color: var(--leaf-muted);
+}
+.loyal__strip-kicker {
+  margin-right: 10px;
+  color: var(--leaf-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.loyal__strip--soft {
+  margin-top: 10px;
+  padding-block: 18px;
+  background: rgb(23 61 44 / 0.05);
+  box-shadow: none;
+}
+.loyal__ask-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 10px;
+  color: var(--leaf-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.loyal__ask-link svg {
+  transition: translate 450ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .loyal__ask-link:hover svg {
+    translate: 4px 0;
+  }
+}
+.loyal .btn--primary {
+  --btn-fill: #2e6b45;
+  background: var(--leaf-ink);
+  color: #f7f5ec;
+}
+
+/* How it works and what to know, beside the calculator. */
+.loyal__bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  margin-top: clamp(48px, 8vh, 80px);
+}
+.loyal__label {
+  margin: 0 0 16px;
+  color: var(--leaf-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.loyal__how,
+.loyal__facts {
+  margin: 0 0 32px;
+  padding: 0;
+  list-style: none;
+}
+.loyal__how li,
+.loyal__facts li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--leaf-rule);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.loyal__how span {
+  flex: none;
+  min-width: 1.6em;
+  color: var(--leaf-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.loyal__facts li {
+  color: var(--leaf-muted);
+}
+.loyal__facts svg {
+  flex: none;
+  translate: 0 2px;
+  color: #2e6b45;
+}
+
+/* The calculator. */
+.loyal__calc {
+  position: relative;
+  padding: clamp(24px, 2.6vw, 36px);
+  border-radius: 28px;
+  background: rgb(23 61 44 / 0.04);
+  box-shadow: inset 0 0 0 1px var(--leaf-rule);
+}
+.loyal__for {
   position: relative;
   display: inline-grid;
   grid-template-columns: 1fr 1fr;
   padding: 4px;
   border-radius: var(--radius-pill);
-  background: rgb(23 61 44 / 0.07);
+  background: rgb(23 61 44 / 0.08);
 }
-.loyal__tabs button {
+.loyal__for button {
   position: relative;
   z-index: 1;
-  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
   padding: 0 20px;
   border: 0;
   border-radius: var(--radius-pill);
@@ -158,14 +378,13 @@ main.air {
   color: var(--leaf-ink);
   font: inherit;
   font-weight: 650;
-  white-space: nowrap;
   cursor: pointer;
   transition: color 400ms ease;
 }
-.loyal__tabs button[aria-selected='true'] {
+.loyal__for button[aria-checked='true'] {
   color: #f4f6ef;
 }
-.loyal__tabs-ink {
+.loyal__for-ink {
   position: absolute;
   top: 4px;
   bottom: 4px;
@@ -175,153 +394,23 @@ main.air {
   background: var(--color-forest);
   transition: translate 600ms cubic-bezier(0.76, 0, 0.24, 1);
 }
-.loyal__tabs-ink[data-at='try'] {
+.loyal__for-ink[data-at='business'] {
   translate: 100% 0;
 }
-.loyal__tabs :focus-visible {
+.loyal__for :focus-visible {
   outline: 2px solid var(--leaf-ink);
   outline-offset: 2px;
 }
-
-/* How it works: four steps, the one on show open, a bar for how long it holds. */
-.loyal__steps {
-  margin: 28px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.loyal__step {
-  display: grid;
-  gap: 10px;
-  width: 100%;
-  padding: 16px 0 18px;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.loyal__step-bar {
-  position: relative;
-  display: block;
-  height: 2px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--leaf-rule);
-}
-.loyal__step-bar i {
-  position: absolute;
-  inset: 0;
-  background: var(--color-forest);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-}
-li[data-done] .loyal__step-bar i,
-li[data-on] .loyal__step-bar i {
-  transform: none;
-}
-.loyal__step-bar i[data-run] {
-  animation: step-run var(--ms) linear both;
-}
-@keyframes step-run {
-  from {
-    transform: scaleX(0);
-  }
-}
-.loyal__step-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--leaf-muted);
-  transition: color 400ms ease;
-}
-li[data-on] .loyal__step-head {
-  color: var(--leaf-ink);
-}
-.loyal__step-num {
-  font-size: 0.8rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.6;
-}
-.loyal__step-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-stretch: 108%;
-  font-size: clamp(1.2rem, 1vw + 0.8rem, 1.55rem);
-  letter-spacing: -0.02em;
-}
-.loyal__step-text {
-  display: grid;
-  grid-template-rows: 0fr;
-  max-width: 30rem;
-  overflow: hidden;
-  color: var(--leaf-muted);
-  font-size: 1rem;
-  line-height: 1.55;
-  opacity: 0;
-  transition:
-    grid-template-rows 600ms var(--ease-out),
-    opacity 500ms ease;
-}
-li[data-on] .loyal__step-text {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-.loyal__step-text > span {
-  min-height: 0;
-}
-.loyal__step {
-  row-gap: 0;
-}
-.loyal__step-head {
-  margin-top: 12px;
-}
-li[data-on] .loyal__step-text > span {
-  padding-top: 8px;
-}
-.loyal__step:focus-visible {
-  outline: 2px solid var(--leaf-ink);
-  outline-offset: 4px;
-}
-.loyal__next {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 6px;
-  padding: 6px 0;
-  border: 0;
-  background: none;
-  color: var(--leaf-ink);
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-}
-.loyal__next svg {
-  transition: translate 450ms var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .loyal__next:hover svg {
-    translate: 4px 0;
-  }
-  .loyal__step:hover .loyal__step-head {
-    color: var(--leaf-ink);
-  }
-}
-
-/* Try your numbers. */
-.loyal__try {
-  margin-top: 28px;
-}
 .loyal__ask {
   display: block;
+  margin-top: 24px;
   color: var(--leaf-muted);
   font-weight: 600;
 }
-.loyal__spend {
-  margin: 10px 0 18px;
+.loyal__value {
+  margin: 8px 0 16px;
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 4.4vw, 4.2rem);
+  font-size: clamp(2.4rem, 4vw, 3.8rem);
   line-height: 1;
 }
 .loyal__picks {
@@ -330,8 +419,8 @@ li[data-on] .loyal__step-text > span {
   gap: 8px;
 }
 .loyal__picks button {
-  min-height: 40px;
-  padding: 0 16px;
+  min-height: 38px;
+  padding: 0 14px;
   border: 0;
   border-radius: var(--radius-pill);
   background: none;
@@ -339,7 +428,7 @@ li[data-on] .loyal__step-text > span {
   color: var(--leaf-ink);
   font: inherit;
   font-weight: 650;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   cursor: pointer;
   transition:
     background-color 300ms ease,
@@ -356,7 +445,7 @@ li[data-on] .loyal__step-text > span {
   scale: 0.96;
 }
 @media (hover: hover) and (pointer: fine) {
-  .loyal__picks button:hover {
+  .loyal__picks button:not([data-on]):hover {
     box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
   }
 }
@@ -364,88 +453,91 @@ li[data-on] .loyal__step-text > span {
   --track: linear-gradient(90deg, var(--leaf-ink) var(--fill, 0%), var(--leaf-rule) var(--fill, 0%));
   --thumb: var(--leaf-ink);
   --halo: rgb(23 61 44 / 0.14);
-  margin-top: 14px;
+  margin-top: 12px;
 }
 .loyal__result {
-  margin-top: 8px;
+  position: relative;
+  margin-top: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--leaf-rule);
 }
-.loyal__back-line {
+.loyal__answer {
   margin: 0;
   font-size: 1.15rem;
 }
-.loyal__back-line strong {
-  margin: 0 4px;
+.loyal__answer .figure {
+  margin-right: 4px;
   font-family: var(--font-display);
-  font-size: 2.2rem;
+  font-size: clamp(2rem, 3vw, 2.8rem);
 }
 .loyal__meta {
-  margin: 6px 0 0;
+  margin: 10px 0 0;
   color: var(--leaf-muted);
-  font-size: 0.98rem;
+  font-size: 0.95rem;
 }
-.loyal__next-bar {
+/* Ten suns for the home card's ten vouchers; the next one fills as the year goes on. */
+.loyal__suns {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.loyal__suns li {
+  position: relative;
+  flex: 1;
+  max-width: 34px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
+  transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.loyal__suns li::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ffd98a, #f2b33d);
+  clip-path: inset(calc(100% - var(--p, 0%)) 0 0 0);
+  transition: clip-path 500ms var(--ease-out);
+}
+.loyal__suns li[data-state='earned'] {
+  transform: scale(1.06);
+  box-shadow: none;
+}
+.loyal__suns li[data-state='earned']::after {
+  clip-path: inset(0);
+}
+/* The business goal, as one bar that fills to 5,000 points. */
+.loyal__goal {
   position: relative;
   display: block;
-  height: 8px;
-  margin-top: 14px;
-  border-radius: 8px;
+  height: 10px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 10px;
   background: var(--leaf-rule);
 }
-.loyal__next-bar i {
+.loyal__goal i {
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--p);
-  border-radius: 8px;
-  background: linear-gradient(90deg, #f2b33d, #ffd98a);
+  border-radius: 10px;
+  background: linear-gradient(90deg, #2e6b45, var(--color-mint));
   transition: width 500ms var(--ease-out);
 }
-.loyal__next-bar span {
-  position: absolute;
-  right: 0;
-  top: 14px;
-  color: var(--leaf-muted);
-  font-size: 0.8rem;
-}
-.loyal__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 40px;
-}
-.loyal .btn--primary {
-  --btn-fill: #2e6b45;
-  background: var(--leaf-ink);
-  color: #f7f5ec;
-}
-.loyal .btn--ghost {
-  --btn-fill: var(--leaf-ink);
-  color: var(--leaf-ink);
-  box-shadow: inset 0 0 0 1.5px var(--leaf-rule);
-}
-@media (hover: hover) and (pointer: fine) {
-  .loyal .btn--ghost:hover {
-    color: #f7f5ec;
-    box-shadow: inset 0 0 0 1.5px var(--leaf-ink);
-  }
-}
-
-/* The card, with the voucher rising off it when one lands. */
-.loyal__card {
-  position: relative;
-  justify-self: center;
-  width: min(100%, 32rem);
-  will-change: transform;
-}
+/* A reward landing rises off the result. */
 .loyal__pop {
   position: absolute;
   z-index: 3;
-  top: 6%;
-  right: 6%;
-  padding: 8px 16px;
+  top: 6px;
+  right: 0;
+  padding: 7px 14px;
   border-radius: var(--radius-pill);
   background: #f2b33d;
   color: #2a1d02;
   font-weight: 800;
+  font-size: 0.9rem;
   box-shadow: 0 14px 30px -10px rgb(242 179 61 / 0.7);
   pointer-events: none;
   animation: voucher-pop 1600ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -467,16 +559,10 @@ li[data-on] .loyal__step-text > span {
   }
   100% {
     opacity: 0;
-    transform: translateY(-60px) scale(0.95);
+    transform: translateY(-50px) scale(0.95);
   }
 }
-.loyal__caption {
-  margin: 22px 0 0;
-  color: var(--leaf-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-align: center;
-}
+/* The reward side of a card. */
 .loyal__back {
   display: flex;
   flex-direction: column;
@@ -486,7 +572,7 @@ li[data-on] .loyal__step-text > span {
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
   line-height: 1;
   letter-spacing: -0.03em;
 }
@@ -494,55 +580,7 @@ li[data-on] .loyal__step-text > span {
   max-width: 18rem;
   margin: 0;
   opacity: 0.8;
-  font-size: 0.95rem;
-}
-
-/* The small print, folded. */
-.loyal__facts {
-  margin-top: clamp(56px, 9vh, 90px);
-  border-top: 1px solid var(--leaf-rule);
-  border-bottom: 1px solid var(--leaf-rule);
-}
-.loyal__facts summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 0;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-stretch: 108%;
-  font-size: 1.35rem;
-  cursor: pointer;
-  list-style: none;
-}
-.loyal__facts summary::-webkit-details-marker {
-  display: none;
-}
-.loyal__facts summary span {
-  transition: rotate 400ms var(--ease-out);
-}
-.loyal__facts[open] summary span {
-  rotate: 45deg;
-}
-.loyal__facts ul {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 40px;
-  margin: 0;
-  padding: 0 0 26px;
-  list-style: none;
-}
-.loyal__facts li {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  color: var(--leaf-muted);
-  font-size: 1rem;
-  line-height: 1.5;
-}
-.loyal__facts li svg {
-  flex: none;
-  color: var(--leaf-ink);
+  font-size: 0.9rem;
 }
 
 /* ---------- One voice (round 12): the old narrow bold labels and figures take the page's type ---------- */
@@ -1214,6 +1252,12 @@ li[data-on] .loyal__step-text > span {
 .team__scroller > li {
   scroll-snap-align: start;
 }
+/* Wide screens: the row runs the other way, opening at its right end beside You? (TeamRail). */
+@media (min-width: 961px) {
+  .team__scroller > li {
+    order: var(--order);
+  }
+}
 .team__scroller[data-drag] {
   scroll-snap-type: none;
   cursor: grabbing;
@@ -1585,21 +1629,36 @@ li[data-on] .loyal__step-text > span {
 }
 .reviews__dots {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 14px;
 }
-.reviews__dots i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+/* Each dot is a review: it lengthens while its review is in the middle, and brings it there when pressed. A wide
+   invisible edge makes it easy to hit. */
+.reviews__dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
   background: rgb(244 246 239 / 0.3);
+  box-shadow: 0 0 0 10px transparent;
+  cursor: pointer;
   transition:
     background-color 300ms ease,
-    width 400ms var(--ease-out);
+    width 500ms var(--ease-out);
 }
-.reviews__dots i[data-on] {
-  width: 18px;
-  border-radius: 3px;
+.reviews__dots button[data-on] {
+  width: 32px;
   background: var(--color-mint);
+}
+@media (hover: hover) and (pointer: fine) {
+  .reviews__dots button:not([data-on]):hover {
+    background: rgb(244 246 239 / 0.7);
+  }
+}
+.reviews__dots button:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 4px;
 }
 .reviews__google {
   display: inline-flex;
@@ -1788,14 +1847,19 @@ li[data-on] .loyal__step-text > span {
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 60rem) {
-  .loyal__stage {
+  .loyal__top,
+  .tiers,
+  .loyal__bottom {
     grid-template-columns: minmax(0, 1fr);
   }
-  .loyal__card {
-    order: -1;
+  .tier {
+    min-height: 560px;
   }
-  .loyal__facts ul {
-    grid-template-columns: minmax(0, 1fr);
+  .tier__text {
+    max-width: 22rem;
+  }
+  .tier__card {
+    width: min(58%, 24rem);
   }
   .why__top {
     flex-direction: column;
@@ -1842,11 +1906,20 @@ li[data-on] .loyal__step-text > span {
   }
 }
 @media (max-width: 40rem) {
-  .loyal__actions .btn {
-    flex: 1 1 auto;
+  .tier {
+    min-height: 0;
+    padding-bottom: 62%;
   }
-  .loyal__tabs {
-    display: grid;
+  .tier__text {
+    max-width: none;
+  }
+  .tier__card {
+    width: 78%;
+    right: -10%;
+    bottom: -8%;
+  }
+  .loyal__strip {
+    padding: 18px 20px;
   }
   .collection__track {
     gap: 56px;
