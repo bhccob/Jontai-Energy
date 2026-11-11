@@ -34,3 +34,29 @@ export function kelvinStill(k: number, stills: number[]): { a: number; b: number
   if (a === last) return { a: last, b: last, t: 0 };
   return { a, b: a + 1, t: (v - stills[a]) / (stills[a + 1] - stills[a]) };
 }
+
+/** The temperatures the lighting island's bulb is baked at (tools/sky/bulb-light.mjs, Bob round 17). */
+export const LAMP_STILLS = [2700, 3500, 4500, 5500, 6500];
+
+/**
+ * How much of each baked bulb shows at `k`. The pictures are stacked in order: the first always shows, and each next
+ * one fades in between the temperature before it and its own, so the two nearest mix and the bulb never dims between.
+ */
+export function lampLayers(k: number, stills: number[] = LAMP_STILLS): number[] {
+  return stills.map((s, i) => (i === 0 ? 1 : Math.min(1, Math.max(0, (k - stills[i - 1]) / (s - stills[i - 1])))));
+}
+
+const toLinear = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+const toSrgb = (c: number) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+
+/**
+ * The colour of the bulb's light as a camera balanced for neutral 4300K light sees it, at full strength: warm reads
+ * amber and daylight a little cool, as in a photograph. Shared by the baked bulb (tools/sky/bulb-light.mjs) and its
+ * halo on the page (LampSlider).
+ */
+export function lampGlow(k: number): [number, number, number] {
+  const wb = kelvinToRgb(4300).map((v) => toLinear(v / 255));
+  const lin = kelvinToRgb(k).map((v, c) => toLinear(v / 255) / wb[c]);
+  const max = Math.max(...lin);
+  return lin.map((v) => clampByte(toSrgb(v / max) * 255)) as [number, number, number];
+}

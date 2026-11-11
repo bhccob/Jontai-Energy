@@ -45,9 +45,10 @@ export function CollectionMotion() {
       });
       const st = tween.scrollTrigger as ScrollTrigger;
       // The pictures sway with the speed of the scroll and settle when it stops.
+      // Every layer of a picture sways together (the lighting island's bulb sits on it as its own pictures).
       const sways = pieces.map((p) => {
-        const img = p.querySelector('.piece__float img');
-        return img ? gsap.quickTo(img, 'skewX', { duration: 0.6, ease: 'power3' }) : null;
+        const imgs = Array.from(p.querySelectorAll('.piece__float img, .piece__float .lamp__halo'));
+        return imgs.length ? gsap.quickTo(imgs, 'skewX', { duration: 0.6, ease: 'power3' }) : null;
       });
       const sway = ScrollTrigger.create({
         trigger: pin,

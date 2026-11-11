@@ -758,7 +758,7 @@ main.air {
   }
 }
 @media (hover: hover) and (pointer: fine) {
-  .piece__frame:hover .piece__float img {
+  .piece__frame:hover .piece__float :is(img, .lamp__halo) {
     scale: 1.1;
     translate: 0 -14px;
     rotate: -1.5deg;
@@ -879,18 +879,18 @@ main.air {
 }
 .collection[data-row] .collection__track {
   display: flex;
-  align-items: flex-start;
-  gap: 3.5vw;
+  align-items: flex-end;
+  gap: 4vw;
   width: max-content;
   height: 100%;
-  padding: calc(var(--nav-h) + 4vh) 10vw 0 var(--gutter);
+  padding: calc(var(--nav-h) + 3vh) 10vw 6vh var(--gutter);
 }
 .collection[data-row] .collection__head {
   flex: 0 0 min(36vw, 36rem);
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  padding-bottom: 7vh;
+  padding-bottom: 1vh;
 }
 .collection[data-row] .collection__title {
   font-size: clamp(2.4rem, 3.7vw, 4.6rem);
@@ -898,36 +898,32 @@ main.air {
 .collection[data-row] .collection__foot {
   margin-top: auto;
 }
-/* Bigger frames (Bob, round 16), a little wider than tall so the row still fits a screen, staggered gently. */
+/* Bigger again (Bob, round 17): each frame stands nearly the height of the screen, its name and figures beside it at
+   its foot like the label next to a picture on a wall, and the heights step a little from one range to the next. */
 .collection[data-row] .piece {
+  --fh: min(100svh - var(--nav-h) - 10vh, 62vw);
   flex: 0 0 auto;
-  width: clamp(320px, min(29vw, 54vh), 520px);
-  gap: 12px;
-}
-.collection[data-row] .piece__frame {
-  aspect-ratio: 6 / 7;
-}
-.collection[data-row] .piece:nth-of-type(3n + 1) {
-  margin-top: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 16.5rem);
+  align-items: end;
+  gap: 0 clamp(20px, 2vw, 32px);
+  max-width: none;
 }
 .collection[data-row] .piece:nth-of-type(3n + 2) {
-  margin-top: 5vh;
+  --fh: min((100svh - var(--nav-h) - 10vh) * 0.87, 62vw * 0.87);
 }
 .collection[data-row] .piece:nth-of-type(3n) {
-  margin-top: 2.5vh;
+  --fh: min((100svh - var(--nav-h) - 10vh) * 0.94, 62vw * 0.94);
 }
-.collection[data-row] .piece__note {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.collection[data-row] .piece__frame {
+  width: calc(var(--fh) * 6 / 7);
+  height: var(--fh);
+  aspect-ratio: auto;
 }
-/* In the row the figures and the note stay short, so the frames can be big. */
-.collection[data-row] .piece__line {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.collection[data-row] .piece__meta {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 4px;
 }
 .collection[data-row] .collection__end {
   align-self: center;
@@ -1617,83 +1613,42 @@ main.air {
   color: var(--deep-muted);
 }
 
-/* ---------- The lighting island's bulb: its light in the slider's colour (LampSlider) ---------- */
+/* ---------- The lighting island's bulb, lit from inside (LampSlider, tools/sky/bulb-light.mjs) ---------- */
 
+/* Five pictures of the same bulb at 2700K to 6500K, each the island's size and clear except round the bulb, stacked
+   exactly on the picture: they take its hover and sway, but not its shadow. */
 .piece[data-lamp] {
-  --kelvin: 255 167 87;
+  --kelvin: 255 167 87; /* kelvinToRgb(2700), for the slider's handle and figure */
+  --glow: 255 200 127; /* lampGlow(2700), for the halo */
 }
 .lamp {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
-/* Everything is placed on the bulb: --bx/--by its centre, --br its radius, in % of the picture's width. */
-.lamp__bloom,
-.lamp__filament,
-.lamp__inner,
-.lamp__core {
-  position: absolute;
-  left: var(--bx);
-  top: var(--by);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: background-color 300ms ease;
-}
-/* Layers cut to the picture's own pixels (the island is its own mask), so the light lands only on what is there:
-   the glass, the post, the grass and the rock. The blend is on the cut layer, so it mixes with the picture under it. */
-.lamp__glass,
-.lamp__spill {
+/* The halo: one map of where the light falls, painted in the slider's colour, under the globe. */
+.lamp__halo {
   position: absolute;
   inset: 0;
-  -webkit-mask: url('/sky/island-light-700.webp') 0 0 / 100% 100% no-repeat;
-  mask: url('/sky/island-light-700.webp') 0 0 / 100% 100% no-repeat;
+  background: rgb(var(--glow));
+  -webkit-mask: url('/sky/island-light-halo-700.webp') 0 0 / 100% 100% no-repeat;
+  mask: url('/sky/island-light-halo-700.webp') 0 0 / 100% 100% no-repeat;
+  transition:
+    background-color 140ms linear,
+    scale 900ms var(--ease-out),
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
 }
-/* The light falling on the island: warm at 2700K, cool at 6500K, strongest near the bulb. */
-.lamp__spill {
-  background: radial-gradient(circle at var(--bx) var(--by), rgb(var(--kelvin) / 0.95) 0, rgb(var(--kelvin) / 0.55) 14%, rgb(var(--kelvin) / 0.18) 34%, transparent 55%);
-  mix-blend-mode: soft-light;
-}
-/* Only the filaments take the light's colour; the glass keeps its own reflections. */
-.lamp__glass--tint {
-  mix-blend-mode: color;
-}
-.lamp__filament {
-  width: calc(var(--br) * 0.8);
-  aspect-ratio: 0.55;
-  background: rgb(var(--kelvin));
-}
-/* The glass filling with light from inside. */
-.lamp__glass--glow {
-  mix-blend-mode: screen;
-}
-.lamp__inner {
-  width: calc(var(--br) * 2.1);
-  aspect-ratio: 1;
-  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.55), rgb(var(--kelvin) / 0.18) 65%, transparent);
-}
-/* The white-hot middle of the filaments, and the soft bloom it throws into the air. */
-.lamp__core {
-  width: calc(var(--br) * 0.9);
-  aspect-ratio: 0.6;
-  background: radial-gradient(closest-side, rgb(255 255 255 / 0.85), rgb(var(--kelvin) / 0.65) 45%, transparent);
-  mix-blend-mode: screen;
-  filter: blur(2px);
-}
-.lamp__bloom {
-  width: calc(var(--br) * 7);
-  aspect-ratio: 1;
-  background: radial-gradient(closest-side, rgb(var(--kelvin) / 0.5), rgb(var(--kelvin) / 0.16) 45%, transparent);
-  mix-blend-mode: screen;
-}
-@keyframes lamp-on {
-  from {
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .lamp {
-    animation: lamp-on 1.6s ease-out both;
-  }
+.piece__float .lamp__k {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: none;
+  transition:
+    opacity 140ms linear,
+    scale 900ms var(--ease-out),
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
 }
 
 .lamp-slider {

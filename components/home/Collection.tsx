@@ -3,9 +3,13 @@ import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
 import { ISLANDS } from '@/lib/islands';
+import { LAMP_STILLS } from '@/lib/kelvin';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { CollectionMotion } from './CollectionMotion';
 import { LampSlider } from './LampSlider';
+
+/** How wide a picture shows: nearly full width when the frames stack, nearly half the screen in the row. */
+const SIZES = '(max-width: 60rem) 92vw, 48vw';
 
 /** The ranges seen after dark keep a dark frame, so the bulb's light and the camera's night read. */
 const NIGHT = new Set(['light', 'security']);
@@ -59,7 +63,7 @@ export function Collection() {
               tabIndex={-1}
               data-night={NIGHT.has(it.id) || undefined}
               data-lamp={it.lamp ? 'true' : undefined}
-              style={{ '--i': i, ...(it.lamp ? { '--bx': `${it.lamp.x}%`, '--by': `${it.lamp.y}%`, '--br': `${it.lamp.r}%` } : {}) } as CSSProperties}
+              style={{ '--i': i } as CSSProperties}
             >
               <div className="piece__frame">
                 <span className="piece__count">
@@ -72,7 +76,7 @@ export function Collection() {
                     <img
                       src={`/sky/island-${it.image}-1200.webp`}
                       srcSet={`/sky/island-${it.image}-700.webp 700w, /sky/island-${it.image}-1200.webp 1200w`}
-                      sizes="(max-width: 60rem) 80vw, 26vw"
+                      sizes={SIZES}
                       alt=""
                       width={it.size[0]}
                       height={it.size[1]}
@@ -80,17 +84,27 @@ export function Collection() {
                       decoding="async"
                     />
                     {it.lamp && (
-                      // The bulb's light in the slider's colour: on the island around it, in the filaments and the glass, and in the air.
+                      // The bulb lit from inside at five temperatures, baked from the photo (tools/sky/bulb-light.mjs),
+                      // stacked over the picture; the slider fades in the warmer or cooler ones (--lamp-n, LampSlider).
+                      // Under them, its halo in the air and on the post, painted in the slider's colour (--glow).
                       <span className="lamp">
-                        <span className="lamp__spill" />
-                        <span className="lamp__glass lamp__glass--tint">
-                          <span className="lamp__filament" />
-                        </span>
-                        <span className="lamp__glass lamp__glass--glow">
-                          <span className="lamp__inner" />
-                        </span>
-                        <span className="lamp__bloom" />
-                        <span className="lamp__core" />
+                        <span className="lamp__halo" />
+                        {LAMP_STILLS.map((k, j) => (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            key={k}
+                            className="lamp__k"
+                            src={`/sky/island-${it.image}-k${k}-1200.webp`}
+                            srcSet={`/sky/island-${it.image}-k${k}-700.webp 700w, /sky/island-${it.image}-k${k}-1200.webp 1200w`}
+                            sizes={SIZES}
+                            alt=""
+                            width={it.size[0]}
+                            height={it.size[1]}
+                            loading="lazy"
+                            decoding="async"
+                            style={j === 0 ? undefined : { opacity: `var(--lamp-${j}, 0)` }}
+                          />
+                        ))}
                       </span>
                     )}
                   </span>

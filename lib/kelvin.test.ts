@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { kelvinLabel, kelvinStill, kelvinToRgb, kelvinValueText } from './kelvin.ts';
+import { LAMP_STILLS, kelvinLabel, kelvinStill, kelvinToRgb, kelvinValueText, lampGlow, lampLayers } from './kelvin.ts';
 
 test('warm 3000K is amber and 6500K is near white', () => {
   assert.deepEqual(kelvinToRgb(3000), [255, 177, 110]);
@@ -47,4 +47,26 @@ test('the ends of the slider land on the first and last still', () => {
   assert.deepEqual(kelvinStill(6500, STILLS), { a: 7, b: 7, t: 0 });
   assert.deepEqual(kelvinStill(2000, STILLS), { a: 0, b: 1, t: 0 });
   assert.deepEqual(kelvinStill(9000, STILLS), { a: 7, b: 7, t: 0 });
+});
+
+test('the baked bulbs run from warm 2700K to daylight 6500K', () => {
+  assert.equal(LAMP_STILLS[0], 2700);
+  assert.equal(LAMP_STILLS.at(-1), 6500);
+});
+
+test('the bulb layers mix the two nearest temperatures and never dim', () => {
+  assert.deepEqual(lampLayers(2700), [1, 0, 0, 0, 0]);
+  assert.deepEqual(lampLayers(6500), [1, 1, 1, 1, 1]);
+  assert.deepEqual(lampLayers(4000), [1, 1, 0.5, 0, 0]);
+  assert.deepEqual(lampLayers(1000), [1, 0, 0, 0, 0]);
+  for (let k = 2700; k <= 6500; k += 100) assert.equal(lampLayers(k)[0], 1);
+});
+
+test('the bulb glows amber when warm and a little cool in daylight', () => {
+  const [wr, , wb] = lampGlow(2700);
+  const [dr, , db] = lampGlow(6500);
+  assert.equal(wr, 255);
+  assert.ok(wb < 160, 'warm is amber');
+  assert.equal(db, 255);
+  assert.ok(dr < 255, 'daylight leans cool');
 });

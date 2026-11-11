@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
-import { kelvinLabel, kelvinToRgb, kelvinValueText } from '@/lib/kelvin';
+import { kelvinLabel, kelvinToRgb, kelvinValueText, lampGlow, lampLayers } from '@/lib/kelvin';
 
 /** The LED bulbs the store carries run from warm 2700K to daylight 6500K (Bob, round 11). */
 const WARM = 2700;
 const DAY = 6500;
 
 /**
- * The lighting island's bulb, from warm 2700K to daylight 6500K: the slider sets the colour of its light (--kelvin on
- * the island), which tints the glass, its bright core and the halo it throws on the grass and the air (air.css, .lamp).
+ * The lighting island's bulb, from warm 2700K to daylight 6500K. The bulb is baked lit from inside at five temperatures
+ * (lib/kelvin LAMP_STILLS); the slider sets how much of each shows (--lamp-1 to --lamp-4 on the island), so the two
+ * nearest mix and the light changes inside the glass, not on top of it (Bob, round 17), and the colour of the halo
+ * round it (--glow).
  */
 export function LampSlider() {
   const id = useId();
@@ -19,8 +21,12 @@ export function LampSlider() {
   useEffect(() => {
     const island = ref.current?.closest<HTMLElement>('[data-lamp]');
     if (!island) return;
-    const [r, g, b] = kelvinToRgb(k);
-    island.style.setProperty('--kelvin', `${r} ${g} ${b}`);
+    // The slider's own handle and figure in the light's colour, and the halo round the bulb.
+    island.style.setProperty('--kelvin', kelvinToRgb(k).join(' '));
+    island.style.setProperty('--glow', lampGlow(k).join(' '));
+    lampLayers(k).forEach((w, j) => {
+      if (j > 0) island.style.setProperty(`--lamp-${j}`, w.toFixed(3));
+    });
   }, [k]);
 
   const [wr, wg, wb] = kelvinToRgb(WARM);

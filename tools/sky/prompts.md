@@ -44,3 +44,7 @@ ffmpeg -i tools/sky/source/valley-loop.mp4 -an -vf "scale=1920:-2" -c:v libvpx-v
 ## The lighting island's bulb (round 11, no credits)
 
 Bob, 2026-11-11: "the bulb gotta make sense since its not connected to the socket". The generated island hung the bulb upside down: the cord's socket held the top of the glass and the screw base pointed at the grass. `tools/sky/fix-bulb.mjs` keeps the cord and socket, turns the glass and base over so the base goes up into the socket, and writes `source/island-light-fixed.png`, which `publish.mjs` now prefers. It prints where the glass ends up (lib/islands, `lamp`), for the page's 2700K to 6500K light.
+
+## The bulb lit from inside (round 17, no credits)
+
+Bob, 2026-11-11: "switching the color doesnt make sense the brightness has to be inside the bulb". `tools/sky/bulb-light.mjs` (run after `publish.mjs`) bakes the lighting island's bulb at 2700, 3500, 4500, 5500 and 6500K from the photo itself: the filaments' own light takes the new colour and burns nearly white at the core, the glass fills with light from the filaments out and stays clear at the rim. Each temperature is `public/sky/island-light-k<K>-{1200,700}.webp`, the island's size and clear except the globe; one shared `island-light-halo-{1200,700}.webp` holds where the light falls round it, and the page paints it in the slider's colour. `--debug` writes check images to `source/`.
