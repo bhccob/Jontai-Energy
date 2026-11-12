@@ -114,6 +114,29 @@
       "quote": "solar-panels"
     },
     {
+      "id": "cooling",
+      "name": "Solar Cooling",
+      "short": "Cooling",
+      "blurb": "Fans and air conditioners that run on the sun.",
+      "products": [],
+      "carries": ["Hybrid solar air conditioners", "Solar fans"],
+      "range": [
+        {
+          "name": "Solar fans",
+          "line": "Standing fans that run from their own small solar panel.",
+          "image": "/catalog/solar-fan.webp",
+          "alt": "A white standing fan joined by a cable to a small solar panel on a stand"
+        },
+        {
+          "name": "Solar air conditioners",
+          "line": "Hybrid units that run on the sun by day and the grid when needed.",
+          "image": "/catalog/solar-ac.webp",
+          "alt": "A white indoor air conditioning unit and its grey outdoor unit"
+        }
+      ],
+      "quote": "solar-fan"
+    },
+    {
       "id": "power",
       "name": "Inverters & Generators",
       "short": "Power",
@@ -572,14 +595,15 @@
       "id": "led",
       "name": "LED Lighting",
       "short": "LED",
-      "blurb": "Bulbs, LED strips, panels, tubes and floodlights.",
+      "blurb": "Bulbs, LED strips, panels, tubes, floodlights and solar street lamps.",
       "products": [],
       "carries": [
         "Bulbs, including filament styles",
         "LED strips",
         "Ceiling panels and round downlights",
         "Tubes and linear fixtures",
-        "Floodlights for yards and storefronts"
+        "Floodlights for yards and storefronts",
+        "Solar street lamps"
       ],
       "ask": "Stock changes often, so message us on WhatsApp before you make the trip.",
       "range": [
@@ -612,6 +636,12 @@
           "line": "For yards and storefronts.",
           "image": "/catalog/floodlight.webp",
           "alt": "A dark grey LED floodlight on a mounting bracket"
+        },
+        {
+          "name": "Solar street lamps",
+          "line": "All-in-one lamps with the solar panel built in, for streets, yards and parking.",
+          "image": "/catalog/street-lamp.webp",
+          "alt": "A dark grey solar street lamp head with a solar panel on top and an LED face"
         }
       ],
       "quote": "led"
@@ -646,11 +676,11 @@
       "id": "furniture",
       "name": "Furniture",
       "short": "Furniture",
-      "blurb": "Furniture for the home, on our second floor.",
+      "blurb": "Furniture for the home, one floor up.",
       "floor": "2nd floor",
       "products": [],
       "carries": [
-        "Home furniture on the second floor of the store",
+        "Home furniture, one floor up in the store",
         "Large pieces delivered to your door"
       ],
       "ask": "Head upstairs at Cumana 73 and have a look around.",
@@ -673,9 +703,10 @@
   "home": {
     "hero": {
       "title": "Aruba sunlight, made useful.",
-      "lead": "Solar, power, lighting and everyday essentials, plus furniture upstairs at Jontai Energy.",
-      "primary": "Explore solar",
-      "secondary": "Visit the store"
+      "lead": "Solar, backup power, lighting, cooling, security cameras and furniture, from one family-owned store at Cumana 73, Oranjestad.",
+      "primary": "Visit the store",
+      "secondary": "See what we sell",
+      "note": "Illustrations, not specific stock."
     },
     "statement": {
       "label": "One store, two floors",
@@ -684,8 +715,7 @@
       "points": [
         {
           "label": "Family-owned",
-          "text": "We choose every product with care and look after every customer ourselves.",
-          "team": true
+          "text": "We choose every product with care and look after every customer ourselves."
         },
         {
           "id": "delivery",
@@ -694,7 +724,7 @@
         },
         {
           "label": "Talk to a person",
-          "text": "Buy at the counter, on WhatsApp or with a quote. No cart, no checkout."
+          "text": "Ask at the counter, call, or send a message from the website. A person at the store answers."
         }
       ]
     },
@@ -908,7 +938,7 @@
         }
       ],
       "specs": "spi-8k-up",
-      "note": "Wiring to your panel and batteries should be done by a licensed electrician. Jontai Energy does not install.",
+      "note": "Wiring to your electrical panel and batteries should be done by a licensed electrician. Jontai Energy does not install.",
       "source": "Figures from the Namkoo SPI series datasheet. Ask what is on the shelf.",
       "quote": "inverter"
     },
@@ -1052,7 +1082,7 @@
     },
     "furniture": {
       "name": "Furniture delivery",
-      "model": "Second floor, Cumana 73",
+      "model": "One floor up, Cumana 73",
       "image": "/catalog/sofa.webp",
       "alt": "A cream two-seat sofa with oak legs",
       "intro": "Pick your furniture upstairs at Cumana 73 and have it delivered to your door.",

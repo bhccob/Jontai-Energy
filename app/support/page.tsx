@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
-import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { CatalogProvider } from '@/components/catalog/CatalogProvider';
 import { Footer } from '@/components/sections/Footer';
 import { StoreDetails } from '@/components/sections/StoreDetails';
 import { Contours } from '@/components/ui/Contours';
 import { Header } from '@/components/ui/Header';
 import { Words } from '@/components/ui/Split';
-import { DIRECTIONS_URL, whatsappLink } from '@/lib/contact';
+import { DIRECTIONS_URL } from '@/lib/contact';
 import { VISIT_HILLS } from '@/lib/contours';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { STORE } from '@/lib/store';
@@ -57,7 +56,7 @@ export default function SupportPage() {
             <Words text="Help after you buy." />
           </h1>
           <p className="lead" data-reveal>
-            Questions, warranty, returns and repairs, in plain words. For anything else, call, WhatsApp or come by Cumana 73.
+            Questions, warranty, returns and repairs, in plain words. For anything else, call, send a message or come by Cumana 73.
           </p>
         </header>
 
@@ -166,7 +165,7 @@ export default function SupportPage() {
                 </div>
                 <div>
                   <h3 className="label" data-reveal>
-                    Cannot come back
+                    Not returnable
                   </h3>
                   <ul className="dashes">
                     {RETURNS.cannot.map((x) => (
@@ -211,10 +210,10 @@ export default function SupportPage() {
           <StoreDetails />
           <div className="actions" data-reveal>
             <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className="btn btn--primary">
-              Get directions <ArrowRight size={18} weight="bold" aria-hidden="true" />
+              Get directions
             </a>
-            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="btn btn--ghost">
-              WhatsApp us
+            <a href="/contact" className="btn btn--ghost">
+              Send a message
             </a>
             <a href="/quote" className="btn btn--ghost">
               {QUOTE_ACTION}

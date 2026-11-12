@@ -9,7 +9,7 @@
 import data from '@/data/products.json';
 import type { QuoteTopic } from './quote';
 
-export type CategoryId = 'solar' | 'power' | 'led' | 'cameras' | 'furniture';
+export type CategoryId = 'solar' | 'cooling' | 'power' | 'led' | 'cameras' | 'furniture';
 
 export interface Spec {
   label: string;
@@ -105,7 +105,8 @@ export interface HomeChapter {
 
 /** Copy for the type-led home page. */
 export interface HomeCopy {
-  hero: { title: string; lead: string; primary: string; secondary: string };
+  /** The first view (round 9): the owner's line, what the store sells, who runs it and where, two ways in, the caveat. */
+  hero: { title: string; lead: string; primary: string; secondary: string; note: string };
   /** `team`: the point carries "Meet the team", marked coming soon until the team feature exists. */
   statement: { label: string; strong: string; soft: string; points: { id?: string; label: string; text: string; team?: boolean }[] };
   chapters: HomeChapter[];

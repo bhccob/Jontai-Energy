@@ -28,5 +28,16 @@ export function businessCard(n: number) {
   return { reached: p >= BUSINESS_GOAL, fraction: Math.min(1, p / BUSINESS_GOAL), toGoal: Math.max(0, BUSINESS_GOAL - p) };
 }
 
+/**
+ * What a year's spending earns, by the owner's rule as stated (Afl. 25 back for every full Afl. 500): the vouchers,
+ * their total, and how much more to spend for the next one. Works in florins only, since the points rate per florin
+ * is not confirmed (docs/content-placeholders.md).
+ */
+export function rewardFor(spend: number) {
+  const s = Number.isFinite(spend) && spend > 0 ? Math.floor(spend) : 0;
+  const vouchers = Math.floor(s / REWARD_STEP_AFL);
+  return { vouchers, back: vouchers * REWARD_PER_STEP_AFL, toNext: REWARD_STEP_AFL - (s % REWARD_STEP_AFL) };
+}
+
 export const formatAfl = (n: number) => `Afl. ${Math.round(n).toLocaleString('en-US')}`;
 export const formatPoints = (n: number) => `${Math.round(n).toLocaleString('en-US')} ${Math.round(n) === 1 ? 'point' : 'points'}`;

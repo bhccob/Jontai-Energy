@@ -1,0 +1,913 @@
+/* Open air (round 9, nature direction; Bob 2026-11-10, after novair and l-elite templates and his "Energy reimagined"
+   picture). One real-looking sky holds behind the first sections; the products stand on floating islands of rock and
+   grass; the type is huge and thin across the sky. No boxes, no frames, no shapes: type on the sky, thin rules, and
+   glass only on what floats (the header bar and the bundle panel). Nature images: tools/sky/prompts.md. */
+
+/* Green is the main colour (Bob, 2026-11-10): the backdrop is a green valley in mist, shaded toward the brand's deep
+   forest top and bottom so white type stays readable; mint marks what can be pressed. */
+:root {
+  /* Round 13 (Bob: "more light and welcoming"): a pale morning green, forest ink on it. */
+  --sky-top: #eef3e7;
+  --sky-ink: #173d2c;
+  --sky-soft: rgb(23 61 44 / 0.86);
+  --sky-muted: rgb(23 61 44 / 0.7);
+  --sky-rule: rgb(23 61 44 / 0.2);
+  /* The brand's deep forest, for the shade at the top and the ground at the bottom. */
+  --ground: 15 40 29;
+}
+:root:has(.sky-scope) {
+  background: var(--sky-top);
+}
+
+
+/* ---------- The sky ---------- */
+
+.sky-scope {
+  position: relative;
+  z-index: 3;
+  overflow: clip;
+  background: var(--sky-top);
+  color: var(--sky-ink);
+}
+.sky {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100lvh;
+  margin-bottom: -100lvh;
+  overflow: clip;
+  pointer-events: none;
+}
+.sky__media {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+}
+.sky__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+/* The moving valley fades in over the still once it plays; its first frame is the still, so nothing jumps. */
+.sky__video {
+  opacity: 0;
+  transition: opacity 1400ms ease;
+}
+.sky__video[data-on='true'] {
+  opacity: 1;
+}
+@media (max-width: 40rem), (prefers-reduced-motion: reduce) {
+  .sky__video {
+    display: none;
+  }
+}
+/* The morning over the valley. It screens: black letters let the valley through untouched, the pale green everywhere
+   else turns it into soft morning light with the faintest movement. JONTAI stands across the foot of the screen. */
+.sky__ink {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 var(--gutter);
+  background: linear-gradient(to bottom, #f7f9f2 0%, #eef3e7 55%, #e2ebd8 100%);
+  mix-blend-mode: screen;
+}
+.sky__name {
+  width: 100%;
+  margin: 0;
+  color: #000;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 125%;
+  font-size: 22vw;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  transform: translateY(14%);
+}
+.sky__name .c {
+  overflow: clip;
+}
+/* The Aruba sun, rising behind the headline as the page opens: a warm soft light, never a disc with an edge. */
+.sky::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: min(120vw, 1500px);
+  aspect-ratio: 1.6;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgb(255 252 225 / 0.95), rgb(255 250 220 / 0.45) 40%, rgb(214 236 196 / 0.25) 65%, transparent);
+  pointer-events: none;
+}
+@keyframes sun-rise {
+  from {
+    opacity: 0.2;
+    transform: translateY(45vh) scale(0.7);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sky::after {
+    animation: sun-rise 2600ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+  }
+}
+.sky-scope > :not(.sky) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Buttons on the sky ---------- */
+
+.sky-scope .btn--primary {
+  --btn-fill: #0e2219;
+  background: var(--color-forest);
+  color: #f4f6ef;
+}
+/* Over clouds an outline alone goes missing, so the outlined button floats on a little frosted glass. */
+.sky-scope .btn--ghost {
+  --btn-fill: var(--sky-ink);
+  background: rgb(15 40 29 / 0.18);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  color: var(--sky-ink);
+  box-shadow: inset 0 0 0 1.5px rgb(251 252 253 / 0.6);
+}
+.sky-scope :focus-visible {
+  outline-color: var(--sky-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sky-scope .btn--ghost:hover {
+    color: var(--color-forest);
+    box-shadow: inset 0 0 0 1.5px var(--sky-ink);
+  }
+}
+
+
+/* ---------- The first view ---------- */
+
+/* The entrance, once, as the page paints: CSS only, so it never waits for scripts (--d, in ms, set in Hero). The valley
+   comes up out of the morning mist and settles (no window or box opening: Bob, round 18), the name rises letter by
+   letter out of the grass, the island drifts up in front of it, then the words. */
+@keyframes sky-open {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+@keyframes hero-line {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes hero-letter {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes hero-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(120px) scale(0.9);
+  }
+}
+@keyframes hero-grass {
+  from {
+    transform: translateY(30%);
+  }
+}
+/* The island's slow bob, as if it were held by the air. */
+@keyframes island-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(-0.6deg);
+  }
+}
+/* The small islands (round 26): they rise into place a little after the main one, then each bobs at its own pace. */
+@keyframes isle-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(70px) scale(0.86);
+  }
+}
+@keyframes isle-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-11px) rotate(0.9deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sky {
+    animation: sky-open 1500ms cubic-bezier(0.76, 0, 0.24, 1) both;
+  }
+  #hero [data-hero] {
+    animation: hero-rise 1100ms var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * 1ms + 120ms);
+  }
+  #hero [data-hero-line] {
+    animation: hero-line 1300ms var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * 1ms + 120ms);
+  }
+  .sky__name .ci {
+    animation: hero-letter 1500ms var(--ease-out) both;
+  }
+  .sky__name .c:nth-child(1) .ci {
+    animation-delay: 700ms;
+  }
+  .sky__name .c:nth-child(2) .ci {
+    animation-delay: 770ms;
+  }
+  .sky__name .c:nth-child(3) .ci {
+    animation-delay: 840ms;
+  }
+  .sky__name .c:nth-child(4) .ci {
+    animation-delay: 910ms;
+  }
+  .sky__name .c:nth-child(5) .ci {
+    animation-delay: 980ms;
+  }
+  .sky__name .c:nth-child(6) .ci {
+    animation-delay: 1050ms;
+  }
+  #hero .hero__lean {
+    animation: hero-arrive 1800ms var(--ease-out) 800ms both;
+  }
+  #hero .hero__float {
+    animation: island-float 8s ease-in-out 2.6s infinite;
+  }
+  #hero .hero__arrive {
+    animation: isle-arrive 1600ms var(--ease-out) both;
+  }
+  .hero__small--lantern .hero__arrive {
+    animation-delay: 1250ms;
+  }
+  .hero__small--tree .hero__arrive {
+    animation-delay: 1100ms;
+  }
+  .hero__small--meadow .hero__arrive {
+    animation-delay: 1350ms;
+  }
+  .hero__small--chair .hero__arrive {
+    animation-delay: 1200ms;
+  }
+  .hero__small--lantern .hero__bob {
+    animation: isle-bob 7s ease-in-out -2s infinite;
+  }
+  .hero__small--tree .hero__bob {
+    animation: isle-bob 9.5s ease-in-out -5s infinite;
+  }
+  .hero__small--meadow .hero__bob {
+    animation: isle-bob 8s ease-in-out -1s infinite;
+  }
+  .hero__small--chair .hero__bob {
+    animation: isle-bob 10.5s ease-in-out -7s infinite;
+  }
+}
+
+/* Few things, on one axis: the words in the middle at the top, the landscape under them. */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--nav-h) + clamp(16px, 3.6vh, 40px)) var(--gutter) 0;
+  overflow: clip;
+  text-align: center;
+}
+.hero__top {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 64rem;
+}
+
+/* Aruba's welcome and the time at the store, as a plain line of small capitals over the headline (round 22). */
+.hero__eyebrow {
+  margin-bottom: clamp(16px, 2.6vh, 26px);
+}
+.sunclock {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  color: var(--sky-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.sunclock__hi {
+  color: var(--color-forest);
+  white-space: nowrap;
+}
+.sunclock__rule {
+  width: 36px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+.sunclock__time {
+  white-space: nowrap;
+}
+
+.hero__display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2.8rem, 5.8vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+/* Each line rises out of its own box; the padding keeps descenders and the comma inside it. */
+.hero__mask {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.hero__line {
+  display: block;
+}
+.hero__lead {
+  max-width: 36rem;
+  margin: clamp(18px, 2.8vh, 28px) 0 0;
+  color: var(--sky-soft);
+  font-size: clamp(1.05rem, 0.3vw + 0.98rem, 1.2rem);
+  line-height: 1.5;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 28px;
+  margin-top: clamp(20px, 3vh, 30px);
+}
+.hero__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  color: var(--sky-ink);
+  font-weight: 650;
+  text-decoration: none;
+}
+.hero__more svg {
+  transition: transform 450ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero__more:hover svg {
+    transform: translateY(4px);
+  }
+}
+
+/* The landscape: the island at the foot of the view, the name standing behind it across the whole width. */
+.hero__stage {
+  position: relative;
+  flex: 1 0 auto;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 0;
+}
+.hero__island {
+  position: relative;
+  z-index: 2;
+  /* Bigger (Bob, round 28: "i want the main island to be bigger"); its size follows the screen's height, so the first
+     view still ends with JONTAI standing behind it. */
+  width: min(48vw, 50vh, 740px);
+  margin: clamp(16px, 3vh, 36px) 0 clamp(40px, 6vh, 90px);
+  pointer-events: none;
+}
+.hero__float {
+  position: relative;
+}
+.hero__lean {
+  position: relative;
+}
+.hero__day {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 50px 50px rgb(23 61 44 / 0.28));
+}
+
+/* The small islands round the main one (Bob, round 26: "more sub floating islands"), at different depths: the far
+   ones smaller and a little soft, the near ones larger and lower. Clear of the words; HeroSkyMotion moves them. */
+.hero__small {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero__small .hero__day {
+  filter: drop-shadow(0 26px 24px rgb(23 61 44 / 0.22));
+}
+.hero__small--lantern {
+  top: 23%;
+  right: 8%;
+  width: clamp(70px, 7vw, 130px);
+}
+.hero__small--lantern .hero__day {
+  filter: blur(0.6px) drop-shadow(0 18px 18px rgb(23 61 44 / 0.16));
+}
+.hero__small--tree {
+  top: 33%;
+  left: 6%;
+  width: clamp(96px, 10vw, 180px);
+}
+.hero__small--meadow {
+  top: 69%;
+  left: 10%;
+  z-index: 3;
+  width: clamp(120px, 12.5vw, 230px);
+}
+.hero__small--chair {
+  top: 61%;
+  right: 13%;
+  z-index: 3;
+  width: clamp(130px, 13.5vw, 245px);
+}
+.hero__drift,
+.hero__arrive,
+.hero__bob {
+  position: relative;
+}
+
+/* The floodlight's light (Bob, round 26: "a light that powers on"; round 28: the solar floodlight and camera on one short
+   post), placed in % of the island's picture (the LED panel spans 547 to 686 by 211 to 234 of 1200 by 1020): the panel
+   itself, a soft glow round it, a faint cone down to a pool on the grass in front. It powers on with a quick flicker
+   once the islands have arrived, and stays on. */
+.hero__led,
+.hero__halo,
+.hero__beam,
+.hero__pool {
+  position: absolute;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.hero__led {
+  left: 51.4%;
+  top: 21.8%;
+  width: 11.8%;
+  height: 2.6%;
+  border-radius: 40%;
+  translate: -50% -50%;
+  rotate: -2deg;
+  background: radial-gradient(closest-side, #fffdf5, rgb(255 246 222 / 0.9) 55%, rgb(255 236 200 / 0));
+}
+.hero__halo {
+  left: 51.4%;
+  top: 22.2%;
+  width: 36%;
+  aspect-ratio: 1.5;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgb(255 248 226 / 1), rgb(255 240 208 / 0.5) 30%, rgb(255 234 198 / 0.14) 64%, transparent);
+}
+.hero__beam {
+  left: 50%;
+  top: 23.2%;
+  width: 30%;
+  height: 22%;
+  translate: -50% 0;
+  clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%);
+  background: linear-gradient(to bottom, rgb(255 246 222 / 0.7), rgb(255 242 214 / 0.24) 55%, transparent 94%);
+  filter: blur(6px);
+}
+.hero__pool {
+  left: 47%;
+  top: 45%;
+  width: 34%;
+  height: 8%;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgb(255 246 222 / 0.75), rgb(255 240 210 / 0.24) 55%, transparent);
+}
+@keyframes led-on {
+  0%,
+  8% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.25;
+  }
+  26%,
+  100% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #hero :is(.hero__led, .hero__halo, .hero__beam, .hero__pool) {
+    animation: led-on 1400ms linear 2400ms both;
+  }
+}
+
+/* The mist the scroll flies into (HeroSkyMotion, round 26: no change of colour, Bob): it rises from below, the sky's
+   own pale white thickening until it is the white Rewards starts in. Twice the first view's height, clear at the top,
+   so it can climb up through it. */
+.hero__mist {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  height: 200%;
+  background: linear-gradient(to top, #fff 50%, rgb(255 255 255 / 0.9) 64%, rgb(255 255 255 / 0.45) 82%, rgb(255 255 255 / 0));
+  opacity: 0;
+  pointer-events: none;
+}
+/* While the first view holds (wide screens), the islands' bob is the script's, so it can settle as the camera moves
+   in (HeroSkyMotion). */
+.sky-holds #hero .hero__float,
+.sky-holds #hero .hero__bob {
+  animation: none;
+}
+
+/* ---------- Header over the sky ---------- */
+
+.nav[data-sky] {
+  color: var(--sky-ink);
+}
+/* Once you leave the top, the bar turns frosted white with the forest ink, over sky and page alike. */
+.nav[data-sky][data-solid='true'] {
+  color: var(--color-ink);
+}
+.nav[data-sky] :focus-visible {
+  outline-color: currentColor;
+}
+@media (max-width: 40rem) {
+  .nav[data-sky] .nav__support {
+    display: none;
+  }
+}
+.offer-pill__short {
+  display: none;
+}
+@media (max-width: 27rem) {
+  .offer-pill__long {
+    display: none;
+  }
+  .offer-pill__short {
+    display: inline;
+  }
+  .nav[data-sky] .nav__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .nav[data-sky] .nav__end {
+    gap: 14px;
+  }
+  .nav[data-sky] .nav__menu {
+    min-width: 44px;
+    justify-content: center;
+  }
+}
+
+/* ---------- Bundle offers: the pill and its panel (deep green glass) ---------- */
+
+.offer-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint);
+  color: var(--color-forest);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 250ms ease,
+    scale 120ms ease-out;
+}
+.offer-pill:active {
+  scale: 0.97;
+}
+.offer-pill[aria-expanded='true'] {
+  background: #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer-pill:hover {
+    background: #cfe6c3;
+  }
+}
+/* The panel (round 22: "in the middle with more rectangular shaped"): a native dialog, so it sits in the middle of the
+   screen above everything, over a soft dimmed page; a wide rectangle of deep green glass with small corners, the three
+   offers side by side. It rises a little as it opens. */
+.offer {
+  width: min(60rem, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  margin: auto;
+  padding: 28px 34px 26px;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 12px;
+  background: rgb(14 34 25 / 0.92);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  backdrop-filter: blur(24px) saturate(1.3);
+  box-shadow:
+    inset 0 0 0 1px rgb(244 246 239 / 0.1),
+    0 50px 100px -40px rgb(5 16 11 / 0.8);
+  color: #f4f6ef;
+  overscroll-behavior: contain;
+}
+.offer::backdrop {
+  background: rgb(14 34 25 / 0.38);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+@keyframes offer-in {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+    scale: 0.98;
+  }
+}
+@keyframes offer-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .offer[open] {
+    animation: offer-in 600ms var(--ease-out);
+  }
+  .offer[open]::backdrop {
+    animation: offer-fade 400ms ease;
+  }
+}
+.offer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.offer__kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--color-mint);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+.offer__kicker span {
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px rgb(184 216 168 / 0.4);
+  color: rgb(244 246 239 / 0.75);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.offer__close {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-right: -8px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(244 246 239 / 0.08);
+  color: #f4f6ef;
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    rotate 400ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer__close:hover {
+    background: rgb(244 246 239 / 0.16);
+    rotate: 90deg;
+  }
+}
+.offer__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.offer__lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px 32px;
+  margin: 18px 0 26px;
+}
+.offer__title:focus {
+  outline: none;
+}
+.offer__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block: 1px solid rgb(244 246 239 / 0.14);
+}
+.offer__list li {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 22px 22px 24px;
+}
+.offer__list li:first-child {
+  padding-left: 0;
+}
+.offer__list li + li {
+  border-left: 1px solid rgb(244 246 239 / 0.14);
+}
+.offer__save {
+  margin: 0;
+  color: var(--color-mint);
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: 3.4rem;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  transition: translate 500ms var(--ease-out);
+}
+.offer__save span {
+  margin-left: 2px;
+  font-size: 0.8rem;
+  font-stretch: 100%;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.offer__name {
+  margin: 0;
+  font-weight: 650;
+  font-size: 1.05rem;
+}
+.offer__items {
+  margin: 3px 0 0;
+  color: rgb(244 246 239 / 0.7);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer__list li:hover .offer__save {
+    translate: 4px 0;
+  }
+}
+.offer__ask {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint);
+  color: #0e2219;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background-color 250ms ease,
+    scale 120ms ease-out;
+}
+.offer__ask svg {
+  transition: translate 450ms var(--ease-out);
+}
+.offer__ask:active {
+  scale: 0.98;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer__ask:hover {
+    background: #cfe6c3;
+  }
+  .offer__ask:hover svg {
+    translate: 4px 0;
+  }
+}
+.offer :focus-visible {
+  outline-color: var(--color-mint);
+}
+.offer__note {
+  margin: 14px 0 0;
+  color: rgb(244 246 239 / 0.6);
+  font-size: 0.82rem;
+}
+@media (max-width: 48rem) {
+  .offer {
+    padding: 22px 22px 20px;
+  }
+  .offer__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .offer__list li,
+  .offer__list li:first-child {
+    padding: 16px 0;
+  }
+  .offer__list li + li {
+    border-left: 0;
+    border-top: 1px solid rgb(244 246 239 / 0.14);
+  }
+  .offer__ask {
+    width: 100%;
+  }
+}
+/* The title, the offers and the button arrive one after another as it opens. */
+@keyframes offer-row {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .offer[open] :is(.offer__title, .offer__list li, .offer__ask, .offer__note) {
+    animation: offer-row 700ms var(--ease-out) both;
+  }
+  .offer[open] .offer__title {
+    animation-delay: 160ms;
+  }
+  .offer[open] .offer__list li {
+    animation-delay: calc(240ms + var(--i, 0) * 90ms);
+  }
+  .offer[open] .offer__ask {
+    animation-delay: 300ms;
+  }
+  .offer[open] .offer__note {
+    animation-delay: 560ms;
+  }
+}
+
+/* ---------- Narrow screens: the words, then the island, the name at the foot of the screen ---------- */
+
+@media (max-width: 60rem) {
+  .hero__island {
+    width: min(78vw, 30rem);
+    margin: clamp(24px, 4vh, 40px) 0 calc(24vw + 24px);
+  }
+  /* Two of the small islands, either side of the main one. */
+  .hero__small--lantern,
+  .hero__small--meadow {
+    display: none;
+  }
+  .hero__small--tree {
+    top: auto;
+    bottom: calc(24vw + 24px + min(52vw, 20rem));
+    left: 1%;
+    width: min(21vw, 9rem);
+  }
+  .hero__small--chair {
+    top: auto;
+    bottom: calc(24vw + 12px);
+    right: 1%;
+    width: min(24vw, 10rem);
+  }
+}
+@media (max-width: 40rem) {
+  .hero {
+    padding-top: calc(var(--nav-h) + 22px);
+  }
+  .hero__display {
+    font-size: clamp(2.5rem, 11.4vw, 4rem);
+  }
+  .hero__actions {
+    flex-direction: column;
+    align-self: stretch;
+  }
+  .hero__actions .btn {
+    align-self: stretch;
+  }
+  .sunclock {
+    font-size: 0.72rem;
+  }
+}

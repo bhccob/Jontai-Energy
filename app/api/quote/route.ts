@@ -28,7 +28,8 @@ export async function POST(request: Request) {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from, to: [process.env.QUOTE_TO || STORE.email], reply_to: checked.value.email, subject, text }),
+      // Reply-To only when the visitor gave an email (one who asked for WhatsApp may not have).
+      body: JSON.stringify({ from, to: [process.env.QUOTE_TO || STORE.email], ...(checked.value.email ? { reply_to: checked.value.email } : {}), subject, text }),
     });
     if (!res.ok) {
       console.error('[quote] Resend answered', res.status, await res.text().catch(() => ''));

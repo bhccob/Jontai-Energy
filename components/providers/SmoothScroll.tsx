@@ -13,7 +13,8 @@ gsap.registerPlugin(ScrollTrigger);
  * Lenis drives the real window scroll, so Motion's useScroll, IntersectionObserver and ScrollTrigger all keep working.
  * One clock: GSAP's ticker advances Lenis, and every Lenis scroll tells ScrollTrigger to update, so pinned
  * GSAP sequences and Motion-driven sections never drift apart.
- * lerp 0.12 keeps the wheel smooth without trailing far behind the hand; touch keeps native momentum.
+ * lerp 0.08 lets the page glide a little after the hand (Bob, round 27: "move slightly more delayed so its more premium
+ * feeling"), and every GSAP animation runs at 85% speed for the same reason; touch keeps native momentum.
  * Reduced-motion visitors get plain native scrolling. In-page links glide to their target (InPageLinks).
  */
 export function SmoothScroll({ children }: { children: ReactNode }) {
@@ -24,11 +25,16 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     const tick = (time: number) => lenisRef.current?.lenis?.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
-    return () => gsap.ticker.remove(tick);
+    // Slightly slower everywhere: reveals, scrubs settling, leans (round 27).
+    gsap.globalTimeline.timeScale(0.85);
+    return () => {
+      gsap.ticker.remove(tick);
+      gsap.globalTimeline.timeScale(1);
+    };
   }, []);
 
   return (
-    <ReactLenis root ref={lenisRef} options={{ autoRaf: false, lerp: 0.12, wheelMultiplier: 1.1, smoothWheel: !reduced }}>
+    <ReactLenis root ref={lenisRef} options={{ autoRaf: false, lerp: 0.08, wheelMultiplier: 1, smoothWheel: !reduced }}>
       <ScrollTriggerSync />
       <InPageLinks />
       {process.env.NODE_ENV === 'development' && <DevHandle />}
@@ -76,7 +82,7 @@ function InPageLinks() {
           if (frames++ < 90) wait = requestAnimationFrame(go);
           return;
         }
-        lenis.scrollTo(at(), { duration: 1.2 });
+        lenis.scrollTo(at(), { duration: 1.6 });
         document.getElementById(id)?.focus({ preventScroll: true });
       };
       go();

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkQuote, quoteEmail, quoteHref, quoteMailto, topicsFrom } from './quote.ts';
+import { QUOTE_TOPICS, checkQuote, quoteEmail, quoteHref, quoteMailto, quoteWhatsapp, topicsFrom } from './quote.ts';
 
 const valid = { topics: ['inverter', 'generator'], details: 'Two units for a shop.', area: '', name: 'Maria Croes', email: 'maria@example.com', phone: '' };
 
@@ -60,6 +60,34 @@ test('the store email names the products and the person, on one subject line', (
   assert.match(text, /Delivery area: Noord/);
   assert.match(text, /Two units for a shop\./);
   assert.doesNotMatch(text, /Phone:/);
+});
+
+test('"Something else" is a topic, and a request says whether it is for home or business', () => {
+  assert.equal(QUOTE_TOPICS.at(-1)?.id, 'other');
+  const r = checkQuote({ ...valid, topics: ['other'], use: 'business' });
+  assert.ok(r.ok);
+  if (r.ok) {
+    assert.equal(r.value.use, 'business');
+    assert.match(quoteEmail(r.value).text, /Use: Business/);
+  }
+  const p = checkQuote(valid);
+  assert.ok(p.ok && p.value.use === 'personal' && p.value.reply === 'email');
+});
+
+test('a reply on WhatsApp needs a number and not an email', () => {
+  const missing = checkQuote({ ...valid, email: '', reply: 'whatsapp' });
+  assert.ok(!missing.ok && missing.errors.phone && !missing.errors.email);
+  const r = checkQuote({ ...valid, email: '', phone: '+297 586 5323', reply: 'whatsapp' });
+  assert.ok(r.ok);
+  if (r.ok) assert.match(quoteEmail(r.value).text, /reply on WhatsApp, at \+297 586 5323/);
+  assert.ok(!checkQuote({ ...valid, phone: '12', reply: 'whatsapp' }).ok);
+});
+
+test('the request can go on WhatsApp instead, typed in', () => {
+  const link = quoteWhatsapp({ topics: ['led'], use: 'business', details: 'Ten bulbs.', name: 'Maria' });
+  assert.match(link, /^https:\/\/wa\.me\/\d+\?text=/);
+  assert.match(decodeURIComponent(link), /For: LED lighting/);
+  assert.match(decodeURIComponent(link), /Use: Business/);
 });
 
 test('the email-app fallback is addressed to the store, encoded', () => {

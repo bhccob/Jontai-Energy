@@ -18,24 +18,28 @@ test('support shows no prices, financing or efficiency figures', () => {
   assert.doesNotMatch(all, /\$|AWG|Afl\.?\s?\d|financ|efficien/i);
 });
 
-test('the warranty periods are the store policy, from the date of purchase', () => {
+test('only solar batteries carry a warranty, one year from the date of purchase', () => {
   assert.deepEqual(
     WARRANTY.periods.map((p) => [p.what, p.period]),
-    [
-      ['Solar panels', '10 years'],
-      ['Inverters and batteries', '5 years'],
-      ['LED fixtures and drivers', '3 years'],
-      ['Electrical hardware', '1 year'],
-      ['Other hardware', '6 months'],
-    ],
+    [['Solar batteries', '1 year']],
   );
   assert.match(WARRANTY.from, /date of purchase/);
+  assert.match(WARRANTY.from, /do not carry a store warranty/);
 });
 
-test('returns take 14 days with the receipt, and repairs carry 90 days', () => {
-  assert.match(RETURNS.lead, /14 days/);
+test('the wrong item is exchanged after a check, with no cash refunds and the difference as store credit', () => {
   assert.match(RETURNS.lead, /receipt/);
+  assert.match(RETURNS.lead, /check/);
+  assert.match(RETURNS.lead, /does not give cash refunds/);
+  assert.match(RETURNS.lead, /store credit/);
+  assert.doesNotMatch(JSON.stringify(RETURNS), /refund to the original|money back/i);
   assert.ok(SERVICE.steps.some((s) => /90-day/.test(s.line)));
+});
+
+test('Rewards need only the card at the counter; logging in only shows the points', () => {
+  const join = QUESTIONS.find((x) => x.q === 'How do I join Rewards?');
+  assert.match(join?.a ?? '', /apply at the counter/);
+  assert.match(join?.a ?? '', /only to see your points/);
 });
 
 test('the questions Visit shows come first, and every answer is a full sentence', () => {

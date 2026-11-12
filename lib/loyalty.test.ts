@@ -1,6 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { BUSINESS_GOAL, POINTS_MAX, businessCard, formatAfl, formatPoints, regularCard } from './loyalty.ts';
+import { BUSINESS_GOAL, POINTS_MAX, businessCard, formatAfl, formatPoints, regularCard, rewardFor } from './loyalty.ts';
+
+test('every full Afl. 500 spent gives Afl. 25 back', () => {
+  assert.deepEqual(rewardFor(2000), { vouchers: 4, back: 100, toNext: 500 });
+  assert.deepEqual(rewardFor(1250), { vouchers: 2, back: 50, toNext: 250 });
+  assert.equal(rewardFor(499).back, 0);
+  assert.equal(rewardFor(-10).back, 0);
+  assert.equal(rewardFor(Number.NaN).vouchers, 0);
+});
 
 test('regular members unlock an Afl. 25 voucher for every 500 points', () => {
   assert.deepEqual(regularCard(1250), { vouchers: 2, credit: 50, fraction: 0.5, toNext: 250 });

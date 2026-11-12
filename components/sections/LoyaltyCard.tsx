@@ -129,21 +129,31 @@ export function BusinessFace({ points }: { points: number }) {
 }
 
 /** The card as the member types: their code and name appear on it; the field in use is lit. */
-export function MemberFace({ code, name, focus }: { code: string; name: string; focus: 'code' | 'name' | null }) {
+export function MemberFace({
+  code,
+  name,
+  focus,
+  kind = 'personal',
+}: {
+  code: string;
+  name: string;
+  focus: 'code' | 'name' | null;
+  /** Personal is the green card, business the oak one, as on Rewards (round 27). */
+  kind?: 'personal' | 'business';
+}) {
   return (
-    <div className="lcard__body" data-tone="sand">
-      <Brand tier="Member card" />
+    <div className="lcard__body" data-tone={kind === 'business' ? 'forest' : 'sand'}>
+      <Brand tier={kind === 'business' ? 'Business member' : 'Rewards member'} />
       <span className="lcard__code" data-on={focus === 'code'} data-empty={!code}>
         {code || 'Your loyalty code'}
       </span>
       <div className="lcard__bottom">
         <span className="lcard__field" data-on={focus === 'name'}>
-          <span className="lcard__label">Member</span>
+          <span className="lcard__label">{kind === 'business' ? 'Business' : 'Member'}</span>
           <span className="lcard__value" data-empty={!name}>
-            {name || 'Your name'}
+            {name || (kind === 'business' ? 'Business name' : 'Your name')}
           </span>
         </span>
-        <span className="lcard__sun" />
       </div>
     </div>
   );
@@ -154,12 +164,11 @@ export function NoticeFace({ phone }: { phone: string }) {
   return (
     <div className="lcard__body" data-tone="forest">
       <Brand tier="Online points" />
-      <p className="lcard__notice">Coming soon. Show this card at the counter, or call {phone}, to hear your balance.</p>
+      <p className="lcard__notice">Online points are not connected yet. Show this card at the counter, or call {phone}, to hear your balance.</p>
       <div className="lcard__bottom">
         <span className="lcard__field">
           <span className="lcard__label">Nothing was sent</span>
         </span>
-        <span className="lcard__sun" />
       </div>
     </div>
   );

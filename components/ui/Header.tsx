@@ -3,14 +3,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLenis } from 'lenis/react';
-import { DIRECTIONS_URL, whatsappLink } from '@/lib/contact';
+import { DIRECTIONS_URL } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
+import { BundleOffer } from './BundleOffer';
 
 /** The home page's sections, as the menu lists them. */
+/** The six ranges, named as on the home page (lib/islands), then Rewards and the visit (polish, round 30). */
 const LINKS = [
   { id: 'solar', label: 'Solar' },
-  { id: 'backup', label: 'Power' },
-  { id: 'light', label: 'Lighting' },
+  { id: 'cooling', label: 'Cooling' },
+  { id: 'backup', label: 'Backup power' },
+  { id: 'light', label: 'LED lighting' },
+  { id: 'security', label: 'Security' },
   { id: 'upstairs', label: 'Furniture' },
   { id: 'rewards', label: 'Rewards' },
   { id: 'visit', label: 'Visit' },
@@ -20,9 +24,9 @@ const LINKS = [
  * The header: the store's mark, Support and Menu, nothing else. A slim bar gathers it once you leave the top; it steps
  * out of the way while you read down and comes back as soon as you scroll up or tab into it. Menu opens the sections
  * and the ways to reach the store full screen, on every screen size. `base` is '/' on other pages, so the section
- * links lead back home.
+ * links lead back home. `sky` (the home page, round 9) sets it in white over the sky and adds the bundle offers.
  */
-export function Header({ base = '' }: { base?: string }) {
+export function Header({ base = '', sky = false }: { base?: string; sky?: boolean }) {
   const pathname = usePathname();
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -71,13 +75,14 @@ export function Header({ base = '' }: { base?: string }) {
 
   return (
     <>
-      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open}>
+      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open} data-sky={sky || undefined}>
         <a href={base || '#top'} className="brand" aria-label={base ? 'Jontai Energy, home' : 'Jontai Energy, back to the top'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon-192.png" alt="" width={30} height={30} />
           Jontai Energy
         </a>
         <div className="nav__end">
+          {sky && <BundleOffer hidden={open} />}
           <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
             Support
           </a>
@@ -93,7 +98,7 @@ export function Header({ base = '' }: { base?: string }) {
               <i />
               <i />
             </span>
-            {open ? 'Close' : 'Menu'}
+            <span className="nav__label">{open ? 'Close' : 'Menu'}</span>
           </button>
           {/* Without scripts the button cannot open the menu; this link opens it instead (shell.css, :target). */}
           <a href="#menu" className="nav__menu nav__menu--plain">
@@ -121,8 +126,8 @@ export function Header({ base = '' }: { base?: string }) {
           </li>
         </ul>
         <div className="actions">
-          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="btn btn--primary">
-            WhatsApp us
+          <a href="/contact" className="btn btn--primary">
+            Send a message
           </a>
           <a href="/quote" className="btn btn--ghost">
             {QUOTE_ACTION}

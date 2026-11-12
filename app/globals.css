@@ -14,6 +14,11 @@
 @import './styles/panel.css';
 @import './styles/quote.css';
 @import './styles/support.css';
+@import './styles/stage.css';
+@import './styles/sky.css';
+@import './styles/air.css';
+@import './styles/letter.css';
+@import './styles/glass.css';
 
 /* ---------- Page ---------- */
 
@@ -61,4 +66,15 @@ html.lenis body {
 }
 .skip:focus-visible {
   transform: none;
+}
+
+/* The browser's own surfaces in the palette (polish, round 30): selected text in mint on forest ink, the caret and
+   native checks in forest. */
+::selection {
+  background: #b8d8a8;
+  color: #173d2c;
+}
+:root {
+  accent-color: #2e6b45;
+  caret-color: #173d2c;
 }

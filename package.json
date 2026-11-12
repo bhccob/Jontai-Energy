@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "legacy:build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --minify",
     "legacy:watch:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --watch",
-    "test": "node --test lib/loyalty.test.ts lib/contact.test.ts lib/kelvin.test.ts lib/quote.test.ts lib/store.test.ts lib/countup.test.ts lib/contours.test.ts lib/home-copy.test.ts lib/support.test.ts"
+    "test": "node --test lib/loyalty.test.ts lib/contact.test.ts lib/kelvin.test.ts lib/quote.test.ts lib/store.test.ts lib/countup.test.ts lib/contours.test.ts lib/home-copy.test.ts lib/support.test.ts lib/stage.test.ts lib/bundles.test.ts lib/islands.test.ts lib/sun.test.ts lib/reviews.test.ts lib/message.test.ts"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",
@@ -27,6 +27,9 @@
     "three": "0.170.0"
   },
   "devDependencies": {
+    "@gltf-transform/core": "4",
+    "@gltf-transform/extensions": "4",
+    "@gltf-transform/functions": "4",
     "@tailwindcss/cli": "^4.2.2",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20.17.0",
@@ -35,6 +38,7 @@
     "@types/three": "0.170.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.25",
+    "meshoptimizer": "^1.3.0",
     "postcss": "^8.4.49",
     "sharp": "0.33.5",
     "tailwindcss": "^4.2.2",

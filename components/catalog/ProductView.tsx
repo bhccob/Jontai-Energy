@@ -1,44 +1,41 @@
 'use client';
 
-import Image from 'next/image';
-import { motion } from 'motion/react';
+import { motion, type HTMLMotionProps } from 'motion/react';
+import { Plus } from '@phosphor-icons/react/dist/ssr';
 import { productById, type Product, type ProductPanel } from '@/lib/products';
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+/** The entrance each part of the panel gets, from CategoryDrawer (staggered, or a plain fade with reduced motion). */
+type Rise = (i: number) => Pick<HTMLMotionProps<'div'>, 'initial' | 'animate' | 'transition'>;
 
 /**
- * One product told in full, inside the product panel: its picture beside what it does and a few figures, then the
- * points that matter, then the manufacturer's full table behind a disclosure. Figures come only from supplied documents.
+ * One product told in full, on the panel's forest side (round 31): what it does, its figures in a ruled row, the points
+ * that matter as ruled lines (numbered when they happen in order, as delivery does), and the manufacturer's full table
+ * behind a disclosure. The picture stands in the panel's studio (CategoryDrawer). Figures come only from supplied
+ * documents.
  */
-export function ProductView({ panel, reduced }: { panel: ProductPanel; reduced: boolean }) {
+export function ProductView({ panel, rise }: { panel: ProductPanel; rise: Rise }) {
   const spec = panel.specs ? productById(panel.specs) : null;
   const List = panel.steps ? 'ol' : 'ul';
-  const rise = (i: number) =>
-    reduced ? {} : { initial: { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, ease: EASE, delay: 0.16 + i * 0.08 } };
 
   return (
     <div className="drawer__body pv">
-      <motion.div className="pv__top" {...rise(0)}>
-        <div className="pv__media">
-          <Image className="feather" src={panel.image} alt={panel.alt} width={800} height={800} sizes="(max-width: 40rem) 100vw, 300px" />
-        </div>
-        <div className="pv__intro">
-          <p className="pv__lead">{panel.intro}</p>
-          {panel.highlight && <p className="pv__highlight">{panel.highlight}</p>}
-          {panel.figures && (
-            <dl className="pv__figures">
-              {panel.figures.map((f) => (
-                <div key={f.label}>
-                  <dt>{f.label}</dt>
-                  <dd className="figure">{f.value}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
-        </div>
+      <motion.div className="pv__intro" {...rise(1)}>
+        <p className="pv__lead">{panel.intro}</p>
+        {panel.highlight && <p className="pv__highlight">{panel.highlight}</p>}
       </motion.div>
 
-      <motion.div {...rise(1)}>
+      {panel.figures && (
+        <motion.dl className="pv__figures" {...rise(2)}>
+          {panel.figures.map((f) => (
+            <div key={f.label}>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </motion.dl>
+      )}
+
+      <motion.div {...rise(3)}>
         <List className="pv__points" data-steps={panel.steps || undefined}>
           {panel.points.map((p) => (
             <li key={p.title}>
@@ -50,12 +47,19 @@ export function ProductView({ panel, reduced }: { panel: ProductPanel; reduced: 
       </motion.div>
 
       {spec && (
-        <motion.details className="pv__specs" {...rise(2)}>
-          <summary>Full specifications</summary>
+        <motion.details className="pv__specs" {...rise(4)}>
+          <summary>
+            Full specifications
+            <Plus size={16} weight="bold" aria-hidden="true" />
+          </summary>
           <SpecTables product={spec} />
         </motion.details>
       )}
-      {panel.note && <p className="note pv__note">{panel.note}</p>}
+      {panel.note && (
+        <motion.p className="pv__note" {...rise(5)}>
+          {panel.note}
+        </motion.p>
+      )}
     </div>
   );
 }

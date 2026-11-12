@@ -1,0 +1,28 @@
+/* The WebGL product stage (components/stage), kept for the development lab (/lab) while the home page is in open air
+   (sky.css). The canvas fades in over its still once it has drawn. */
+
+.stage {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100lvh;
+  margin-bottom: -100lvh;
+  overflow: clip;
+  background: var(--night-deep);
+  pointer-events: none;
+}
+.stage__poster,
+.stage__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.stage__canvas {
+  display: block;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out);
+}
+.stage[data-live='true'] .stage__canvas {
+  opacity: 1;
+}

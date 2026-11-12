@@ -1,36 +1,49 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { CheckCircle, WarningCircle } from '@phosphor-icons/react/dist/ssr';
-import { DELIVERY_TOPICS, QUOTE_LIMITS, checkQuote, quoteMailto, type QuoteErrors, type QuoteField, type QuoteRequest, type QuoteTopic } from '@/lib/quote';
-import { CONCEPT, OFFICIAL_URL, STORE } from '@/lib/store';
-import { ProductPicker } from './ProductPicker';
+import { useId, useRef, useState, type FormEvent } from 'react';
+import { WhatsappLogo } from '@phosphor-icons/react/dist/ssr';
+import { ProductChips } from '@/components/forms/ProductChips';
+import { ConceptNote, Failed, FieldError, Honeypot, Send, Sent, Step, Switch } from '@/components/forms/parts';
+import {
+  DELIVERY_TOPICS,
+  QUOTE_LIMITS,
+  QUOTE_USES,
+  REPLY_BY,
+  checkQuote,
+  quoteMailto,
+  quoteWhatsapp,
+  type QuoteErrors,
+  type QuoteField,
+  type QuoteRequest,
+  type QuoteTopic,
+  type QuoteUse,
+  type ReplyBy,
+} from '@/lib/quote';
+import { CONCEPT } from '@/lib/store';
 
 type Status =
   | { kind: 'idle' }
   | { kind: 'sending' }
-  | { kind: 'sent'; name: string; email: string }
+  | { kind: 'sent'; name: string; email: string; phone: string; reply: ReplyBy }
   | { kind: 'failed'; request: QuoteRequest }
   | { kind: 'concept' };
 
 const ORDER: QuoteField[] = ['topics', 'details', 'area', 'name', 'email', 'phone'];
 
 /**
- * The quote request, in two parts: what it is for, then how to reply. Checked here and again on the server with the
- * same rules. If the website cannot send it, the visitor gets the same message ready to send from their own email app.
+ * The quote request as a letter in three steps on one glass sheet (Bob, round 18): what it is for, picked from chips
+ * with each range's island; the details, written on ruled lines; and where to reply. Checked here and again on the
+ * server with the same rules. If the website cannot send it, the visitor gets the same letter for their email app.
  */
 export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
   const id = useId();
   const [topics, setTopics] = useState<QuoteTopic[]>(initial);
+  const [use, setUse] = useState<QuoteUse>('personal');
+  const [reply, setReply] = useState<ReplyBy>('email');
   const [errors, setErrors] = useState<QuoteErrors>({});
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const form = useRef<HTMLFormElement>(null);
-  const sent = useRef<HTMLDivElement>(null);
   const delivery = topics.some((t) => DELIVERY_TOPICS.includes(t));
-
-  useEffect(() => {
-    if (status.kind === 'sent') sent.current?.focus();
-  }, [status.kind]);
 
   const choose = (next: QuoteTopic[]) => {
     setTopics(next);
@@ -47,11 +60,10 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const text = (k: string) => String(data.get(k) ?? '');
-    const checked = checkQuote({ topics, details: text('details'), area: delivery ? text('area') : '', name: text('name'), email: text('email'), phone: text('phone') });
+    const checked = checkQuote({ topics, use, reply, details: text('details'), area: delivery ? text('area') : '', name: text('name'), email: text('email'), phone: text('phone') });
     if (!checked.ok) return showErrors(checked.errors);
 
     setErrors({});
-    // A concept build checks the form like the real one but sends nothing, not even to the visitor's email app.
     if (CONCEPT) return setStatus({ kind: 'concept' });
     setStatus({ kind: 'sending' });
     try {
@@ -61,7 +73,7 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
         body: JSON.stringify({ ...checked.value, website: text('website') }),
       });
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: QuoteErrors };
-      if (res.ok && json.ok) return setStatus({ kind: 'sent', name: checked.value.name, email: checked.value.email });
+      if (res.ok && json.ok) return setStatus({ kind: 'sent', name: checked.value.name, email: checked.value.email, phone: checked.value.phone, reply: checked.value.reply });
       if (res.status === 422 && json.errors) {
         setStatus({ kind: 'idle' });
         return showErrors(json.errors);
@@ -74,40 +86,33 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
 
   if (status.kind === 'sent') {
     return (
-      <div ref={sent} className="quote__sent" role="status" tabIndex={-1}>
-        <CheckCircle size={40} weight="light" aria-hidden="true" />
-        <h2 className="h-title">Request sent.</h2>
-        <p className="body">
-          Thank you, {status.name}. Jontai Energy will reply to <strong>{status.email}</strong>.
-        </p>
-        <div className="actions">
-          <a href="/" className="btn btn--primary">
-            Back to the home page
-          </a>
-          <button
-            type="button"
-            className="btn btn--ghost"
-            onClick={() => {
-              setTopics([]);
-              setStatus({ kind: 'idle' });
-            }}
-          >
-            Send another request
-          </button>
-        </div>
-      </div>
+      <Sent
+        title="Request sent."
+        name={status.name}
+        reply={
+          status.reply === 'whatsapp' ? (
+            <>
+              on WhatsApp at <strong>{status.phone}</strong>
+            </>
+          ) : (
+            <>
+              to <strong>{status.email}</strong>
+            </>
+          )
+        }
+        again="Send another request"
+        refocus={(el) => el?.focus()}
+        onAgain={() => {
+          setTopics([]);
+          setStatus({ kind: 'idle' });
+        }}
+      />
     );
   }
 
   const sending = status.kind === 'sending';
-  const describe = (k: QuoteField, hint?: boolean) => [hint ? `${id}-${k}-hint` : '', errors[k] ? `${id}-${k}-error` : ''].filter(Boolean).join(' ') || undefined;
-  const error = (k: QuoteField) =>
-    errors[k] ? (
-      <p id={`${id}-${k}-error`} className="field__error">
-        <WarningCircle size={16} weight="bold" aria-hidden="true" />
-        {errors[k]}
-      </p>
-    ) : null;
+  const errId = (k: QuoteField) => `${id}-${k}-error`;
+  const describe = (k: QuoteField, hint?: boolean) => [hint ? `${id}-${k}-hint` : '', errors[k] ? errId(k) : ''].filter(Boolean).join(' ') || undefined;
   const input = (k: QuoteField) => ({
     id: `${id}-${k}`,
     name: k,
@@ -117,31 +122,25 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
   });
 
   return (
-    <form ref={form} className="quote__form" onSubmit={submit} noValidate aria-busy={sending}>
-      <section className="quote__part" aria-labelledby={`${id}-need`}>
-        <h2 id={`${id}-need`} className="quote__part-title">
-          Your request
-        </h2>
+    <form ref={form} className="sheet" onSubmit={submit} noValidate aria-busy={sending}>
+      <Step n={1} id={`${id}-for`} title="What it is for">
+        <Switch name="use" label="Who it is for" options={QUOTE_USES} value={use} onChange={setUse} />
+        <p id={`${id}-topics-hint`} className="field__hint">
+          Pick one or more, or &ldquo;Something else&rdquo;.
+        </p>
+        <ProductChips labelId={`${id}-for`} value={topics} onChange={choose} error={errors.topics} describedBy={describe('topics', true)} />
+        <FieldError id={errId('topics')} text={errors.topics} />
+      </Step>
 
-        <div className="field">
-          <span id={`${id}-topics-label`} className="field__label">
-            Product
-          </span>
-          <ProductPicker labelId={`${id}-topics-label`} value={topics} onChange={choose} error={errors.topics} describedBy={describe('topics', true)} />
-          <p id={`${id}-topics-hint`} className="field__hint">
-            Choose one or more.
-          </p>
-          {error('topics')}
-        </div>
-
+      <Step n={2} id={`${id}-need`} title="The details">
         <div className="field">
           <label htmlFor={`${id}-details`} className="field__label">
-            Details
+            What you need
           </label>
           <textarea
             {...input('details')}
-            className="field__input field__input--area"
-            rows={5}
+            className="field__input field__input--lines"
+            rows={4}
             maxLength={QUOTE_LIMITS.details}
             placeholder="For example: two 12,000 BTU solar air conditioners, one for a bedroom and one for an office."
             aria-describedby={describe('details', true)}
@@ -149,9 +148,8 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
           <p id={`${id}-details-hint`} className="field__hint">
             Models, sizes, quantities, and where it will be used.
           </p>
-          {error('details')}
+          <FieldError id={errId('details')} text={errors.details} />
         </div>
-
         {delivery && (
           <div className="field">
             <label htmlFor={`${id}-area`} className="field__label">
@@ -161,81 +159,64 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
             <p id={`${id}-area-hint`} className="field__hint">
               Large items such as furniture can be delivered. Where should it go?
             </p>
-            {error('area')}
+            <FieldError id={errId('area')} text={errors.area} />
           </div>
         )}
-      </section>
+      </Step>
 
-      <section className="quote__part" aria-labelledby={`${id}-you`}>
-        <h2 id={`${id}-you`} className="quote__part-title">
-          Your details
-        </h2>
+      <Step n={3} id={`${id}-you`} title="Where to reply">
+        <Switch name="reply" label="Reply by" options={REPLY_BY} value={reply} onChange={setReply} />
         <div className="field-row">
           <div className="field">
             <label htmlFor={`${id}-name`} className="field__label">
               Name
             </label>
             <input {...input('name')} autoComplete="name" required maxLength={QUOTE_LIMITS.name} aria-describedby={describe('name')} />
-            {error('name')}
+            <FieldError id={errId('name')} text={errors.name} />
           </div>
           <div className="field">
             <label htmlFor={`${id}-email`} className="field__label">
-              Email
+              Email {reply === 'whatsapp' && <span className="field__optional">optional</span>}
             </label>
-            <input {...input('email')} type="email" inputMode="email" autoComplete="email" required maxLength={QUOTE_LIMITS.email} aria-describedby={describe('email')} />
-            {error('email')}
+            <input {...input('email')} type="email" inputMode="email" autoComplete="email" required={reply === 'email'} maxLength={QUOTE_LIMITS.email} aria-describedby={describe('email')} />
+            <FieldError id={errId('email')} text={errors.email} />
           </div>
         </div>
         <div className="field">
           <label htmlFor={`${id}-phone`} className="field__label">
-            Phone <span className="field__optional">optional, if you would rather we call</span>
+            {reply === 'whatsapp' ? (
+              'WhatsApp number'
+            ) : (
+              <>
+                Phone <span className="field__optional">optional, if you would rather we call</span>
+              </>
+            )}
           </label>
-          <input {...input('phone')} type="tel" autoComplete="tel" maxLength={QUOTE_LIMITS.phone} aria-describedby={describe('phone')} />
-          {error('phone')}
+          <input {...input('phone')} type="tel" autoComplete="tel" required={reply === 'whatsapp'} maxLength={QUOTE_LIMITS.phone} aria-describedby={describe('phone')} />
+          <FieldError id={errId('phone')} text={errors.phone} />
         </div>
-      </section>
+      </Step>
 
-      {/* Left empty by people; bots fill it in. */}
-      <div className="hp" aria-hidden="true">
-        <label>
-          Website
-          <input name="website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-
-      {status.kind === 'failed' && (
-        <div className="quote__failed" role="alert">
-          <p>
-            <strong>The website could not send this right now.</strong> Your message is ready to send from your own email app instead, or call{' '}
-            <a href={`tel:${STORE.phone.replace(/\s/g, '')}`}>{STORE.phone}</a>.
-          </p>
-          <a href={quoteMailto(status.request)} className="btn btn--ghost btn--sm">
-            Open in your email app
-          </a>
-        </div>
-      )}
-
-      {status.kind === 'concept' && (
-        <div className="quote__failed" role="status">
-          <p>
-            <strong>Nothing was sent.</strong> This is a concept redesign, so the form is not connected to the store. To ask Jontai Energy
-            for a quote, call <a href={`tel:${STORE.phone.replace(/\s/g, '')}`}>{STORE.phone}</a> or visit{' '}
-            <a href={OFFICIAL_URL} rel="noopener noreferrer">
-              jontaienergy.com
-            </a>
-            .
-          </p>
-        </div>
-      )}
-
-      <div className="quote__send">
-        <button type="submit" className="btn btn--primary" disabled={sending}>
-          {sending ? 'Sending' : 'Send request'}
-        </button>
-        <p className="note">
-          {CONCEPT ? 'A concept redesign: nothing you enter here is sent.' : 'Sent by email to Jontai Energy. Your details are only used to reply.'}
-        </p>
-      </div>
+      <Honeypot />
+      {status.kind === 'failed' && <Failed mailto={quoteMailto(status.request)} />}
+      {status.kind === 'concept' && <ConceptNote what="ask Jontai Energy for a quote" />}
+      <Send sending={sending} label="Send request" />
+      {/* WhatsApp as a way of its own (Bob, round 23): the same request, typed into a chat with the store. */}
+      <p className="sheet__or">
+        Rather chat?{' '}
+        <a
+          href={quoteWhatsapp({ topics, use })}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="sheet__wa"
+          onClick={(e) => {
+            const data = form.current ? new FormData(form.current) : null;
+            e.currentTarget.href = quoteWhatsapp({ topics, use, details: String(data?.get('details') ?? ''), name: String(data?.get('name') ?? '') });
+          }}
+        >
+          <WhatsappLogo size={18} weight="fill" aria-hidden="true" /> Send this request on WhatsApp
+        </a>
+      </p>
     </form>
   );
 }
