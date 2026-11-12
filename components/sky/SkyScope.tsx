@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react';
-import { SkyName } from './SkyName';
+import { FitText } from '@/components/ui/FitText';
 import { SkyVideo } from './SkyVideo';
 
 /**
- * The first view's backdrop (round 12, Bob: the valley and grass made it "cluttered"): the valley (still, then the
- * loop) at the back, turned to a pale morning light by the layer over it, and JONTAI across the foot of the screen in
- * front of the islands (round 26), its letters showing the same valley (SkyName). Held still behind the first view
- * while it scrolls (sticky), clipped to it. Phones get a portrait slice of the valley.
+ * The first view's backdrop (round 12, Bob: the valley and grass made it "cluttered"): a plain deep green, with the
+ * moving valley showing only through the letters of JONTAI across the foot of the screen. The valley (still, then the
+ * loop) sits at the back; over it a deep green layer multiplies, white where the letters are, so the valley comes
+ * through them and everywhere else is the green. Held still behind the first view while it scrolls (sticky), clipped
+ * to it. Phones get a portrait slice of the valley.
  */
 export function SkyScope({ children }: { children: ReactNode }) {
   return (
@@ -30,10 +31,10 @@ export function SkyScope({ children }: { children: ReactNode }) {
           </picture>
           <SkyVideo />
         </div>
-        <div className="sky__ink" />
+        <div className="sky__ink">
+          <FitText text="JONTAI" chars className="sky__name" />
+        </div>
       </div>
-      {/* JONTAI, in front of the islands (round 26), showing the same valley. */}
-      <SkyName />
       {children}
     </div>
   );
