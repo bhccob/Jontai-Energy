@@ -260,7 +260,7 @@
   .hero__small--meadow .hero__arrive {
     animation-delay: 1350ms;
   }
-  .hero__small--panel .hero__arrive {
+  .hero__small--chair .hero__arrive {
     animation-delay: 1200ms;
   }
   .hero__small--lantern .hero__bob {
@@ -272,7 +272,7 @@
   .hero__small--meadow .hero__bob {
     animation: isle-bob 8s ease-in-out -1s infinite;
   }
-  .hero__small--panel .hero__bob {
+  .hero__small--chair .hero__bob {
     animation: isle-bob 10.5s ease-in-out -7s infinite;
   }
 }
@@ -394,9 +394,9 @@
 .hero__island {
   position: relative;
   z-index: 2;
-  /* The island is nearly square (round 26), so its size follows the screen's height, and the first view still ends
-     where it did, with JONTAI standing behind it. */
-  width: min(40vw, 46vh, 660px);
+  /* The solar lamp island is taller than it is wide (round 26), so its size follows the screen's height, and the first
+     view still ends where it did, with JONTAI standing behind it. */
+  width: min(40vw, 38vh, 560px);
   margin: 6px 0 clamp(56px, 9vh, 110px);
   pointer-events: none;
 }
@@ -442,7 +442,7 @@
   z-index: 3;
   width: clamp(120px, 12.5vw, 230px);
 }
-.hero__small--panel {
+.hero__small--chair {
   top: 61%;
   right: 13%;
   z-index: 3;
@@ -452,6 +452,77 @@
 .hero__arrive,
 .hero__bob {
   position: relative;
+}
+
+/* The solar lamp's light (Bob, round 26: "only the solar with a light that powers on"), placed in % of the island's
+   picture (the LED face is at 705, 196 of 1200 by 1443): the face itself, a soft glow round the head, a faint cone
+   down to a pool on the grass. It powers on with a quick flicker once the islands have arrived, and stays on. */
+.hero__led,
+.hero__halo,
+.hero__beam,
+.hero__pool {
+  position: absolute;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.hero__led {
+  left: 58.8%;
+  top: 13.7%;
+  width: 9.6%;
+  height: 1.9%;
+  border-radius: 50%;
+  translate: -50% -50%;
+  rotate: -3deg;
+  background: radial-gradient(closest-side, #fffdf5, rgb(255 246 222 / 0.9) 55%, rgb(255 236 200 / 0));
+}
+.hero__halo {
+  left: 58.8%;
+  top: 14%;
+  width: 34%;
+  aspect-ratio: 1.5;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgb(255 248 226 / 1), rgb(255 240 208 / 0.5) 30%, rgb(255 234 198 / 0.14) 64%, transparent);
+}
+.hero__beam {
+  left: 58.8%;
+  top: 14.4%;
+  width: 26%;
+  height: 36%;
+  translate: -50% 0;
+  clip-path: polygon(41% 0, 59% 0, 100% 100%, 0 100%);
+  background: linear-gradient(to bottom, rgb(255 246 222 / 0.7), rgb(255 242 214 / 0.24) 55%, transparent 94%);
+  filter: blur(6px);
+}
+.hero__pool {
+  left: 58.8%;
+  top: 50.5%;
+  width: 30%;
+  height: 7%;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgb(255 246 222 / 0.75), rgb(255 240 210 / 0.24) 55%, transparent);
+}
+@keyframes led-on {
+  0%,
+  8% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.25;
+  }
+  26%,
+  100% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #hero :is(.hero__led, .hero__halo, .hero__beam, .hero__pool) {
+    animation: led-on 1400ms linear 2400ms both;
+  }
 }
 
 /* The mist the scroll flies into (HeroSkyMotion, round 26: no change of colour, Bob): it rises from below, the sky's
@@ -814,7 +885,7 @@
     left: 1%;
     width: min(21vw, 9rem);
   }
-  .hero__small--panel {
+  .hero__small--chair {
     top: auto;
     bottom: calc(24vw + 12px);
     right: 1%;

@@ -23,7 +23,7 @@ const BOB_SMALL: Record<string, { period: number; start: number }> = {
   lantern: { period: 7, start: -2 },
   tree: { period: 9.5, start: -5 },
   meadow: { period: 8, start: -1 },
-  panel: { period: 10.5, start: -7 },
+  chair: { period: 10.5, start: -7 },
 };
 
 /**
@@ -69,7 +69,7 @@ export function HeroSkyMotion() {
       const letters = all('.sky__name .c');
       if (!holds) {
         // Phones and short screens: the layers drift apart as the first view scrolls by.
-        const scrub = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true };
+        const scrub = { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true };
         gsap.to(island, { yPercent: -8, ease: 'none', scrollTrigger: scrub });
         gsap.to(smalls, { yPercent: (_i: number, el: Element) => -20 - 40 * depth(el), ease: 'none', scrollTrigger: scrub });
         gsap.to(letters, { yPercent: (i) => 18 + i * 9, ease: 'none', scrollTrigger: scrub });
@@ -130,7 +130,7 @@ export function HeroSkyMotion() {
           end: () => `+=${scope.offsetHeight + window.innerHeight * EXTRA}`,
           pin: true,
           pinSpacing: false,
-          scrub: 0.8,
+          scrub: 1.2,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             state.calm = 1 - gsap.utils.clamp(0, 1, self.progress / SETTLE);

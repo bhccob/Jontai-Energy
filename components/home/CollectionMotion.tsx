@@ -41,7 +41,7 @@ export function CollectionMotion() {
       const tween = gsap.to(track, {
         x: () => -distance(),
         ease: 'none',
-        scrollTrigger: { trigger: pin, pin: true, start: 'top top', end: () => `+=${distance()}`, scrub: 0.4, invalidateOnRefresh: true },
+        scrollTrigger: { trigger: pin, pin: true, start: 'top top', end: () => `+=${distance()}`, scrub: 0.7, invalidateOnRefresh: true },
       });
       const st = tween.scrollTrigger as ScrollTrigger;
       // The pictures sway with the speed of the scroll and settle when it stops.

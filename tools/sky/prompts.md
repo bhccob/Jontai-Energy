@@ -73,3 +73,15 @@ Then Bob asked for "something else on the big main island that makes it look fil
 The same day he dropped the sunset ("i dont want the transition to change color"): the scroll is now one camera moving in on the islands, through the sky's own white mist, into Rewards.
 
 Published with `node tools/sky/publish.mjs island-garden` (and `island-boulders`), then `node tools/sky/hero-islands.mjs`, which cuts the four small islands out of their sheet (`island-small-{lantern,tree,panel,meadow}-{640,360}.webp`). The array island stays as the solar panels' chip on the quote page.
+
+## The solar lamp island and the chair (round 27, approved by Bob on 2026-11-12)
+
+Bob sent the lighting island as the look he wanted for the main island ("lets just make the main island this") and asked for "only the solar with a light that powers on where they dont take too much space", and for the small solar-panel island to become something else so it is not redundant. He picked "All-in-one solar lamp" and "Lounge chair".
+
+| File | Job | Settings | Prompt |
+| --- | --- | --- | --- |
+| `island-lamp.png` | d9765d38 | GPT Image 2.6, 1:1, 2K, high, transparent, reference = the lighting island (job bc447568) (2.75 credits) | A floating island in the same style as the reference picture: pale limestone rock underneath with moss and hanging roots, a thick top of lush green grass with a few small white wildflowers, seen slightly from above, soft daylight from the upper left. On it stands one compact all-in-one solar street light: a slim dark grey pole, a small solar panel mounted at the top and angled to the sun, and just under it a short arm with a slim LED light head facing down, switched off. Neat and small, near the middle, nothing else on the island. Photorealistic, true colours, transparent background, no text, no people, no logos. |
+| `island-small-chair.png` | a3a6059a | GPT Image 2.6, 1:1, 2K, high, transparent, reference = the tree island cut from `islands-small.png` (2.75 credits) | A small floating island in the same style as the reference picture, with the same rounded mossy underside, grass and small ferns, seen slightly from above, soft daylight from the upper left. On it stands a small light oak lounge chair with sage-green cushions. Nothing else. Photorealistic, true colours, transparent background, no text, no people, no logos. |
+
+The lamp's light is CSS (sky.css, `.hero__led`, `.hero__halo`, `.hero__beam`, `.hero__pool`), placed on the LED face at 705, 196 of the 1200 by 1443 picture; it powers on with a short flicker once the islands have arrived, and the camera's move flies into it. Published with `node tools/sky/publish.mjs island-lamp` and `node tools/sky/hero-islands.mjs`.
+

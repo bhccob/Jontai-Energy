@@ -1,4 +1,3 @@
-import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { FitText } from '@/components/ui/FitText';
 import { FooterFocus } from '@/components/ui/FooterFocus';
@@ -57,12 +56,12 @@ export function Footer({ base = '' }: { base?: string }) {
             <ul>
               <li>
                 <a href={STORE.facebook} target="_blank" rel="noopener noreferrer">
-                  Facebook <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
+                  Facebook
                 </a>
               </li>
               <li>
                 <a href={STORE.instagram} target="_blank" rel="noopener noreferrer">
-                  Instagram <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
+                  Instagram
                 </a>
               </li>
             </ul>

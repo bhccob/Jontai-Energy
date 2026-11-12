@@ -1,4 +1,3 @@
-import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { Contours } from '@/components/ui/Contours';
 import { FitText } from '@/components/ui/FitText';
 import { DIRECTIONS_URL } from '@/lib/contact';
@@ -38,13 +37,13 @@ export function Visit() {
           </details>
         ))}
         <a href="/support#questions" className="textlink faq__more" data-reveal>
-          More questions, warranty and returns <ArrowRight size={18} weight="bold" aria-hidden="true" />
+          More questions, warranty and returns
         </a>
       </section>
 
       <div className="actions" data-reveal>
         <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className="btn btn--primary">
-          Get directions <ArrowRight size={18} weight="bold" aria-hidden="true" />
+          Get directions
         </a>
         <a href="/contact" className="btn btn--ghost">
           Send a message

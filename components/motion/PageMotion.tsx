@@ -55,7 +55,7 @@ export function PageMotion() {
           gsap.fromTo(
             el.querySelectorAll('.wi'),
             { opacity: 0.14 },
-            { opacity: 1, ease: 'none', stagger: 0.1, scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 58%', scrub: 0.5 } },
+            { opacity: 1, ease: 'none', stagger: 0.1, scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 58%', scrub: 0.8 } },
           );
         });
 
@@ -70,7 +70,7 @@ export function PageMotion() {
           gsap.fromTo(
             el,
             { yPercent: from },
-            { yPercent: to, ease: 'none', scrollTrigger: { trigger: el.parentElement ?? el, start: 'top bottom', end: 'bottom top', scrub: true } },
+            { yPercent: to, ease: 'none', scrollTrigger: { trigger: el.parentElement ?? el, start: 'top bottom', end: 'bottom top', scrub: 0.6 } },
           );
         });
 
@@ -80,7 +80,7 @@ export function PageMotion() {
           gsap.fromTo(
             el,
             { rotateX: 32, rotateZ: -7, yPercent: 26, scale: 0.9, transformPerspective: 1400, transformOrigin: '50% 100%' },
-            { rotateX: 0, rotateZ: 0, yPercent: 0, scale: 1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top bottom', end: 'center 62%', scrub: 0.6 } },
+            { rotateX: 0, rotateZ: 0, yPercent: 0, scale: 1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top bottom', end: 'center 62%', scrub: 0.9 } },
           );
         });
 
@@ -139,7 +139,7 @@ export function PageMotion() {
           gsap.fromTo(
             paths,
             { attr: { 'stroke-dasharray': 1, 'stroke-dashoffset': 1 } },
-            { attr: { 'stroke-dashoffset': 0 }, ease: 'none', stagger: 0.03, scrollTrigger: { trigger: section, start: 'top 85%', end: 'center 45%', scrub: 1 } },
+            { attr: { 'stroke-dashoffset': 0 }, ease: 'none', stagger: 0.03, scrollTrigger: { trigger: section, start: 'top 85%', end: 'center 45%', scrub: 1.4 } },
           );
         });
 
@@ -161,7 +161,7 @@ export function PageMotion() {
           gsap.fromTo(
             el,
             { clipPath: inset },
-            { clipPath: 'inset(0px 0vw 0px 0vw round 0px)', ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 12%', scrub: true } },
+            { clipPath: 'inset(0px 0vw 0px 0vw round 0px)', ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 12%', scrub: 0.6 } },
           );
         });
       });

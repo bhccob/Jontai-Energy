@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react';
-import { ArrowDown, ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { HOME_COPY } from '@/lib/products';
 import { HeroSkyMotion } from './HeroSkyMotion';
 import { SunClock } from './SunClock';
@@ -8,10 +7,10 @@ import { SunClock } from './SunClock';
 const at = (d: number) => ({ '--d': d }) as CSSProperties;
 /**
  * Where the camera flies in as the first view scrolls away (HeroSkyMotion), in % of the main island's picture: the
- * middle solar panel. Every island grows from this one point, so nothing slides (Bob, round 26: "so the island dont
+ * solar lamp's light. Every island grows from this one point, so nothing slides (Bob, round 26: "so the island dont
  * move").
  */
-const ZOOM = { x: 54, y: 31 };
+const ZOOM = { x: 58.8, y: 13.8 };
 
 /**
  * The small islands round the main one (Bob, round 26: "more sub floating islands"), cut from one picture by
@@ -22,14 +21,14 @@ const SMALL = [
   { name: 'lantern', height: 656, depth: 0.35 },
   { name: 'tree', height: 713, depth: 0.55 },
   { name: 'meadow', height: 550, depth: 0.8 },
-  { name: 'panel', height: 617, depth: 1 },
+  { name: 'chair', height: 589, depth: 1 },
 ] as const;
 
 /**
  * The first view, kept to a few things (Bob, rounds 11 and 12: "too cluttered"): the live line about the sun over the
  * store, the owner's line in thin wide capitals, one sentence that says what the store is, one way in. Under it an
- * island of Aruba's Casibari boulders, a small calm garden on top (a kadushi in a ring of stones with aloe, three solar
- * panels, a lamp and a stepping-stone path to it), floats in front of JONTAI, whose
+ * island of pale limestone and grass carrying one all-in-one solar street light, whose light powers on once the
+ * islands have arrived (round 26, Bob: "only the solar with a light that powers on"), floats in front of JONTAI, whose
  * letters show the moving valley (SkyScope), with four small islands round it at different depths (round 26). On wide
  * screens the scroll is one camera moving in (HeroSkyMotion): the islands settle and grow from one point, the sky's
  * own white mist rises through them, and Rewards comes up out of the white.
@@ -62,10 +61,10 @@ export function Hero() {
         </p>
         <div className="hero__actions" data-hero style={at(1040)}>
           <a href="#visit" className="btn btn--primary">
-            {hero.primary} <ArrowRight size={18} weight="bold" aria-hidden="true" />
+            {hero.primary}
           </a>
           <a href="#products" className="hero__more">
-            {hero.secondary} <ArrowDown size={16} weight="bold" aria-hidden="true" />
+            {hero.secondary}
           </a>
         </div>
       </div>
@@ -78,15 +77,21 @@ export function Hero() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="hero__day"
-                src="/sky/island-garden-1200.webp"
-                srcSet="/sky/island-garden-700.webp 700w, /sky/island-garden-1200.webp 1200w"
+                src="/sky/island-lamp-1200.webp"
+                srcSet="/sky/island-lamp-700.webp 700w, /sky/island-lamp-1200.webp 1200w"
                 sizes="(max-width: 60rem) 78vw, 64vw"
                 alt=""
                 width={1200}
-                height={1202}
+                height={1443}
                 fetchPriority="high"
                 decoding="async"
               />
+              {/* The lamp's light, powering on (sky.css): the LED face, the glow round the head, the light it throws
+                  down onto the grass. */}
+              <span className="hero__beam" />
+              <span className="hero__pool" />
+              <span className="hero__halo" />
+              <span className="hero__led" />
             </div>
           </div>
         </figure>

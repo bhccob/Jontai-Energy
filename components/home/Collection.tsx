@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react';
-import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
 import { ISLANDS } from '@/lib/islands';
@@ -47,7 +46,7 @@ export function Collection() {
                 Ranges <span>/ {String(n).padStart(2, '0')}</span>
               </p>
               <a href="/quote" className="collection__all">
-                {QUOTE_ACTION} <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
+                {QUOTE_ACTION}
               </a>
             </div>
           </header>
@@ -127,7 +126,7 @@ export function Collection() {
                 <div className="piece__actions">
                   {it.actions.map((a) => (
                     <OpenCategoryButton key={a.panel} id={a.panel} className="textlink">
-                      {a.label} <ArrowRight size={16} weight="bold" aria-hidden="true" />
+                      {a.label}
                     </OpenCategoryButton>
                   ))}
                   <a href={`/quote?for=${it.quote}`} className="textlink">
@@ -156,7 +155,7 @@ export function Collection() {
               <p className="piece__line">Looking for something that is not one of these six? Ask us, and a person at the store tells you what is in stock.</p>
               <div className="piece__actions">
                 <a href={contactHref('question')} className="textlink">
-                  Ask us <ArrowRight size={16} weight="bold" aria-hidden="true" />
+                  Ask us
                 </a>
                 <a href="/quote?for=other" className="textlink">
                   {QUOTE_ACTION}

@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { ArrowRight, UserCircle } from '@phosphor-icons/react/dist/ssr';
+import { UserCircle } from '@phosphor-icons/react/dist/ssr';
 import { Words } from '@/components/ui/Split';
 import { contactHref } from '@/lib/message';
 import { TEAM } from '@/lib/team';
@@ -58,7 +58,7 @@ export function Team() {
             <p className="team__you-title">Love solar, light and good design?</p>
             <p className="team__you-text">Tell us a little about yourself and what you would like to do. A person at the store reads every message.</p>
             <a href={contactHref('work')} className="team__you-cta">
-              Apply here <ArrowRight size={16} weight="bold" aria-hidden="true" />
+              Apply here
             </a>
           </div>
           <h3 className="person__name">You?</h3>

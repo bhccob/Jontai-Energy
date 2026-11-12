@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useLenis } from 'lenis/react';
-import { ArrowRight, X } from '@phosphor-icons/react';
+import { X } from '@phosphor-icons/react';
 import { BUNDLES, BUNDLE_NOTE, bundleQuestion, shouldAutoOpen } from '@/lib/bundles';
 
 const SEEN = 'jontai-bundles-seen';
@@ -120,7 +120,7 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
             pay less.
           </h2>
           <a href={bundleQuestion()} className="offer__ask">
-            Ask about a bundle <ArrowRight size={18} weight="bold" aria-hidden="true" />
+            Ask about a bundle
           </a>
         </div>
         <ol className="offer__list">

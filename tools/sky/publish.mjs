@@ -39,11 +39,10 @@ for (const { name, phoneAt } of BACKDROPS) {
 }
 
 // Islands: trimmed to their own edges, then two widths with their transparency kept.
-// The first view's island is `garden` (Aruba's Casibari rocks, a kadushi in a ring of stones with aloe, three panels,
-// a lamp and a stepping-stone path; round 26), made with FLUX 3 on white and cut out by cutout-white.mjs; `boulders`
-// is the same island before the garden. The small islands that float round it come from one picture, cut apart by
-// tools/sky/hero-islands.mjs.
-for (const name of ['garden', 'boulders', 'array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
+// The first view's island is `lamp`: pale limestone and grass like the ranges' islands, with one all-in-one solar
+// street light (round 26, Bob: "only the solar with a light that powers on"). The small islands that float round it
+// are published by tools/sky/hero-islands.mjs.
+for (const name of ['lamp', 'array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
   if (!wanted(`island-${name}`)) continue;
   // A fixed version wins where one exists (fix-bulb.mjs turns the lighting island's bulb the right way up).
   const fixed = join(src, `island-${name}-fixed.png`);

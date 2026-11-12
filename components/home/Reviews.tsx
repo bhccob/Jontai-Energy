@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { gsap } from 'gsap';
-import { ArrowUpRight, Star } from '@phosphor-icons/react';
+import { Star } from '@phosphor-icons/react';
 import { Words } from '@/components/ui/Split';
 import { GOOGLE_RATING, GOOGLE_REVIEWS_URL, REVIEWS } from '@/lib/reviews';
 
@@ -220,7 +220,6 @@ export function Reviews() {
       </div>
       <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="reviews__google">
         <span className="reviews__score">{GOOGLE_RATING.score.toFixed(1)}</span> out of 5 · {GOOGLE_RATING.count} reviews on Google{' '}
-        <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
       </a>
     </section>
   );

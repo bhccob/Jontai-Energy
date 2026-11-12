@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { useLenis } from 'lenis/react';
-import { ArrowRight, WarningCircle, X } from '@phosphor-icons/react/dist/ssr';
+import { WarningCircle, X } from '@phosphor-icons/react/dist/ssr';
+import { Switch } from '@/components/forms/parts';
 import { STORE } from '@/lib/store';
 import { LoyaltyCard, MemberFace, NoticeFace } from './LoyaltyCard';
 
@@ -13,17 +14,25 @@ import { LoyaltyCard, MemberFace, NoticeFace } from './LoyaltyCard';
 const LOOKUP_URL = '';
 
 type Field = 'code' | 'name';
+type Kind = 'personal' | 'business';
+/** The two memberships (round 27, Bob: "inside it should also have personal and bussines"). */
+const KINDS = [
+  { id: 'personal', label: 'Personal' },
+  { id: 'business', label: 'Business' },
+] as const;
 
 /**
- * The member login: the loyalty card sits in the dialog and fills in as the member types, lighting the field in use.
- * Missing details give the card a small shake; complete ones turn it over. It is a placeholder: nothing is sent until a
- * lookup is connected, and both the card and the form say so.
+ * The member login: the loyalty card sits in the dialog and fills in as the member types, lighting the field in use;
+ * Personal or Business picks the card (the green one or the oak one) and what the name means. Missing details give the
+ * card a small shake; complete ones turn it over. It is a placeholder: nothing is sent until a lookup is connected, and
+ * both the card and the form say so. A wide, low sheet (round 27: "more rectangle instead of boxy").
  */
 export function MemberLogin() {
   const id = useId();
   const lenis = useLenis();
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
+  const [kind, setKind] = useState<Kind>('personal');
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [focus, setFocus] = useState<Field | null>(null);
@@ -65,7 +74,7 @@ export function MemberLogin() {
     e.preventDefault();
     const next: Partial<Record<Field, string>> = {};
     if (!code.trim()) next.code = 'Enter the code printed on your loyalty card.';
-    if (!name.trim()) next.name = 'Enter the name on your membership.';
+    if (!name.trim()) next.name = kind === 'business' ? 'Enter the business name on the membership.' : 'Enter the name on your membership.';
     setErrors(next);
     const first = (['code', 'name'] as Field[]).find((k) => next[k]);
     if (first) {
@@ -97,7 +106,7 @@ export function MemberLogin() {
           <LoyaltyCard
             flipped={Boolean(result)}
             shake={shake}
-            front={<MemberFace code={code} name={name} focus={focus} />}
+            front={<MemberFace code={code} name={name} focus={focus} kind={kind} />}
             back={<NoticeFace phone={STORE.phone} />}
           />
         </div>
@@ -109,6 +118,18 @@ export function MemberLogin() {
             You never need to log in to use your rewards: show your card at the counter and they apply. To see your points, enter the code printed on your card with your name.
           </p>
           <form className="member__form" onSubmit={submit} noValidate>
+            <Switch
+              name={`${id}-kind`}
+              label="Membership"
+              options={KINDS}
+              value={kind}
+              onChange={(next) => {
+                setKind(next);
+                setResult('');
+                if (errors.name) setErrors((cur) => ({ ...cur, name: undefined }));
+              }}
+            />
+            <div className="member__fields">
             <div className="field">
               <label htmlFor={`${id}-code`} className="field__label">
                 Loyalty code
@@ -132,14 +153,14 @@ export function MemberLogin() {
             </div>
             <div className="field">
               <label htmlFor={`${id}-name`} className="field__label">
-                Name
+                {kind === 'business' ? 'Business name' : 'Name'}
               </label>
               <input
                 id={`${id}-name`}
                 name="name"
                 className="field__input"
                 autoComplete="name"
-                placeholder="Personal or business name"
+                placeholder={kind === 'business' ? 'As on the membership' : 'As on your card'}
                 maxLength={60}
                 value={name}
                 onChange={(e) => edit('name', e.currentTarget.value)}
@@ -150,9 +171,9 @@ export function MemberLogin() {
               />
               {error('name')}
             </div>
+            </div>
             <button type="submit" className="btn btn--primary member__submit">
               View my points
-              <ArrowRight size={18} weight="bold" aria-hidden="true" />
             </button>
             <p className="member__result" aria-live="polite">
               {result}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { ArrowRight, ArrowUp, Briefcase, Check, House, X } from '@phosphor-icons/react';
+import { Briefcase, Check, House, X } from '@phosphor-icons/react';
 import { BusinessFace, LoyaltyCard } from '@/components/sections/LoyaltyCard';
 import { MemberLogin } from '@/components/sections/MemberLogin';
 import { Words } from '@/components/ui/Split';
@@ -131,7 +131,7 @@ function Tier({ kind, children, card }: { kind: Kind; children: ReactNode; card:
           {kind === 'home' ? 'Jontai Rewards for your home' : 'Jontai Rewards for your business'}
         </h3>
         <button ref={opener} type="button" className={`tier__cta${kind === 'business' ? ' tier__cta--fill' : ''}`} aria-expanded={open} aria-controls={`${id}-info`} onClick={() => setOpen(true)}>
-          How it works <ArrowUp size={16} weight="bold" aria-hidden="true" />
+          How it works
         </button>
       </div>
       <div className="tier__card" aria-hidden="true">
@@ -231,7 +231,7 @@ export function Rewards() {
       <div className="loyal__strip loyal__strip--soft" data-reveal>
         <p>Not sure which card fits? Ask us; a person answers.</p>
         <a href={contactHref('rewards')} className="loyal__ask-link">
-          Send us a message <ArrowRight size={16} weight="bold" aria-hidden="true" />
+          Send us a message
         </a>
       </div>
     </section>
