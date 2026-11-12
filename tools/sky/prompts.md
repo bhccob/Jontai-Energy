@@ -119,3 +119,16 @@ node tools/sky/publish.mjs island-set
 
 The floodlight and the festoon bulbs that show (not the three behind the card) power on in CSS (sky.css); the camera's move flies into the card.
 
+## Back to the short-post island, with a plain card (round 29, 2026-11-12)
+
+Bob rejected both round-29 islands ("just keep the simple version main island from 1 design before ... the one where theres 1 short pole with a card"), so `island-post` is the first view's island again, and asked to take the suns off its card (FLUX 3, 3 credits):
+
+| File | Job | Settings | Prompt |
+| --- | --- | --- | --- |
+| `island-post.png` (from `island-post2-white.png`) | 3f0743f7 | FLUX 3 Image, 1:1, 2K, reference = the round 28 edit on white (job 19ceb587) (3 credits) | Edit the reference picture. Keep everything exactly as it is: the floating island, its pale limestone rock, roots and grass, the aloe and wildflowers, the two small boulders, and the short post with the solar panel, floodlight and white dome camera, same places, same size, same framing. Change only the green Jontai Energy loyalty card: remove the row of five sun stamps, so the card is plain glossy green with only the 'Jontai Energy' wordmark in white in the top left and the small 'Rewards member' label in the top right. Nothing else changes. Same soft daylight from the upper left, same photorealistic style. Keep the plain pure white background, no shadow on the background, no people, no logos. |
+
+```bash
+node tools/sky/cutout-white.mjs tools/sky/source/island-post2-white.png tools/sky/source/island-post.png --clear 5 --solid 12 --keep "47,30,78,50.5;43,35,51,45"
+node tools/sky/publish.mjs island-post
+```
+
