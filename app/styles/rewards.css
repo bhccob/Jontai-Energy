@@ -626,8 +626,7 @@
   -webkit-mask: radial-gradient(closest-side, transparent 64%, var(--color-day-ink) 66%);
   mask: radial-gradient(closest-side, transparent 64%, var(--color-day-ink) 66%);
 }
-.lcard__stamp[data-state='earned'],
-.lcard__sun {
+.lcard__stamp[data-state='earned'] {
   background: radial-gradient(circle at 34% 30%, color-mix(in oklab, var(--color-sun) 45%, var(--color-paper)), var(--color-sun) 55%, var(--color-wood));
   box-shadow: 0 0.8cqi 1.6cqi -0.6cqi color-mix(in oklab, var(--color-wood) 80%, transparent);
 }
@@ -705,12 +704,6 @@
 .lcard__field[data-on='true'] .lcard__value {
   opacity: 1;
   box-shadow: 0 0.6cqi 0 0 var(--color-sun);
-}
-.lcard__sun {
-  flex-shrink: 0;
-  width: 9cqi;
-  aspect-ratio: 1;
-  border-radius: 50%;
 }
 .lcard__notice {
   align-self: center;

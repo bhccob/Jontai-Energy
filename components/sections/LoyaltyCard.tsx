@@ -154,7 +154,6 @@ export function MemberFace({
             {name || (kind === 'business' ? 'Business name' : 'Your name')}
           </span>
         </span>
-        <span className="lcard__sun" />
       </div>
     </div>
   );
@@ -170,7 +169,6 @@ export function NoticeFace({ phone }: { phone: string }) {
         <span className="lcard__field">
           <span className="lcard__label">Nothing was sent</span>
         </span>
-        <span className="lcard__sun" />
       </div>
     </div>
   );

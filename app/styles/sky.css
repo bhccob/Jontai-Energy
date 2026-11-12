@@ -396,7 +396,7 @@
   z-index: 2;
   /* Bigger (Bob, round 28: "i want the main island to be bigger"); its size follows the screen's height, so the first
      view still ends with JONTAI standing behind it. */
-  width: min(52vw, 56vh, 820px);
+  width: min(48vw, 50vh, 740px);
   margin: clamp(16px, 3vh, 36px) 0 clamp(40px, 6vh, 90px);
   pointer-events: none;
 }
@@ -454,50 +454,51 @@
   position: relative;
 }
 
-/* The floodlight's light (Bob, round 26: "a light that powers on"; round 28: the solar floodlight and camera), placed in
-   % of the island's picture (the LED panel spans 547 to 686 by 211 to 234 of 1200 by 1020): the panel itself, a soft
-   glow round it, a faint cone down to a pool on the grass in front. It powers on with a quick flicker once the islands
-   have arrived, and stays on. */
+/* The lights (Bob, round 26: "a light that powers on"; rounds 28 and 29: a floodlight on its own stand and festoon bulbs),
+   placed in % of the island's picture (the floodlight's LED face spans 575 to 705 by 25 to 100 of 1200 by 981): the
+   face itself, a soft glow round it, a faint cone down onto the card and the grass, and a glow on each bulb. They power
+   on with a quick flicker once the islands have arrived, the bulbs one after another, and stay on. */
 .hero__led,
 .hero__halo,
 .hero__beam,
-.hero__pool {
+.hero__pool,
+.hero__bulb {
   position: absolute;
   pointer-events: none;
   mix-blend-mode: screen;
 }
 .hero__led {
-  left: 51.4%;
-  top: 21.8%;
-  width: 11.8%;
-  height: 2.6%;
-  border-radius: 40%;
+  left: 53.4%;
+  top: 6.4%;
+  width: 10.4%;
+  height: 7.2%;
+  border-radius: 18%;
   translate: -50% -50%;
-  rotate: -2deg;
+  rotate: -4deg;
   background: radial-gradient(closest-side, #fffdf5, rgb(255 246 222 / 0.9) 55%, rgb(255 236 200 / 0));
 }
 .hero__halo {
-  left: 51.4%;
-  top: 22.2%;
-  width: 36%;
+  left: 53.4%;
+  top: 7%;
+  width: 34%;
   aspect-ratio: 1.5;
   border-radius: 50%;
   translate: -50% -50%;
   background: radial-gradient(closest-side, rgb(255 248 226 / 1), rgb(255 240 208 / 0.5) 30%, rgb(255 234 198 / 0.14) 64%, transparent);
 }
 .hero__beam {
-  left: 50%;
-  top: 23.2%;
-  width: 30%;
-  height: 22%;
+  left: 55%;
+  top: 9.5%;
+  width: 34%;
+  height: 30%;
   translate: -50% 0;
   clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%);
   background: linear-gradient(to bottom, rgb(255 246 222 / 0.7), rgb(255 242 214 / 0.24) 55%, transparent 94%);
   filter: blur(6px);
 }
 .hero__pool {
-  left: 47%;
-  top: 45%;
+  left: 56%;
+  top: 38%;
   width: 34%;
   height: 8%;
   border-radius: 50%;
@@ -520,9 +521,20 @@
     opacity: 1;
   }
 }
+.hero__bulb {
+  width: 3.4%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, #fffaf0, rgb(255 226 168 / 0.85) 34%, rgb(255 206 130 / 0.25) 66%, transparent);
+}
 @media (prefers-reduced-motion: no-preference) {
   #hero :is(.hero__led, .hero__halo, .hero__beam, .hero__pool) {
     animation: led-on 1400ms linear 2400ms both;
+  }
+  #hero .hero__bulb {
+    animation: led-on 1100ms linear both;
+    animation-delay: calc(2900ms + var(--i, 0) * 90ms);
   }
 }
 
