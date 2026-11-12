@@ -41,7 +41,7 @@
 .nav[data-solid='true'],
 :root:not(.js) .nav {
   inset: 8px 0 auto;
-  width: min(42rem, calc(100% - 24px));
+  width: min(50rem, calc(100% - 24px));
   height: calc(var(--nav-h) - 10px);
   padding-inline: 18px 14px;
   border-radius: var(--radius-pill);
@@ -142,20 +142,6 @@
 
 /* ---------- Pills: the sun line, the bundle offers, the range numbers, the concept notice ---------- */
 
-.offer-pill {
-  background: var(--lg-glint), var(--lg-mint);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim), 0 8px 18px -12px rgb(14 34 25 / 0.45);
-}
-@media (hover: hover) and (pointer: fine) {
-  .offer-pill:hover {
-    background: var(--lg-glint), linear-gradient(165deg, rgb(226 242 217 / 0.96), rgb(200 228 186 / 0.9));
-  }
-}
-.offer-pill[aria-expanded='true'] {
-  background: var(--lg-glint), var(--lg-clear);
-}
 .concept {
   background: rgb(14 34 25 / 0.74);
   -webkit-backdrop-filter: var(--lg-blur);
@@ -384,8 +370,258 @@
   min-height: 40px;
   font-size: 0.92rem;
 }
+
+/* ---------- The header's two buttons (round 32) ----------
+   Bob: "i want the bundle button to be better designed and also a button on the header for login to see member point".
+   Bundle offers is deep green glass carrying one product from each bundle, round and overlapping like things bought
+   together, then its name; they pop in one by one after load, a light runs over the glass once, and under the pointer
+   the products fan out. Member login is clear glass with the forest ink, a person icon and its name. On narrower screens
+   the names shorten, then go: the bundle pill keeps its three products, the login its icon, Menu its two lines. */
+
+.offer-pill,
+.nav__member {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  transition:
+    background-color 250ms ease,
+    box-shadow 300ms ease,
+    scale 140ms ease-out;
+}
+.offer-pill:active,
+.nav__member:active {
+  scale: 0.97;
+}
+
 .offer-pill {
-  min-height: 32px;
-  padding: 0 13px;
-  font-size: 0.86rem;
+  gap: 9px;
+  padding: 4px 16px 4px 4px;
+  overflow: hidden;
+  background: var(--lg-glint), var(--lg-forest);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    inset 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 10px 22px -14px rgb(14 34 25 / 0.7);
+  color: #f4f6ef;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer-pill:hover {
+    background: var(--lg-glint), linear-gradient(170deg, rgb(66 132 95 / 0.92), rgb(30 78 56 / 0.95) 50%, rgb(17 44 32 / 0.96));
+  }
+}
+.offer-pill[aria-expanded='true'] {
+  background: var(--lg-glint), var(--lg-mint);
+  color: var(--color-forest);
+}
+.offer-pill__stack {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.offer-pill__stack img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ede5d7;
+  /* A ring in the pill's own green, so where they overlap each reads as its own thing. */
+  box-shadow: 0 0 0 1.5px #1f4d38;
+  transition:
+    translate 500ms var(--ease-out),
+    rotate 500ms var(--ease-out);
+}
+.offer-pill__stack img + img {
+  margin-left: -5px;
+}
+.offer-pill[aria-expanded='true'] .offer-pill__stack img {
+  box-shadow: 0 0 0 1.5px #c6e2b8;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer-pill:hover .offer-pill__stack img:nth-child(1) {
+    translate: -2px 0;
+    rotate: -10deg;
+  }
+  .offer-pill:hover .offer-pill__stack img:nth-child(2) {
+    translate: 0 -2px;
+  }
+  .offer-pill:hover .offer-pill__stack img:nth-child(3) {
+    translate: 3px 0;
+    rotate: 10deg;
+  }
+}
+/* The light that runs over the glass. */
+.offer-pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.24) 50%, transparent 70%);
+  translate: -110% 0;
+  pointer-events: none;
+}
+@keyframes offer-pill-pop {
+  from {
+    opacity: 0;
+    scale: 0.4;
+    translate: -8px 0;
+  }
+}
+@keyframes offer-pill-sheen {
+  from {
+    translate: -110% 0;
+  }
+  to {
+    translate: 110% 0;
+  }
+}
+/* The same run again under the pointer (a new name restarts it). */
+@keyframes offer-pill-sheen-again {
+  from {
+    translate: -110% 0;
+  }
+  to {
+    translate: 110% 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .offer-pill__stack img {
+    animation: offer-pill-pop 650ms var(--ease-out) calc(700ms + var(--i) * 130ms) backwards;
+  }
+  .offer-pill::after {
+    animation: offer-pill-sheen 1300ms ease-in-out 1500ms;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .offer-pill:hover::after {
+    animation: offer-pill-sheen-again 900ms ease-in-out;
+  }
+}
+
+.nav__member {
+  gap: 7px;
+  padding: 0 16px 0 10px;
+  background: var(--lg-glint), var(--lg-clear);
+  box-shadow:
+    var(--lg-rim),
+    inset 0 0 0 1px rgb(23 61 44 / 0.16),
+    0 8px 18px -14px rgb(14 34 25 / 0.45);
+  color: inherit;
+}
+.nav__member svg {
+  flex-shrink: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav__member:hover {
+    background: var(--lg-glint), linear-gradient(165deg, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.66));
+    box-shadow:
+      var(--lg-rim),
+      inset 0 0 0 1px rgb(23 61 44 / 0.3),
+      0 10px 20px -14px rgb(14 34 25 / 0.5);
+  }
+}
+
+.offer-pill__short {
+  display: none;
+}
+/* Tablets: the shorter names and the login as its icon. */
+@media (max-width: 48rem) {
+  .offer-pill__long {
+    display: none;
+  }
+  .offer-pill__short {
+    display: inline;
+  }
+  .nav__member {
+    justify-content: center;
+    width: 40px;
+    min-height: 40px;
+    padding: 0;
+  }
+  .nav__member-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+/* On the home page Support moves into the menu a little sooner, to leave the bundle pill its room. */
+@media (max-width: 40rem) {
+  .nav[data-sky] .nav__support {
+    display: none;
+  }
+}
+/* Phones: the bundle pill is its three products, Menu its two lines. */
+@media (max-width: 32rem) {
+  .offer-pill__short {
+    display: none;
+  }
+  .offer-pill {
+    gap: 0;
+    padding: 4px;
+  }
+  .offer-pill__stack img {
+    width: 28px;
+    height: 28px;
+  }
+  .offer-pill__stack img + img {
+    margin-left: -7px;
+  }
+  .nav .nav__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .nav__end {
+    gap: 8px;
+  }
+  .nav .nav__menu {
+    min-width: 40px;
+    justify-content: center;
+  }
+}
+/* Narrow phones set the name a little smaller; the narrowest move Support into the menu and, on the home page with its
+   bundle pill, keep the mark without its name, so nothing crowds (the link keeps its name for screen readers). The
+   buttons never squeeze. */
+.offer-pill,
+.nav__member,
+.nav .nav__menu {
+  flex-shrink: 0;
+}
+@media (max-width: 24rem) {
+  .brand {
+    gap: 6px;
+    font-size: 0.94rem;
+  }
+  .brand img {
+    width: 24px;
+    height: 24px;
+  }
+}
+@media (max-width: 22.4rem) {
+  .nav__support {
+    display: none;
+  }
+  .nav[data-sky] .brand {
+    font-size: 0;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .offer-pill {
+    background: #173d2c;
+  }
+  .nav__member {
+    background: #f6f9f2;
+  }
 }

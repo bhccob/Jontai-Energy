@@ -16,6 +16,7 @@
 //   nojs          disable page scripts, then reload
 //   block=PATTERN block requests matching PATTERN (e.g. *\/_next/static/chunks/*), then reload
 //   key=KEY       press a real key (e.g. key=Tab), so later focus counts as keyboard focus (:focus-visible)
+//   hover=SEL     move the mouse to the middle of SEL (for :hover)
 // Chrome comes from CHROME_PATH, or Playwright's Chromium under %LOCALAPPDATA%. Page exceptions print at the end.
 import { spawn } from 'node:child_process';
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
@@ -133,7 +134,11 @@ for (const target of splitTargets(targets)) {
     await reload();
   } else if (target.startsWith('key=')) {
     const key = target.slice(4);
-    for (const type of ['keyDown', 'keyUp']) await send('Input.dispatchKeyEvent', { type, key, code: key, windowsVirtualKeyCode: key === 'Tab' ? 9 : 0 });
+    const vk = { Tab: 9, Enter: 13, Escape: 27 }[key] ?? 0;
+    for (const type of ['keyDown', 'keyUp']) await send('Input.dispatchKeyEvent', { type, key, code: key, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk });
+  } else if (target.startsWith('hover=')) {
+    const at = await evaluate(`(() => { const r = document.querySelector(${JSON.stringify(target.slice(6))})?.getBoundingClientRect(); return r ? [r.left + r.width / 2, r.top + r.height / 2] : [0, 0] })()`);
+    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at[0], y: at[1] });
   } else if (target.startsWith('block=')) {
     await send('Network.enable');
     await send('Network.setBlockedURLs', { urls: [target.slice(6)] });

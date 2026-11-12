@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLenis } from 'lenis/react';
+import { UserCircle } from '@phosphor-icons/react/dist/ssr';
+import { MemberLogin, openMemberLogin } from '@/components/sections/MemberLogin';
 import { DIRECTIONS_URL } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { BundleOffer } from './BundleOffer';
@@ -21,10 +23,12 @@ const LINKS = [
 ] as const;
 
 /**
- * The header: the store's mark, Support and Menu, nothing else. A slim bar gathers it once you leave the top; it steps
+ * The header: the store's mark, Member login, Support and Menu. A slim bar gathers it once you leave the top; it steps
  * out of the way while you read down and comes back as soon as you scroll up or tab into it. Menu opens the sections
  * and the ways to reach the store full screen, on every screen size. `base` is '/' on other pages, so the section
  * links lead back home. `sky` (the home page, round 9) sets it in white over the sky and adds the bundle offers.
+ * Member login (round 32, Bob: "a button on the header for login to see member point") opens the points window, which
+ * lives here so it opens on every page; on phones the button is its icon alone.
  */
 export function Header({ base = '', sky = false }: { base?: string; sky?: boolean }) {
   const pathname = usePathname();
@@ -83,6 +87,18 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
         </a>
         <div className="nav__end">
           {sky && <BundleOffer hidden={open} />}
+          <button
+            type="button"
+            className="nav__member"
+            aria-haspopup="dialog"
+            onClick={() => {
+              setOpen(false);
+              openMemberLogin();
+            }}
+          >
+            <UserCircle size={21} weight="regular" aria-hidden="true" />
+            <span className="nav__member-label">Member login</span>
+          </button>
           <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
             Support
           </a>
@@ -137,6 +153,7 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
           </a>
         </div>
       </nav>
+      <MemberLogin />
     </>
   );
 }

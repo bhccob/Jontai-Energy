@@ -115,12 +115,7 @@ main {
     text-decoration-line: underline;
   }
 }
-/* The narrowest phones keep Support in the menu, so the mark and Menu never crowd. */
-@media (max-width: 23.4rem) {
-  .nav__support {
-    display: none;
-  }
-}
+/* On the narrowest phones Support moves into the menu (glass.css, with the header's other buttons). */
 
 /* ---------- Menu (every screen size) ---------- */
 

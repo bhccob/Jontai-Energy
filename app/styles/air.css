@@ -416,7 +416,7 @@ main.air {
   background: var(--leaf-ink);
   box-shadow: none;
 }
-/* Only the strip's own line: the login dialog sits inside the strip and keeps its own ink. */
+/* Only the strip's own line. */
 .loyal__strip:has(.member__open) > p {
   color: rgb(247 245 236 / 0.82);
 }
