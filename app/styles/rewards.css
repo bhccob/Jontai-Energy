@@ -267,8 +267,9 @@
   margin-block-start: var(--space-3xs);
   color: var(--color-wood);
 }
-/* Without scripts the login cannot open, so only the in-store line shows. */
-:root:not(.js) .member__open {
+/* Without scripts the login cannot open, so only the in-store line shows, and the header has no login button. */
+:root:not(.js) .member__open,
+:root:not(.js) .nav__member {
   display: none;
 }
 
@@ -328,6 +329,22 @@
   top: var(--space-md);
   right: var(--space-md);
   z-index: 2;
+}
+/* It stays light glass with the forest ink over the misty valley: the product panel's close (panel.css) is made for its
+   dark green, and on phones would leave the X dark on dark here. */
+.member .member__close {
+  width: 44px;
+  height: 44px;
+  background: rgb(255 255 255 / 0.55);
+  box-shadow:
+    var(--lg-rim),
+    0 8px 18px -14px rgb(14 34 25 / 0.4);
+  color: var(--color-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .member .member__close:hover {
+    background: rgb(255 255 255 / 0.9);
+  }
 }
 .member__intro {
   display: grid;

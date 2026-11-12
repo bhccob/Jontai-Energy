@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Briefcase, Check, House, X } from '@phosphor-icons/react';
 import { BusinessFace, LoyaltyCard } from '@/components/sections/LoyaltyCard';
-import { MemberLogin } from '@/components/sections/MemberLogin';
+import { MemberLoginButton } from '@/components/sections/MemberLogin';
 import { Words } from '@/components/ui/Split';
 import { contactHref } from '@/lib/message';
 import { BUSINESS_DISCOUNT, BUSINESS_GOAL, REWARD_PER_STEP_AFL, REWARD_STEP_AFL, formatAfl, formatPoints, rewardFor } from '@/lib/loyalty';
@@ -226,7 +226,7 @@ export function Rewards() {
         <p>
           <span className="loyal__strip-kicker">At the counter</span> Show your card when you pay and your rewards apply. Log in only to see your points.
         </p>
-        <MemberLogin />
+        <MemberLoginButton className="btn btn--primary member__open">See my points</MemberLoginButton>
       </div>
       <div className="loyal__strip loyal__strip--soft" data-reveal>
         <p>Not sure which card fits? Ask us; a person answers.</p>

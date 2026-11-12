@@ -559,69 +559,10 @@
 .nav[data-sky] :focus-visible {
   outline-color: currentColor;
 }
-@media (max-width: 40rem) {
-  .nav[data-sky] .nav__support {
-    display: none;
-  }
-}
-.offer-pill__short {
-  display: none;
-}
-@media (max-width: 27rem) {
-  .offer-pill__long {
-    display: none;
-  }
-  .offer-pill__short {
-    display: inline;
-  }
-  .nav[data-sky] .nav__label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  .nav[data-sky] .nav__end {
-    gap: 14px;
-  }
-  .nav[data-sky] .nav__menu {
-    min-width: 44px;
-    justify-content: center;
-  }
-}
+/* The header's buttons over the sky (the bundle offers, the member login) and how they fit on phones: glass.css. */
 
-/* ---------- Bundle offers: the pill and its panel (deep green glass) ---------- */
+/* ---------- Bundle offers: the panel (deep green glass) ---------- */
 
-.offer-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 38px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-mint);
-  color: var(--color-forest);
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 250ms ease,
-    scale 120ms ease-out;
-}
-.offer-pill:active {
-  scale: 0.97;
-}
-.offer-pill[aria-expanded='true'] {
-  background: #fff;
-}
-@media (hover: hover) and (pointer: fine) {
-  .offer-pill:hover {
-    background: #cfe6c3;
-  }
-}
 /* The panel (round 22: "in the middle with more rectangular shaped"): a native dialog, so it sits in the middle of the
    screen above everything, over a soft dimmed page; a wide rectangle of deep green glass with small corners, the three
    offers side by side. It rises a little as it opens. */

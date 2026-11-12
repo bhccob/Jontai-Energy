@@ -10,12 +10,16 @@ export interface Bundle {
   items: string;
   /** Percent off when bought together (sample). */
   save: number;
+  /** One of its products, small and round, for the header's pill (tools/sky/bundle-thumbs.mjs). */
+  thumb: string;
+  /** What the small picture shows. */
+  shows: string;
 }
 
 export const BUNDLES: Bundle[] = [
-  { id: 'starter-solar', name: 'Starter Solar Kit', items: 'Solar panels, a hybrid inverter and a power station.', save: 20 },
-  { id: 'home-security', name: 'Home Security Bundle', items: 'Two solar cameras, one for the door and one for the yard.', save: 15 },
-  { id: 'outdoor-lighting', name: 'Outdoor Lighting Pack', items: 'A street lamp, garden lights and an LED floodlight.', save: 15 },
+  { id: 'starter-solar', name: 'Starter Solar Kit', items: 'Solar panels, a hybrid inverter and a power station.', save: 20, thumb: '/sky/bundle-starter-solar-96.webp', shows: 'a solar panel' },
+  { id: 'home-security', name: 'Home Security Bundle', items: 'Two solar cameras, one for the door and one for the yard.', save: 15, thumb: '/sky/bundle-home-security-96.webp', shows: 'a solar camera' },
+  { id: 'outdoor-lighting', name: 'Outdoor Lighting Pack', items: 'A street lamp, garden lights and an LED floodlight.', save: 15, thumb: '/sky/bundle-outdoor-lighting-96.webp', shows: 'a solar street lamp' },
 ];
 
 export const BUNDLE_NOTE = "Sample offers. Ask in store for this month's bundles.";

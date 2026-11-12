@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useLenis } from 'lenis/react';
 import { WarningCircle, X } from '@phosphor-icons/react/dist/ssr';
 import { Step, Switch } from '@/components/forms/parts';
@@ -12,6 +12,23 @@ import { LoyaltyCard, MemberFace, NoticeFace } from './LoyaltyCard';
  * member up by the code on their card and their name, and this form asks for the same two things.
  */
 const LOOKUP_URL = '';
+
+/** The event that opens the login, so any button on any page can (the header's, and Rewards' "See my points"). */
+const OPEN = 'jontai:member-login';
+
+/** Opens the member login wherever the visitor is. */
+export function openMemberLogin() {
+  window.dispatchEvent(new Event(OPEN));
+}
+
+/** A button that opens the member login. Without scripts it cannot, so it stays hidden (rewards.css). */
+export function MemberLoginButton({ className, children }: { className: string; children: ReactNode }) {
+  return (
+    <button type="button" className={className} onClick={openMemberLogin} aria-haspopup="dialog">
+      {children}
+    </button>
+  );
+}
 
 type Field = 'code' | 'name';
 type Kind = 'personal' | 'business';
@@ -25,7 +42,9 @@ const KINDS = [
  * The member login: the loyalty card sits in the dialog and fills in as the member types, lighting the field in use;
  * Personal or Business picks the card (the green one or the oak one) and what the name means. Missing details give the
  * card a small shake; complete ones turn it over. It is a placeholder: nothing is sent until a lookup is connected, and
- * both the card and the form say so. A wide, low sheet (round 27: "more rectangle instead of boxy").
+ * both the card and the form say so. A wide, low sheet (round 27: "more rectangle instead of boxy"). Since round 32
+ * (Bob: "a button on the header for login to see member point") it lives once in the header, on every page, and opens
+ * from the header's "Member login" or Rewards' "See my points"; closing it hands focus back to the button that opened it.
  */
 export function MemberLogin() {
   const id = useId();
@@ -39,6 +58,16 @@ export function MemberLogin() {
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [shake, setShake] = useState(false);
   const [result, setResult] = useState('');
+  const opener = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const onOpen = () => {
+      opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      setOpen(true);
+    };
+    window.addEventListener(OPEN, onOpen);
+    return () => window.removeEventListener(OPEN, onOpen);
+  }, []);
 
   useEffect(() => {
     const d = dialog.current;
@@ -61,6 +90,8 @@ export function MemberLogin() {
   const onClose = () => {
     setOpen(false);
     lenis?.start();
+    opener.current?.focus({ preventScroll: true });
+    opener.current = null;
   };
 
   // Editing after a try turns the card back to its front.
@@ -96,9 +127,6 @@ export function MemberLogin() {
 
   return (
     <>
-      <button type="button" className="btn btn--primary member__open" onClick={() => setOpen(true)} aria-haspopup="dialog">
-        See my points
-      </button>
       {/* Like the contact page (Bob, round 28: "the inside design to be more like support contact"): the valley under a
           morning mist, the title in thin wide capitals with the card under it, and the form as one glass sheet in
           numbered steps with fields that are a line to write on. */}
