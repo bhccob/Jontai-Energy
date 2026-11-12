@@ -646,11 +646,11 @@
       "id": "furniture",
       "name": "Furniture",
       "short": "Furniture",
-      "blurb": "Furniture for the home, on our second floor.",
+      "blurb": "Furniture for the home, one floor up.",
       "floor": "2nd floor",
       "products": [],
       "carries": [
-        "Home furniture on the second floor of the store",
+        "Home furniture, one floor up in the store",
         "Large pieces delivered to your door"
       ],
       "ask": "Head upstairs at Cumana 73 and have a look around.",
@@ -908,7 +908,7 @@
         }
       ],
       "specs": "spi-8k-up",
-      "note": "Wiring to your panel and batteries should be done by a licensed electrician. Jontai Energy does not install.",
+      "note": "Wiring to your electrical panel and batteries should be done by a licensed electrician. Jontai Energy does not install.",
       "source": "Figures from the Namkoo SPI series datasheet. Ask what is on the shelf.",
       "quote": "inverter"
     },
@@ -1052,7 +1052,7 @@
     },
     "furniture": {
       "name": "Furniture delivery",
-      "model": "Second floor, Cumana 73",
+      "model": "One floor up, Cumana 73",
       "image": "/catalog/sofa.webp",
       "alt": "A cream two-seat sofa with oak legs",
       "intro": "Pick your furniture upstairs at Cumana 73 and have it delivered to your door.",

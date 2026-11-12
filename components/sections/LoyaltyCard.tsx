@@ -164,7 +164,7 @@ export function NoticeFace({ phone }: { phone: string }) {
   return (
     <div className="lcard__body" data-tone="forest">
       <Brand tier="Online points" />
-      <p className="lcard__notice">Coming soon. Show this card at the counter, or call {phone}, to hear your balance.</p>
+      <p className="lcard__notice">Online points are not connected yet. Show this card at the counter, or call {phone}, to hear your balance.</p>
       <div className="lcard__bottom">
         <span className="lcard__field">
           <span className="lcard__label">Nothing was sent</span>

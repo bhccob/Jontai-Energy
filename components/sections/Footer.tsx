@@ -1,9 +1,8 @@
-import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { FitText } from '@/components/ui/FitText';
 import { FooterFocus } from '@/components/ui/FooterFocus';
-import { CATEGORIES } from '@/lib/products';
+import { ISLANDS } from '@/lib/islands';
 import { QUOTE_ACTION } from '@/lib/quote';
-import { CONCEPT, OFFICIAL_URL, STORE } from '@/lib/store';
+import { CONCEPT, OFFICIAL_URL, SERVICE_LINE, STORE } from '@/lib/store';
 
 /**
  * The page's last word, in the page's own voice (Bob, round 12: the old footer's narrow bold capitals did not belong):
@@ -24,9 +23,11 @@ export function Footer({ base = '' }: { base?: string }) {
           <div>
             <h2 className="footer__head">Ranges</h2>
             <ul>
-              {CATEGORIES.map((c) => (
-                <li key={c.id}>
-                  <OpenCategoryButton id={c.id}>{c.name}</OpenCategoryButton>
+              {/* The six ranges, named and ordered as on the home page, each leading to its place there (polish,
+                  round 30). */}
+              {ISLANDS.map((r) => (
+                <li key={r.id}>
+                  <a href={`${base}#${r.id}`}>{r.name}</a>
                 </li>
               ))}
             </ul>
@@ -74,7 +75,7 @@ export function Footer({ base = '' }: { base?: string }) {
         <p>
           © {new Date().getFullYear()} {STORE.name} · {STORE.street}, {STORE.city}, {STORE.country}
         </p>
-        <p>Jontai Energy is a retail store and does not provide installation services.</p>
+        <p>{SERVICE_LINE}</p>
         {CONCEPT && (
           <p>
             A concept redesign, not the official Jontai Energy website. The store&rsquo;s own site is{' '}

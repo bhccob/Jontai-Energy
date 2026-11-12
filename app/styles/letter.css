@@ -521,3 +521,19 @@
 .sheet__wa svg {
   color: #25d366;
 }
+
+/* A missing page (app/not-found.tsx): the two ways back, centred under the title like the forms on the other letters. */
+.lost {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 16px;
+}
+
+/* The missing page is short, so the store's hours land where the mist is thinnest: a thicker mist there keeps them
+   readable over the valley (polish, round 30). */
+.letter:has(.lost) .letter__backdrop {
+  background:
+    linear-gradient(to bottom, var(--sky-top) 0, rgb(238 243 231 / 0.84) 30%, rgb(238 243 231 / 0.66) 60%, rgb(238 243 231 / 0.8)),
+    url('/sky/valley-green-1920.webp') center 70% / cover no-repeat;
+}

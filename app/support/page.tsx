@@ -165,7 +165,7 @@ export default function SupportPage() {
                 </div>
                 <div>
                   <h3 className="label" data-reveal>
-                    Cannot come back
+                    Not returnable
                   </h3>
                   <ul className="dashes">
                     {RETURNS.cannot.map((x) => (

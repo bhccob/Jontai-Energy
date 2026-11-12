@@ -126,7 +126,7 @@ export function QuoteForm({ initial }: { initial: QuoteTopic[] }) {
       <Step n={1} id={`${id}-for`} title="What it is for">
         <Switch name="use" label="Who it is for" options={QUOTE_USES} value={use} onChange={setUse} />
         <p id={`${id}-topics-hint`} className="field__hint">
-          Pick one or more, or Something else.
+          Pick one or more, or &ldquo;Something else&rdquo;.
         </p>
         <ProductChips labelId={`${id}-for`} value={topics} onChange={choose} error={errors.topics} describedBy={describe('topics', true)} />
         <FieldError id={errId('topics')} text={errors.topics} />

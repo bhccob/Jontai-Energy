@@ -164,11 +164,14 @@ main {
 }
 .menu__links a {
   display: block;
-  padding: 14px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--color-rule);
-  font-weight: 800;
-  font-size: clamp(2rem, 9vw, 2.6rem);
-  letter-spacing: var(--tracking-display);
+  /* The page's thin wide capitals (polish, round 30), as the headings across the site. */
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
   line-height: 1;
   text-decoration: none;
   transition:
@@ -200,8 +203,8 @@ main {
     border-top: 1px solid var(--color-rule);
   }
   .menu__links a {
-    padding: clamp(14px, 2.2vh, 22px) 0;
-    font-size: clamp(2.6rem, 4.4vw, 4.6rem);
+    padding: clamp(12px, 1.8vh, 18px) 0;
+    font-size: clamp(2.2rem, 3.6vw, 3.8rem);
   }
   .menu .actions .btn {
     flex: 0 0 auto;

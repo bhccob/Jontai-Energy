@@ -8,10 +8,13 @@ import { QUOTE_ACTION } from '@/lib/quote';
 import { BundleOffer } from './BundleOffer';
 
 /** The home page's sections, as the menu lists them. */
+/** The six ranges, named as on the home page (lib/islands), then Rewards and the visit (polish, round 30). */
 const LINKS = [
   { id: 'solar', label: 'Solar' },
-  { id: 'backup', label: 'Power' },
+  { id: 'cooling', label: 'Cooling' },
+  { id: 'backup', label: 'Backup power' },
   { id: 'light', label: 'Lighting' },
+  { id: 'security', label: 'Security' },
   { id: 'upstairs', label: 'Furniture' },
   { id: 'rewards', label: 'Rewards' },
   { id: 'visit', label: 'Visit' },

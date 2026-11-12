@@ -186,7 +186,7 @@ export function MemberLogin() {
           </Step>
           <div className="sheet__send">
             <button type="submit" className="btn btn--primary sheet__go">
-              View my points
+              See my points
             </button>
             <p className="sheet__fine">Online points are not connected yet, so nothing you enter is sent.</p>
           </div>

@@ -48,9 +48,9 @@ export const ISLANDS: Island[] = [
     size: [1200, 1335],
     line: 'Air conditioning that runs on sunlight while the sun is out, and on the grid only when it needs to.',
     facts: [
-      { value: '9k–36k', label: 'BTU, by model' },
+      { value: '9,000–36,000', label: 'BTU, by model' },
       { value: 'Up to 100%', label: 'Solar while the sun is out' },
-      { value: 'No battery', label: 'Or separate inverter' },
+      { value: 'None', label: 'Battery or extra inverter needed' },
     ],
     note: 'From the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
     actions: [{ label: 'See solar air conditioners', panel: 'solar-ac' }],
@@ -67,7 +67,7 @@ export const ISLANDS: Island[] = [
       { value: '2,560 Wh', label: 'Battery' },
       { value: '4', label: 'AC outlets' },
     ],
-    note: '3000W portable power station. Figures from its spec sheet; other models differ.',
+    note: '3,000 W portable power station. Figures from its spec sheet; other models differ.',
     actions: [
       { label: 'See the power station', panel: 'power-station' },
       { label: 'See generators', panel: 'generator' },

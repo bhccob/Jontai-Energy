@@ -15,7 +15,7 @@ const archivo = Archivo({ subsets: ['latin'], axes: ['wdth'], variable: '--font-
 // The owner's tab title (2026-10-28).
 const title = 'Jontai Energy | Smart Lights Smart Savings';
 const description =
-  'A retail store at Cumana 73, Oranjestad: solar panels, inverters, generators, power stations, LED lighting, solar cameras and solar air conditioning, with furniture on the second floor. Large-item delivery available.';
+  'A retail store at Cumana 73, Oranjestad: solar panels, inverters, generators, power stations, LED lighting, solar cameras and solar air conditioning, with furniture one floor up. Large-item delivery available.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -84,7 +84,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             complete, as it does without JavaScript. (Round 9 has no loader: the first view paints at once.) */}
         <script dangerouslySetInnerHTML={{ __html: HEAD_SCRIPT }} />
       </head>
-      <body>
+      <body id="top">
         <a href="#main" className="skip">
           Skip to content
         </a>

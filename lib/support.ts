@@ -20,7 +20,7 @@ export const QUESTIONS: Question[] = [
     q: 'Who installs what I buy?',
     a: 'Jontai Energy is a retail store and does not install the products it sells. Please arrange installation with a qualified installer or electrician of your choice.',
   },
-  { q: 'What do you deliver?', a: 'Large items, such as furniture from the second floor and large generators. Ask about delivery when you buy.' },
+  { q: 'What do you deliver?', a: 'Large items, such as furniture from the floor upstairs and large generators. Ask about delivery when you buy.' },
   {
     q: 'Can I see products before I buy?',
     a: 'Yes. Every product is checked in store before it is sold, and you are welcome to see it at Cumana 73 first, with furniture one flight up.',
@@ -55,7 +55,7 @@ export const WARRANTY = {
     'Lightning, power surges, flooding and other acts of nature',
     'A removed or unreadable serial number',
     'Parts that wear out in normal use, such as fuses',
-    'Software or settings, unless a hardware fault causes it',
+    'Software or settings, unless a hardware fault causes them',
   ],
   claim: [
     { title: 'Get in touch', line: 'Call, email or send us a message from the contact page, or come by the store.' },
@@ -86,7 +86,7 @@ export const RETURNS = {
 };
 
 export const SERVICE = {
-  lead: 'Bought it from us and something is wrong? Bring it in with the receipt. We find out what is going on and tell you the next step: a repair, a replacement part, a warranty claim or a return.',
+  lead: 'Bought it from us and something is wrong? Bring it in with the receipt. We find out what is going on and tell you the next step: a repair, a replacement part, a warranty claim or an exchange.',
   covers: 'Solar panels, inverters, batteries, LED fixtures and the other hardware we sell.',
   steps: [
     { title: 'Bring it in', line: 'Come by in opening hours with the product and its receipt. No appointment needed.' },
