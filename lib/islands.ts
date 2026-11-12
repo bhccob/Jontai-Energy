@@ -46,14 +46,17 @@ export const ISLANDS: Island[] = [
     name: 'Cooling',
     image: 'cooling',
     size: [1200, 1335],
-    line: 'Air conditioning that runs on sunlight while the sun is out, and on the grid only when it needs to.',
+    line: 'Air conditioners that run on sunlight and use the grid only when they need to, and fans that run on a solar panel.',
     facts: [
       { value: '9,000–36,000', label: 'BTU, by model' },
       { value: 'Up to 100%', label: 'Solar while the sun is out' },
       { value: 'None', label: 'Battery or extra inverter needed' },
     ],
-    note: 'From the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
-    actions: [{ label: 'See solar air conditioners', panel: 'solar-ac' }],
+    note: 'Air conditioner figures from the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
+    actions: [
+      { label: 'See solar air conditioners', panel: 'solar-ac' },
+      { label: 'See solar fans', panel: 'cooling' },
+    ],
     quote: 'solar-ac',
   },
   {
@@ -76,12 +79,12 @@ export const ISLANDS: Island[] = [
   },
   {
     id: 'light',
-    name: 'Lighting',
+    name: 'LED lighting',
     image: 'light',
     size: [1200, 1529],
-    line: 'Bulbs, including filament styles, LED strips, ceiling panels, tubes and floodlights, in the colour you like.',
+    line: 'Bulbs in the colour you like, LED strips, ceiling panels, tubes, floodlights and solar street lamps.',
     note: 'Stock changes often, so ask before you make the trip.',
-    actions: [{ label: 'See lighting', panel: 'led' }],
+    actions: [{ label: 'See LED lighting', panel: 'led' }],
     quote: 'led',
     // From tools/sky/fix-bulb.mjs, which turned the bulb the right way up into its socket.
     lamp: { x: 57.27, y: 32.63, r: 10.98 },

@@ -31,3 +31,19 @@ test('the island copy keeps the store rules', () => {
   assert.equal(ISLANDS.find((i) => i.id === 'upstairs')!.note, 'Large-item delivery available. Ask us about furniture delivery.');
 });
 
+
+test('round 31: LED lighting by name, solar street lamps in it, solar fans under Cooling, both on the quote form', () => {
+  const light = ISLANDS.find((i) => i.id === 'light')!;
+  assert.equal(light.name, 'LED lighting');
+  assert.match(light.line, /solar street lamps/);
+  const led = data.categories.find((c: { id: string }) => c.id === 'led');
+  assert.ok(led.range.some((r: { name: string }) => r.name === 'Solar street lamps'));
+  const cooling = ISLANDS.find((i) => i.id === 'cooling')!;
+  assert.ok(cooling.actions.some((a) => a.panel === 'cooling' && /solar fans/.test(a.label)));
+  const range = data.categories.find((c: { id: string }) => c.id === 'cooling');
+  assert.ok(range.range.some((r: { name: string }) => r.name === 'Solar fans'));
+  for (const id of ['solar-fan', 'street-lamp']) {
+    assert.ok(QUOTE_TOPICS.some((t) => t.id === id), id);
+    assert.ok(existsSync(join(root, 'public', 'sky', `thumb-${id}-160.webp`)), `${id} chip picture`);
+  }
+});

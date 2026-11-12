@@ -1,15 +1,21 @@
 import { Check, DotsThree, GasCan } from '@phosphor-icons/react/dist/ssr';
 import { QUOTE_TOPICS, type QuoteTopic } from '@/lib/quote';
 
-/** The island picture that shows each product (public/sky, tools/sky/thumbs.mjs); the generator and "Something else" have none, so an icon. */
+/**
+ * The picture that shows each product: its range's island (public/sky, tools/sky/thumbs.mjs), or for a product with no
+ * island of its own a cut-out of its catalogue picture (tools/sky/catalog-thumbs.mjs). The generator and "Something
+ * else" have none, so an icon.
+ */
 const PICS: Partial<Record<QuoteTopic, string>> = {
-  inverter: 'solar',
-  'solar-panels': 'array',
-  'solar-ac': 'cooling',
-  'power-station': 'power',
-  led: 'light',
-  cameras: 'security',
-  furniture: 'furniture',
+  inverter: '/sky/island-solar-160.webp',
+  'solar-panels': '/sky/island-array-160.webp',
+  'solar-ac': '/sky/island-cooling-160.webp',
+  'solar-fan': '/sky/thumb-solar-fan-160.webp',
+  'power-station': '/sky/island-power-160.webp',
+  led: '/sky/island-light-160.webp',
+  'street-lamp': '/sky/thumb-street-lamp-160.webp',
+  cameras: '/sky/island-security-160.webp',
+  furniture: '/sky/island-furniture-160.webp',
 };
 
 /**
@@ -47,7 +53,7 @@ export function ProductChips({
             <span className="chip__pic" aria-hidden="true">
               {pic ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={`/sky/island-${pic}-160.webp`} alt="" width={80} height={80} loading="lazy" decoding="async" />
+                <img src={pic} alt="" width={80} height={80} loading="lazy" decoding="async" />
               ) : t.id === 'other' ? (
                 <DotsThree size={26} weight="bold" />
               ) : (

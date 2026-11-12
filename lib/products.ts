@@ -9,7 +9,7 @@
 import data from '@/data/products.json';
 import type { QuoteTopic } from './quote';
 
-export type CategoryId = 'solar' | 'power' | 'led' | 'cameras' | 'furniture';
+export type CategoryId = 'solar' | 'cooling' | 'power' | 'led' | 'cameras' | 'furniture';
 
 export interface Spec {
   label: string;

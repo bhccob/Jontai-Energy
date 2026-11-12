@@ -50,7 +50,7 @@ const range = (id: string, name: string, product: ProductId, aim: number) => {
 export const RANGES = [
   range('solar', 'Solar', 'solar_panel', 0.8),
   range('backup', 'Backup power', 'power_station', 0.2),
-  range('light', 'Lighting', 'bulb', 0),
+  range('light', 'LED lighting', 'bulb', 0),
   range('cooling', 'Cooling', 'ac_outdoor', 0.3),
   range('security', 'Security', 'site_camera', 0.9),
   range('upstairs', 'Furniture', 'lounge_chair', 0.45),

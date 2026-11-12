@@ -50,12 +50,13 @@ const toLinear = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055
 const toSrgb = (c: number) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
 
 /**
- * The colour of the bulb's light as a camera balanced for neutral 4300K light sees it, at full strength: warm reads
- * amber and daylight a little cool, as in a photograph. Shared by the baked bulb (tools/sky/bulb-light.mjs) and its
- * halo on the page (LampSlider).
+ * The colour of the bulb's light at full strength, as an eye used to daylight sees it: warm white reads amber and
+ * 6500K daylight reads clean white, the screen's own white (sRGB's white is daylight at about 6500K). Balancing for
+ * 4300K instead (round 17) turned daylight sky blue, which no real LED bulb looks like (Bob, round 31). Shared by the
+ * baked bulb (tools/sky/bulb-light.mjs) and its halo on the page (LampSlider).
  */
 export function lampGlow(k: number): [number, number, number] {
-  const wb = kelvinToRgb(4300).map((v) => toLinear(v / 255));
+  const wb = kelvinToRgb(6500).map((v) => toLinear(v / 255));
   const lin = kelvinToRgb(k).map((v, c) => toLinear(v / 255) / wb[c]);
   const max = Math.max(...lin);
   return lin.map((v) => clampByte(toSrgb(v / max) * 255)) as [number, number, number];

@@ -13,7 +13,7 @@ const LINKS = [
   { id: 'solar', label: 'Solar' },
   { id: 'cooling', label: 'Cooling' },
   { id: 'backup', label: 'Backup power' },
-  { id: 'light', label: 'Lighting' },
+  { id: 'light', label: 'LED lighting' },
   { id: 'security', label: 'Security' },
   { id: 'upstairs', label: 'Furniture' },
   { id: 'rewards', label: 'Rewards' },

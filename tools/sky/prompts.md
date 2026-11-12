@@ -132,3 +132,12 @@ node tools/sky/cutout-white.mjs tools/sky/source/island-post2-white.png tools/sk
 node tools/sky/publish.mjs island-post
 ```
 
+
+## Two more product types: solar street lamps and solar fans (round 31, approved by Bob on 2026-11-12)
+
+Bob asked to add "(solar) street lamps" and "solar fans" to the ranges. Both catalogue pictures were made in the cream studio look of `public/catalog/*.webp`, with `public/catalog/floodlight.webp` uploaded as the style reference, then resized to 800 px (`public/catalog/street-lamp.webp`, `public/catalog/solar-fan.webp`). Originals in `tools/sky/source/catalog/`.
+
+| File | Job | Settings | Prompt |
+|---|---|---|---|
+| `street-lamp.png` | 7e42bb10 | GPT Image 2.6, 1:1, 1K, high, reference = floodlight.webp (1.5 credits) | A product photo in the same style as the reference picture: one all-in-one solar LED street lamp shown on its own, without a pole: a slim dark grey aluminium light head with a flat solar panel built into its top and a short mounting arm at the back, seen from slightly in front and above so both the panel and the LED face show, switched off, centred, filling about two thirds of the frame. Plain warm cream studio background like the reference, soft daylight from the upper left, a soft shadow under it. Photorealistic, true colours, no text, no logos, no people. |
+| `solar-fan.png` | 6be58f34 | GPT Image 2.6, 1:1, 1K, high, reference = floodlight.webp (1.5 credits) | A product photo in the same style as the reference picture: one solar fan set: a white standing pedestal fan with a round wire grille, and beside it a small framed solar panel on a low folding stand, joined to the fan's base by one neat black cable. Seen from slightly in front, centred, filling about two thirds of the frame. Plain warm cream studio background like the reference, soft daylight from the upper left, soft shadows. Photorealistic, true colours, no text, no logos, no people. |

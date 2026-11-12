@@ -62,11 +62,13 @@ test('the bulb layers mix the two nearest temperatures and never dim', () => {
   for (let k = 2700; k <= 6500; k += 100) assert.equal(lampLayers(k)[0], 1);
 });
 
-test('the bulb glows amber when warm and a little cool in daylight', () => {
+test('the bulb glows amber when warm and clean white in daylight, never blue', () => {
   const [wr, , wb] = lampGlow(2700);
-  const [dr, , db] = lampGlow(6500);
   assert.equal(wr, 255);
   assert.ok(wb < 160, 'warm is amber');
-  assert.equal(db, 255);
-  assert.ok(dr < 255, 'daylight leans cool');
+  assert.deepEqual(lampGlow(6500), [255, 255, 255]);
+  for (let k = 2700; k <= 6500; k += 100) {
+    const [r, , b] = lampGlow(k);
+    assert.ok(b <= r, `${k}K is never bluer than it is red`);
+  }
 });
