@@ -64,8 +64,8 @@
     display: none;
   }
 }
-/* The morning over the valley. It screens: black letters let the valley through untouched, the pale green everywhere
-   else turns it into soft morning light with the faintest movement. JONTAI stands across the foot of the screen. */
+/* The morning over the valley. It screens: the pale green turns the valley into soft morning light with the faintest
+   movement. JONTAI stands across the foot of the screen, in front of the islands (.sky__front). */
 .sky__ink {
   position: absolute;
   inset: 0;
@@ -90,6 +90,31 @@
 .sky__name .c {
   overflow: clip;
 }
+/* JONTAI stands in front of the islands (Bob, round 26: "i want jontai text to be infront"), held still over the first
+   view like the sky behind it. Each letter shows its own piece of the valley picture, placed by SkyName as if the
+   picture filled the screen, so the word still reads as cut out of the valley. */
+.sky__front {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  height: 100lvh;
+  margin-bottom: -100lvh;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 var(--gutter);
+  overflow: clip;
+  pointer-events: none;
+}
+.sky__front .ci {
+  background-image: var(--sky-pic, url('/sky/valley-green-1920.webp'));
+  background-size: var(--bw, 100vw) var(--bh, auto);
+  background-position: var(--bx, 50%) var(--by, 60%);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
 /* The Aruba sun, rising behind the headline as the page opens: a warm soft light, never a disc with an edge. */
 .sky::after {
   content: '';
@@ -113,7 +138,7 @@
     animation: sun-rise 2600ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
   }
 }
-.sky-scope > :not(.sky) {
+.sky-scope > :not(.sky, .sky__front) {
   position: relative;
   z-index: 1;
 }
