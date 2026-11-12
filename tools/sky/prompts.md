@@ -95,3 +95,9 @@ Seeing the solar lamp island, Bob said "the pole is too long", the island should
 
 The floodlight's light is CSS on its LED panel (545 to 697 by 209 to 243 of the 1200 by 1166 picture); the camera's move flies into the card (`ZOOM` in `components/home/Hero.tsx`). Published with `node tools/sky/publish.mjs island-guard`.
 
+Seeing it, Bob said "it still looks too long and like the island has empty spaces". He approved an edit of it with FLUX 3 (3 credits), from the island on white, cut out with `node tools/sky/cutout-white.mjs source/island-guard2-white.png source/island-post.png --clear 5 --solid 12` (tight, so the pale boulders at the edge stay) and published as `island-post`:
+
+| File | Job | Settings | Prompt |
+| --- | --- | --- | --- |
+| `island-post.png` (from `island-guard2-white.png`) | 19ceb587 | FLUX 3 Image, 1:1, 2K, reference = `island-guard.png` flattened on white (3 credits) | Edit the reference picture. Keep the floating island, its pale limestone rock, roots and grass, the green Jontai Energy loyalty card and the solar floodlight unit (solar panel, LED floodlight and white dome camera) exactly as they look, in the same place, same size and same framing, but make its dark grey pole about half as tall, so the solar panel sits just above the top of the card. Fill the empty grass with a few low, natural pieces: on the left a small cluster of low aloe plants and white wildflowers, and at the front right two small rounded pale limestone boulders with a little moss. Nothing else. Same soft daylight from the upper left, same photorealistic style. Keep the plain pure white background, no shadow on the background, no text other than the card's, no people, no logos. |
+

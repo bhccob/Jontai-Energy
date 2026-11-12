@@ -1,19 +1,27 @@
 // Cuts a subject out of a plain white background (for models with no transparent output, such as FLUX 3; round 26).
 // Only the white that reaches the picture's edges is removed, so white flowers and pale stones inside the subject stay;
 // along the outline the alpha is soft, and the white is taken back out of the colour there, so no light halo is left.
-//   node tools/sky/cutout-white.mjs <in.png> <out.png>
+//   node tools/sky/cutout-white.mjs <in.png> <out.png> [--clear N] [--solid N]
 
 import sharp from 'sharp';
 
-const [input, output] = process.argv.slice(2);
+const [input, output, ...opts] = process.argv.slice(2);
 if (!input || !output) {
-  console.error('usage: node tools/sky/cutout-white.mjs <in.png> <out.png>');
+  console.error('usage: node tools/sky/cutout-white.mjs <in.png> <out.png> [--clear N] [--solid N]');
   process.exit(2);
 }
+const opt = (name, fallback) => {
+  const i = opts.indexOf(name);
+  return i >= 0 ? Number(opts[i + 1]) : fallback;
+};
 
-/** How far from white a pixel may be and still count as background (0 to 255, on its least white channel). */
-const CLEAR = 10;
-const SOLID = 44;
+/**
+ * How far from white a pixel may be and still count as background (0 to 255, on its least white channel): fully clear
+ * up to CLEAR, part clear up to SOLID. A subject with near-white parts at its outline (pale stones) needs a tighter
+ * SOLID, e.g. --clear 5 --solid 12 when the background is pure white (CLEAR just above its noise).
+ */
+const CLEAR = opt('--clear', 10);
+const SOLID = opt('--solid', 44);
 
 const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
 const { width: W, height: H } = info;

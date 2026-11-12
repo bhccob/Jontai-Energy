@@ -10,7 +10,7 @@ const at = (d: number) => ({ '--d': d }) as CSSProperties;
  * Jontai loyalty card leaning on the pole, so the flight goes into the card and comes out in Rewards (round 28). Every
  * island grows from this one point, so nothing slides (Bob, round 26: "so the island dont move").
  */
-const ZOOM = { x: 62.2, y: 40.3 };
+const ZOOM = { x: 63, y: 31 };
 
 /**
  * The small islands round the main one (Bob, round 26: "more sub floating islands"), cut from one picture by
@@ -28,8 +28,9 @@ const SMALL = [
  * The first view, kept to a few things (Bob, rounds 11 and 12: "too cluttered"): the live line about the sun over the
  * store, the owner's line in thin wide capitals, one sentence that says what the store is, one way in. Under it an
  * island of pale limestone and grass floats in front of JONTAI, whose letters show the moving valley (SkyScope): one
- * short pole with a solar panel, a floodlight that powers on once the islands have arrived and a camera, with the
- * Jontai loyalty card leaning on it (round 28); four small islands float round it at different depths (round 26). On
+ * short post with a solar panel, a floodlight that powers on once the islands have arrived and a camera, the Jontai
+ * loyalty card leaning on it, an aloe and two small boulders (round 28); four small islands float round it at
+ * different depths (round 26). On
  * wide screens the scroll is one camera moving in (HeroSkyMotion): the islands settle and grow from one point, the
  * card, the sky's own white mist rises through them, and Rewards comes up out of the white.
  */
@@ -77,12 +78,12 @@ export function Hero() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="hero__day"
-                src="/sky/island-guard-1200.webp"
-                srcSet="/sky/island-guard-700.webp 700w, /sky/island-guard-1200.webp 1200w"
+                src="/sky/island-post-1200.webp"
+                srcSet="/sky/island-post-700.webp 700w, /sky/island-post-1200.webp 1200w"
                 sizes="(max-width: 60rem) 78vw, 64vw"
                 alt=""
                 width={1200}
-                height={1166}
+                height={1020}
                 fetchPriority="high"
                 decoding="async"
               />

@@ -396,8 +396,8 @@
   z-index: 2;
   /* Bigger (Bob, round 28: "i want the main island to be bigger"); its size follows the screen's height, so the first
      view still ends with JONTAI standing behind it. */
-  width: min(46vw, 47vh, 700px);
-  margin: 6px 0 clamp(40px, 6vh, 90px);
+  width: min(52vw, 56vh, 820px);
+  margin: clamp(16px, 3vh, 36px) 0 clamp(40px, 6vh, 90px);
   pointer-events: none;
 }
 .hero__float {
@@ -455,7 +455,7 @@
 }
 
 /* The floodlight's light (Bob, round 26: "a light that powers on"; round 28: the solar floodlight and camera), placed in
-   % of the island's picture (the LED panel spans 545 to 697 by 209 to 243 of 1200 by 1166): the panel itself, a soft
+   % of the island's picture (the LED panel spans 547 to 686 by 211 to 234 of 1200 by 1020): the panel itself, a soft
    glow round it, a faint cone down to a pool on the grass in front. It powers on with a quick flicker once the islands
    have arrived, and stays on. */
 .hero__led,
@@ -467,9 +467,9 @@
   mix-blend-mode: screen;
 }
 .hero__led {
-  left: 51.8%;
-  top: 19.4%;
-  width: 12.6%;
+  left: 51.4%;
+  top: 21.8%;
+  width: 11.8%;
   height: 2.6%;
   border-radius: 40%;
   translate: -50% -50%;
@@ -477,19 +477,19 @@
   background: radial-gradient(closest-side, #fffdf5, rgb(255 246 222 / 0.9) 55%, rgb(255 236 200 / 0));
 }
 .hero__halo {
-  left: 51.8%;
-  top: 19.8%;
-  width: 40%;
+  left: 51.4%;
+  top: 22.2%;
+  width: 36%;
   aspect-ratio: 1.5;
   border-radius: 50%;
   translate: -50% -50%;
   background: radial-gradient(closest-side, rgb(255 248 226 / 1), rgb(255 240 208 / 0.5) 30%, rgb(255 234 198 / 0.14) 64%, transparent);
 }
 .hero__beam {
-  left: 51%;
-  top: 20.6%;
-  width: 34%;
-  height: 28%;
+  left: 50%;
+  top: 23.2%;
+  width: 30%;
+  height: 22%;
   translate: -50% 0;
   clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%);
   background: linear-gradient(to bottom, rgb(255 246 222 / 0.7), rgb(255 242 214 / 0.24) 55%, transparent 94%);
@@ -497,8 +497,8 @@
 }
 .hero__pool {
   left: 47%;
-  top: 50%;
-  width: 36%;
+  top: 45%;
+  width: 34%;
   height: 8%;
   border-radius: 50%;
   translate: -50% -50%;

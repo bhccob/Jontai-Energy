@@ -39,10 +39,11 @@ for (const { name, phoneAt } of BACKDROPS) {
 }
 
 // Islands: trimmed to their own edges, then two widths with their transparency kept.
-// The first view's island is `guard`: pale limestone and grass like the ranges' islands, with one short pole carrying a
-// solar panel, a floodlight and a camera, and the Jontai loyalty card leaning on it (round 28). The small islands that
-// float round it are published by tools/sky/hero-islands.mjs.
-for (const name of ['guard', 'array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
+// The first view's island is `post`: pale limestone and grass like the ranges' islands, with one short post carrying a
+// solar panel, a floodlight and a camera, the Jontai loyalty card leaning on it, an aloe and two small boulders (round
+// 28; made with FLUX 3 on white and cut out by cutout-white.mjs). The small islands that float round it are published
+// by tools/sky/hero-islands.mjs.
+for (const name of ['post', 'array', 'solar', 'power', 'cooling', 'light', 'security', 'furniture']) {
   if (!wanted(`island-${name}`)) continue;
   // A fixed version wins where one exists (fix-bulb.mjs turns the lighting island's bulb the right way up).
   const fixed = join(src, `island-${name}-fixed.png`);
