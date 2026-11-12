@@ -85,3 +85,13 @@ Bob sent the lighting island as the look he wanted for the main island ("lets ju
 
 The lamp's light is CSS (sky.css, `.hero__led`, `.hero__halo`, `.hero__beam`, `.hero__pool`), placed on the LED face at 705, 196 of the 1200 by 1443 picture; it powers on with a short flicker once the islands have arrived, and the camera's move flies into it. Published with `node tools/sky/publish.mjs island-lamp` and `node tools/sky/hero-islands.mjs`.
 
+## The solar floodlight island with the card (round 28, approved by Bob on 2026-11-12)
+
+Seeing the solar lamp island, Bob said "the pole is too long", the island should be bigger, with "more smaller stuff that goes together: solar + loyalty card + light for solar + (come up with something)". A first set with a power station (job 86ea5c4b, 2.75 credits) was rejected before it was used: "the objects are too small and the power doesnt make sense that its connected to the solar panel and membershipcard should look normal; maybe solar panel plus a floodlight with a short pole thats camera". He approved:
+
+| File | Job | Settings | Prompt |
+| --- | --- | --- | --- |
+| `island-guard.png` | 1f240ae2 | GPT Image 2.6, 1:1, 2K, high, transparent, reference = the solar lamp island (job d9765d38) (2.75 credits) | The same floating island as the reference picture (pale limestone rock underneath with moss and hanging roots, a thick top of lush green grass with a few small white wildflowers), but without the street light, filling most of the picture, seen slightly from above, soft daylight from the upper left. Near the middle, large and clearly visible, one compact all-in-one solar security light on a short sturdy dark grey pole, about chest height: at the top a solar panel angled to the sun, just under it a slim LED floodlight facing forward and down, switched off, and under that a small white dome security camera, all on the same pole as one neat unit. Right beside the pole, standing upright in the grass and leaning slightly, a large green loyalty card that looks like a real plastic membership card: thin, glossy, rounded corners, a small 'Jontai Energy' wordmark in white in the top left corner, a small 'Rewards member' label in the top right and a neat row of five small sun stamps along the bottom. Nothing else. Photorealistic, true colours, transparent background, no people, no other text or logos. |
+
+The floodlight's light is CSS on its LED panel (545 to 697 by 209 to 243 of the 1200 by 1166 picture); the camera's move flies into the card (`ZOOM` in `components/home/Hero.tsx`). Published with `node tools/sky/publish.mjs island-guard`.
+

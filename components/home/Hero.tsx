@@ -7,10 +7,10 @@ import { SunClock } from './SunClock';
 const at = (d: number) => ({ '--d': d }) as CSSProperties;
 /**
  * Where the camera flies in as the first view scrolls away (HeroSkyMotion), in % of the main island's picture: the
- * solar lamp's light. Every island grows from this one point, so nothing slides (Bob, round 26: "so the island dont
- * move").
+ * Jontai loyalty card leaning on the pole, so the flight goes into the card and comes out in Rewards (round 28). Every
+ * island grows from this one point, so nothing slides (Bob, round 26: "so the island dont move").
  */
-const ZOOM = { x: 58.8, y: 13.8 };
+const ZOOM = { x: 62.2, y: 40.3 };
 
 /**
  * The small islands round the main one (Bob, round 26: "more sub floating islands"), cut from one picture by
@@ -27,11 +27,11 @@ const SMALL = [
 /**
  * The first view, kept to a few things (Bob, rounds 11 and 12: "too cluttered"): the live line about the sun over the
  * store, the owner's line in thin wide capitals, one sentence that says what the store is, one way in. Under it an
- * island of pale limestone and grass carrying one all-in-one solar street light, whose light powers on once the
- * islands have arrived (round 26, Bob: "only the solar with a light that powers on"), floats in front of JONTAI, whose
- * letters show the moving valley (SkyScope), with four small islands round it at different depths (round 26). On wide
- * screens the scroll is one camera moving in (HeroSkyMotion): the islands settle and grow from one point, the sky's
- * own white mist rises through them, and Rewards comes up out of the white.
+ * island of pale limestone and grass floats in front of JONTAI, whose letters show the moving valley (SkyScope): one
+ * short pole with a solar panel, a floodlight that powers on once the islands have arrived and a camera, with the
+ * Jontai loyalty card leaning on it (round 28); four small islands float round it at different depths (round 26). On
+ * wide screens the scroll is one camera moving in (HeroSkyMotion): the islands settle and grow from one point, the
+ * card, the sky's own white mist rises through them, and Rewards comes up out of the white.
  */
 export function Hero() {
   const { hero } = HOME_COPY;
@@ -77,17 +77,17 @@ export function Hero() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="hero__day"
-                src="/sky/island-lamp-1200.webp"
-                srcSet="/sky/island-lamp-700.webp 700w, /sky/island-lamp-1200.webp 1200w"
+                src="/sky/island-guard-1200.webp"
+                srcSet="/sky/island-guard-700.webp 700w, /sky/island-guard-1200.webp 1200w"
                 sizes="(max-width: 60rem) 78vw, 64vw"
                 alt=""
                 width={1200}
-                height={1443}
+                height={1166}
                 fetchPriority="high"
                 decoding="async"
               />
-              {/* The lamp's light, powering on (sky.css): the LED face, the glow round the head, the light it throws
-                  down onto the grass. */}
+              {/* The floodlight, powering on (sky.css): the LED panel, the glow round it, the light it throws down
+                  onto the grass in front. */}
               <span className="hero__beam" />
               <span className="hero__pool" />
               <span className="hero__halo" />

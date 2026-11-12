@@ -272,42 +272,51 @@
   display: none;
 }
 
-/* The login dialog, a frosted sheet (round 2): the card on a veil of the stage colour on one side, the form on the
-   other. Wide and low with small corners (Bob, round 27: "more rectangle instead of boxy"). */
+/* The login dialog, like the contact page (Bob, round 28: "more like support contact"): the green valley under a morning
+   mist behind it all; on the left the title in the page's thin wide capitals, one line and the card; on the right the
+   form as one glass sheet in numbered steps, fields a line to write on (letter.css). Wide and low, small corners
+   (round 27: "more rectangle instead of boxy"). */
 .member {
-  width: min(68rem, calc(100% - 2 * var(--gutter)));
+  width: min(74rem, calc(100% - 2 * var(--gutter)));
   max-height: calc(100svh - 2 * var(--space-lg));
   padding: 0;
   border: 0;
   border-radius: 12px;
-  color: var(--color-ink);
+  color: var(--leaf-ink);
+  background: var(--sky-top);
   overflow-y: auto;
   overscroll-behavior: contain;
+  box-shadow: 0 40px 80px -40px rgb(14 34 25 / 0.55);
 }
 .member[open] {
+  isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(24px, 3.4vw, 56px);
+  padding: clamp(28px, 4vw, 60px);
 }
-.member {
-  background: var(--glass-paper-strong);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow:
-    var(--glass-edge),
-    0 40px 80px -40px rgb(24 49 40 / 0.55);
+.member__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to right, rgb(238 243 231 / 0.75), rgb(238 243 231 / 0.2) 55%, transparent),
+    linear-gradient(to bottom, var(--sky-top) 0, rgb(238 243 231 / 0.86) 36%, rgb(238 243 231 / 0.42) 70%, rgb(238 243 231 / 0.6)),
+    url('/sky/valley-green-1920.webp') center 70% / cover no-repeat;
 }
 .member::backdrop {
   background: rgb(15 40 29 / 0.32);
 }
 @media (prefers-reduced-motion: no-preference) {
   .member[open] {
-    animation: member-in 420ms var(--ease-out);
+    animation: member-in 520ms var(--ease-out);
   }
 }
 @keyframes member-in {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.98);
+    transform: translateY(16px) scale(0.985);
   }
   to {
     opacity: 1;
@@ -320,95 +329,78 @@
   right: var(--space-md);
   z-index: 2;
 }
-.member__card {
+.member__intro {
   display: grid;
-  place-items: center;
-  padding: var(--space-xl) var(--space-lg);
-  background: color-mix(in oklab, var(--color-stage) 62%, transparent);
+  gap: 18px;
+  align-content: center;
 }
-.member__side {
-  display: grid;
-  align-content: start;
-  padding: var(--space-lg) var(--space-xl);
+.member__intro .letter__kicker {
+  margin: 0;
+  text-align: left;
+}
+.member__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.9vw, 4.1rem);
+}
+.member__title > span {
+  white-space: nowrap;
+}
+.member__indent {
+  display: inline-block;
+  padding-left: 0.7em;
 }
 .member__lead {
-  margin-block: var(--space-xs) var(--space-md);
-  color: var(--color-ink-2);
+  max-width: 26rem;
+  margin: 0;
+  color: var(--leaf-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
 }
-.member__form {
-  display: grid;
-  gap: var(--space-md);
+.member__card {
+  width: min(100%, 24rem);
+  margin-top: 8px;
 }
-.member__form .switch {
+.member__sheet {
+  padding: clamp(24px, 2.8vw, 44px);
+}
+.member__sheet .step {
+  padding-bottom: clamp(20px, 3vh, 30px);
+}
+.member__sheet .step + .step {
+  padding-top: clamp(20px, 3vh, 30px);
+}
+.member__sheet .switch {
   justify-self: start;
-}
-/* The code and the name side by side, so the sheet stays low. */
-.member__fields {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-md);
-}
-.member .field__input {
-  min-height: 56px;
-  background: color-mix(in oklab, var(--color-paper) 70%, transparent);
-  box-shadow: inset 0 0 0 var(--rule-hair) color-mix(in oklab, var(--color-ink) 16%, transparent);
-}
-@media (hover: hover) and (pointer: fine) {
-  .member .field__input:hover {
-    box-shadow: inset 0 0 0 var(--rule-hair) color-mix(in oklab, var(--color-ink) 34%, transparent);
-  }
-}
-.member .field__input:focus-visible {
-  background: var(--color-paper);
-}
-.member .field__input[aria-invalid='true'] {
-  box-shadow: inset 0 0 0 2px var(--color-error);
 }
 .member__code {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-.member__submit {
-  justify-self: start;
-}
-.member__submit svg {
-  transition: transform var(--dur-short) var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .member__submit:hover svg {
-    transform: translateX(3px);
-  }
-}
 .member__result:empty {
   display: none;
 }
 .member__result {
-  padding: var(--space-md);
-  border-radius: var(--radius-well);
-  background: color-mix(in oklab, var(--color-field) 28%, transparent);
-  font-size: var(--text-sm);
-  color: var(--color-ink);
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.55);
+  font-size: 0.92rem;
+  color: var(--leaf-ink);
 }
 .member__note {
-  margin-block-start: var(--space-md);
-  padding-block-start: var(--space-sm);
-  border-top: var(--rule-hair) solid var(--color-rule);
+  max-width: none;
+  margin-top: 18px;
 }
-@media (max-width: 48rem) {
+@media (max-width: 52rem) {
   .member[open] {
     grid-template-columns: minmax(0, 1fr);
+    padding: 24px 18px;
+  }
+  .member__title {
+    font-size: clamp(2.2rem, 11vw, 3.2rem);
   }
   .member__card {
-    padding: var(--space-xl) var(--space-lg) var(--space-lg);
-  }
-  .member__card .lcard {
-    max-width: 20rem;
-  }
-  .member__side {
-    padding: var(--space-lg);
-  }
-  .member__fields {
-    grid-template-columns: minmax(0, 1fr);
+    width: min(100%, 18rem);
   }
 }
 
