@@ -11,7 +11,7 @@ const at = (d: number) => ({ '--d': d }) as CSSProperties;
  * middle solar panel. Every island grows from this one point, so nothing slides (Bob, round 26: "so the island dont
  * move").
  */
-const ZOOM = { x: 49, y: 32 };
+const ZOOM = { x: 54, y: 31 };
 
 /**
  * The small islands round the main one (Bob, round 26: "more sub floating islands"), cut from one picture by
@@ -28,7 +28,8 @@ const SMALL = [
 /**
  * The first view, kept to a few things (Bob, rounds 11 and 12: "too cluttered"): the live line about the sun over the
  * store, the owner's line in thin wide capitals, one sentence that says what the store is, one way in. Under it an
- * island of Aruba's Casibari boulders, with a kadushi, three solar panels and a lamp, floats in front of JONTAI, whose
+ * island of Aruba's Casibari boulders, a small calm garden on top (a kadushi in a ring of stones with aloe, three solar
+ * panels, a lamp and a stepping-stone path to it), floats in front of JONTAI, whose
  * letters show the moving valley (SkyScope), with four small islands round it at different depths (round 26). On wide
  * screens the scroll is one camera moving in (HeroSkyMotion): the islands settle and grow from one point, the sky's
  * own white mist rises through them, and Rewards comes up out of the white.
@@ -77,12 +78,12 @@ export function Hero() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="hero__day"
-                src="/sky/island-boulders-1200.webp"
-                srcSet="/sky/island-boulders-700.webp 700w, /sky/island-boulders-1200.webp 1200w"
+                src="/sky/island-garden-1200.webp"
+                srcSet="/sky/island-garden-700.webp 700w, /sky/island-garden-1200.webp 1200w"
                 sizes="(max-width: 60rem) 78vw, 64vw"
                 alt=""
                 width={1200}
-                height={1204}
+                height={1202}
                 fetchPriority="high"
                 decoding="async"
               />
