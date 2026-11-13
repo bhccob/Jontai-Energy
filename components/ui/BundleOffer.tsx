@@ -8,9 +8,9 @@ import { BUNDLES, BUNDLE_NOTE, bundleQuestion, shouldAutoOpen } from '@/lib/bund
 const SEEN = 'jontai-bundles-seen';
 
 /**
- * The header's "Bundle offers" pill and the offers it opens. The pill (round 32, Bob: "the bundle button to be better
- * designed") is deep green glass carrying one product from each bundle, round and overlapping, then its name; the
- * products fan out under the pointer, and on phones they stand alone so the header keeps room for the member login.
+ * The header's "Bundle offers" button and the offers it opens. The button is the bar's one filled shape: a flat
+ * forest pill with its name and nothing else (round 35, Bob: "more clean designed like bigger and more minimal"; the
+ * round-32 pill carried three product pictures that popped in and fanned out). On narrow screens it says "Bundles".
  * The offers (Bob, round 22: "in the middle with more rectangular
  * shaped"): a native dialog in the middle of the screen over a soft dimmed page, a wide rectangle with the three
  * offers side by side (name, saving, what is in it), one way to ask (the contact page), and the note that these are
@@ -104,13 +104,6 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
           setOpen(true);
         }}
       >
-        {/* One product from each bundle, side by side like things bought together; they fan out when pointed at. */}
-        <span className="offer-pill__stack" aria-hidden="true">
-          {BUNDLES.map((b, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img key={b.id} src={b.thumb} alt="" width={28} height={28} style={{ '--i': i } as CSSProperties} />
-          ))}
-        </span>
         <span className="offer-pill__long">Bundle offers</span>
         <span className="offer-pill__short">Bundles</span>
       </button>

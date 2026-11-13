@@ -787,8 +787,9 @@
   "optional": "选填",
   "reach Jontai Energy": "联系 Jontai Energy",
   "ask Jontai Energy for a quote": "向 Jontai Energy 获取报价",
-  "site|Visit": "访问",
-  "save|% off": "% 折扣"
+  "site|Visit": "访问 ",
+  "save|% off": "% 折扣",
+  "brand|Jontai Energy": " Jontai Energy"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} 星（满分 5 星）",
