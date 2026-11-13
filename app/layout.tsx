@@ -6,6 +6,7 @@ import { ConceptBanner } from '@/components/ui/ConceptBanner';
 import { GlassLight } from '@/components/ui/GlassLight';
 import { RevealObserver } from '@/components/ui/RevealObserver';
 import { PageMotion } from '@/components/motion/PageMotion';
+import { Translator } from '@/components/i18n/Translator';
 import { CONCEPT, SITE_URL, STORE } from '@/lib/store';
 import './globals.css';
 
@@ -50,7 +51,11 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+// A visitor who chose Spanish or Chinese before: the page says so at once and stays hidden until the translator has
+// rewritten it (components/i18n/Translator), so English never flashes; it shows anyway after 3 seconds.
 const HEAD_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');
+try{var l=localStorage.getItem('jontai-lang');if(l==='es'||l==='zh'){d.lang=l==='zh'?'zh-Hans':'es';d.setAttribute('data-i18n','wait');
+setTimeout(function(){d.removeAttribute('data-i18n')},3000)}}catch(e){}
 setTimeout(function(){if(!window.__jontaiReady)d.classList.remove('js')},8000)})()`;
 
 // Verified business facts only (lib/store.ts). Hours confirmed by the owner on 2026-10-27.
@@ -93,6 +98,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <PageMotion />
         <GlassLight />
         <ConceptBanner />
+        <Translator />
         {!CONCEPT && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(store) }} />}
       </body>
     </html>

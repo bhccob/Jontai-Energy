@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { LAMP_STILLS, kelvinLabel, kelvinStill, kelvinToRgb, kelvinValueText, lampGlow, lampLayers } from './kelvin.ts';
+import { LIGHTS, kelvinLabel, kelvinStill, kelvinToRgb, kelvinValueText, lightById } from './kelvin.ts';
 
 test('warm 3000K is amber and 6500K is near white', () => {
   assert.deepEqual(kelvinToRgb(3000), [255, 177, 110]);
@@ -49,26 +49,36 @@ test('the ends of the slider land on the first and last still', () => {
   assert.deepEqual(kelvinStill(9000, STILLS), { a: 7, b: 7, t: 0 });
 });
 
-test('the baked bulbs run from warm 2700K to daylight 6500K', () => {
-  assert.equal(LAMP_STILLS[0], 2700);
-  assert.equal(LAMP_STILLS.at(-1), 6500);
+test('the bulb comes in warm white and clear white, warm first', () => {
+  assert.deepEqual(
+    LIGHTS.map((l) => [l.id, l.name, l.k]),
+    [
+      ['warm', 'Warm white', 3000],
+      ['clear', 'Clear white', 6500],
+    ],
+  );
+  assert.equal(lightById('clear').name, 'Clear white');
 });
 
-test('the bulb layers mix the two nearest temperatures and never dim', () => {
-  assert.deepEqual(lampLayers(2700), [1, 0, 0, 0, 0]);
-  assert.deepEqual(lampLayers(6500), [1, 1, 1, 1, 1]);
-  assert.deepEqual(lampLayers(4000), [1, 1, 0.5, 0, 0]);
-  assert.deepEqual(lampLayers(1000), [1, 0, 0, 0, 0]);
-  for (let k = 2700; k <= 6500; k += 100) assert.equal(lampLayers(k)[0], 1);
+const hue = ([r, g, b]: readonly number[]) => {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max === min) return 0;
+  const h = max === r ? (g - b) / (max - min) : max === g ? 2 + (b - r) / (max - min) : 4 + (r - g) / (max - min);
+  return (h * 60 + 360) % 360;
+};
+
+test('warm white glows golden, not salmon or orange', () => {
+  const { glow } = lightById('warm');
+  assert.equal(glow[0], 255);
+  const h = hue(glow);
+  assert.ok(h >= 32 && h <= 45, `hue ${h.toFixed(1)} should be gold`);
+  assert.ok(glow[2] < 160, 'warm is clearly warm');
 });
 
-test('the bulb glows amber when warm and clean white in daylight, never blue', () => {
-  const [wr, , wb] = lampGlow(2700);
-  assert.equal(wr, 255);
-  assert.ok(wb < 160, 'warm is amber');
-  assert.deepEqual(lampGlow(6500), [255, 255, 255]);
-  for (let k = 2700; k <= 6500; k += 100) {
-    const [r, , b] = lampGlow(k);
-    assert.ok(b <= r, `${k}K is never bluer than it is red`);
-  }
+test('clear white is plain white: never blue, never grey', () => {
+  const { glow, core } = lightById('clear');
+  assert.ok(Math.min(...glow) >= 245, 'bright');
+  assert.ok(glow[2] - glow[0] <= 2, 'not bluer than it is red');
+  assert.deepEqual(core, [255, 255, 255]);
 });

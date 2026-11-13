@@ -8,7 +8,8 @@ export function ConceptBanner() {
     <aside className="concept" aria-label="About this website">
       <p>
         Concept redesign, not the official <span className="concept__long">Jontai Energy </span>site.{' '}
-        <a href={OFFICIAL_URL} rel="noopener noreferrer">
+        {/* "site" picks the link's own word for Visit in other languages (lib/i18n, "site|Visit"). */}
+        <a href={OFFICIAL_URL} rel="noopener noreferrer" data-i18n-ctx="site">
           <span className="concept__long">Visit </span>jontaienergy.com
         </a>
       </p>

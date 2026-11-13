@@ -948,17 +948,8 @@ main.air {
 .collection :focus-visible {
   outline-color: var(--color-mint);
 }
-.piece .lamp-slider {
+.piece .lamp-switch {
   margin: 4px 0 0;
-}
-.piece .lamp-slider__row {
-  font-size: 0.9rem;
-}
-.piece .lamp-slider__value .figure {
-  font-size: 1.25rem;
-}
-.piece .lamp-slider__ends {
-  font-size: 0.75rem;
 }
 
 /* The way out at the end of the row. */
@@ -1661,20 +1652,23 @@ main.air {
   color: var(--deep-muted);
 }
 
-/* ---------- The lighting island's bulb, lit from inside (LampSlider, tools/sky/bulb-light.mjs) ---------- */
+/* ---------- The lighting island's bulb, lit from inside (LampSwitch, tools/sky/bulb-light.mjs) ---------- */
 
-/* Five pictures of the same bulb at 2700K to 6500K, each the island's size and clear except round the bulb, stacked
-   exactly on the picture: they take its hover and sway, but not its shadow. */
+/* The bulb baked in warm white and in clear white, each the island's size and clear except round the bulb, stacked
+   exactly on the picture: they take its hover and sway, but not its shadow. Clear white fades in over warm when it is
+   picked, and the halo turns from gold to white with it (round 33). */
 .piece[data-lamp] {
-  --kelvin: 255 167 87; /* kelvinToRgb(2700), for the slider's handle and figure */
-  --glow: 255 200 127; /* lampGlow(2700), for the halo */
+  --glow: 255 196 112; /* LIGHTS warm.glow, for the halo */
+}
+.piece[data-lamp]:has(.lamp-switch input[value='clear']:checked) {
+  --glow: 250 251 250; /* LIGHTS clear.glow */
 }
 .lamp {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
-/* The halo: one map of where the light falls, painted in the slider's colour, under the globe. */
+/* The halo: one map of where the light falls, painted in the light's colour, under the globe. */
 .lamp__halo {
   position: absolute;
   inset: 0;
@@ -1682,7 +1676,7 @@ main.air {
   -webkit-mask: url('/sky/island-light-halo-700.webp') 0 0 / 100% 100% no-repeat;
   mask: url('/sky/island-light-halo-700.webp') 0 0 / 100% 100% no-repeat;
   transition:
-    background-color 140ms linear,
+    background-color 600ms ease,
     scale 900ms var(--ease-out),
     translate 900ms var(--ease-out),
     rotate 900ms var(--ease-out);
@@ -1693,41 +1687,102 @@ main.air {
   left: 0;
   filter: none;
   transition:
-    opacity 140ms linear,
+    opacity 600ms ease,
     scale 900ms var(--ease-out),
     translate 900ms var(--ease-out),
     rotate 900ms var(--ease-out);
 }
-
-.lamp-slider {
-  max-width: 26rem;
-  margin: 26px 0 0;
+.piece__float .lamp__k--clear {
+  opacity: 0;
 }
-.lamp-slider__row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
+.piece[data-lamp]:has(.lamp-switch input[value='clear']:checked) .lamp__k--clear {
+  opacity: 1;
+}
+
+/* The two light colours: glass chips on the dark green, a dot of each light, the chosen one filled with its light. */
+.lamp-switch {
+  min-width: 0;
+  margin: 22px 0 0;
+  padding: 0;
+  border: 0;
+}
+.lamp-switch__label {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 0.9rem;
   font-weight: 600;
 }
-.lamp-slider__value {
-  color: color-mix(in srgb, currentColor 80%, transparent);
-  font-weight: 500;
+.lamp-switch__opts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 19rem;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 10px;
+  background: rgb(244 246 239 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.14);
 }
-.lamp-slider__value .figure {
-  margin-right: 6px;
-  color: rgb(var(--kelvin));
-  font-size: 1.6rem;
+/* Name over its colour temperature, the dot beside both, so two fit in the narrow column. */
+.lamp-switch__opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 9px;
+  min-height: 48px;
+  padding: 6px 12px;
+  border-radius: 7px;
+  color: #f4f6ef;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 450ms ease,
+    color 450ms ease,
+    box-shadow 450ms ease;
 }
-.lamp-slider__input {
-  --thumb: rgb(var(--kelvin));
-  --halo: rgb(var(--kelvin) / 0.25);
+.lamp-switch__opt input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
 }
-.lamp-slider__ends {
-  display: flex;
-  justify-content: space-between;
-  color: color-mix(in srgb, currentColor 60%, transparent);
-  font-size: 0.85rem;
+.lamp-switch__dot {
+  grid-row: span 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(var(--light));
+  box-shadow: 0 0 10px 1px rgb(var(--light) / 0.7);
+}
+.lamp-switch__k {
+  grid-column: 2;
+  color: rgb(244 246 239 / 0.6);
+  font-size: 0.74rem;
+  transition: color 450ms ease;
+}
+.lamp-switch__opt:has(input:checked) {
+  background: rgb(var(--light));
+  color: #0e2219;
+  box-shadow: 0 0 22px -4px rgb(var(--light) / 0.55);
+}
+.lamp-switch__opt:has(input:checked) .lamp-switch__k {
+  color: rgb(14 34 25 / 0.6);
+}
+.lamp-switch__opt:has(input:checked) .lamp-switch__dot {
+  box-shadow: inset 0 0 0 1.5px rgb(14 34 25 / 0.35);
+}
+.lamp-switch__opt:has(input:focus-visible) {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .lamp-switch__opt:not(:has(input:checked)):hover {
+    background: rgb(244 246 239 / 0.08);
+  }
 }
 
 /* ---------- Narrow screens ---------- */

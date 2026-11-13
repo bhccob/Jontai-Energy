@@ -318,3 +318,16 @@
     transform: none;
   }
 }
+
+/* ---------- Languages (components/i18n) ---------- */
+
+/* A visitor who chose Spanish or Chinese before: the page waits, hidden, for the translator (app/layout head script). */
+html[data-i18n='wait'] body {
+  opacity: 0;
+}
+/* Chinese: Archivo has no Chinese characters, so they come from the system's own Chinese typeface, named here so each
+   platform uses its best one, and set a little more open than the Latin headings. */
+:root:lang(zh-Hans) {
+  --font-display: var(--font-archivo), 'Archivo', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-archivo), 'Archivo', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', ui-sans-serif, system-ui, sans-serif;
+}
