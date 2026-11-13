@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLenis } from 'lenis/react';
 import { UserCircle } from '@phosphor-icons/react/dist/ssr';
+import { LangChoices, LangSwitch } from '@/components/i18n/LangSwitch';
 import { MemberLogin, openMemberLogin } from '@/components/sections/MemberLogin';
 import { DIRECTIONS_URL } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
@@ -28,7 +29,8 @@ const LINKS = [
  * and the ways to reach the store full screen, on every screen size. `base` is '/' on other pages, so the section
  * links lead back home. `sky` (the home page, round 9) sets it in white over the sky and adds the bundle offers.
  * Member login (round 32, Bob: "a button on the header for login to see member point") opens the points window, which
- * lives here so it opens on every page; on phones the button is its icon alone.
+ * lives here so it opens on every page; on phones the button is its icon alone. The language button (round 33, Bob:
+ * "spanish&chinese translator") sits beside it; phones choose the language in the menu.
  */
 export function Header({ base = '', sky = false }: { base?: string; sky?: boolean }) {
   const pathname = usePathname();
@@ -99,6 +101,7 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
             <UserCircle size={21} weight="regular" aria-hidden="true" />
             <span className="nav__member-label">Member login</span>
           </button>
+          <LangSwitch />
           <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
             Support
           </a>
@@ -152,6 +155,7 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
             Get directions
           </a>
         </div>
+        <LangChoices />
       </nav>
       <MemberLogin />
     </>

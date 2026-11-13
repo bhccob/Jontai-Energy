@@ -565,12 +565,13 @@
 
 /* The panel (round 22: "in the middle with more rectangular shaped"): a native dialog, so it sits in the middle of the
    screen above everything, over a soft dimmed page; a wide rectangle of deep green glass with small corners, the three
-   offers side by side. It rises a little as it opens. */
+   offers side by side. It rises a little as it opens. Round 33 (Bob: "the bundle pop up is smaller"): about half the
+   size it was, everything in it scaled down with it; on phones each offer is one row. */
 .offer {
-  width: min(60rem, calc(100vw - 32px));
+  width: min(42rem, calc(100vw - 32px));
   max-height: calc(100svh - 32px);
   margin: auto;
-  padding: 28px 34px 26px;
+  padding: 18px 24px 16px;
   overflow-y: auto;
   border: 0;
   border-radius: 12px;
@@ -620,7 +621,7 @@
   gap: 10px;
   margin: 0;
   color: var(--color-mint);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 650;
 }
 .offer__kicker span {
@@ -628,15 +629,15 @@
   border-radius: var(--radius-pill);
   box-shadow: inset 0 0 0 1px rgb(184 216 168 / 0.4);
   color: rgb(244 246 239 / 0.75);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 600;
 }
 .offer__close {
   display: inline-grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  margin-right: -8px;
+  width: 32px;
+  height: 32px;
+  margin-right: -6px;
   border: 0;
   border-radius: 50%;
   background: rgb(244 246 239 / 0.08);
@@ -657,8 +658,8 @@
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(1.9rem, 3vw, 2.8rem);
-  line-height: 0.98;
+  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  line-height: 1;
   letter-spacing: -0.03em;
   text-transform: uppercase;
 }
@@ -667,8 +668,8 @@
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 18px 32px;
-  margin: 18px 0 26px;
+  gap: 12px 24px;
+  margin: 10px 0 14px;
 }
 .offer__title:focus {
   outline: none;
@@ -684,8 +685,8 @@
 .offer__list li {
   display: grid;
   align-content: start;
-  gap: 10px;
-  padding: 22px 22px 24px;
+  gap: 6px;
+  padding: 14px 16px 15px;
 }
 .offer__list li:first-child {
   padding-left: 0;
@@ -699,14 +700,14 @@
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: 3.4rem;
+  font-size: 2.2rem;
   line-height: 0.9;
   letter-spacing: -0.04em;
   transition: translate 500ms var(--ease-out);
 }
 .offer__save span {
   margin-left: 2px;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-stretch: 100%;
   font-weight: 600;
   letter-spacing: 0;
@@ -714,13 +715,13 @@
 .offer__name {
   margin: 0;
   font-weight: 650;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
 }
 .offer__items {
-  margin: 3px 0 0;
+  margin: 2px 0 0;
   color: rgb(244 246 239 / 0.7);
-  font-size: 0.92rem;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 @media (hover: hover) and (pointer: fine) {
   .offer__list li:hover .offer__save {
@@ -732,11 +733,12 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 50px;
-  padding: 0 24px;
+  min-height: 40px;
+  padding: 0 18px;
   border-radius: var(--radius-pill);
   background: var(--color-mint);
   color: #0e2219;
+  font-size: 0.86rem;
   font-weight: 700;
   text-decoration: none;
   transition:
@@ -761,20 +763,27 @@
   outline-color: var(--color-mint);
 }
 .offer__note {
-  margin: 14px 0 0;
+  margin: 10px 0 0;
   color: rgb(244 246 239 / 0.6);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
 }
 @media (max-width: 48rem) {
   .offer {
-    padding: 22px 22px 20px;
+    padding: 16px 18px 14px;
   }
   .offer__list {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* One row per offer: the saving on the left, what it is beside it. */
   .offer__list li,
   .offer__list li:first-child {
-    padding: 16px 0;
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+  }
+  .offer__save {
+    font-size: 1.9rem;
   }
   .offer__list li + li {
     border-left: 0;

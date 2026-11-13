@@ -136,7 +136,7 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
         <ol className="offer__list">
           {BUNDLES.map((b, i) => (
             <li key={b.id} style={{ '--i': i } as CSSProperties}>
-              <p className="offer__save figure">
+              <p className="offer__save figure" data-i18n-ctx="save">
                 {b.save}
                 <span>% off</span>
               </p>

@@ -2,11 +2,11 @@ import type { CSSProperties } from 'react';
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
 import { ISLANDS } from '@/lib/islands';
-import { LAMP_STILLS } from '@/lib/kelvin';
+import { LIGHTS } from '@/lib/kelvin';
 import { contactHref } from '@/lib/message';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { CollectionMotion } from './CollectionMotion';
-import { LampSlider } from './LampSlider';
+import { LampSwitch } from './LampSwitch';
 
 /** How wide a picture shows: most of the width when the ranges stack, about a quarter of the screen in the row. */
 const SIZES = '(max-width: 60rem) 76vw, 22vw';
@@ -17,7 +17,7 @@ const SIZES = '(max-width: 60rem) 76vw, 22vw';
  * its number, its name in wide capitals and the figures that matter beside it, the way a portfolio lists date, client
  * and format. On wide screens with motion the row holds still and the scroll carries it sideways (CollectionMotion); a
  * frame leans toward the pointer, its island grows, and a round "View" follows the pointer. Picking one opens it.
- * Lighting keeps its bulb and the 2700K to 6500K slider. Elsewhere the ranges stack, taking turns left and right.
+ * Lighting keeps its bulb and its two light colours (LampSwitch). Elsewhere the ranges stack, taking turns left and right.
  */
 export function Collection() {
   const n = ISLANDS.length;
@@ -77,25 +77,24 @@ export function Collection() {
                       decoding="async"
                     />
                     {it.lamp && (
-                      // The bulb lit from inside at five temperatures, baked from the photo (tools/sky/bulb-light.mjs),
-                      // stacked over the picture; the slider fades in the warmer or cooler ones (--lamp-n, LampSlider).
-                      // Under them, its halo in the air and on the post, painted in the slider's colour (--glow).
+                      // The bulb lit from inside in warm white and in clear white, baked from the photo
+                      // (tools/sky/bulb-light.mjs), stacked over the picture; picking clear white fades it in over warm
+                      // (LampSwitch, air.css). Under them, its halo in the air and on the post, in the light's colour.
                       <span className="lamp">
                         <span className="lamp__halo" />
-                        {LAMP_STILLS.map((k, j) => (
+                        {LIGHTS.map((l) => (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            key={k}
-                            className="lamp__k"
-                            src={`/sky/island-${it.image}-k${k}-1200.webp`}
-                            srcSet={`/sky/island-${it.image}-k${k}-700.webp 700w, /sky/island-${it.image}-k${k}-1200.webp 1200w`}
+                            key={l.id}
+                            className={`lamp__k lamp__k--${l.id}`}
+                            src={`/sky/island-${it.image}-${l.id}-1200.webp`}
+                            srcSet={`/sky/island-${it.image}-${l.id}-700.webp 700w, /sky/island-${it.image}-${l.id}-1200.webp 1200w`}
                             sizes={SIZES}
                             alt=""
                             width={it.size[0]}
                             height={it.size[1]}
                             loading="lazy"
                             decoding="async"
-                            style={j === 0 ? undefined : { opacity: `var(--lamp-${j}, 0)` }}
                           />
                         ))}
                       </span>
@@ -121,7 +120,7 @@ export function Collection() {
                     ))}
                   </dl>
                 )}
-                {it.lamp && <LampSlider />}
+                {it.lamp && <LampSwitch />}
                 {it.note && <p className="piece__note">{it.note}</p>}
                 <div className="piece__actions">
                   {it.actions.map((a) => (

@@ -35,29 +35,31 @@ export function kelvinStill(k: number, stills: number[]): { a: number; b: number
   return { a, b: a + 1, t: (v - stills[a]) / (stills[a + 1] - stills[a]) };
 }
 
-/** The temperatures the lighting island's bulb is baked at (tools/sky/bulb-light.mjs, Bob round 17). */
-export const LAMP_STILLS = [2700, 3500, 4500, 5500, 6500];
+/** The two colours the store's LED bulbs come in, as the lighting island's bulb shows them. */
+export type LightId = 'warm' | 'clear';
 
-/**
- * How much of each baked bulb shows at `k`. The pictures are stacked in order: the first always shows, and each next
- * one fades in between the temperature before it and its own, so the two nearest mix and the bulb never dims between.
- */
-export function lampLayers(k: number, stills: number[] = LAMP_STILLS): number[] {
-  return stills.map((s, i) => (i === 0 ? 1 : Math.min(1, Math.max(0, (k - stills[i - 1]) / (s - stills[i - 1])))));
+export interface Light {
+  id: LightId;
+  name: 'Warm white' | 'Clear white';
+  /** The colour temperature printed on the box. */
+  k: number;
+  /** The light where it glows (round the filaments, in the glass, in the air), as an eye used to daylight sees it. */
+  glow: [number, number, number];
+  /** The filaments' burning cores: nearly white, a touch of the colour. */
+  core: [number, number, number];
 }
 
-const toLinear = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-const toSrgb = (c: number) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
-
 /**
- * The colour of the bulb's light at full strength, as an eye used to daylight sees it: warm white reads amber and
- * 6500K daylight reads clean white, the screen's own white (sRGB's white is daylight at about 6500K). Balancing for
- * 4300K instead (round 17) turned daylight sky blue, which no real LED bulb looks like (Bob, round 31). Shared by the
- * baked bulb (tools/sky/bulb-light.mjs) and its halo on the page (LampSlider).
+ * Warm white and clear white (Bob, round 33: "it doesnt match the real colors needs to be true warm white and clear
+ * white"). Not a black body run through a camera: a 3000K filament looks golden, not salmon, and a 6500K one looks
+ * plain bright white, never grey and never blue. The lighting island's bulb is baked lit in each
+ * (tools/sky/bulb-light.mjs) and the page switches between the two (LampSwitch).
  */
-export function lampGlow(k: number): [number, number, number] {
-  const wb = kelvinToRgb(6500).map((v) => toLinear(v / 255));
-  const lin = kelvinToRgb(k).map((v, c) => toLinear(v / 255) / wb[c]);
-  const max = Math.max(...lin);
-  return lin.map((v) => clampByte(toSrgb(v / max) * 255)) as [number, number, number];
+export const LIGHTS: readonly Light[] = [
+  { id: 'warm', name: 'Warm white', k: 3000, glow: [255, 196, 112], core: [255, 244, 222] },
+  { id: 'clear', name: 'Clear white', k: 6500, glow: [250, 251, 250], core: [255, 255, 255] },
+];
+
+export function lightById(id: LightId): Light {
+  return LIGHTS.find((l) => l.id === id) ?? LIGHTS[0];
 }
