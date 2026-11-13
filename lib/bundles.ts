@@ -10,7 +10,7 @@ export interface Bundle {
   items: string;
   /** Percent off when bought together (sample). */
   save: number;
-  /** One of its products, small and round, for the header's pill (tools/sky/bundle-thumbs.mjs). */
+  /** One of its products, small and round (tools/sky/bundle-thumbs.mjs). The header's button showed it until round 35. */
   thumb: string;
   /** What the small picture shows. */
   shows: string;

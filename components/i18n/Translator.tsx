@@ -163,7 +163,8 @@ export function Translator() {
       }
     });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: [...ATTRS] });
-    if (title) seen.observe(title, { subtree: true, childList: true, characterData: true });
+    // The tab's title: its text can change, and the framework can swap the whole tag for a new one.
+    seen.observe(document.head, { subtree: true, childList: true, characterData: true });
     return () => seen.disconnect();
   }, [t, lang]);
 

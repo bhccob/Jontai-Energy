@@ -9,6 +9,11 @@ main {
 
 /* ---------- Header ---------- */
 
+/* One still bar (round 35, Bob: "just make it not move and more clean designed like bigger and more minimal"). It keeps
+   its place, height and width from the top of the page to the foot: no floating pill, no sliding away while you read.
+   Only its colour changes. At the top it is bare over the page; once you leave the top it frosts over, edge to edge,
+   with a hairline under it; over a dark section (the ranges, the footer; Header reads the ground) the frost turns deep
+   green and the ink pale, so it always reads. Without scripts nothing turns the frost on, so it is always there. */
 .nav {
   position: fixed;
   inset: 0 0 auto;
@@ -21,71 +26,143 @@ main {
   padding: 0 var(--gutter);
   color: var(--color-ink);
   transition:
-    background-color 300ms ease,
-    box-shadow 300ms ease,
-    transform 500ms var(--ease-out);
+    background-color 350ms ease,
+    box-shadow 350ms ease,
+    color 350ms ease;
 }
-/* Once you leave the top, a slim frosted bar edge to edge with a hairline under it: no floating box. Without scripts
-   nothing turns it on, and the page would pass under bare links, so it is always there. */
 .nav[data-solid='true'],
 :root:not(.js) .nav {
-  background: var(--glass-bar);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: 0 1px 0 var(--color-rule);
+  background: rgb(249 251 246 / 0.86);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow: 0 1px 0 rgb(23 61 44 / 0.1);
 }
-/* Out of the way while reading down, hairline and all; back the moment keyboard focus comes in. */
-.nav[data-hidden='true']:not(:focus-within) {
-  transform: translateY(calc(-100% - 2px));
+.nav[data-solid='true'][data-over='dark'] {
+  background: rgb(14 34 25 / 0.84);
+  box-shadow: 0 1px 0 rgb(244 246 239 / 0.1);
+  color: #f4f6ef;
 }
+@media (prefers-reduced-transparency: reduce) {
+  .nav[data-solid='true'],
+  :root:not(.js) .nav {
+    background: #f9fbf6;
+  }
+  .nav[data-solid='true'][data-over='dark'] {
+    background: #0e2219;
+  }
+}
+
+/* What the bar holds: the mark and name of the store, big; then, on the right, one filled button (Bundle offers, on
+   the home page) and three plain words: Member login, the language, Menu. No glass chips, no pictures, nothing that
+   moves by itself. Support is in the menu and the footer. Nothing in the row is ever squeezed: it keeps its natural
+   width, and when that does not fit the header sheds labels instead (useHeaderFit and the data-fit steps below). */
 .brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   letter-spacing: -0.03em;
   text-decoration: none;
   white-space: nowrap;
 }
 .brand img {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
 }
 .nav__end {
   display: flex;
   align-items: center;
-  gap: clamp(18px, 2.4vw, 36px);
+  gap: clamp(22px, 2.6vw, 40px);
 }
-.nav__support,
-.nav__menu {
+.brand,
+.nav__end,
+.nav__end > * {
+  flex: none;
+}
+
+/* The plain words. */
+.nav__member,
+.nav__menu,
+.lang__button {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-weight: 600;
-  font-size: 1rem;
-  text-decoration: none;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
-  white-space: nowrap;
-}
-.nav__support[aria-current='page'] {
-  text-decoration-line: underline;
-}
-.nav__menu {
-  gap: 10px;
   padding: 0;
   border: 0;
   background: none;
   color: inherit;
-  font-family: inherit;
-  letter-spacing: inherit;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+  white-space: nowrap;
   cursor: pointer;
 }
+.nav__member {
+  gap: 8px;
+}
+.nav__member svg {
+  flex: none;
+}
+.nav__menu {
+  gap: 11px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav__member:hover,
+  .nav__menu:hover,
+  .lang__button:hover {
+    text-decoration-line: underline;
+  }
+}
+
+/* The one button: a flat forest pill; mint over a dark section, and while its offers are open. */
+.offer-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-forest);
+  color: #f4f6ef;
+  font: inherit;
+  font-size: 0.96rem;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    scale 140ms ease-out;
+}
+.offer-pill:active {
+  scale: 0.97;
+}
+.offer-pill[aria-expanded='true'],
+.nav[data-over='dark'] .offer-pill {
+  background: var(--color-mint);
+  color: #0e2219;
+}
+@media (hover: hover) and (pointer: fine) {
+  .offer-pill:hover {
+    background: #24553e;
+  }
+  .offer-pill[aria-expanded='true']:hover,
+  .nav[data-over='dark'] .offer-pill:hover {
+    background: #cfe6c3;
+  }
+}
+.offer-pill__short {
+  display: none;
+}
+
 /* Two lines that cross into an X while the menu is open. */
 .nav__lines {
   position: relative;
-  width: 22px;
+  width: 26px;
   height: 10px;
 }
 .nav__lines i {
@@ -109,13 +186,141 @@ main {
 .nav__menu[aria-expanded='true'] .nav__lines i:last-child {
   transform: translateY(-4px) rotate(-45deg);
 }
-@media (hover: hover) and (pointer: fine) {
-  .nav__support:hover,
-  .nav__menu:hover {
-    text-decoration-line: underline;
+
+/* Smaller screens: the same bar, a size down each time, with shorter labels. */
+@media (max-width: 60rem) {
+  .brand {
+    gap: 9px;
+    font-size: 1.15rem;
+  }
+  .brand img {
+    width: 30px;
+    height: 30px;
+  }
+  .offer-pill {
+    min-height: 40px;
+    padding: 0 18px;
+    font-size: 0.92rem;
   }
 }
-/* On the narrowest phones Support moves into the menu (glass.css, with the header's other buttons). */
+/* Tablets: "Bundles", and the login as its icon. */
+@media (max-width: 48rem) {
+  .offer-pill__long {
+    display: none;
+  }
+  .offer-pill__short {
+    display: inline;
+  }
+  .nav__member {
+    justify-content: center;
+    width: 40px;
+  }
+  .nav__member-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+/* Phones: Menu is its two lines, and the language is picked in the menu (glass.css hides its button). The mark and
+   the buttons may stand as close as 8px, the least air useHeaderFit allows there. */
+@media (max-width: 32rem) {
+  .nav {
+    gap: 8px;
+  }
+  .nav__end {
+    gap: 4px;
+  }
+  .brand {
+    gap: 8px;
+    font-size: 1.05rem;
+  }
+  .brand img {
+    width: 28px;
+    height: 28px;
+  }
+  .offer-pill {
+    min-height: 38px;
+    margin-right: 4px;
+    padding: 0 14px;
+    font-size: 0.88rem;
+  }
+  .nav .nav__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .nav .nav__menu {
+    justify-content: center;
+    min-width: 40px;
+  }
+}
+@media (max-width: 24rem) {
+  .brand {
+    gap: 7px;
+    font-size: 1rem;
+  }
+  .brand img {
+    width: 26px;
+    height: 26px;
+  }
+  /* A little tighter, so a 360px phone keeps the name beside the mark. */
+  .offer-pill {
+    margin-right: 2px;
+    padding: 0 11px;
+  }
+}
+/* The narrowest phones keep the mark without its name on the home page, where the bundle button needs the room (the
+   link keeps its name for screen readers). */
+@media (max-width: 22.4rem) {
+  .nav[data-sky] .brand {
+    font-size: 0;
+  }
+}
+
+/* The row always fits (useHeaderFit): when the mark and the buttons do not fit side by side (longer Spanish labels, a
+   narrow window), the header sheds labels in this order; each step is a word in data-fit. The steps repeat what the
+   breakpoints above do for English, so a phone looks the same with or without them. */
+
+/* 1. The shorter name of the bundle button. */
+.nav[data-fit~='bundle'] .offer-pill__long {
+  display: none;
+}
+.nav[data-fit~='bundle'] .offer-pill__short {
+  display: inline;
+}
+/* 2. The login as its icon. */
+.nav[data-fit~='member'] .nav__member {
+  justify-content: center;
+  width: 40px;
+}
+.nav[data-fit~='member'] .nav__member-label,
+.nav[data-fit~='menu'] .nav__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* 3. Menu as its two lines. */
+.nav[data-fit~='menu'] .nav__menu {
+  justify-content: center;
+  min-width: 40px;
+}
+/* 4. The language is picked in the menu. */
+.nav[data-fit~='lang'] .lang {
+  display: none;
+}
+/* 5. The mark without its name. */
+.nav[data-fit~='brand'] .brand {
+  font-size: 0;
+}
 
 /* ---------- Menu (every screen size) ---------- */
 

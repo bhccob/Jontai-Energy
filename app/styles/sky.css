@@ -552,8 +552,9 @@
 .nav[data-sky] {
   color: var(--sky-ink);
 }
-/* Once you leave the top, the bar turns frosted white with the forest ink, over sky and page alike. */
-.nav[data-sky][data-solid='true'] {
+/* Once you leave the top, the bar turns frosted white with the forest ink, over sky and page alike; over a dark
+   section it keeps the pale ink shell.css gives it. */
+.nav[data-sky][data-solid='true']:not([data-over='dark']) {
   color: var(--color-ink);
 }
 .nav[data-sky] :focus-visible {

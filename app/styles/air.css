@@ -1712,10 +1712,12 @@ main.air {
   font-size: 0.9rem;
   font-weight: 600;
 }
+/* Two equal chips side by side; when the names are too long for the column ("Blanco cálido"), one under the other. */
 .lamp-switch__opts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: 19rem;
+  display: flex;
+  flex-wrap: wrap;
+  width: fit-content;
+  max-width: 100%;
   gap: 4px;
   padding: 4px;
   border-radius: 10px;
@@ -1725,12 +1727,14 @@ main.air {
 /* Name over its colour temperature, the dot beside both, so two fit in the narrow column. */
 .lamp-switch__opt {
   position: relative;
+  flex: 1 1 0;
+  min-width: max-content;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  column-gap: 9px;
+  column-gap: 7px;
   min-height: 48px;
-  padding: 6px 12px;
+  padding: 6px 11px 6px 9px;
   border-radius: 7px;
   color: #f4f6ef;
   font-size: 0.86rem;

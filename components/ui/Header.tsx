@@ -9,6 +9,7 @@ import { MemberLogin, openMemberLogin } from '@/components/sections/MemberLogin'
 import { DIRECTIONS_URL } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { BundleOffer } from './BundleOffer';
+import { useHeaderFit } from './useHeaderFit';
 
 /** The home page's sections, as the menu lists them. */
 /** The six ranges, named as on the home page (lib/islands), then Rewards and the visit (polish, round 30). */
@@ -23,34 +24,56 @@ const LINKS = [
   { id: 'visit', label: 'Visit' },
 ] as const;
 
+/** Whether an element paints a dark ground of its own (the ranges, the footer): the bar turns dark over those. */
+function isDark(el: HTMLElement) {
+  const m = /rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[,/ ]+([\d.]+))?/.exec(getComputedStyle(el).backgroundColor);
+  if (!m || (m[4] !== undefined && Number(m[4]) < 0.6)) return false;
+  return (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255 < 0.25;
+}
+
 /**
- * The header: the store's mark, Member login, Support and Menu. A slim bar gathers it once you leave the top; it steps
- * out of the way while you read down and comes back as soon as you scroll up or tab into it. Menu opens the sections
- * and the ways to reach the store full screen, on every screen size. `base` is '/' on other pages, so the section
- * links lead back home. `sky` (the home page, round 9) sets it in white over the sky and adds the bundle offers.
- * Member login (round 32, Bob: "a button on the header for login to see member point") opens the points window, which
- * lives here so it opens on every page; on phones the button is its icon alone. The language button (round 33, Bob:
- * "spanish&chinese translator") sits beside it; phones choose the language in the menu.
+ * The header: one still bar (round 35, Bob: "just make it not move and more clean designed like bigger and more
+ * minimal"). It keeps its place, height and width from the top of the page to the foot, and holds four things: the
+ * store's mark and name, Bundle offers (the home page's one button, `sky`), Member login (round 32; it opens the points
+ * window, which lives here so it opens on every page), the language (round 33; phones choose it in the menu) and Menu,
+ * which opens the sections and the ways to reach the store full screen. Support is in the menu and the footer. Only the
+ * bar's colour changes: bare at the top, frosted once you leave it, and deep green with pale ink over a dark section
+ * (data-over, shell.css). `base` is '/' on other pages, so the section links lead back home. The row always fits, in
+ * every language: useHeaderFit sheds labels in a set order.
  */
 export function Header({ base = '', sky = false }: { base?: string; sky?: boolean }) {
   const pathname = usePathname();
   const [solid, setSolid] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const lastY = useRef(0);
+  const [overDark, setOverDark] = useState(false);
+  const darkGrounds = useRef<HTMLElement[]>([]);
   const toggle = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLElement>(null);
+  const bar = useRef<HTMLElement>(null);
+  useHeaderFit(bar);
+
+  /** Whether a dark section lies under the middle of the bar. */
+  const readGround = () =>
+    setOverDark(
+      darkGrounds.current.some((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top <= 36 && r.bottom >= 36;
+      }),
+    );
 
   const lenis = useLenis((l) => {
-    const y = l.scroll;
-    setSolid(y > 12);
-    if (y > lastY.current + 4 && y > window.innerHeight * 0.7) setHidden(true);
-    else if (y < lastY.current - 4) setHidden(false);
-    lastY.current = y;
+    setSolid(l.scroll > 12);
+    readGround();
   });
 
   // A reload part-way down the page starts solid.
   useEffect(() => setSolid(window.scrollY > 12), []);
+
+  // The page's dark sections, found once per page by the ground they paint.
+  useEffect(() => {
+    darkGrounds.current = [...document.querySelectorAll<HTMLElement>('main section, main > div, footer')].filter(isDark);
+    readGround();
+  }, [pathname]);
 
   // The menu: the page behind is inert, Escape closes it, focus goes in and comes back to Menu.
   useEffect(() => {
@@ -81,10 +104,16 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
 
   return (
     <>
-      <header className="nav" data-solid={solid || open} data-hidden={hidden && !open} data-sky={sky || undefined}>
+      <header
+        ref={bar}
+        className="nav"
+        data-solid={solid || open}
+        data-sky={sky || undefined}
+        data-over={overDark && !open ? 'dark' : undefined}
+      >
         <a href={base || '#top'} className="brand" aria-label={base ? 'Jontai Energy, home' : 'Jontai Energy, back to the top'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon-192.png" alt="" width={30} height={30} />
+          <img src="/icon-192.png" alt="" width={34} height={34} />
           Jontai Energy
         </a>
         <div className="nav__end">
@@ -98,13 +127,10 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
               openMemberLogin();
             }}
           >
-            <UserCircle size={21} weight="regular" aria-hidden="true" />
+            <UserCircle size={24} weight="regular" aria-hidden="true" />
             <span className="nav__member-label">Member login</span>
           </button>
           <LangSwitch />
-          <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
-            Support
-          </a>
           <button
             ref={toggle}
             type="button"
