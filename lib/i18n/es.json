@@ -859,7 +859,10 @@
   "Back to the ranges": "Volver a las líneas",
   "Solar panels and hybrid inverters that run a home on sun, battery and grid.": "Paneles solares e inversores híbridos que hacen funcionar una casa con sol, batería y red.",
   "Power for when the grid goes down, from quiet batteries to generators.": "Energía para cuando se va la luz, desde baterías silenciosas hasta generadores.",
-  "Jontai Energy sells and delivers; it does not install.": "Jontai Energy vende y entrega; no instala."
+  "Jontai Energy sells and delivers; it does not install.": "Jontai Energy vende y entrega; no instala.",
+  "Everything that runs on the sun: panels and inverters for the home, and solar air conditioners, fans, street lamps and cameras.": "Todo lo que funciona con el sol: paneles e inversores para la casa, y aires acondicionados, ventiladores, lámparas de calle y cámaras solares.",
+  "Solar cameras for homes and yards": "Cámaras solares para casas y patios",
+  "Solar cameras for sites and farms": "Cámaras solares para obras y fincas"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} de 5 estrellas",

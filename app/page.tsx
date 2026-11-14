@@ -11,8 +11,8 @@ import { Visit } from '@/components/sections/Visit';
 import { Footer } from '@/components/sections/Footer';
 import { SkyScope } from '@/components/sky/SkyScope';
 
-/** The browser's own bars match the deep forest at the top of the home page (round 41: the valley in full colour). */
-export const viewport: Viewport = { themeColor: '#12291d' };
+/** The browser's own bars match the light green at the top of the home page (round 47). */
+export const viewport: Viewport = { themeColor: '#dae9cd' };
 
 /**
  * The order (Bob, round 25): the first view, which Jontai Rewards slides up over (round 37: the two share .cover, so

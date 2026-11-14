@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { FILES, ISLANDS, PRODUCTS } from './islands.ts';
+import { FILES, ISLANDS, PRODUCTS, shownIn } from './islands.ts';
 import { DETAILS } from './productPages.ts';
 import { QUOTE_TOPICS } from './quote.ts';
 
@@ -83,7 +83,7 @@ test('round 39: every range shows two to six products, solar street lamps and so
   assert.equal(ISLANDS.flatMap((i) => i.products).filter((p) => p.bulb).length, 1, 'one bulb that lights up');
   // The names and lines the catalogue panels already use (so the translations already have them), except the furniture.
   const catalogue = new Set(data.categories.flatMap((c: { range?: { name: string; line: string }[] }) => (c.range ?? []).flatMap((r) => [r.name, r.line])));
-  for (const p of ISLANDS.filter((i) => i.id !== 'upstairs').flatMap((i) => i.products).filter((p) => p.id !== 'ceiling-lights')) {
+  for (const p of ISLANDS.filter((i) => i.id !== 'upstairs').flatMap((i) => i.products).filter((p) => !['ceiling-lights', 'home-cameras', 'site-cameras'].includes(p.id))) {
     assert.ok(catalogue.has(p.name), p.name);
     assert.ok(catalogue.has(p.line), p.line);
   }
@@ -112,4 +112,17 @@ test('round 44: the range rows stay broad: no figures, no model names, no links 
     assert.doesNotMatch(`${it.line} ${it.note ?? ''}`, /Namkoo|ACDC|SPI-|\d[\d,]* ?(W|Wh|BTU|ms)\b/, it.id);
     for (const a of it.actions ?? []) assert.ok(!['inverter', 'solar-ac', 'power-station', 'generator'].includes(a.panel), `${it.id} → ${a.panel}`);
   }
+});
+
+test('round 46: the Solar range shows every solar product too, each still with one home range and one page', () => {
+  const solar = ISLANDS.find((i) => i.id === 'solar')!;
+  const shown = shownIn(solar).map((p) => p.id);
+  const solarElsewhere = ISLANDS.filter((i) => i.id !== 'solar')
+    .flatMap((i) => i.products)
+    .filter((p) => /solar/i.test(p.name));
+  assert.ok(solarElsewhere.length >= 5, `${solarElsewhere.length} solar products elsewhere`);
+  for (const p of solarElsewhere) assert.ok(shown.includes(p.id), p.id);
+  assert.equal(new Set(shown).size, shown.length, 'nothing shown twice in Solar');
+  assert.equal(new Set(PRODUCTS.map((p) => p.id)).size, PRODUCTS.length, 'one page per product');
+  assert.equal(PRODUCTS.find((p) => p.id === 'solar-fans')!.range.id, 'cooling', 'a solar fan still belongs to Cooling');
 });
