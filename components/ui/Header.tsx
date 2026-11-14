@@ -3,12 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLenis } from 'lenis/react';
-import { UserCircle } from '@phosphor-icons/react/dist/ssr';
+import { Headset, UserCircle } from '@phosphor-icons/react/dist/ssr';
 import { LangChoices, LangSwitch } from '@/components/i18n/LangSwitch';
 import { MemberLogin, openMemberLogin } from '@/components/sections/MemberLogin';
 import { DIRECTIONS_URL } from '@/lib/contact';
 import { QUOTE_ACTION } from '@/lib/quote';
-import { BundleOffer } from './BundleOffer';
 import { useHeaderFit } from './useHeaderFit';
 
 /** The home page's sections, as the menu lists them. */
@@ -34,9 +33,10 @@ function isDark(el: HTMLElement) {
 /**
  * The header: one still bar (round 35, Bob: "just make it not move and more clean designed like bigger and more
  * minimal"). It keeps its place, height and width from the top of the page to the foot, and holds four things: the
- * store's mark and name, Bundle offers (the home page's one button, `sky`), Member login (round 32; it opens the points
- * window, which lives here so it opens on every page), the language (round 33; phones choose it in the menu) and Menu,
- * which opens the sections and the ways to reach the store full screen. Support is in the menu and the footer. Only the
+ * store's mark and name, Support (round 48, in the place of the Bundles & discounts button, which is off for now),
+ * Member (round 32; it opens the points window, which lives here so it opens on every page), the language (round 33;
+ * phones choose it in the menu) and Menu, which opens the sections and the ways to reach the store full screen. Support,
+ * Member and the language are their icons, each word sliding out on hover or focus (rounds 49 and 50). Only the
  * bar's colour changes: bare at the top, frosted once you leave it, and deep green with pale ink over a dark section
  * (data-over, shell.css). `base` is '/' on other pages, so the section links lead back home. The row always fits, in
  * every language: useHeaderFit sheds labels in a set order.
@@ -117,7 +117,13 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
           Jontai Energy
         </a>
         <div className="nav__end">
-          {sky && <BundleOffer hidden={open} />}
+          {/* Support, in the bar on every page (round 48, Bob: "add support on the header where its visible"), where the
+              Bundles & discounts button was (off for now: BundleOffer, lib/bundles). Its icon alone; its word slides out
+              on hover or focus (round 49, shell.css). */}
+          <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
+            <Headset size={24} weight="regular" aria-hidden="true" />
+            <span className="nav__support-label nav__slide">Support</span>
+          </a>
           <button
             type="button"
             className="nav__member"
@@ -128,7 +134,7 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
             }}
           >
             <UserCircle size={24} weight="regular" aria-hidden="true" />
-            <span className="nav__member-label">Member login</span>
+            <span className="nav__member-label nav__slide">Member</span>
           </button>
           <LangSwitch />
           <button

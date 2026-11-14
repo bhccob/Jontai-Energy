@@ -3,11 +3,11 @@
 import { useEffect, type RefObject } from 'react';
 
 /**
- * What the header gives up, in this order, when its row does not fit: the bundle button's long name, the login's name,
- * Menu's word, the language button (it is in the menu too), and last the store's name beside its mark. Each step is a
- * word in the header's data-fit (shell.css).
+ * What the header gives up, in this order, when its row does not fit: Menu's word, the language button (it is in the menu
+ * too), and last the store's name beside its mark. (Support, Member and the language are their icons already, rounds 49
+ * and 50.) Each step is a word in the header's data-fit (shell.css).
  */
-const STEPS = ['bundle', 'member', 'menu', 'lang', 'brand'] as const;
+const STEPS = ['menu', 'lang', 'brand'] as const;
 
 /**
  * Keeps the header's row inside the header, in every language. The breakpoints in shell.css are set for English;

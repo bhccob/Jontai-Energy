@@ -56,8 +56,10 @@ export function LangSwitch() {
         aria-label={`${info.label}: ${info.name}`}
         onClick={() => setOpen((v) => !v)}
       >
-        <Globe size={18} weight="regular" aria-hidden="true" />
-        <span lang={info.html}>{info.short}</span>
+        <Globe size={22} weight="regular" aria-hidden="true" />
+        <span className="nav__slide" lang={info.html}>
+          {info.short}
+        </span>
       </button>
       <ul id={`${id}-list`} className="lang__list" data-open={open} hidden={!open}>
         {LANGS.map((l) => (

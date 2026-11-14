@@ -22,18 +22,15 @@
 
 /* ---------- The sky ---------- */
 
-/* Round 41 (Bob, after the Windore example: "the background being only white is too plain"): the green valley fills the
-   first view in full colour, shaded toward deep forest at the top and the foot so the words read, and the words are a
-   warm cream, Aruba's sunlight on the green. The page's own --sky-* colours are redefined for it here. */
+/* Round 47 (Bob: "first view page should be light green the dark green and too visible background not the best"): a
+   light green field with the valley only just showing through it, forest words on it (round 41 to 46 it was the valley
+   under deep green with cream words). --veil is the light green, as r g b. */
 .sky-scope {
-  --sky-ink: #f5ecd9;
-  --sky-soft: rgb(245 236 217 / 0.9);
-  --sky-muted: rgb(245 236 217 / 0.76);
-  --sky-rule: rgb(245 236 217 / 0.3);
+  --veil: 218 233 205;
   position: relative;
   z-index: 1;
   overflow: clip;
-  background: #183a29;
+  background: rgb(var(--veil));
   color: var(--sky-ink);
 }
 /* Round 37 (Bob: "just make it normal scroll ... like the loyalty page when scroll its on top of the first page"): the
@@ -92,21 +89,21 @@
     display: none;
   }
 }
-/* The shade over the valley (round 41; until then a pale screen that turned it almost white): deep forest at the top
-   behind the header, clear through the middle where the hills show, deep again at the foot under JONTAI. */
+/* The light green veil over the valley (round 47): nearly solid, a touch thinner through the middle, so the hills and
+   the moving mist are only a faint texture in the green. */
 .sky__ink {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(70% 55% at 50% 42%, rgb(14 34 25 / 0.4), transparent 75%),
-    linear-gradient(to bottom, rgb(14 34 25 / 0.72) 0%, rgb(14 34 25 / 0.46) 26%, rgb(14 34 25 / 0.42) 52%, rgb(14 34 25 / 0.66) 78%, rgb(14 34 25 / 0.9) 100%);
+  background: linear-gradient(to bottom, rgb(var(--veil) / 0.92) 0%, rgb(var(--veil) / 0.86) 40%, rgb(var(--veil) / 0.86) 65%, rgb(var(--veil) / 0.92) 100%);
 }
 /* Bob, round 42: "the first view page background is too strong", toned down three times; then round 44: "the green ...
    looks a bit sad and not much the color of other greens in the website". The valley keeps its own living greens (no
    more greying), and the shade over it is the site's deep green (--deep, #0e2219, the ranges' ground), so it stays calm
-   behind the words and of a piece with the rest of the page. */
+   behind the words and of a piece with the rest of the page. Round 45 ("it has to be less shown the background", then
+   "it gotta be barely visible"). Round 47: under a light green veil instead (.sky__ink), the valley still only a faint
+   green texture moving behind it. */
 .sky__media {
-  filter: saturate(0.95) brightness(0.9);
+  filter: saturate(0.9);
 }
 /* The Aruba sun, rising behind the headline as the page opens: a warm soft light, never a disc with an edge. */
 .sky::after {
@@ -117,8 +114,7 @@
   width: min(120vw, 1500px);
   aspect-ratio: 1.6;
   translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(255 236 196 / 0.26), rgb(255 230 186 / 0.1) 45%, transparent);
-  mix-blend-mode: soft-light;
+  background: radial-gradient(closest-side, rgb(255 252 230 / 0.7), rgb(255 250 225 / 0.3) 45%, transparent);
   pointer-events: none;
 }
 @keyframes sun-rise {
@@ -139,13 +135,12 @@
 
 /* ---------- Buttons on the sky ---------- */
 
-/* The main button is the cream of the words, with forest type, as Windore's light button on its landscape. */
+/* The main button: forest, with pale type, on the light green. */
 .sky-scope .hero__actions .btn--primary {
-  --btn-fill: #ffffff;
-  background: var(--sky-ink);
-  color: var(--color-forest);
-  text-shadow: none;
-  box-shadow: 0 14px 30px -16px rgb(4 12 8 / 0.7);
+  --btn-fill: #0e2219;
+  background: var(--color-forest);
+  color: #f4f6ef;
+  box-shadow: 0 14px 30px -16px rgb(14 34 25 / 0.55);
 }
 /* Over clouds an outline alone goes missing, so the outlined button floats on a little frosted glass. */
 .sky-scope .btn--ghost {
@@ -253,15 +248,14 @@
   justify-content: center;
   max-width: 64rem;
   padding-block: clamp(24px, 5vh, 56px);
-  text-shadow: 0 2px 28px rgb(4 14 9 / 0.35);
 }
 /* JONTAI (round 39, Bob: "jontai text below gotta be better styled"; he picked "Forest ink on a hairline"). Round 41
-   (Bob, after the Windore example: "needs work like fading"): the whole word across the width in the words' cream, on a
+   (Bob, after the Windore example: "needs work like fading"): the whole word across the width in the words' colour, on a
    faint rule, fading from solid at the top of its letters into the landscape at the foot, where the screen cuts it. */
 .hero__mark {
   align-self: stretch;
   padding-top: clamp(14px, 2.2vh, 22px);
-  border-top: 1px solid rgb(245 236 217 / 0.22);
+  border-top: 1px solid rgb(23 61 44 / 0.22);
 }
 .hero__name {
   width: 100%;
@@ -282,7 +276,7 @@
 }
 
 /* Whether the store is open now, over the headline (round 43, Bob on the "Bon bini" time pill: "looks like its ai
-   generated"): plain text in the words' cream, as a sentence, with no pill, no dot, no rule and no spaced capitals. */
+   generated"): plain text in the words' colour, as a sentence, with no pill, no dot, no rule and no spaced capitals. */
 .hero__eyebrow {
   margin-bottom: clamp(14px, 2.2vh, 22px);
 }
@@ -355,24 +349,6 @@
 
 .nav[data-sky] {
   color: var(--sky-ink);
-}
-/* At the top, over the valley (round 41): cream ink, and the one filled button in cream with forest type. */
-.nav[data-sky]:not([data-solid='true']) {
-  color: #f5ecd9;
-}
-.nav[data-sky]:not([data-solid='true']) .offer-pill {
-  background: #f5ecd9;
-  color: var(--color-forest);
-}
-@media (hover: hover) and (pointer: fine) {
-  .nav[data-sky]:not([data-solid='true']) .offer-pill:hover {
-    background: #ffffff;
-  }
-}
-/* Once you leave the top, the bar turns frosted white with the forest ink, over sky and page alike; over a dark
-   section it keeps the pale ink shell.css gives it. */
-.nav[data-sky][data-solid='true']:not([data-over='dark']) {
-  color: var(--color-ink);
 }
 .nav[data-sky] :focus-visible {
   outline-color: currentColor;

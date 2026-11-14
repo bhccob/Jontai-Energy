@@ -50,6 +50,8 @@ The quote page (`/quote`) sends each request to the store by email through Resen
 
 ## Bundles and discounts (round 41, coming soon)
 
+Off the site for now (round 48): the header shows Support in its place. The panel and its words stay in the code for when the bundles and discounts are ready.
+
 The header's "Bundles & discounts" button ("Deals" on narrow screens) opens a panel (`lib/bundles.ts`, `BUNDLE_TEASER`) that holds no offers: it says bundles and discounts are coming soon, with no date, tells visitors to ask in store about current offers, and links to the contact page with bundles chosen. When the bundles and discounts are set, put their real names, contents and savings in `lib/bundles.ts` and the panel. No prices are shown.
 
 ## Product pages (round 41)

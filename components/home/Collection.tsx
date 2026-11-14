@@ -1,6 +1,6 @@
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
-import { ISLANDS } from '@/lib/islands';
+import { ISLANDS, shownIn } from '@/lib/islands';
 import { contactHref } from '@/lib/message';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { CollectionMotion } from './CollectionMotion';
@@ -79,10 +79,10 @@ export function Collection() {
                   </a>
                 </div>
               </div>
-              {it.products.length > 2 ? (
+              {shownIn(it).length > 2 ? (
                 // More than two (round 40): two in view, the rest scroll sideways (ProductRail).
-                <ProductRail count={it.products.length} labelledBy={`${it.id}-title`}>
-                  {it.products.map((p) => (
+                <ProductRail count={shownIn(it).length} labelledBy={`${it.id}-title`}>
+                  {shownIn(it).map((p) => (
                     <li key={p.id} className="product" data-bulb={p.bulb || undefined}>
                       <ProductTile p={p} />
                     </li>
@@ -90,7 +90,7 @@ export function Collection() {
                 </ProductRail>
               ) : (
                 <ul className="range__products" aria-labelledby={`${it.id}-title`}>
-                  {it.products.map((p) => (
+                  {shownIn(it).map((p) => (
                     <li key={p.id} className="product" data-bulb={p.bulb || undefined}>
                       <ProductTile p={p} />
                     </li>

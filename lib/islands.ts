@@ -48,6 +48,8 @@ export interface Island {
   quote: string;
   /** Where the bulb's glass is in its source photo, in % (x, y of its centre; r of the width), for bulb-light.mjs. */
   lamp?: { x: number; y: number; r: number };
+  /** Products of other ranges this range shows too, by page id (round 46: every solar product also under Solar). */
+  also?: string[];
 }
 
 export const ISLANDS: Island[] = [
@@ -58,7 +60,8 @@ export const ISLANDS: Island[] = [
       { id: 'solar-panels', name: 'Solar panels', line: 'Framed panels for rooftop systems and solar air conditioning.', image: 'solar-panel', size: [1048, 1995], quote: 'solar-panels' },
       { id: 'hybrid-inverters', name: 'Hybrid inverters', line: 'Solar, battery and grid in one wall unit.', image: 'inverter', size: [1200, 1626], quote: 'inverter' },
     ],
-    line: 'Solar panels and hybrid inverters that run a home on sun, battery and grid.',
+    line: 'Everything that runs on the sun: panels and inverters for the home, and solar air conditioners, fans, street lamps and cameras.',
+    also: ['solar-air-conditioners', 'solar-fans', 'solar-street-lamps', 'home-cameras', 'site-cameras'],
     quote: 'inverter',
   },
   {
@@ -103,8 +106,8 @@ export const ISLANDS: Island[] = [
     id: 'security',
     name: 'Security',
     products: [
-      { id: 'home-cameras', name: 'For homes and yards', line: 'Solar-powered cameras that need no wiring.', image: 'security', size: [1200, 1571], quote: 'cameras' },
-      { id: 'site-cameras', name: 'For sites and farms', line: 'For places with no power nearby.', image: 'camera-site', size: [1156, 1983], quote: 'cameras' },
+      { id: 'home-cameras', name: 'Solar cameras for homes and yards', line: 'Solar-powered cameras that need no wiring.', image: 'security', size: [1200, 1571], quote: 'cameras' },
+      { id: 'site-cameras', name: 'Solar cameras for sites and farms', line: 'For places with no power nearby.', image: 'camera-site', size: [1156, 1983], quote: 'cameras' },
     ],
     line: 'Security cameras that charge themselves from the sun, for the door, the yard or a site.',
     quote: 'cameras',
@@ -128,3 +131,13 @@ export const PRODUCTS: (Product & { range: Island })[] = ISLANDS.flatMap((range)
 
 /** A product by its page id. */
 export const productBySlug = (id: string) => PRODUCTS.find((p) => p.id === id) ?? null;
+
+/** What a range shows: its own products, then those of other ranges it shows too (`also`). */
+export const shownIn = (range: Island): Product[] => [
+  ...range.products,
+  ...(range.also ?? []).map((id) => {
+    const p = ISLANDS.flatMap((r) => r.products).find((q) => q.id === id);
+    if (!p) throw new Error(`no product ${id}`);
+    return p;
+  }),
+];

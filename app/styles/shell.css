@@ -86,6 +86,7 @@ main {
 }
 
 /* The plain words. */
+.nav__support,
 .nav__member,
 .nav__menu,
 .lang__button {
@@ -105,16 +106,49 @@ main {
   white-space: nowrap;
   cursor: pointer;
 }
-.nav__member {
-  gap: 8px;
-}
-.nav__member svg {
+.nav__support svg,
+.nav__member svg,
+.lang__button svg {
   flex: none;
+}
+/* Support, Member and the language (rounds 49 and 50, Bob: "make it so it only shows icon first so its less cluttered and
+   minimal", "same with member login and language"): each is its icon alone; its word slides out beside it while the
+   pointer is on it, the keyboard is, or (the language) its list is open. Screen readers always hear the word. */
+.nav__support,
+.nav__member,
+.nav .lang__button {
+  justify-content: center;
+  gap: 0;
+  min-width: 40px;
+}
+.nav__slide {
+  display: inline-block;
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-width 420ms var(--ease-out),
+    margin-left 420ms var(--ease-out),
+    opacity 260ms ease;
+}
+.nav :focus-visible > .nav__slide,
+.lang__button[aria-expanded='true'] > .nav__slide {
+  max-width: 8em;
+  margin-left: 8px;
+  opacity: 1;
 }
 .nav__menu {
   gap: 11px;
 }
 @media (hover: hover) and (pointer: fine) {
+  .nav__support:hover > .nav__slide,
+  .nav__member:hover > .nav__slide,
+  .lang__button:hover > .nav__slide {
+    max-width: 8em;
+    margin-left: 8px;
+    opacity: 1;
+  }
   .nav__member:hover,
   .nav__menu:hover,
   .lang__button:hover {
@@ -215,18 +249,6 @@ main {
   .offer-pill__short {
     display: inline;
   }
-  .nav__member {
-    justify-content: center;
-    width: 40px;
-  }
-  .nav__member-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
 }
 /* Phones: Menu is its two lines, and the language is picked in the menu (glass.css hides its button). The mark and
    the buttons may stand as close as 8px, the least air useHeaderFit allows there. */
@@ -279,8 +301,7 @@ main {
     padding: 0 11px;
   }
 }
-/* The narrowest phones keep the mark without its name on the home page, where the bundle button needs the room (the
-   link keeps its name for screen readers). */
+/* The narrowest phones keep the mark without its name on the home page (the link keeps its name for screen readers). */
 @media (max-width: 22.4rem) {
   .nav[data-sky] .brand {
     font-size: 0;
@@ -291,19 +312,7 @@ main {
    narrow window), the header sheds labels in this order; each step is a word in data-fit. The steps repeat what the
    breakpoints above do for English, so a phone looks the same with or without them. */
 
-/* 1. The shorter name of the bundle button. */
-.nav[data-fit~='bundle'] .offer-pill__long {
-  display: none;
-}
-.nav[data-fit~='bundle'] .offer-pill__short {
-  display: inline;
-}
-/* 2. The login as its icon. */
-.nav[data-fit~='member'] .nav__member {
-  justify-content: center;
-  width: 40px;
-}
-.nav[data-fit~='member'] .nav__member-label,
+/* 1. Menu as its two lines. */
 .nav[data-fit~='menu'] .nav__label {
   position: absolute;
   width: 1px;
@@ -312,16 +321,16 @@ main {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-/* 3. Menu as its two lines. */
+
 .nav[data-fit~='menu'] .nav__menu {
   justify-content: center;
   min-width: 40px;
 }
-/* 4. The language is picked in the menu. */
+/* 2. The language is picked in the menu. */
 .nav[data-fit~='lang'] .lang {
   display: none;
 }
-/* 5. The mark without its name. */
+/* 3. The mark without its name. */
 .nav[data-fit~='brand'] .brand {
   font-size: 0;
 }

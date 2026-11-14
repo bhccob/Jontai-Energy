@@ -8,6 +8,9 @@ import { BUNDLE_TEASER, bundleQuestion, shouldAutoOpen } from '@/lib/bundles';
 const SEEN = 'jontai-bundles-seen';
 
 /**
+ * Off for now (round 48, Bob: "should remove bunbdles and discounts for now"): the header no longer shows it, and Support
+ * takes its place. Put `<BundleOffer hidden={open} />` back in Header to bring it back.
+ *
  * The header's "Bundle offers" button and the offers it opens. The button is the bar's one filled shape: a flat
  * forest pill with its name and nothing else (round 35, Bob: "more clean designed like bigger and more minimal"; the
  * round-32 pill carried three product pictures that popped in and fanned out). On narrow screens it says "Bundles".
