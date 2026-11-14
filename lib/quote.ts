@@ -16,7 +16,7 @@ export const QUOTE_TOPICS = [
   { id: 'generator', label: 'Generator' },
   { id: 'led', label: 'LED lighting' },
   { id: 'street-lamp', label: 'Solar street lamp' },
-  { id: 'cameras', label: 'Solar security camera' },
+  { id: 'cameras', label: 'Security camera' },
   { id: 'furniture', label: 'Furniture and delivery' },
   { id: 'other', label: 'Something else' },
 ] as const;

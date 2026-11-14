@@ -18,16 +18,26 @@ export interface Product {
   id: string;
   name: string;
   line: string;
-  image: string;
+  /** Its picture, public/sky/range-<image>-<w>.webp. Left out while it has none yet (round 52: the indoor camera): it
+   *  then shows as a line of words under the pictures (RangeProducts) and its page has no picture. */
+  image?: string;
   /** Natural size of the larger picture, for the img's width and height (no wider than the large file's width). */
-  size: [number, number];
+  size?: [number, number];
   /** The widths the picture is published at, small then large. Most are 640 and 1200. */
   files?: [number, number];
   /** The quote page's topic for it (lib/quote.ts). */
   quote: QuoteTopic;
-  /** The lighting range's bulb, which lights up in the colour picked beside it (LampSwitch, bulb-light.mjs). */
+  /** The bulb: it hangs from the top of its frame by its cord (round 51: one still picture, no colour switch). */
   bulb?: boolean;
+  /** The pole lamp: its head and the top of its pole, rising from the foot of its frame (round 53). */
+  rise?: boolean;
 }
+
+/** A product with its picture. */
+export type Pictured = Product & { image: string; size: [number, number] };
+
+/** Whether a product has its picture yet. */
+export const hasPicture = <P extends Product>(p: P): p is P & Pictured => Boolean(p.image && p.size);
 
 /** The widths most product pictures are published at (tools/sky/range-products.mjs). */
 export const FILES: [number, number] = [640, 1200];
@@ -36,7 +46,7 @@ export interface Island {
   /** Anchor id: the footer and the menu link to these (keep solar, cooling, backup, light, upstairs). */
   id: string;
   name: string;
-  /** What the range shows (round 39, Bob: "add more product like solar street lamp and solar fans"): two to six; more
+  /** What the range shows (round 39, Bob: "add more product like solar street lamp and solar fans"): two to eight; more
    *  than two slide sideways (ProductRail). */
   products: Product[];
   line: string;
@@ -61,7 +71,7 @@ export const ISLANDS: Island[] = [
       { id: 'hybrid-inverters', name: 'Hybrid inverters', line: 'Solar, battery and grid in one wall unit.', image: 'inverter', size: [1200, 1626], quote: 'inverter' },
     ],
     line: 'Everything that runs on the sun: panels and inverters for the home, and solar air conditioners, fans, street lamps and cameras.',
-    also: ['solar-air-conditioners', 'solar-fans', 'solar-street-lamps', 'home-cameras', 'site-cameras'],
+    also: ['solar-air-conditioners', 'solar-fans', 'solar-floor-fans', 'solar-fan-lights', 'solar-street-lamps', 'solar-wall-lamps', 'outdoor-cameras'],
     quote: 'inverter',
   },
   {
@@ -69,7 +79,10 @@ export const ISLANDS: Island[] = [
     name: 'Cooling',
     products: [
       { id: 'solar-air-conditioners', name: 'Solar air conditioners', line: 'Hybrid units that run on the sun by day and the grid when needed.', image: 'cooling', size: [1200, 1245], quote: 'solar-ac' },
-      { id: 'solar-fans', name: 'Solar fans', line: 'Standing fans that run from their own small solar panel.', image: 'solar-fan', size: [1200, 1479], quote: 'solar-fan' },
+      // Round 53 (Bob: "theres more options in fan"): the three kinds, each with its own picture and page.
+      { id: 'solar-fans', name: 'Solar standing fans', line: 'A tall fan with a head you can tilt, run from its own small solar panel.', image: 'solar-fan', size: [1200, 1479], quote: 'solar-fan' },
+      { id: 'solar-floor-fans', name: 'Solar floor fans', line: 'A sturdy round fan for the floor or a table, run from its own small solar panel.', image: 'floor-fan', size: [1200, 923], quote: 'solar-fan' },
+      { id: 'solar-fan-lights', name: 'Solar fan lights', line: 'A fan with a light in its middle, to hang up, run from its own small solar panel.', image: 'fan-light', size: [1200, 1032], quote: 'solar-fan' },
     ],
     line: 'Fans and air conditioners that run on the sun.',
     note: 'Jontai Energy sells and delivers; it does not install.',
@@ -90,13 +103,15 @@ export const ISLANDS: Island[] = [
     name: 'LED lighting',
     products: [
       { id: 'bulbs', name: 'Bulbs', line: 'Everyday and filament styles, warm to daylight white.', image: 'light', size: [600, 710], quote: 'led', files: [400, 600], bulb: true },
-      { id: 'solar-street-lamps', name: 'Solar street lamps', line: 'All-in-one lamps with the solar panel built in, for streets, yards and parking.', image: 'street-lamp', size: [1200, 707], quote: 'street-lamp' },
+      // Round 53 (Bob: "we have normal street lamps standing with pole and the wall mounted one").
+      { id: 'solar-street-lamps', name: 'Solar street lamps', line: 'Round-headed lamps on a pole of their own, for paths, courtyards and parking.', image: 'pole-lamp', size: [544, 952], quote: 'street-lamp', rise: true },
+      { id: 'solar-wall-lamps', name: 'Solar wall lamps', line: 'All-in-one lamps on a bracket, for a wall or a post you already have.', image: 'street-lamp', size: [1200, 707], quote: 'street-lamp' },
       { id: 'ceiling-lights', name: 'Ceiling lights', line: 'Slim ceiling panels and round downlights.', image: 'ceiling-lights', size: [1200, 611], quote: 'led' },
       { id: 'led-tubes', name: 'Tubes and linear fixtures', line: 'LED tubes and long linear fittings.', image: 'tubes', size: [1200, 841], quote: 'led' },
       { id: 'floodlights', name: 'Floodlights', line: 'For yards and storefronts.', image: 'floodlight', size: [1200, 1292], quote: 'led' },
       { id: 'led-strips', name: 'LED strips', line: 'Flexible strip lights, warm to daylight white.', image: 'led-strip', size: [1200, 679], quote: 'led' },
     ],
-    line: 'Bulbs in the colour you like, LED strips, ceiling panels, tubes, floodlights and solar street lamps.',
+    line: 'Bulbs, LED strips, ceiling panels, tubes, floodlights and solar street lamps.',
     note: 'Stock changes often, so ask before you make the trip.',
     quote: 'led',
     // From tools/sky/fix-bulb.mjs, which turned the bulb the right way up into its socket.
@@ -106,10 +121,13 @@ export const ISLANDS: Island[] = [
     id: 'security',
     name: 'Security',
     products: [
-      { id: 'home-cameras', name: 'Solar cameras for homes and yards', line: 'Solar-powered cameras that need no wiring.', image: 'security', size: [1200, 1571], quote: 'cameras' },
-      { id: 'site-cameras', name: 'Solar cameras for sites and farms', line: 'For places with no power nearby.', image: 'camera-site', size: [1156, 1983], quote: 'cameras' },
+      // Round 51 (Bob: "a mounted one thats for outside and one for inside that put on the table and it can turn"): the
+      // outdoor one, which turns, and (round 52, "also add indoors camera that works with electricity") the indoor one,
+      // which plugs into a socket. Round 53: both with their pictures, the outdoor one with two lenses like Bob's photo.
+      { id: 'outdoor-cameras', name: 'Outdoor solar cameras', line: 'Mounted on a wall or a pole, they turn to look around.', image: 'camera-outdoor', size: [1200, 1180], quote: 'cameras' },
+      { id: 'indoor-cameras', name: 'Indoor cameras', line: 'Plugged into a socket, they stand on a table and turn to watch the room.', image: 'camera-indoor', size: [1200, 1288], quote: 'cameras' },
     ],
-    line: 'Security cameras that charge themselves from the sun, for the door, the yard or a site.',
+    line: 'Cameras that turn to look around: solar ones for outside, and plug-in ones for inside. Both record to SD cards, which we sell too.',
     quote: 'cameras',
   },
   {
@@ -124,6 +142,18 @@ export const ISLANDS: Island[] = [
     actions: [{ label: 'How delivery works', panel: 'furniture' }],
     quote: 'furniture',
   },
+];
+
+/**
+ * Others (round 51, Bob: "put \"others\" SD cards from 16-256GB add in \"others\" more options for small solar lights,
+ * solar door bells, wifi mesh - dont need to use pics"): what the store sells outside the six ranges, words only, in the
+ * row after them (Collection).
+ */
+export const OTHERS: { name: string; line: string }[] = [
+  { name: 'SD cards', line: 'From 16 GB to 256 GB, for the security cameras.' },
+  { name: 'Small solar lights', line: 'Little lights with their own panel, for paths, gardens and fences.' },
+  { name: 'Solar doorbells', line: 'A doorbell that charges from the sun, with no wiring to run.' },
+  { name: 'WiFi mesh', line: 'Carries the WiFi signal to every room, and out to the cameras.' },
 ];
 
 /** Every product in every range, in the order the page shows them. */

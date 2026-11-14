@@ -182,3 +182,17 @@ Bob: "for led lighting need to include ceiling lights and the tubes". Same setti
 | --- | --- | --- | --- |
 | `range-ceiling-lights.png` | 9fcee2e1 | `downlights.webp` | a slim round white LED downlight and beside it a slim square white LED ceiling panel, both with their small spring clips at the sides, standing on edge and leaning slightly back, switched off |
 | `range-tubes.png` | a28df1d8 | `tubes.webp` | two slim white LED tubes with their two-pin end caps and beside them one white linear LED fitting with a square profile, laid side by side diagonally, switched off |
+
+## Real product types (round 53, approved by Bob on 2026-11-14, "you can generate the pics now")
+
+Bob (round 51): street lamps "standing with pole and the wall mounted one", "more options in fan", an outdoor mounted camera that turns and an indoor one on a table; (round 52) the indoor one "works with electricity". Same settings and prompt pattern as rounds 38 to 41 (GPT Image 2.6, 1:1, 2K, high, transparent, 2.75 credits each, 13.75 in all). The references are Bob's own small photos (pole lamps in a courtyard, three solar fans, the dual-lens outdoor camera), with "ignore the orange badge in the corner"; the indoor camera has no reference.
+
+| File | Job | Reference | The product |
+| --- | --- | --- | --- |
+| `range-pole-lamp-full.png` | 7458d193 | Bob's courtyard photo | one solar street lamp on its slim grey pole with a round base plate, the round flat UFO-shaped head with the panel built into its top, a courtyard-height pole. `range-pole-lamp.png` is its head and the top of its pole (the trimmed lamp cut to 1.75 times its width), shown rising from the foot of its frame (`rise`) |
+| `range-floor-fan.png` | cdb5420c | Bob's fans photo | the black solar floor fan in its round frame with a wire grille and short feet, its small framed panel on a folding stand, one black cable |
+| `range-fan-light.png` | c08a555f | Bob's fans photo | the white solar fan light, five broad blades round a round LED light, a cord and hook at its top, its small framed panel on a folding stand, one black cable |
+| `range-camera-outdoor.png` | d90927ae | Bob's camera photo | the white dual-lens outdoor camera, a fixed upper body and a turning dome below, on its wall bracket, the black panel above on a tilting arm, small antennas |
+| `range-camera-indoor.png` | c7ceb606 | none | a white indoor pan-tilt camera, a round head on a round base, a white cable to a small wall plug |
+
+Published with `node tools/sky/range-products.mjs <names>` and `node tools/sky/thumbs.mjs` (the quote page's camera chip is now the outdoor camera). The old single-lens camera picture (`range-security`) is no longer published.

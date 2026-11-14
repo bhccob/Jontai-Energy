@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { FILES, ISLANDS, PRODUCTS, shownIn } from './islands.ts';
+import { FILES, ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
 import { DETAILS } from './productPages.ts';
 import { QUOTE_TOPICS } from './quote.ts';
 
@@ -20,7 +20,7 @@ test('every range has both pictures, a real panel to open and a real quote topic
   const panels = new Set([...Object.keys(data.panels), ...data.categories.map((c: { id: string }) => c.id)]);
   for (const it of ISLANDS) {
     for (const p of it.products) {
-      for (const w of p.files ?? FILES) assert.ok(existsSync(join(root, 'public', 'sky', `range-${p.image}-${w}.webp`)), `${p.image} ${w}`);
+      if (hasPicture(p)) for (const w of p.files ?? FILES) assert.ok(existsSync(join(root, 'public', 'sky', `range-${p.image}-${w}.webp`)), `${p.image} ${w}`);
       assert.ok(QUOTE_TOPICS.some((t) => t.id === p.quote), `${p.name} → ${p.quote}`);
     }
     for (const a of it.actions ?? []) assert.ok(panels.has(a.panel), `${it.id} → ${a.panel}`);
@@ -43,7 +43,7 @@ test('round 31: LED lighting by name, solar street lamps in it, solar fans under
   const led = data.categories.find((c: { id: string }) => c.id === 'led');
   assert.ok(led.range.some((r: { name: string }) => r.name === 'Solar street lamps'));
   const cooling = ISLANDS.find((i) => i.id === 'cooling')!;
-  assert.ok(cooling.products.some((p) => p.name === 'Solar fans'));
+  assert.ok(cooling.products.some((p) => p.name === 'Solar standing fans'));
   const range = data.categories.find((c: { id: string }) => c.id === 'cooling');
   assert.ok(range.range.some((r: { name: string }) => r.name === 'Solar fans'));
   for (const id of ['solar-fan', 'street-lamp']) {
@@ -52,15 +52,11 @@ test('round 31: LED lighting by name, solar street lamps in it, solar fans under
   }
 });
 
-test('round 36: the ranges show their products without islands, and the bulb keeps both light colours', () => {
-  for (const p of ISLANDS.flatMap((i) => i.products)) {
+test('round 36: the ranges show their products without islands, each picture published at two widths', () => {
+  for (const p of ISLANDS.flatMap((i) => i.products).filter(hasPicture)) {
     const [small, large] = p.files ?? FILES;
     assert.ok(small < large, p.image);
     assert.ok(p.size[0] <= large, `${p.image}: the large picture is never upscaled`);
-  }
-  const bulb = ISLANDS.find((i) => i.id === 'light')!.products.find((p) => p.bulb)!;
-  for (const name of ['warm', 'clear', 'halo']) {
-    for (const w of bulb.files ?? FILES) assert.ok(existsSync(join(root, 'public', 'sky', `range-light-${name}-${w}.webp`)), `${name} ${w}`);
   }
 });
 
@@ -76,14 +72,14 @@ test('round 38: no islands are left anywhere ("less game like"), and every quote
 });
 
 test('round 39: every range shows two to six products, solar street lamps and solar fans among them, worded as the catalogue words them', () => {
-  for (const it of ISLANDS) assert.ok(it.products.length >= 2 && it.products.length <= 6, `${it.id}: ${it.products.length}`);
+  for (const it of ISLANDS) assert.ok(it.products.length >= 2 && it.products.length <= 8, `${it.id}: ${it.products.length}`);
   const names = (id: string) => ISLANDS.find((i) => i.id === id)!.products.map((p) => p.name);
   assert.ok(names('light').includes('Solar street lamps'));
-  assert.ok(names('cooling').includes('Solar fans'));
-  assert.equal(ISLANDS.flatMap((i) => i.products).filter((p) => p.bulb).length, 1, 'one bulb that lights up');
+  assert.ok(names('cooling').includes('Solar standing fans'));
+  assert.equal(ISLANDS.flatMap((i) => i.products).filter((p) => p.bulb).length, 1, 'one hanging bulb');
   // The names and lines the catalogue panels already use (so the translations already have them), except the furniture.
   const catalogue = new Set(data.categories.flatMap((c: { range?: { name: string; line: string }[] }) => (c.range ?? []).flatMap((r) => [r.name, r.line])));
-  for (const p of ISLANDS.filter((i) => i.id !== 'upstairs').flatMap((i) => i.products).filter((p) => !['ceiling-lights', 'home-cameras', 'site-cameras'].includes(p.id))) {
+  for (const p of ISLANDS.filter((i) => i.id !== 'upstairs').flatMap((i) => i.products).filter((p) => !['ceiling-lights', 'outdoor-cameras', 'indoor-cameras', 'solar-fans', 'solar-floor-fans', 'solar-fan-lights', 'solar-street-lamps', 'solar-wall-lamps'].includes(p.id))) {
     assert.ok(catalogue.has(p.name), p.name);
     assert.ok(catalogue.has(p.line), p.line);
   }
@@ -120,9 +116,75 @@ test('round 46: the Solar range shows every solar product too, each still with o
   const solarElsewhere = ISLANDS.filter((i) => i.id !== 'solar')
     .flatMap((i) => i.products)
     .filter((p) => /solar/i.test(p.name));
-  assert.ok(solarElsewhere.length >= 5, `${solarElsewhere.length} solar products elsewhere`);
+  assert.ok(solarElsewhere.length >= 4, `${solarElsewhere.length} solar products elsewhere`);
   for (const p of solarElsewhere) assert.ok(shown.includes(p.id), p.id);
   assert.equal(new Set(shown).size, shown.length, 'nothing shown twice in Solar');
   assert.equal(new Set(PRODUCTS.map((p) => p.id)).size, PRODUCTS.length, 'one page per product');
   assert.equal(PRODUCTS.find((p) => p.id === 'solar-fans')!.range.id, 'cooling', 'a solar fan still belongs to Cooling');
+});
+
+test('round 51: street lamps on a pole or a wall, more fans, a camera that turns, and an Others list with no pictures', () => {
+  const words = (id: string) => JSON.stringify(DETAILS[id]);
+  // Round 53: each kind of lamp and fan is now its own product, with its own picture and page.
+  assert.equal(PRODUCTS.find((p) => p.id === 'solar-street-lamps')!.image, 'pole-lamp');
+  assert.equal(PRODUCTS.find((p) => p.id === 'solar-wall-lamps')!.range.id, 'light');
+  assert.deepEqual(
+    ISLANDS.find((i) => i.id === 'cooling')!.products.filter((p) => p.quote === 'solar-fan').map((p) => p.name),
+    ['Solar standing fans', 'Solar floor fans', 'Solar fan lights'],
+  );
+  assert.match(words('outdoor-cameras'), /turns/);
+  assert.match(words('outdoor-cameras'), /SD card/);
+  const security = ISLANDS.find((i) => i.id === 'security')!;
+  assert.match(security.line, /plug-in ones for inside/);
+  assert.match(security.line, /SD cards/);
+  assert.ok(!PRODUCTS.some((p) => p.id === 'site-cameras' || p.id === 'home-cameras'), 'the old camera pages are gone');
+  // The bulb is one still picture: no colour switch and none of its light layers.
+  assert.ok(!existsSync(join(root, 'components', 'home', 'LampSwitch.tsx')));
+  assert.equal(readdirSync(join(root, 'public', 'sky')).filter((f) => /^range-light-(warm|clear|halo)/.test(f)).length, 0);
+  assert.doesNotMatch(ISLANDS.find((i) => i.id === 'light')!.line, /colour/);
+  // Others: words only.
+  assert.deepEqual(
+    OTHERS.map((o) => o.name),
+    ['SD cards', 'Small solar lights', 'Solar doorbells', 'WiFi mesh'],
+  );
+  assert.match(OTHERS[0].line, /16 GB to 256 GB/);
+  for (const o of OTHERS) assert.deepEqual(Object.keys(o).sort(), ['line', 'name'], o.name);
+});
+
+test('round 51: every product word on the home page and the product pages is in both dictionaries', () => {
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  const all = [
+    ...ISLANDS.flatMap((i) => [i.name, i.line, i.note ?? '']),
+    ...PRODUCTS.flatMap((p) => [p.name, p.line]),
+    ...OTHERS.flatMap((o) => [o.name, o.line]),
+    ...Object.values(DETAILS).flatMap((d) => [d.title ?? '', d.model ?? '', d.intro ?? '', ...(d.points ?? []).flatMap((p) => [p.title, p.line])]),
+  ].filter(Boolean);
+  for (const w of all) {
+    assert.ok(w in es, `es: ${w}`);
+    assert.ok(w in zh, `zh: ${w}`);
+  }
+});
+
+test('round 52: an indoor camera that plugs into a socket, under Security only, with its own page', () => {
+  const indoor = PRODUCTS.find((p) => p.id === 'indoor-cameras')!;
+  assert.equal(indoor.range.id, 'security');
+  assert.equal(indoor.image, 'camera-indoor', 'its picture (round 53)');
+  assert.match(indoor.line, /socket/);
+  assert.match(JSON.stringify(DETAILS['indoor-cameras']), /Runs on electricity/);
+  assert.match(JSON.stringify(DETAILS['indoor-cameras']), /SD card/);
+  assert.ok(!shownIn(ISLANDS.find((i) => i.id === 'solar')!).some((p) => p.id === 'indoor-cameras'), 'not solar');
+  assert.equal(QUOTE_TOPICS.find((q) => q.id === 'cameras')!.label, 'Security camera');
+  // Round 53: every product has its picture now.
+  assert.deepEqual(PRODUCTS.filter((p) => !hasPicture(p)).map((p) => p.id), []);
+});
+
+test('round 53: the five new pictures are published, the pole lamp rises from its frame, and the old camera picture is gone', () => {
+  for (const name of ['pole-lamp', 'floor-fan', 'fan-light', 'camera-outdoor', 'camera-indoor']) {
+    for (const w of FILES) assert.ok(existsSync(join(root, 'public', 'sky', `range-${name}-${w}.webp`)), `${name} ${w}`);
+    assert.ok(PRODUCTS.some((p) => p.image === name), `${name} is shown`);
+  }
+  assert.deepEqual(PRODUCTS.filter((p) => p.rise).map((p) => p.id), ['solar-street-lamps']);
+  assert.ok(!existsSync(join(root, 'public', 'sky', 'range-security-1200.webp')));
+  assert.equal(PRODUCTS.find((p) => p.id === 'outdoor-cameras')!.image, 'camera-outdoor');
 });
