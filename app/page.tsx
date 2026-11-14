@@ -11,11 +11,12 @@ import { Visit } from '@/components/sections/Visit';
 import { Footer } from '@/components/sections/Footer';
 import { SkyScope } from '@/components/sky/SkyScope';
 
-/** The browser's own bars match the pale morning green at the top of the home page. */
-export const viewport: Viewport = { themeColor: '#eef3e7' };
+/** The browser's own bars match the deep forest at the top of the home page (round 41: the valley in full colour). */
+export const viewport: Viewport = { themeColor: '#12291d' };
 
 /**
- * The order (Bob, round 25): the first view, whose scroll flies into Jontai Rewards; why the store is different; the
+ * The order (Bob, round 25): the first view, which Jontai Rewards slides up over (round 37: the two share .cover, so
+ * the first view holds still only while Rewards covers it); why the store is different; the
  * six ranges as a collection; what customers say on Google, right after the products; the people behind it; the
  * visit; the footer. ("What we offer" is gone: it repeated what the page and the menu already show.) Each section has
  * its own character and its own way of arriving, in two greens and the same type. Bundle offers sit in the header.
@@ -25,10 +26,12 @@ export default function Home() {
     <CatalogProvider>
       <Header sky />
       <main id="main" className="air">
-        <SkyScope>
-          <Hero />
-        </SkyScope>
-        <Rewards />
+        <div className="cover">
+          <SkyScope>
+            <Hero />
+          </SkyScope>
+          <Rewards />
+        </div>
         <Why />
         <Collection />
         <Reviews />

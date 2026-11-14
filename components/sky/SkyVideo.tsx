@@ -21,10 +21,17 @@ export function SkyVideo() {
     if (saveData || window.matchMedia('(max-width: 40rem)').matches) return;
 
     let visible = true;
+    // Rewards slides over the first view and covers it while it holds (HeroSkyMotion): on screen, but not seen.
+    let covered = false;
     const sync = () => {
-      if (calm.matches || !visible || document.hidden) video.pause();
+      if (calm.matches || !visible || covered || document.hidden) video.pause();
       else void video.play().catch(() => {});
     };
+    const onCover = (e: Event) => {
+      covered = (e as CustomEvent<boolean>).detail;
+      sync();
+    };
+    scope.addEventListener('sky:cover', onCover);
     const load = () => {
       if (calm.matches || video.dataset.loaded) return;
       video.dataset.loaded = 'true';
@@ -50,6 +57,7 @@ export function SkyVideo() {
     document.addEventListener('visibilitychange', sync);
     return () => {
       io.disconnect();
+      scope.removeEventListener('sky:cover', onCover);
       calm.removeEventListener('change', onCalm);
       document.removeEventListener('visibilitychange', sync);
       video.removeEventListener('playing', playing);

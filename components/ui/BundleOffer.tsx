@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import { useLenis } from 'lenis/react';
 import { X } from '@phosphor-icons/react';
-import { BUNDLES, BUNDLE_NOTE, bundleQuestion, shouldAutoOpen } from '@/lib/bundles';
+import { BUNDLE_TEASER, bundleQuestion, shouldAutoOpen } from '@/lib/bundles';
 
 const SEEN = 'jontai-bundles-seen';
 
@@ -11,10 +11,10 @@ const SEEN = 'jontai-bundles-seen';
  * The header's "Bundle offers" button and the offers it opens. The button is the bar's one filled shape: a flat
  * forest pill with its name and nothing else (round 35, Bob: "more clean designed like bigger and more minimal"; the
  * round-32 pill carried three product pictures that popped in and fanned out). On narrow screens it says "Bundles".
- * The offers (Bob, round 22: "in the middle with more rectangular
- * shaped"): a native dialog in the middle of the screen over a soft dimmed page, a wide rectangle with the three
- * offers side by side (name, saving, what is in it), one way to ask (the contact page), and the note that these are
- * samples. Being a dialog, it keeps keyboard focus inside while open and hands it back after; Escape, the close button
+ * What it opens (Bob, round 22: "in the middle"): a native dialog in the middle of the screen over a soft dimmed page.
+ * Since round 38 it holds no offers; since round 41 (Bob: "make bundles just say coming soon no release month date and
+ * maybe also like discount too") it says only that bundles and discounts are coming soon, with one way to hear first
+ * (the contact page, with bundles chosen). The button says "Bundles & discounts", or "Deals" when the bar is narrow. Being a dialog, it keeps keyboard focus inside while open and hands it back after; Escape, the close button
  * or a click on the dimmed page closes it, and the page holds still behind it. It opens by itself once per visit, a
  * moment after load while the visitor is still at the top, and closes when the menu opens (`hidden`).
  */
@@ -95,7 +95,7 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
         ref={pill}
         type="button"
         className="offer-pill"
-        aria-label="Bundle offers"
+        aria-label={BUNDLE_TEASER.name}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={`${id}-panel`}
@@ -104,43 +104,34 @@ export function BundleOffer({ hidden }: { hidden: boolean }) {
           setOpen(true);
         }}
       >
-        <span className="offer-pill__long">Bundle offers</span>
-        <span className="offer-pill__short">Bundles</span>
+        <span className="offer-pill__long">{BUNDLE_TEASER.name}</span>
+        <span className="offer-pill__short">{BUNDLE_TEASER.short}</span>
       </button>
-      <dialog ref={dialog} id={`${id}-panel`} className="offer" aria-labelledby={`${id}-title`} onClick={onDialogClick}>
+      <dialog
+        ref={dialog}
+        id={`${id}-panel`}
+        className="offer"
+        aria-labelledby={`${id}-title`}
+        aria-describedby={`${id}-text`}
+        onClick={onDialogClick}
+      >
         <div className="offer__head">
           <p className="offer__kicker">
-            Bundle offers <span>Samples</span>
+            {BUNDLE_TEASER.name} <span>{BUNDLE_TEASER.when}</span>
           </p>
-          <button type="button" className="offer__close" aria-label="Close bundle offers" onClick={() => setOpen(false)}>
+          <button type="button" className="offer__close" aria-label="Close" onClick={() => setOpen(false)}>
             <X size={18} weight="bold" aria-hidden="true" />
           </button>
         </div>
-        <div className="offer__lead">
-          <h2 id={`${id}-title`} className="offer__title" tabIndex={-1}>
-            Buy together,
-            <br />
-            pay less.
-          </h2>
-          <a href={bundleQuestion()} className="offer__ask">
-            Ask about a bundle
-          </a>
-        </div>
-        <ol className="offer__list">
-          {BUNDLES.map((b, i) => (
-            <li key={b.id} style={{ '--i': i } as CSSProperties}>
-              <p className="offer__save figure" data-i18n-ctx="save">
-                {b.save}
-                <span>% off</span>
-              </p>
-              <div className="offer__what">
-                <p className="offer__name">{b.name}</p>
-                <p className="offer__items">{b.items}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-        <p className="offer__note">{BUNDLE_NOTE}</p>
+        <h2 id={`${id}-title`} className="offer__title" tabIndex={-1}>
+          {BUNDLE_TEASER.title}
+        </h2>
+        <p id={`${id}-text`} className="offer__text">
+          {BUNDLE_TEASER.text}
+        </p>
+        <a href={bundleQuestion()} className="offer__ask">
+          {BUNDLE_TEASER.ask}
+        </a>
       </dialog>
     </>
   );

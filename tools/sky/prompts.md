@@ -141,3 +141,44 @@ Bob asked to add "(solar) street lamps" and "solar fans" to the ranges. Both cat
 |---|---|---|---|
 | `street-lamp.png` | 7e42bb10 | GPT Image 2.6, 1:1, 1K, high, reference = floodlight.webp (1.5 credits) | A product photo in the same style as the reference picture: one all-in-one solar LED street lamp shown on its own, without a pole: a slim dark grey aluminium light head with a flat solar panel built into its top and a short mounting arm at the back, seen from slightly in front and above so both the panel and the LED face show, switched off, centred, filling about two thirds of the frame. Plain warm cream studio background like the reference, soft daylight from the upper left, a soft shadow under it. Photorealistic, true colours, no text, no logos, no people. |
 | `solar-fan.png` | 6be58f34 | GPT Image 2.6, 1:1, 1K, high, reference = floodlight.webp (1.5 credits) | A product photo in the same style as the reference picture: one solar fan set: a white standing pedestal fan with a round wire grille, and beside it a small framed solar panel on a low folding stand, joined to the fan's base by one neat black cable. Seen from slightly in front, centred, filling about two thirds of the frame. Plain warm cream studio background like the reference, soft daylight from the upper left, soft shadows. Photorealistic, true colours, no text, no logos, no people. |
+
+## The six ranges without islands, sharp (round 38, approved by Bob on 2026-11-13)
+
+Round 36 cut the products out of the 800 px catalogue pictures, and Bob found them "too low" in quality. Then he asked to "remove the islands and make the image higher quality for the products", and approved making them new ("Make all five"). All GPT Image 2.6, 1:1, 2K, high, transparent, 2.75 credits each, with the product's catalogue picture in `public/catalog` as the reference. Every prompt follows this pattern: "Recreate the product from the reference picture exactly, same shape, colours, parts and proportions, as a new, sharp, high-resolution product photo: <the product>. Shown on its own, centred, filling about four fifths of the frame, seen from slightly in front, soft daylight from the upper left. Photorealistic product photography, crisp detail, true colours. Transparent background, no floor, no shadow, nothing else, no text, no logos, no people."
+
+| File | Job | Reference | The product |
+| --- | --- | --- | --- |
+| `range-solar.png` | d1a7fee8 | `solar-panels.webp`, `inverter.webp` | the framed blue monocrystalline solar panel standing upright, tilted slightly back, and beside it on the right, a little in front, the white wall inverter with its small screen, about a third of the panel's height |
+| `range-cooling.png` | 4cb9c3ee | `solar-ac.webp` | the white split air conditioner, the slim wall-mounted indoor unit above and, below it, the outdoor unit with its round fan grille and brass pipe valves |
+| `range-power.png` | c8904c4e | `power-station.webp` | the portable power station, its graphite grey case with silver corner caps and carry handles, the colour screen, the row of outlets and the two light bars on its front, seen from slightly in front and to the side |
+| `range-security.png` | 89928ba1 | `camera-home.webp` | the white solar security camera, the round white camera head with its dark lens on its white wall bracket, with the small black solar panel mounted above it |
+| `range-furniture.png` | 5b4a5750 | `lounge-chair.webp` | the lounge chair, its light oak frame with gently curved arms and its sage-green boucle seat and back cushions, seen from slightly in front and to the side |
+
+Published with `node tools/sky/range-products.mjs` (trims each to the product and writes `public/sky/range-<image>-{1200,640}.webp`). Lighting keeps the bulb from `bulb-light.mjs`.
+
+## More products in each range (round 39, approved by Bob on 2026-11-13, "9 pictures")
+
+Bob: "in the six range products gotta add more product like solar street lamp and solar fans". Same settings and prompt pattern as round 38 (GPT Image 2.6, 1:1, 2K, high, transparent, 2.75 credits each, the catalogue picture as the reference). The combined panel-and-inverter picture is split into two. The inverter's first submission hit a rate limit (nothing charged) and was sent again.
+
+| File | Job | Reference | The product |
+| --- | --- | --- | --- |
+| `range-solar-panel.png` | 2af67ccd | `solar-panels.webp` | one framed blue monocrystalline solar panel with a silver aluminium frame, standing upright and tilted slightly back, seen from slightly in front and to the side |
+| `range-inverter.png` | 6b0182f2 | `inverter.webp` | the white wall-mounted hybrid solar inverter with its small colour screen, its buttons and its wall bracket, seen from slightly in front and to the side |
+| `range-solar-fan.png` | 17d82ed6 | `tools/sky/source/catalog/solar-fan.png` | the white standing pedestal fan with its round wire grille and white blades, and beside it on the right the small framed solar panel on its low folding stand, joined to the fan's round base by one neat black cable |
+| `range-street-lamp.png` | 878c6cae | `tools/sky/source/catalog/street-lamp.png` | the all-in-one solar LED street lamp head on its own, without a pole: the slim dark grey aluminium body with the flat solar panel built into its top, the LED face underneath and the short mounting bracket at the back, seen from slightly in front and above, switched off |
+| `range-floodlight.png` | 5c38139d | `floodlight.webp` | the black LED floodlight with its square face of small LEDs behind clear glass, its finned heat sink and its U-shaped mounting bracket, switched off |
+| `range-led-strip.png` | bcf7c95f | `led-strip.webp` | a neat coil of white flexible LED strip light with a short loose end curving out of it, its small LEDs glowing soft warm white |
+| `range-generator.png` | 5ef6885d | `generator.webp` | the compact portable inverter generator, its pale grey case with dark green side panels, carry handle, green fuel cap and control panel with two sockets |
+| `range-camera-site.png` | c9b6f237 | `camera-site.webp` | the solar site security camera on its short galvanised steel pole with a round base plate, the white bullet camera on a bracket and the framed solar panel tilted on top |
+| `range-sofa.png` | d261fb35 | `sofa.webp` | the two-seat sofa in soft cream boucle fabric with rounded arms, two seat and two back cushions, on a slim light oak base with short legs |
+
+Published with `node tools/sky/range-products.mjs` (every product, or the names given), then `node tools/sky/thumbs.mjs` for the quote page's chips.
+
+## Ceiling lights and tubes (round 41, approved by Bob on 2026-11-14, "Make both")
+
+Bob: "for led lighting need to include ceiling lights and the tubes". Same settings and pattern as rounds 38 and 39 (GPT Image 2.6, 1:1, 2K, high, transparent, 2.75 credits each).
+
+| File | Job | Reference | The products |
+| --- | --- | --- | --- |
+| `range-ceiling-lights.png` | 9fcee2e1 | `downlights.webp` | a slim round white LED downlight and beside it a slim square white LED ceiling panel, both with their small spring clips at the sides, standing on edge and leaning slightly back, switched off |
+| `range-tubes.png` | a28df1d8 | `tubes.webp` | two slim white LED tubes with their two-pin end caps and beside them one white linear LED fitting with a square profile, laid side by side diagonally, switched off |

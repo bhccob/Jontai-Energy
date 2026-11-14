@@ -1,6 +1,6 @@
 /* Open air (round 9, nature direction; Bob 2026-11-10, after novair and l-elite templates and his "Energy reimagined"
-   picture). One real-looking sky holds behind the first sections; the products stand on floating islands of rock and
-   grass; the type is huge and thin across the sky. No boxes, no frames, no shapes: type on the sky, thin rules, and
+   picture). One real-looking sky holds behind the first sections; the type is huge and thin across the sky (the
+   floating islands that stood on it are gone since round 38: "less game like"). No boxes, no frames, no shapes: type on the sky, thin rules, and
    glass only on what floats (the header bar and the bundle panel). Nature images: tools/sky/prompts.md. */
 
 /* Green is the main colour (Bob, 2026-11-10): the backdrop is a green valley in mist, shaded toward the brand's deep
@@ -22,12 +22,40 @@
 
 /* ---------- The sky ---------- */
 
+/* Round 41 (Bob, after the Windore example: "the background being only white is too plain"): the green valley fills the
+   first view in full colour, shaded toward deep forest at the top and the foot so the words read, and the words are a
+   warm cream, Aruba's sunlight on the green. The page's own --sky-* colours are redefined for it here. */
 .sky-scope {
+  --sky-ink: #f5ecd9;
+  --sky-soft: rgb(245 236 217 / 0.9);
+  --sky-muted: rgb(245 236 217 / 0.76);
+  --sky-rule: rgb(245 236 217 / 0.3);
   position: relative;
-  z-index: 3;
+  z-index: 1;
   overflow: clip;
-  background: var(--sky-top);
+  background: #183a29;
   color: var(--sky-ink);
+}
+/* Round 37 (Bob: "just make it normal scroll ... like the loyalty page when scroll its on top of the first page"): the
+   first view holds still and Rewards slides up over it (.cover holds the two, so it holds only that long). A first
+   view taller than the screen scrolls to its foot first (--cover-top, HeroSkyMotion). With scripts only, so a page
+   without them is a plain scroll. As it goes under, it dims (--shade, scrubbed by HeroSkyMotion). */
+:root.js .sky-scope {
+  position: sticky;
+  top: var(--cover-top, 0px);
+}
+.sky-scope::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: rgb(8 22 15);
+  opacity: var(--shade, 0);
+  pointer-events: none;
+}
+/* Covered by Rewards, it is not painted at all. */
+.sky-scope[data-covered='true'] {
+  visibility: hidden;
 }
 .sky {
   position: sticky;
@@ -64,31 +92,20 @@
     display: none;
   }
 }
-/* The morning over the valley. It screens: black letters let the valley through untouched, the pale green everywhere
-   else turns it into soft morning light with the faintest movement. JONTAI stands across the foot of the screen. */
+/* The shade over the valley (round 41; until then a pale screen that turned it almost white): deep forest at the top
+   behind the header, clear through the middle where the hills show, deep again at the foot under JONTAI. */
 .sky__ink {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: flex-end;
-  padding: 0 var(--gutter);
-  background: linear-gradient(to bottom, #f7f9f2 0%, #eef3e7 55%, #e2ebd8 100%);
-  mix-blend-mode: screen;
+  background:
+    radial-gradient(70% 55% at 50% 42%, rgb(8 24 16 / 0.46), transparent 75%),
+    linear-gradient(to bottom, rgb(12 30 21 / 0.76) 0%, rgb(12 30 21 / 0.54) 26%, rgb(12 30 21 / 0.5) 52%, rgb(12 30 21 / 0.72) 78%, rgb(12 30 21 / 0.9) 100%);
 }
-.sky__name {
-  width: 100%;
-  margin: 0;
-  color: #000;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-stretch: 125%;
-  font-size: 22vw;
-  line-height: 0.8;
-  letter-spacing: -0.03em;
-  transform: translateY(14%);
-}
-.sky__name .c {
-  overflow: clip;
+/* Bob, round 42: "the first view page background is too strong", then "tone it down a bit more", then "tone it down
+   more". The valley is muted (little colour, soft contrast, darker) under a heavy deep green wash, so the hills are only
+   a quiet texture behind the words. */
+.sky__media {
+  filter: saturate(0.42) contrast(0.84) brightness(0.76);
 }
 /* The Aruba sun, rising behind the headline as the page opens: a warm soft light, never a disc with an edge. */
 .sky::after {
@@ -99,7 +116,8 @@
   width: min(120vw, 1500px);
   aspect-ratio: 1.6;
   translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(255 252 225 / 0.95), rgb(255 250 220 / 0.45) 40%, rgb(214 236 196 / 0.25) 65%, transparent);
+  background: radial-gradient(closest-side, rgb(255 236 196 / 0.26), rgb(255 230 186 / 0.1) 45%, transparent);
+  mix-blend-mode: soft-light;
   pointer-events: none;
 }
 @keyframes sun-rise {
@@ -120,10 +138,13 @@
 
 /* ---------- Buttons on the sky ---------- */
 
-.sky-scope .btn--primary {
-  --btn-fill: #0e2219;
-  background: var(--color-forest);
-  color: #f4f6ef;
+/* The main button is the cream of the words, with forest type, as Windore's light button on its landscape. */
+.sky-scope .hero__actions .btn--primary {
+  --btn-fill: #ffffff;
+  background: var(--sky-ink);
+  color: var(--color-forest);
+  text-shadow: none;
+  box-shadow: 0 14px 30px -16px rgb(4 12 8 / 0.7);
 }
 /* Over clouds an outline alone goes missing, so the outlined button floats on a little frosted glass. */
 .sky-scope .btn--ghost {
@@ -149,7 +170,7 @@
 
 /* The entrance, once, as the page paints: CSS only, so it never waits for scripts (--d, in ms, set in Hero). The valley
    comes up out of the morning mist and settles (no window or box opening: Bob, round 18), the name rises letter by
-   letter out of the grass, the island drifts up in front of it, then the words. */
+   letter out of the grass, then the words. */
 @keyframes sky-open {
   from {
     opacity: 0;
@@ -169,44 +190,8 @@
 }
 @keyframes hero-letter {
   from {
-    transform: translateY(100%);
-  }
-}
-@keyframes hero-arrive {
-  from {
     opacity: 0;
-    transform: translateY(120px) scale(0.9);
-  }
-}
-@keyframes hero-grass {
-  from {
-    transform: translateY(30%);
-  }
-}
-/* The island's slow bob, as if it were held by the air. */
-@keyframes island-float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-16px) rotate(-0.6deg);
-  }
-}
-/* The small islands (round 26): they rise into place a little after the main one, then each bobs at its own pace. */
-@keyframes isle-arrive {
-  from {
-    opacity: 0;
-    transform: translateY(70px) scale(0.86);
-  }
-}
-@keyframes isle-bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-11px) rotate(0.9deg);
+    transform: translateY(70%);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -221,110 +206,94 @@
     animation: hero-line 1300ms var(--ease-out) both;
     animation-delay: calc(var(--d, 0) * 1ms + 120ms);
   }
-  .sky__name .ci {
+  .hero__name .ci {
     animation: hero-letter 1500ms var(--ease-out) both;
   }
-  .sky__name .c:nth-child(1) .ci {
+  .hero__name .c:nth-child(1) .ci {
     animation-delay: 700ms;
   }
-  .sky__name .c:nth-child(2) .ci {
+  .hero__name .c:nth-child(2) .ci {
     animation-delay: 770ms;
   }
-  .sky__name .c:nth-child(3) .ci {
+  .hero__name .c:nth-child(3) .ci {
     animation-delay: 840ms;
   }
-  .sky__name .c:nth-child(4) .ci {
+  .hero__name .c:nth-child(4) .ci {
     animation-delay: 910ms;
   }
-  .sky__name .c:nth-child(5) .ci {
+  .hero__name .c:nth-child(5) .ci {
     animation-delay: 980ms;
   }
-  .sky__name .c:nth-child(6) .ci {
+  .hero__name .c:nth-child(6) .ci {
     animation-delay: 1050ms;
-  }
-  #hero .hero__lean {
-    animation: hero-arrive 1800ms var(--ease-out) 800ms both;
-  }
-  #hero .hero__float {
-    animation: island-float 8s ease-in-out 2.6s infinite;
-  }
-  #hero .hero__arrive {
-    animation: isle-arrive 1600ms var(--ease-out) both;
-  }
-  .hero__small--lantern .hero__arrive {
-    animation-delay: 1250ms;
-  }
-  .hero__small--tree .hero__arrive {
-    animation-delay: 1100ms;
-  }
-  .hero__small--meadow .hero__arrive {
-    animation-delay: 1350ms;
-  }
-  .hero__small--chair .hero__arrive {
-    animation-delay: 1200ms;
-  }
-  .hero__small--lantern .hero__bob {
-    animation: isle-bob 7s ease-in-out -2s infinite;
-  }
-  .hero__small--tree .hero__bob {
-    animation: isle-bob 9.5s ease-in-out -5s infinite;
-  }
-  .hero__small--meadow .hero__bob {
-    animation: isle-bob 8s ease-in-out -1s infinite;
-  }
-  .hero__small--chair .hero__bob {
-    animation: isle-bob 10.5s ease-in-out -7s infinite;
   }
 }
 
-/* Few things, on one axis: the words in the middle at the top, the landscape under them. */
+/* Few things, on one axis: the words in the middle of the sky, JONTAI under them across the foot of the screen. With
+   the islands gone (round 38) the first view is one screen tall (taller only when a short screen needs it), the words
+   in the middle of the room the name leaves them. */
 .hero {
   position: relative;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: calc(var(--nav-h) + clamp(16px, 3.6vh, 40px)) var(--gutter) 0;
+  padding: var(--nav-h) var(--gutter) 0;
   overflow: clip;
   text-align: center;
 }
 .hero__top {
   position: relative;
   z-index: 4;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   max-width: 64rem;
+  padding-block: clamp(24px, 5vh, 56px);
+  text-shadow: 0 2px 28px rgb(4 14 9 / 0.35);
+}
+/* JONTAI (round 39, Bob: "jontai text below gotta be better styled"; he picked "Forest ink on a hairline"). Round 41
+   (Bob, after the Windore example: "needs work like fading"): the whole word across the width in the words' cream, on a
+   faint rule, fading from solid at the top of its letters into the landscape at the foot, where the screen cuts it. */
+.hero__mark {
+  align-self: stretch;
+  padding-top: clamp(14px, 2.2vh, 22px);
+  border-top: 1px solid rgb(245 236 217 / 0.22);
+}
+.hero__name {
+  width: 100%;
+  margin: 0 0 -0.1em;
+  color: var(--sky-ink);
+  -webkit-mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.55) 58%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.55) 58%, transparent 96%);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 125%;
+  font-size: 22vw;
+  line-height: 0.78;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+.hero__name .c {
+  overflow: clip;
 }
 
-/* Aruba's welcome and the time at the store, as a plain line of small capitals over the headline (round 22). */
+/* Whether the store is open now, over the headline (round 43, Bob on the "Bon bini" time pill: "looks like its ai
+   generated"): plain text in the words' cream, as a sentence, with no pill, no dot, no rule and no spaced capitals. */
 .hero__eyebrow {
-  margin-bottom: clamp(16px, 2.6vh, 26px);
+  margin-bottom: clamp(14px, 2.2vh, 22px);
 }
-.sunclock {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  margin: 0;
-  color: var(--sky-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.hero__eyebrow .status {
+  display: inline;
+  color: var(--sky-soft);
+  font-size: 1rem;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
-.sunclock__hi {
-  color: var(--color-forest);
-  white-space: nowrap;
-}
-.sunclock__rule {
-  width: 36px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.5;
-}
-.sunclock__time {
-  white-space: nowrap;
+.hero__eyebrow .status i {
+  display: none;
 }
 
 .hero__display {
@@ -332,7 +301,8 @@
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(2.8rem, 5.8vw, 7rem);
+  /* On short, wide screens it also follows the height, so the words keep clear of JONTAI. */
+  font-size: clamp(2.8rem, min(5.8vw, 11.5vh), 7rem);
   line-height: 0.92;
   letter-spacing: -0.035em;
   text-transform: uppercase;
@@ -380,177 +350,23 @@
   }
 }
 
-/* The landscape: the island at the foot of the view, the name standing behind it across the whole width. */
-.hero__stage {
-  position: relative;
-  flex: 1 0 auto;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-height: 0;
-}
-.hero__island {
-  position: relative;
-  z-index: 2;
-  /* Bigger (Bob, round 28: "i want the main island to be bigger"); its size follows the screen's height, so the first
-     view still ends with JONTAI standing behind it. */
-  width: min(48vw, 50vh, 740px);
-  margin: clamp(16px, 3vh, 36px) 0 clamp(40px, 6vh, 90px);
-  pointer-events: none;
-}
-.hero__float {
-  position: relative;
-}
-.hero__lean {
-  position: relative;
-}
-.hero__day {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 50px 50px rgb(23 61 44 / 0.28));
-}
-
-/* The small islands round the main one (Bob, round 26: "more sub floating islands"), at different depths: the far
-   ones smaller and a little soft, the near ones larger and lower. Clear of the words; HeroSkyMotion moves them. */
-.hero__small {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-}
-.hero__small .hero__day {
-  filter: drop-shadow(0 26px 24px rgb(23 61 44 / 0.22));
-}
-.hero__small--lantern {
-  top: 23%;
-  right: 8%;
-  width: clamp(70px, 7vw, 130px);
-}
-.hero__small--lantern .hero__day {
-  filter: blur(0.6px) drop-shadow(0 18px 18px rgb(23 61 44 / 0.16));
-}
-.hero__small--tree {
-  top: 33%;
-  left: 6%;
-  width: clamp(96px, 10vw, 180px);
-}
-.hero__small--meadow {
-  top: 69%;
-  left: 10%;
-  z-index: 3;
-  width: clamp(120px, 12.5vw, 230px);
-}
-.hero__small--chair {
-  top: 61%;
-  right: 13%;
-  z-index: 3;
-  width: clamp(130px, 13.5vw, 245px);
-}
-.hero__drift,
-.hero__arrive,
-.hero__bob {
-  position: relative;
-}
-
-/* The floodlight's light (Bob, round 26: "a light that powers on"; round 28: the solar floodlight and camera on one short
-   post), placed in % of the island's picture (the LED panel spans 547 to 686 by 211 to 234 of 1200 by 1020): the panel
-   itself, a soft glow round it, a faint cone down to a pool on the grass in front. It powers on with a quick flicker
-   once the islands have arrived, and stays on. */
-.hero__led,
-.hero__halo,
-.hero__beam,
-.hero__pool {
-  position: absolute;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-.hero__led {
-  left: 51.4%;
-  top: 21.8%;
-  width: 11.8%;
-  height: 2.6%;
-  border-radius: 40%;
-  translate: -50% -50%;
-  rotate: -2deg;
-  background: radial-gradient(closest-side, #fffdf5, rgb(255 246 222 / 0.9) 55%, rgb(255 236 200 / 0));
-}
-.hero__halo {
-  left: 51.4%;
-  top: 22.2%;
-  width: 36%;
-  aspect-ratio: 1.5;
-  border-radius: 50%;
-  translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(255 248 226 / 1), rgb(255 240 208 / 0.5) 30%, rgb(255 234 198 / 0.14) 64%, transparent);
-}
-.hero__beam {
-  left: 50%;
-  top: 23.2%;
-  width: 30%;
-  height: 22%;
-  translate: -50% 0;
-  clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%);
-  background: linear-gradient(to bottom, rgb(255 246 222 / 0.7), rgb(255 242 214 / 0.24) 55%, transparent 94%);
-  filter: blur(6px);
-}
-.hero__pool {
-  left: 47%;
-  top: 45%;
-  width: 34%;
-  height: 8%;
-  border-radius: 50%;
-  translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(255 246 222 / 0.75), rgb(255 240 210 / 0.24) 55%, transparent);
-}
-@keyframes led-on {
-  0%,
-  8% {
-    opacity: 0;
-  }
-  12% {
-    opacity: 1;
-  }
-  18% {
-    opacity: 0.25;
-  }
-  26%,
-  100% {
-    opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  #hero :is(.hero__led, .hero__halo, .hero__beam, .hero__pool) {
-    animation: led-on 1400ms linear 2400ms both;
-  }
-}
-
-/* The mist the scroll flies into (HeroSkyMotion, round 26: no change of colour, Bob): it rises from below, the sky's
-   own pale white thickening until it is the white Rewards starts in. Twice the first view's height, clear at the top,
-   so it can climb up through it. */
-.hero__mist {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-  height: 200%;
-  background: linear-gradient(to top, #fff 50%, rgb(255 255 255 / 0.9) 64%, rgb(255 255 255 / 0.45) 82%, rgb(255 255 255 / 0));
-  opacity: 0;
-  pointer-events: none;
-}
-/* While the first view holds (wide screens), the islands' bob is the script's, so it can settle as the camera moves
-   in (HeroSkyMotion). */
-.sky-holds #hero .hero__float,
-.sky-holds #hero .hero__bob {
-  animation: none;
-}
-
 /* ---------- Header over the sky ---------- */
 
 .nav[data-sky] {
   color: var(--sky-ink);
+}
+/* At the top, over the valley (round 41): cream ink, and the one filled button in cream with forest type. */
+.nav[data-sky]:not([data-solid='true']) {
+  color: #f5ecd9;
+}
+.nav[data-sky]:not([data-solid='true']) .offer-pill {
+  background: #f5ecd9;
+  color: var(--color-forest);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav[data-sky]:not([data-solid='true']) .offer-pill:hover {
+    background: #ffffff;
+  }
 }
 /* Once you leave the top, the bar turns frosted white with the forest ink, over sky and page alike; over a dark
    section it keeps the pale ink shell.css gives it. */
@@ -567,12 +383,13 @@
 /* The panel (round 22: "in the middle with more rectangular shaped"): a native dialog, so it sits in the middle of the
    screen above everything, over a soft dimmed page; a wide rectangle of deep green glass with small corners, the three
    offers side by side. It rises a little as it opens. Round 33 (Bob: "the bundle pop up is smaller"): about half the
-   size it was, everything in it scaled down with it; on phones each offer is one row. */
+   size it was. Round 38 (Bob: "stay tuned for december bundles/ deals"): no offers in it, only the note that they are
+   coming in December and one way to hear first, so it is narrower still. */
 .offer {
-  width: min(42rem, calc(100vw - 32px));
+  width: min(27rem, calc(100vw - 32px));
   max-height: calc(100svh - 32px);
   margin: auto;
-  padding: 18px 24px 16px;
+  padding: 18px 24px 24px;
   overflow-y: auto;
   border: 0;
   border-radius: 12px;
@@ -655,87 +472,33 @@
   }
 }
 .offer__title {
-  margin: 0;
+  margin: 14px 0 0;
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
   line-height: 1;
   letter-spacing: -0.03em;
   text-transform: uppercase;
-}
-.offer__lead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px 24px;
-  margin: 10px 0 14px;
+  text-wrap: balance;
 }
 .offer__title:focus {
   outline: none;
 }
-.offer__list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-block: 1px solid rgb(244 246 239 / 0.14);
-}
-.offer__list li {
-  display: grid;
-  align-content: start;
-  gap: 6px;
-  padding: 14px 16px 15px;
-}
-.offer__list li:first-child {
-  padding-left: 0;
-}
-.offer__list li + li {
-  border-left: 1px solid rgb(244 246 239 / 0.14);
-}
-.offer__save {
-  margin: 0;
-  color: var(--color-mint);
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-stretch: 112%;
-  font-size: 2.2rem;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  transition: translate 500ms var(--ease-out);
-}
-.offer__save span {
-  margin-left: 2px;
-  font-size: 0.7rem;
-  font-stretch: 100%;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-.offer__name {
-  margin: 0;
-  font-weight: 650;
+.offer__text {
+  margin: 12px 0 20px;
+  color: rgb(244 246 239 / 0.74);
   font-size: 0.9rem;
-}
-.offer__items {
-  margin: 2px 0 0;
-  color: rgb(244 246 239 / 0.7);
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-@media (hover: hover) and (pointer: fine) {
-  .offer__list li:hover .offer__save {
-    translate: 4px 0;
-  }
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 .offer__ask {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 40px;
-  padding: 0 18px;
+  min-height: 42px;
+  padding: 0 20px;
   border-radius: var(--radius-pill);
   background: var(--color-mint);
   color: #0e2219;
@@ -746,9 +509,6 @@
     background-color 250ms ease,
     scale 120ms ease-out;
 }
-.offer__ask svg {
-  transition: translate 450ms var(--ease-out);
-}
 .offer__ask:active {
   scale: 0.98;
 }
@@ -756,45 +516,19 @@
   .offer__ask:hover {
     background: #cfe6c3;
   }
-  .offer__ask:hover svg {
-    translate: 4px 0;
-  }
 }
 .offer :focus-visible {
   outline-color: var(--color-mint);
 }
-.offer__note {
-  margin: 10px 0 0;
-  color: rgb(244 246 239 / 0.6);
-  font-size: 0.72rem;
-}
 @media (max-width: 48rem) {
   .offer {
-    padding: 16px 18px 14px;
-  }
-  .offer__list {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* One row per offer: the saving on the left, what it is beside it. */
-  .offer__list li,
-  .offer__list li:first-child {
-    grid-template-columns: 4.6rem minmax(0, 1fr);
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-  }
-  .offer__save {
-    font-size: 1.9rem;
-  }
-  .offer__list li + li {
-    border-left: 0;
-    border-top: 1px solid rgb(244 246 239 / 0.14);
+    padding: 16px 18px 18px;
   }
   .offer__ask {
     width: 100%;
   }
 }
-/* The title, the offers and the button arrive one after another as it opens. */
+/* The title, the words and the button arrive one after another as it opens. */
 @keyframes offer-row {
   from {
     opacity: 0;
@@ -802,51 +536,32 @@
   }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .offer[open] :is(.offer__title, .offer__list li, .offer__ask, .offer__note) {
+  .offer[open] :is(.offer__title, .offer__text, .offer__ask) {
     animation: offer-row 700ms var(--ease-out) both;
   }
   .offer[open] .offer__title {
     animation-delay: 160ms;
   }
-  .offer[open] .offer__list li {
-    animation-delay: calc(240ms + var(--i, 0) * 90ms);
+  .offer[open] .offer__text {
+    animation-delay: 240ms;
   }
   .offer[open] .offer__ask {
-    animation-delay: 300ms;
-  }
-  .offer[open] .offer__note {
-    animation-delay: 560ms;
+    animation-delay: 320ms;
   }
 }
 
-/* ---------- Narrow screens: the words, then the island, the name at the foot of the screen ---------- */
+/* ---------- Narrow screens ---------- */
 
-@media (max-width: 60rem) {
-  .hero__island {
-    width: min(78vw, 30rem);
-    margin: clamp(24px, 4vh, 40px) 0 calc(24vw + 24px);
-  }
-  /* Two of the small islands, either side of the main one. */
-  .hero__small--lantern,
-  .hero__small--meadow {
-    display: none;
-  }
-  .hero__small--tree {
-    top: auto;
-    bottom: calc(24vw + 24px + min(52vw, 20rem));
-    left: 1%;
-    width: min(21vw, 9rem);
-  }
-  .hero__small--chair {
-    top: auto;
-    bottom: calc(24vw + 12px);
-    right: 1%;
-    width: min(24vw, 10rem);
-  }
-}
 @media (max-width: 40rem) {
+  /* On phones the name is small: it stands whole above the concept note, fading less, so it still reads. */
   .hero {
-    padding-top: calc(var(--nav-h) + 22px);
+    padding-top: calc(var(--nav-h) + 8px);
+    padding-bottom: 44px;
+  }
+  .hero__name {
+    margin-bottom: 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgb(0 0 0 / 0.7) 70%, rgb(0 0 0 / 0.35) 100%);
+    mask-image: linear-gradient(to bottom, #000 30%, rgb(0 0 0 / 0.7) 70%, rgb(0 0 0 / 0.35) 100%);
   }
   .hero__display {
     font-size: clamp(2.5rem, 11.4vw, 4rem);
@@ -857,8 +572,5 @@
   }
   .hero__actions .btn {
     align-self: stretch;
-  }
-  .sunclock {
-    font-size: 0.72rem;
   }
 }

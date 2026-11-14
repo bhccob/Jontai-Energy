@@ -8,7 +8,8 @@ import { countUpText, hasCount } from '@/lib/countup';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const outsideHero = (el: Element) => !el.closest('#hero');
+/** The first view's words and the JONTAI behind them (.sky) have their own entrance in CSS (sky.css). */
+const outsideHero = (el: Element) => !el.closest('#hero, .sky');
 
 // Words and letters start below their line in CSS (so nothing flashes before this runs). GSAP reads that CSS offset as
 // a pixel y and would keep it under its own yPercent, so every rise also zeroes y.

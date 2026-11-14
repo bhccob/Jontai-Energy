@@ -65,7 +65,7 @@ export function ProductView({ panel, rise }: { panel: ProductPanel; rise: Rise }
 }
 
 /** The manufacturer's table: datasheet groups when there is a datasheet, otherwise the key specs and the model list. */
-function SpecTables({ product }: { product: Product }) {
+export function SpecTables({ product }: { product: Product }) {
   const sheet = product.datasheet;
   if (sheet) {
     return (
