@@ -48,9 +48,13 @@ Drafted 2026-10-28 from the store's current site: `pages/warranty` (policy dated
 
 The quote page (`/quote`) sends each request to the store by email through Resend (resend.com), with Reply-To set to the visitor so a reply goes straight to them. To switch it on, set `RESEND_API_KEY` and `QUOTE_FROM` (an address on a domain verified in Resend) where the site is hosted; `QUOTE_TO` overrides the inbox, which defaults to jontai@qq.com. See `.env.example`. Until then the page does not pretend to send: it says it could not, and opens the same message in the visitor's own email app instead.
 
-## Bundle offers (round 9, sample)
+## Bundles and discounts (round 41, coming soon)
 
-The header's "Bundle offers" panel (`lib/bundles.ts`) shows three sample bundles: Starter Solar Kit (solar panels, a hybrid inverter and a power station) 20% off, Home Security Bundle (two solar cameras) 15% off, Outdoor Lighting Pack (a street lamp, garden lights and an LED floodlight) 15% off. None of these is confirmed by the owner; the panel says "Sample offers. Ask in store for this month's bundles." No prices are shown. Replace the names, contents and savings with the store's real bundles, or remove the panel.
+The header's "Bundles & discounts" button ("Deals" on narrow screens) opens a panel (`lib/bundles.ts`, `BUNDLE_TEASER`) that holds no offers: it says bundles and discounts are coming soon, with no date, tells visitors to ask in store about current offers, and links to the contact page with bundles chosen. When the bundles and discounts are set, put their real names, contents and savings in `lib/bundles.ts` and the panel. No prices are shown.
+
+## Product pages (round 41)
+
+Every product in the six ranges has its own page at `/products/<id>` (`lib/productPages.ts`). The inverter, solar air conditioner, power station, generators, cameras and furniture pages reuse their product panels, with figures only from the supplied documents. The pages for solar panels, solar fans, bulbs, solar street lamps, ceiling lights, tubes, floodlights and LED strips describe what each is, where it goes and what to ask, with no models, figures or prices; the owner should check them and add real models and figures when there are documents for them.
 
 ## Added in round 12 (2026-11-11)
 

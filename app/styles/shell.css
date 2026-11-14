@@ -42,6 +42,10 @@ main {
   box-shadow: 0 1px 0 rgb(244 246 239 / 0.1);
   color: #f4f6ef;
 }
+/* Bare at the top of a page that opens on a dark ground (a product's page, round 41): pale ink on it. */
+.nav[data-over='dark']:not([data-solid='true']) {
+  color: #f4f6ef;
+}
 @media (prefers-reduced-transparency: reduce) {
   .nav[data-solid='true'],
   :root:not(.js) .nav {

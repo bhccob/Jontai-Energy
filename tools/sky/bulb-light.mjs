@@ -7,7 +7,7 @@
 // by brightness: golden or white where it glows, near white where it burns, as filaments look to the eye. The glass
 // stays clear: only a soft glow hugs the filaments (round 31's bake filled the globe with a haze and a lit block,
 // which no real bulb does), and for clear white the photo's warm cast is taken out of the glass. Each result is an
-// overlay the size of the published island (island-light-1200/700.webp), transparent wherever nothing changed; the page
+// overlay cut to the bulb alone (CROP, range-light-600/400.webp; round 36), transparent wherever nothing changed; the page
 // shows warm white and fades clear white in over it (LampSwitch). The light round the globe is one map for both,
 // painted on the page in the light's colour (--glow).
 //
@@ -26,6 +26,20 @@ const DEBUG = process.argv.includes('--debug');
 
 // The frame behind the picture where the bulb hangs (air.css .piece__frame, with its soft light near the top).
 const FRAME = [36, 74, 54];
+
+// Round 36 (Bob: "i wanna see the products in six ranges without the islands"): the range shows the bulb alone,
+// hanging by its cord from the top of its frame. This is the part of the trimmed photo it keeps (below the wooden
+// bar, above the grass, round the bulb), in the photo's pixels; the post, left of POST_EDGE, is taken out.
+const CROP = { left: 578, top: 160, width: 600, height: 710 };
+const POST_EDGE = 640;
+
+/** A full-size RGBA buffer cut to CROP and written at the sizes the page serves. */
+async function writeCrop(buf, name) {
+  const cut = await sharp(buf, { raw: { width: W, height: H, channels: 4 } }).extract(CROP).png().toBuffer();
+  for (const w of [600, 400]) {
+    await sharp(cut).resize(w).webp({ quality: 84, alphaQuality: 88, smartSubsample: true }).toFile(join(OUT, `${name}-${w}.webp`));
+  }
+}
 
 // The same trim publish.mjs makes, so the overlays line up with the served island pixel for pixel.
 const trimmed = await sharp(SRC).trim({ threshold: 1 }).toBuffer();
@@ -215,9 +229,7 @@ for (const light of LIGHTS) {
     }
   }
   const img = sharp(out, { raw: { width: W, height: H, channels: 4 } });
-  for (const w of [1200, 700]) {
-    await img.clone().resize(w).webp({ quality: 82, alphaQuality: 85, smartSubsample: true }).toFile(join(OUT, `island-light-${light.id}-${w}.webp`));
-  }
+  await writeCrop(out, `range-light-${light.id}`);
   results.push(light.id);
   if (DEBUG) {
     // The overlay and its halo on the frame colour, round the globe, to check by eye.
@@ -251,14 +263,28 @@ for (let y = 0; y < bh; y++) {
     const i = y * bw + x;
     const h = (halo[i] * 0.32 + mid[i] * 0.12) * (1 - smooth(2.4, 3.3, dist[i]));
     const o = ((y + y0) * W + (x + x0)) * 4;
+    // Fade out before the edges of the crop, so the light never ends in a straight line.
+    const ax = x + x0 - CROP.left;
+    const ay = y + y0 - CROP.top;
+    const edge = smooth(0, 90, Math.min(ax, CROP.width - ax, CROP.height - ay));
     haloOut[o] = haloOut[o + 1] = haloOut[o + 2] = 255;
-    haloOut[o + 3] = Math.round((1 - Math.exp(-2.2 * h)) * 255);
+    haloOut[o + 3] = Math.round((1 - Math.exp(-2.2 * h)) * 255 * edge);
   }
 }
-for (const w of [1200, 700]) {
-  await sharp(haloOut, { raw: { width: W, height: H, channels: 4 } })
-    .resize(w)
-    .webp({ quality: 80, alphaQuality: 90 })
-    .toFile(join(OUT, `island-light-halo-${w}.webp`));
+await writeCrop(haloOut, 'range-light-halo');
+
+// The bulb itself: the photo without the wooden post (everything left of POST_EDGE) and, by the crop, without the bar
+// above and the island below.
+const bare = Buffer.from(px);
+for (let y = 0; y < H; y++) for (let x = 0; x < Math.min(W, POST_EDGE); x++) bare[(y * W + x) * 4 + 3] = 0;
+await writeCrop(bare, 'range-light');
+if (DEBUG) {
+  const lit = await sharp(bare, { raw: { width: W, height: H, channels: 4 } })
+    .extract(CROP)
+    .composite([{ input: await sharp(haloOut, { raw: { width: W, height: H, channels: 4 } }).extract(CROP).png().toBuffer() }])
+    .flatten({ background: { r: FRAME[0], g: FRAME[1], b: FRAME[2] } })
+    .jpeg({ quality: 90 })
+    .toBuffer();
+  await sharp(lit).toFile(join(here, 'source', 'debug-range-light.jpg'));
 }
-console.log('bulb overlays', results.join(', '), '+ halo, box', { x0, y0, bw, bh });
+console.log('bulb', results.join(', '), '+ halo + bare bulb, crop', CROP);

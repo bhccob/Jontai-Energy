@@ -1,0 +1,213 @@
+/* One product's own page (round 41, app/products/[slug]): on the collection's deep green, laid out like the ranges.
+   The picture in a pane of dark glass beside its name and figures, then what to know as ruled points, then the rest of
+   its range. The product frame, tiles and slide come from air.css and glass.css. */
+
+.pp {
+  --pv-rule: rgb(244 246 239 / 0.14);
+  --pv-muted: var(--deep-muted);
+  min-height: 100svh;
+  background: var(--deep);
+  color: var(--deep-ink);
+}
+.pp :focus-visible {
+  outline-color: var(--color-mint);
+}
+/* Each part paints the deep green itself, so the header knows it is over a dark ground (Header, isDark) and turns pale. */
+.pp__top,
+.pp__details,
+.pp__more {
+  padding-inline: var(--gutter);
+  background: var(--deep);
+}
+.pp__top {
+  padding-top: calc(var(--nav-h) + clamp(24px, 4vh, 48px));
+  padding-bottom: clamp(48px, 8vh, 96px);
+}
+.pp__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-bottom: clamp(20px, 3.4vh, 36px);
+  color: var(--deep-muted);
+  font-size: 0.86rem;
+}
+.pp__crumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.pp__crumbs [aria-current] {
+  color: var(--deep-ink);
+  font-weight: 600;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pp__crumbs a:hover {
+    color: var(--color-mint);
+  }
+}
+.pp__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: 40px 5vw;
+}
+.pp__frame {
+  aspect-ratio: 5 / 4;
+}
+.pp__frame .product__pic {
+  width: min(70cqw, 74cqh * var(--ar));
+}
+.pp__frame[data-bulb] {
+  align-items: flex-start;
+}
+.pp__frame[data-bulb] .product__pic {
+  width: min(56cqw, 92cqh * var(--ar));
+}
+.pp__frame[data-bulb] .product__pic > img {
+  filter: none;
+}
+.pp__info {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+.pp__range {
+  margin: 0;
+  color: var(--color-mint);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pp__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: clamp(2.3rem, 4.2vw, 4.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.pp__model {
+  margin: -4px 0 0;
+  color: var(--deep-muted);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.pp__intro {
+  max-width: 34rem;
+  margin: 6px 0 0;
+  font-size: clamp(1.02rem, 0.3vw + 0.96rem, 1.15rem);
+  line-height: 1.55;
+}
+.pp__highlight {
+  margin: 0;
+  color: var(--color-mint);
+  font-weight: 600;
+}
+.pp__figures {
+  width: min(100%, 26rem);
+}
+.pp__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 26px;
+  margin-top: 10px;
+}
+.pp__actions .textlink {
+  --link-line: rgb(184 216 168 / 0.5);
+}
+
+/* What to know: a heading on the left, ruled points two to a row on the right, as a range reads. */
+.pp__details {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 24px 5vw;
+  padding-block: clamp(48px, 8vh, 88px);
+  border-top: 1px solid var(--deep-rule);
+}
+.pp__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-stretch: 112%;
+  font-size: clamp(1.7rem, 2.4vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+.pp__points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(20px, 3vw, 48px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pp__points li {
+  padding: 18px 0 22px;
+  border-top: 1px solid var(--deep-rule);
+}
+.pp__points h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 650;
+}
+.pp__points p {
+  margin: 0;
+  color: var(--deep-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.pp__points[data-steps] {
+  counter-reset: step;
+}
+.pp__points[data-steps] h3::before {
+  counter-increment: step;
+  content: counter(step, decimal-leading-zero) '  ';
+  color: var(--color-mint);
+  font-variant-numeric: tabular-nums;
+}
+.pp__specs {
+  margin-top: 28px;
+}
+.pp__subheading {
+  margin: 0 0 14px;
+  font-size: 1rem;
+  font-weight: 650;
+}
+.pp__note {
+  max-width: 44rem;
+  margin: 18px 0 0;
+  color: var(--deep-muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+/* The rest of its range, as tiles (a slide when there are more than two). */
+.pp__more {
+  display: grid;
+  gap: clamp(24px, 4vh, 40px);
+  padding-block: clamp(48px, 8vh, 88px) clamp(80px, 12vh, 140px);
+  border-top: 1px solid var(--deep-rule);
+}
+.pp__more .range__products {
+  max-width: 64rem;
+}
+.pp__more .rail {
+  max-width: 64rem;
+}
+
+@media (max-width: 60rem) {
+  .pp__grid,
+  .pp__details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp__points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

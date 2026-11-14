@@ -16,7 +16,8 @@ const loaders: Record<Exclude<Lang, 'en'>, () => Promise<{ default: Dict }>> = {
   zh: () => import('./zh.json') as Promise<{ default: Dict }>,
 };
 
-let state: I18nState = { lang: 'en', t: null };
+const SERVER: I18nState = { lang: 'en', t: null };
+let state: I18nState = SERVER;
 const listeners = new Set<() => void>();
 const cache = new Map<Lang, Translator>();
 let asked: Lang = 'en';
@@ -28,8 +29,9 @@ function emit(next: I18nState) {
 
 export const i18n = {
   get: (): I18nState => state,
-  /** English on the server and in the first render, so the page hydrates as it was written. */
-  server: (): I18nState => ({ lang: 'en', t: null }),
+  /** English on the server and in the first render, so the page hydrates as it was written. Always the same object:
+   *  React's useSyncExternalStore needs the server snapshot cached, or it warns of an endless loop. */
+  server: (): I18nState => SERVER,
   subscribe(l: () => void) {
     listeners.add(l);
     return () => {
