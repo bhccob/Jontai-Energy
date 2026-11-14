@@ -211,3 +211,94 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------- A product opened from the home page: a sheet over it (round 44, ProductSheet) ---------- */
+
+/* The home page holds still under the sheet. */
+html[data-sheet='open'] {
+  overflow: hidden;
+}
+.psheet {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--deep);
+  color: var(--deep-ink);
+  outline: none;
+}
+@keyframes psheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(6vh);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .psheet {
+    animation: psheet-in 520ms var(--ease-out);
+  }
+}
+/* Its own bar instead of the site's header: the way back on the left, close on the right; it stays as the sheet scrolls. */
+.psheet__bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--nav-h);
+  padding: 0 var(--gutter);
+  background: rgb(14 34 25 / 0.86);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: 0 1px 0 rgb(244 246 239 / 0.1);
+}
+.psheet__back,
+.psheet__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: none;
+  color: var(--deep-ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+.psheet__close {
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgb(244 246 239 / 0.3);
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    box-shadow 250ms ease;
+}
+.psheet__back svg {
+  transition: translate 400ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .psheet__back:hover svg {
+    translate: -3px 0;
+  }
+  .psheet__close:hover {
+    background: var(--color-mint);
+    color: var(--deep);
+    box-shadow: none;
+  }
+}
+.psheet :focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 3px;
+}
+/* Under its own bar, not the site's header: less room at the top. */
+.psheet .pp {
+  min-height: 0;
+}
+.psheet .pp__top {
+  padding-top: clamp(16px, 3vh, 32px);
+}

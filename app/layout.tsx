@@ -80,7 +80,8 @@ const store = {
   sameAs: [STORE.facebook, STORE.instagram],
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+/** `modal`: a product opened from inside the site, in a sheet over the page it was opened from (app/@modal, round 44). */
+export default function RootLayout({ children, modal }: { children: ReactNode; modal: ReactNode }) {
   return (
     <html lang="en" className={archivo.variable} suppressHydrationWarning>
       <head>
@@ -93,7 +94,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main" className="skip">
           Skip to content
         </a>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          {children}
+          {modal}
+        </SmoothScroll>
         <RevealObserver />
         <PageMotion />
         <GlassLight />

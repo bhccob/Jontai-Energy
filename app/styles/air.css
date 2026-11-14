@@ -1392,10 +1392,28 @@ main.air {
   position: relative;
   z-index: 1;
   overflow: clip;
-  padding: clamp(100px, 15vh, 170px) var(--gutter) clamp(40px, 6vh, 70px);
+  /* Room at the top for the green hem to lift out of before the title (round 44). */
+  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(40px, 6vh, 70px);
   background: var(--mist);
   color: var(--leaf-ink);
   text-align: center;
+}
+/* From the ranges into the reviews (round 44, Bob: "a seamless transition from end of product ranges to reviews a creative
+   way"): the ranges' deep green carries on over the top of the reviews like a curtain with a curved hem, the same curve
+   the reviews turn on, and as the reviews come up the hem lifts until the edge between them is straight (--hem,
+   scrubbed by Reviews). Without motion it rests as a gentle curve. Behind the reviews' own words and cards. */
+.reviews::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: -15%;
+  right: -15%;
+  height: var(--hem, clamp(40px, 8vh, 90px));
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: var(--deep);
+  box-shadow: 0 34px 60px -34px rgb(3 12 8 / 0.55);
+  pointer-events: none;
 }
 .reviews__title {
   max-width: 24ch;

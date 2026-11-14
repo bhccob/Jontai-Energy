@@ -23,7 +23,7 @@ test('every range has both pictures, a real panel to open and a real quote topic
       for (const w of p.files ?? FILES) assert.ok(existsSync(join(root, 'public', 'sky', `range-${p.image}-${w}.webp`)), `${p.image} ${w}`);
       assert.ok(QUOTE_TOPICS.some((t) => t.id === p.quote), `${p.name} → ${p.quote}`);
     }
-    for (const a of it.actions) assert.ok(panels.has(a.panel), `${it.id} → ${a.panel}`);
+    for (const a of it.actions ?? []) assert.ok(panels.has(a.panel), `${it.id} → ${a.panel}`);
     assert.ok(QUOTE_TOPICS.some((t) => t.id === it.quote), it.quote);
   }
 });
@@ -43,7 +43,7 @@ test('round 31: LED lighting by name, solar street lamps in it, solar fans under
   const led = data.categories.find((c: { id: string }) => c.id === 'led');
   assert.ok(led.range.some((r: { name: string }) => r.name === 'Solar street lamps'));
   const cooling = ISLANDS.find((i) => i.id === 'cooling')!;
-  assert.ok(cooling.actions.some((a) => a.panel === 'cooling' && /solar fans/.test(a.label)));
+  assert.ok(cooling.products.some((p) => p.name === 'Solar fans'));
   const range = data.categories.find((c: { id: string }) => c.id === 'cooling');
   assert.ok(range.range.some((r: { name: string }) => r.name === 'Solar fans'));
   for (const id of ['solar-fan', 'street-lamp']) {
@@ -104,4 +104,12 @@ test('round 41: every product has its own page, with words of its own or its pro
   assert.doesNotMatch(own, /\$|Afl|price|lumen|\d+\s?K\b/i);
   const led = ISLANDS.find((i) => i.id === 'light')!.products.map((p) => p.id);
   assert.ok(led.includes('ceiling-lights') && led.includes('led-tubes'));
+});
+
+test('round 44: the range rows stay broad: no figures, no model names, no links to one product', () => {
+  for (const it of ISLANDS) {
+    assert.equal(it.facts, undefined, it.id);
+    assert.doesNotMatch(`${it.line} ${it.note ?? ''}`, /Namkoo|ACDC|SPI-|\d[\d,]* ?(W|Wh|BTU|ms)\b/, it.id);
+    for (const a of it.actions ?? []) assert.ok(!['inverter', 'solar-ac', 'power-station', 'generator'].includes(a.panel), `${it.id} → ${a.panel}`);
+  }
 });
