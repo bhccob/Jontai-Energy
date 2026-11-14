@@ -40,9 +40,11 @@ export interface Island {
    *  than two slide sideways (ProductRail). */
   products: Product[];
   line: string;
+  /** Figures (unused since round 44: the range rows stay broad, figures are on the product pages). */
   facts?: { value: string; label: string }[];
   note?: string;
-  actions: { label: string; panel: PanelId }[];
+  /** Links to a panel that is about the range, not one product (furniture: how delivery works). */
+  actions?: { label: string; panel: PanelId }[];
   quote: string;
   /** Where the bulb's glass is in its source photo, in % (x, y of its centre; r of the width), for bulb-light.mjs. */
   lamp?: { x: number; y: number; r: number };
@@ -56,17 +58,7 @@ export const ISLANDS: Island[] = [
       { id: 'solar-panels', name: 'Solar panels', line: 'Framed panels for rooftop systems and solar air conditioning.', image: 'solar-panel', size: [1048, 1995], quote: 'solar-panels' },
       { id: 'hybrid-inverters', name: 'Hybrid inverters', line: 'Solar, battery and grid in one wall unit.', image: 'inverter', size: [1200, 1626], quote: 'inverter' },
     ],
-    line: 'Framed panels and one hybrid inverter that runs the whole house on sun, battery and grid.',
-    facts: [
-      { value: '8,000 W', label: 'Rated output' },
-      { value: '10 ms', label: 'To switch to battery' },
-      { value: '2 × 5,500 W', label: 'Solar inputs' },
-    ],
-    note: 'Figures from the Namkoo SPI-8K-UP datasheet. Ask what is on the shelf.',
-    actions: [
-      { label: 'See the inverter', panel: 'inverter' },
-      { label: 'See solar panels', panel: 'solar' },
-    ],
+    line: 'Solar panels and hybrid inverters that run a home on sun, battery and grid.',
     quote: 'inverter',
   },
   {
@@ -76,17 +68,8 @@ export const ISLANDS: Island[] = [
       { id: 'solar-air-conditioners', name: 'Solar air conditioners', line: 'Hybrid units that run on the sun by day and the grid when needed.', image: 'cooling', size: [1200, 1245], quote: 'solar-ac' },
       { id: 'solar-fans', name: 'Solar fans', line: 'Standing fans that run from their own small solar panel.', image: 'solar-fan', size: [1200, 1479], quote: 'solar-fan' },
     ],
-    line: 'Air conditioners that run on sunlight and use the grid only when they need to, and fans that run on a solar panel.',
-    facts: [
-      { value: '9,000–36,000', label: 'BTU, by model' },
-      { value: 'Up to 100%', label: 'Solar while the sun is out' },
-      { value: 'None', label: 'Battery or extra inverter needed' },
-    ],
-    note: 'Air conditioner figures from the ACDC hybrid solar AC brochure. Fitting needs an HVAC technician; Jontai Energy does not install.',
-    actions: [
-      { label: 'See solar air conditioners', panel: 'solar-ac' },
-      { label: 'See solar fans', panel: 'cooling' },
-    ],
+    line: 'Fans and air conditioners that run on the sun.',
+    note: 'Jontai Energy sells and delivers; it does not install.',
     quote: 'solar-ac',
   },
   {
@@ -96,17 +79,7 @@ export const ISLANDS: Island[] = [
       { id: 'portable-power-stations', name: 'Portable power stations', line: 'A quiet battery with outlets, for when the power goes out.', image: 'power', size: [1200, 923], quote: 'power-station' },
       { id: 'generators', name: 'Generators', line: 'Backup power for homes, shops and job sites.', image: 'generator', size: [1200, 1141], quote: 'generator' },
     ],
-    line: 'A quiet battery that keeps the fridge, fans and phones on when the grid drops.',
-    facts: [
-      { value: '3,000 W', label: 'Output' },
-      { value: '2,560 Wh', label: 'Battery' },
-      { value: '4', label: 'AC outlets' },
-    ],
-    note: '3,000 W portable power station. Figures from its spec sheet; other models differ.',
-    actions: [
-      { label: 'See the power station', panel: 'power-station' },
-      { label: 'See generators', panel: 'generator' },
-    ],
+    line: 'Power for when the grid goes down, from quiet batteries to generators.',
     quote: 'power-station',
   },
   {
@@ -122,7 +95,6 @@ export const ISLANDS: Island[] = [
     ],
     line: 'Bulbs in the colour you like, LED strips, ceiling panels, tubes, floodlights and solar street lamps.',
     note: 'Stock changes often, so ask before you make the trip.',
-    actions: [{ label: 'See LED lighting', panel: 'led' }],
     quote: 'led',
     // From tools/sky/fix-bulb.mjs, which turned the bulb the right way up into its socket.
     lamp: { x: 57.27, y: 32.63, r: 10.98 },
@@ -135,7 +107,6 @@ export const ISLANDS: Island[] = [
       { id: 'site-cameras', name: 'For sites and farms', line: 'For places with no power nearby.', image: 'camera-site', size: [1156, 1983], quote: 'cameras' },
     ],
     line: 'Security cameras that charge themselves from the sun, for the door, the yard or a site.',
-    actions: [{ label: 'See security cameras', panel: 'cameras' }],
     quote: 'cameras',
   },
   {

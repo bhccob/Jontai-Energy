@@ -13,7 +13,9 @@ const SIZES = '(max-width: 60rem) 46vw, 30vw';
  */
 export function ProductTile({ p }: { p: Product }) {
   return (
-    <Link href={`/products/${p.id}`} className="product__open" draggable={false}>
+    // scroll={false}: the product opens in a sheet over the page (round 44), so the page under it must not move; left
+    // to itself the router scrolls down to where the sheet sits in the document, the foot of the page.
+    <Link href={`/products/${p.id}`} className="product__open" draggable={false} scroll={false}>
       <span className="product__frame" aria-hidden="true">
         <ProductPicture p={p} sizes={SIZES} />
       </span>

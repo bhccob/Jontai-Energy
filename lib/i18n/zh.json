@@ -856,7 +856,11 @@
   "Light without a fitting": "无需灯具的照明",
   "Tuck it under cabinets, along a shelf or behind a TV for soft light with no lamp in sight.": "藏在橱柜下、搁板边或电视后面，柔和的光，不见灯具。",
   "Tell us where it goes": "告诉我们装在哪里",
-  "Lengths and power supplies differ, so tell us where it goes and we will show you what is in stock.": "长度和电源各不相同，告诉我们装在哪里，我们会为你介绍现有库存。"
+  "Lengths and power supplies differ, so tell us where it goes and we will show you what is in stock.": "长度和电源各不相同，告诉我们装在哪里，我们会为你介绍现有库存。",
+  "Back to the ranges": "返回品类",
+  "Solar panels and hybrid inverters that run a home on sun, battery and grid.": "太阳能板与混合逆变器，让家依靠太阳能、电池和电网运行。",
+  "Power for when the grid goes down, from quiet batteries to generators.": "停电时的电力保障，从安静的储能电源到发电机。",
+  "Jontai Energy sells and delivers; it does not install.": "Jontai Energy 负责销售和送货，不提供安装。"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} 星（满分 5 星）",

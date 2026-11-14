@@ -98,14 +98,15 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(70% 55% at 50% 42%, rgb(8 24 16 / 0.46), transparent 75%),
-    linear-gradient(to bottom, rgb(12 30 21 / 0.76) 0%, rgb(12 30 21 / 0.54) 26%, rgb(12 30 21 / 0.5) 52%, rgb(12 30 21 / 0.72) 78%, rgb(12 30 21 / 0.9) 100%);
+    radial-gradient(70% 55% at 50% 42%, rgb(14 34 25 / 0.4), transparent 75%),
+    linear-gradient(to bottom, rgb(14 34 25 / 0.72) 0%, rgb(14 34 25 / 0.46) 26%, rgb(14 34 25 / 0.42) 52%, rgb(14 34 25 / 0.66) 78%, rgb(14 34 25 / 0.9) 100%);
 }
-/* Bob, round 42: "the first view page background is too strong", then "tone it down a bit more", then "tone it down
-   more". The valley is muted (little colour, soft contrast, darker) under a heavy deep green wash, so the hills are only
-   a quiet texture behind the words. */
+/* Bob, round 42: "the first view page background is too strong", toned down three times; then round 44: "the green ...
+   looks a bit sad and not much the color of other greens in the website". The valley keeps its own living greens (no
+   more greying), and the shade over it is the site's deep green (--deep, #0e2219, the ranges' ground), so it stays calm
+   behind the words and of a piece with the rest of the page. */
 .sky__media {
-  filter: saturate(0.42) contrast(0.84) brightness(0.76);
+  filter: saturate(0.95) brightness(0.9);
 }
 /* The Aruba sun, rising behind the headline as the page opens: a warm soft light, never a disc with an edge. */
 .sky::after {

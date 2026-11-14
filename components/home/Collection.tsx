@@ -64,21 +64,12 @@ export function Collection() {
                 <h3 id={`${it.id}-title`} className="range__name">
                   {it.name}
                 </h3>
+                {/* Broad, about the range (round 44): what a product is, its figures and its model are on its page. */}
                 <p className="range__line">{it.line}</p>
-                {it.facts && (
-                  <dl className="range__facts">
-                    {it.facts.map((f) => (
-                      <div key={f.label}>
-                        <dt>{f.label}</dt>
-                        <dd>{f.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                )}
                 {it.lamp && <LampSwitch />}
                 {it.note && <p className="range__note">{it.note}</p>}
                 <div className="range__actions">
-                  {it.actions.map((a) => (
+                  {it.actions?.map((a) => (
                     <OpenCategoryButton key={a.panel} id={a.panel} className="textlink">
                       {a.label}
                     </OpenCategoryButton>
