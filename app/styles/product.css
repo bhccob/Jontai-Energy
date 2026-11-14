@@ -52,6 +52,14 @@
   align-items: center;
   gap: 40px 5vw;
 }
+/* A product with no picture yet (round 52): its words take the width. */
+.pp__grid--words {
+  grid-template-columns: minmax(0, 1fr);
+}
+.pp__grid--words .pp__info {
+  max-width: 46rem;
+  padding-block: clamp(12px, 4vh, 48px);
+}
 .pp__frame {
   aspect-ratio: 5 / 4;
 }
@@ -63,6 +71,12 @@
 }
 .pp__frame[data-bulb] .product__pic {
   width: min(56cqw, 92cqh * var(--ar));
+}
+.pp__frame[data-rise] {
+  align-items: flex-end;
+}
+.pp__frame[data-rise] .product__pic {
+  width: min(56cqw, 94cqh * var(--ar));
 }
 .pp__frame[data-bulb] .product__pic > img {
   filter: none;

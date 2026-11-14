@@ -23,7 +23,7 @@ export function CollectionMotion() {
     if (!section) return;
     const mm = gsap.matchMedia();
     mm.add(MOTION, () => {
-      const items = gsap.utils.toArray<HTMLElement>(section.querySelectorAll('.range__info, .product, .range__other'));
+      const items = gsap.utils.toArray<HTMLElement>(section.querySelectorAll('.range__info, .product, .range__words, .range__other'));
       gsap.set(items, { autoAlpha: 0, y: 28 });
       const batches = ScrollTrigger.batch(items, {
         start: 'top 90%',

@@ -901,9 +901,6 @@ main.air {
   --link-line: rgb(184 216 168 / 0.5);
   font-size: 0.92rem;
 }
-.range .lamp-switch {
-  margin: 4px 0 0;
-}
 
 /* The products: two to a row, every frame the same size, its name and line under it. */
 .range__products {
@@ -1100,6 +1097,14 @@ main.air {
 .product[data-bulb] .product__pic > img {
   filter: none;
 }
+/* The pole lamp (round 53): its head and the top of its pole, rising from the foot of the frame, the pole running on
+   out of it, so the lamp reads big instead of as a thin stick. */
+.product[data-rise] .product__frame {
+  align-items: flex-end;
+}
+.product[data-rise] .product__pic {
+  width: min(60cqw, 92cqh * var(--ar));
+}
 
 /* "Other": words only, the line and links beside its name. */
 .range__other {
@@ -1110,6 +1115,89 @@ main.air {
 }
 .range--other .range__info {
   position: static;
+}
+/* Others (round 51): what we sell outside the six, as ruled lines of words (no pictures): the name, its line beside it. */
+.others {
+  justify-self: stretch;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgb(244 246 239 / 0.16);
+}
+.others__item {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: 4px 28px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-bottom: 1px solid rgb(244 246 239 / 0.16);
+}
+.others__name {
+  font-size: 1rem;
+  font-weight: 650;
+}
+.others__line {
+  max-width: 30rem;
+  color: var(--deep-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+@media (max-width: 40rem) {
+  .others__item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* A range's products: the pictures, then (round 52) any product with no picture yet as a ruled line of words leading to
+   its page, like the Others row. */
+.range__shelf {
+  display: grid;
+  align-content: start;
+  gap: clamp(28px, 4vh, 40px);
+  min-width: 0;
+}
+.range__words {
+  margin: 0;
+}
+.range__words .others__item {
+  display: block;
+  padding: 0;
+}
+.others__open {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: 4px 28px;
+  align-items: baseline;
+  padding: 18px 0;
+  color: inherit;
+  text-decoration: none;
+}
+.others__open .others__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.others__open .others__name svg {
+  flex: none;
+  color: var(--color-mint);
+  opacity: 0.7;
+  transition:
+    translate 450ms var(--ease-out),
+    opacity 300ms ease;
+}
+.others__open:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 4px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .others__open:hover .others__name svg {
+    translate: 2px -2px;
+    opacity: 1;
+  }
+}
+@media (max-width: 40rem) {
+  .others__open {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* ---------- The people behind it (mist), after squared-media ---------- */
@@ -1672,135 +1760,6 @@ main.air {
 .footer__fine {
   border-top-color: rgb(244 246 239 / 0.12);
   color: var(--deep-muted);
-}
-
-/* ---------- The lighting range's bulb, lit from inside (LampSwitch, tools/sky/bulb-light.mjs) ---------- */
-
-/* The bulb baked in warm white and in clear white, each the picture's size and clear except round the globe, stacked
-   exactly on the picture in its frame (.product__pic). Clear white fades in over warm when it is
-   picked, and the halo turns from gold to white with it (round 33). */
-.range[data-lamp] {
-  --glow: 255 196 112; /* LIGHTS warm.glow, for the halo */
-}
-.range[data-lamp]:has(.lamp-switch input[value='clear']:checked) {
-  --glow: 250 251 250; /* LIGHTS clear.glow */
-}
-.lamp {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-/* The halo: one map of where the light falls, painted in the light's colour, under the globe. */
-.lamp__halo {
-  position: absolute;
-  inset: 0;
-  background: rgb(var(--glow));
-  -webkit-mask: url('/sky/range-light-halo-600.webp') 0 0 / 100% 100% no-repeat;
-  mask: url('/sky/range-light-halo-600.webp') 0 0 / 100% 100% no-repeat;
-  transition: background-color 600ms ease;
-}
-.product__pic .lamp__k {
-  position: absolute;
-  top: 0;
-  left: 0;
-  filter: none;
-  transition: opacity 600ms ease;
-}
-.product__pic .lamp__k--clear {
-  opacity: 0;
-}
-.range[data-lamp]:has(.lamp-switch input[value='clear']:checked) .lamp__k--clear {
-  opacity: 1;
-}
-
-/* The two light colours: glass chips on the dark green, a dot of each light, the chosen one filled with its light. */
-.lamp-switch {
-  min-width: 0;
-  margin: 22px 0 0;
-  padding: 0;
-  border: 0;
-}
-.lamp-switch__label {
-  margin: 0 0 10px;
-  padding: 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-/* Two equal chips side by side; when the names are too long for the column ("Blanco cálido"), one under the other. */
-.lamp-switch__opts {
-  display: flex;
-  flex-wrap: wrap;
-  width: fit-content;
-  max-width: 100%;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 10px;
-  background: rgb(244 246 239 / 0.06);
-  box-shadow: inset 0 0 0 1px rgb(244 246 239 / 0.14);
-}
-/* Name over its colour temperature, the dot beside both, so two fit in the narrow column. */
-.lamp-switch__opt {
-  position: relative;
-  flex: 1 1 0;
-  min-width: max-content;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  column-gap: 7px;
-  min-height: 48px;
-  padding: 6px 11px 6px 9px;
-  border-radius: 7px;
-  color: #f4f6ef;
-  font-size: 0.86rem;
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 450ms ease,
-    color 450ms ease,
-    box-shadow 450ms ease;
-}
-.lamp-switch__opt input {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.lamp-switch__dot {
-  grid-row: span 2;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgb(var(--light));
-  box-shadow: 0 0 10px 1px rgb(var(--light) / 0.7);
-}
-.lamp-switch__k {
-  grid-column: 2;
-  color: rgb(244 246 239 / 0.6);
-  font-size: 0.74rem;
-  transition: color 450ms ease;
-}
-.lamp-switch__opt:has(input:checked) {
-  background: rgb(var(--light));
-  color: #0e2219;
-  box-shadow: 0 0 22px -4px rgb(var(--light) / 0.55);
-}
-.lamp-switch__opt:has(input:checked) .lamp-switch__k {
-  color: rgb(14 34 25 / 0.6);
-}
-.lamp-switch__opt:has(input:checked) .lamp-switch__dot {
-  box-shadow: inset 0 0 0 1.5px rgb(14 34 25 / 0.35);
-}
-.lamp-switch__opt:has(input:focus-visible) {
-  outline: 2px solid var(--color-mint);
-  outline-offset: 2px;
-}
-@media (hover: hover) and (pointer: fine) {
-  .lamp-switch__opt:not(:has(input:checked)):hover {
-    background: rgb(244 246 239 / 0.08);
-  }
 }
 
 /* ---------- Narrow screens ---------- */

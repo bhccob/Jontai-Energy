@@ -20,7 +20,7 @@ const CHIPS = [
   { name: 'power', from: 'range-power-1200.webp' },
   // The bulb and its socket, without most of the cord, so the glass is not lost in a small chip.
   { name: 'light', from: 'range-light-600.webp', crop: { left: 0, top: 110, width: 600, height: 600 } },
-  { name: 'security', from: 'range-security-1200.webp' },
+  { name: 'security', from: 'range-camera-outdoor-1200.webp' },
   { name: 'furniture', from: 'range-furniture-1200.webp' },
 ];
 

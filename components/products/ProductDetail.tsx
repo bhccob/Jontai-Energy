@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { SpecTables } from '@/components/catalog/ProductView';
-import { ProductRail } from '@/components/home/ProductRail';
-import { ProductPicture, ProductTile } from '@/components/home/ProductTile';
-import { productBySlug } from '@/lib/islands';
+import { ProductPicture } from '@/components/home/ProductTile';
+import { RangeProducts } from '@/components/home/RangeProducts';
+import { hasPicture, productBySlug } from '@/lib/islands';
 import { contactHref } from '@/lib/message';
 import { DETAILS } from '@/lib/productPages';
 import { panelById, productById } from '@/lib/products';
@@ -55,10 +55,13 @@ export function ProductDetail({ slug }: { slug: string }) {
           <span aria-hidden="true">/</span>
           <span aria-current="page">{product.name}</span>
         </nav>
-        <div className="pp__grid">
-          <div className="pp__frame product__frame" data-bulb={product.bulb || undefined}>
-            <ProductPicture p={product} sizes="(max-width: 60rem) 92vw, 54vw" eager />
-          </div>
+        {/* A product with no picture yet (round 52) is its words alone, across the page. */}
+        <div className={hasPicture(product) ? 'pp__grid' : 'pp__grid pp__grid--words'}>
+          {hasPicture(product) && (
+            <div className="pp__frame product__frame" data-bulb={product.bulb || undefined} data-rise={product.rise || undefined}>
+              <ProductPicture p={product} sizes="(max-width: 60rem) 92vw, 54vw" eager />
+            </div>
+          )}
           <div className="pp__info">
             <p className="pp__range">{range.name}</p>
             <h1 id="pp-title" className="pp__name">
@@ -118,23 +121,7 @@ export function ProductDetail({ slug }: { slug: string }) {
           <h2 id="pp-more" className="pp__heading">
             More in {range.name}
           </h2>
-          {others.length > 2 ? (
-            <ProductRail count={others.length} labelledBy="pp-more">
-              {others.map((p) => (
-                <li key={p.id} className="product" data-bulb={p.bulb || undefined}>
-                  <ProductTile p={p} />
-                </li>
-              ))}
-            </ProductRail>
-          ) : (
-            <ul className="range__products" aria-labelledby="pp-more">
-              {others.map((p) => (
-                <li key={p.id} className="product" data-bulb={p.bulb || undefined}>
-                  <ProductTile p={p} />
-                </li>
-              ))}
-            </ul>
-          )}
+          <RangeProducts products={others} labelledBy="pp-more" />
         </section>
       )}
     </>
