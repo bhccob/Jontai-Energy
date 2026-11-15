@@ -2,14 +2,16 @@ import type { CSSProperties } from 'react';
 import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
-import { FILES, ISLANDS, PRODUCTS, hasPicture, shownIn, type Island, type Pictured } from '@/lib/islands';
+import { ISLANDS, PRODUCTS, hasPicture, shownIn, type Island, type Pictured } from '@/lib/islands';
 import { WHEEL_COPY } from '@/lib/homeCopy';
 import { contactHref } from '@/lib/message';
 import { WHEEL_PICKS, nameParts, rangeHref, restProgress } from '@/lib/wheel';
+import { RangePicture } from '@/components/products/RangePicture';
 import { WheelMotion } from './WheelMotion';
 
 const N = ISLANDS.length;
 const two = (n: number) => String(n).padStart(2, '0');
+const SIZES = '(max-width: 47.5rem) 84vw, 46vw';
 
 /** The product that stands for a range. */
 function pickOf(range: Island): Pictured {
@@ -32,24 +34,6 @@ function Name({ name }: { name: string }) {
 /** "See all 9 Solar products": one sentence, so the translator's pattern can reorder it. */
 const seeAll = (range: Island) =>
   WHEEL_COPY.seeAll.replace('{0}', String(shownIn(range).length)).replace('{1}', range.name);
-
-function Picture({ p, eager = false }: { p: Pictured; eager?: boolean }) {
-  const [small, large] = p.files ?? FILES;
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={`/sky/range-${p.image}-${large}.webp`}
-      srcSet={`/sky/range-${p.image}-${small}.webp ${small}w, /sky/range-${p.image}-${large}.webp ${p.size[0]}w`}
-      sizes="(max-width: 47.5rem) 84vw, 46vw"
-      alt=""
-      width={p.size[0]}
-      height={p.size[1]}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding="async"
-      draggable={false}
-    />
-  );
-}
 
 /**
  * What we sell (round 54, Bob picked "D. The wheel"): one held screen on deep green. The six range names stand on a drum
@@ -100,7 +84,7 @@ export function Wheel() {
                   <div key={r.id} className={`ws${p.bulb ? ' ws--hang' : ''}`} data-k={k}>
                     <a href={rangeHref(r.id)} aria-label={seeAll(r)}>
                       <span className="ws__fig">
-                        <Picture p={p} eager={k === 0} />
+                        <RangePicture p={p} sizes={SIZES} eager={k === 0} />
                         <span className="ws__floor" aria-hidden="true" />
                       </span>
                       <span className="ws__tag" aria-hidden="true">
@@ -144,7 +128,7 @@ export function Wheel() {
                   <Name name={r.name} />
                 </h3>
                 <a href={rangeHref(r.id)} className="wrow__pic" aria-label={seeAll(r)}>
-                  <Picture p={p} />
+                  <RangePicture p={p} sizes={SIZES} />
                 </a>
                 <a href={rangeHref(r.id)} className="btn wheel__go">
                   <span>{seeAll(r)}</span>
