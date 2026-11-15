@@ -73,7 +73,19 @@ export const INFO_COPY = {
   ask: 'Ask us about it',
 };
 
-export const MENU_COPY = { products: 'All products', solution: 'Our solution' };
+/** The menu (lib/menu): its four places, its two small groups and their links. */
+export const MENU_COPY = {
+  products: 'All products',
+  solution: 'Our solution',
+  sell: 'What we sell',
+  rewards: 'Rewards',
+  visit: 'Visit the store',
+  ranges: 'Ranges',
+  help: 'Help',
+  support: 'Support',
+  message: 'Send a message',
+  directions: 'Get directions',
+};
 
 /** The open-now line in two parts for the first view's Hours fact (lib/firstView hoursFact): the state, then the time. */
 export const HOURS_COPY = {

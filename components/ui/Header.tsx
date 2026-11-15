@@ -6,23 +6,9 @@ import { useLenis } from 'lenis/react';
 import { Headset, UserCircle } from '@phosphor-icons/react/dist/ssr';
 import { LangChoices, LangSwitch } from '@/components/i18n/LangSwitch';
 import { MemberLogin, openMemberLogin } from '@/components/sections/MemberLogin';
-import { DIRECTIONS_URL } from '@/lib/contact';
 import { MENU_COPY } from '@/lib/homeCopy';
-import { QUOTE_ACTION } from '@/lib/quote';
+import { menuLinks } from '@/lib/menu';
 import { useHeaderFit } from './useHeaderFit';
-
-/** The home page's sections, as the menu lists them. */
-/** The six ranges, named as on the home page (lib/islands), then Rewards and the visit (polish, round 30). */
-const LINKS = [
-  { id: 'solar', label: 'Solar' },
-  { id: 'light', label: 'LED lighting' },
-  { id: 'cooling', label: 'Cooling' },
-  { id: 'backup', label: 'Backup power' },
-  { id: 'security', label: 'Security' },
-  { id: 'upstairs', label: 'Furniture' },
-  { id: 'rewards', label: 'Rewards' },
-  { id: 'visit', label: 'Visit' },
-] as const;
 
 /** Whether an element paints a dark ground of its own (the ranges, the footer): the bar turns dark over those. */
 function isDark(el: HTMLElement) {
@@ -104,6 +90,7 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
   }, [open, lenis]);
 
   const close = () => setOpen(false);
+  const links = menuLinks(base);
 
   return (
     <>
@@ -167,43 +154,51 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
           </a>
         </div>
       </header>
+      {/* The menu (round 54, Bob: "this is so cluttered"): four big places on the home page, then small, beside them on
+          wide screens and under them on phones, the ranges (each straight to its products) and the ways to get help,
+          then the languages. */}
       <nav id="menu" ref={menu} className="menu" aria-label="Menu" data-open={open}>
-        <ul className="menu__links">
-          {LINKS.map((l) => (
-            <li key={l.id}>
-              <a href={`${base}#${l.id}`} onClick={close}>
+        <ul className="menu__main">
+          {links.main.map((l) => (
+            <li key={l.href}>
+              <a href={l.href} onClick={close}>
                 {l.label}
               </a>
             </li>
           ))}
-          <li>
-            <a href="/products" aria-current={pathname === '/products' ? 'page' : undefined} onClick={close}>
-              {MENU_COPY.products}
-            </a>
-          </li>
-          <li>
-            <a href={`${base}#solution`} onClick={close}>
-              {MENU_COPY.solution}
-            </a>
-          </li>
-          <li>
-            <a href="/support" aria-current={pathname === '/support' ? 'page' : undefined} onClick={close}>
-              Support
-            </a>
-          </li>
         </ul>
-        <div className="actions">
-          <a href="/contact" className="btn btn--primary">
-            Send a message
-          </a>
-          <a href="/quote" className="btn btn--ghost">
-            {QUOTE_ACTION}
-          </a>
-          <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className="btn btn--ghost">
-            Get directions
-          </a>
+        <div className="menu__side">
+          <div className="menu__group">
+            <p className="menu__label">{MENU_COPY.ranges}</p>
+            <ul className="menu__small menu__small--ranges">
+              {links.ranges.map((l, i) => (
+                <li key={l.href} className={i === 0 ? 'menu__all' : undefined}>
+                  <a href={l.href} aria-current={i === 0 && pathname === '/products' ? 'page' : undefined} onClick={close}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="menu__group">
+            <p className="menu__label">{MENU_COPY.help}</p>
+            <ul className="menu__small">
+              {links.help.map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    aria-current={pathname === l.href ? 'page' : undefined}
+                    onClick={close}
+                    {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <LangChoices />
         </div>
-        <LangChoices />
       </nav>
       <MemberLogin />
     </>

@@ -8,8 +8,10 @@ import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neigh
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { groundOf } from './cursorLight.ts';
+import { TRAIL_CELL, dotColor, dotLevel, groundOf, trailRadius } from './cursorLight.ts';
 import { makeTranslator } from './i18n/translate.ts';
+import { menuLinks } from './menu.ts';
+import { DIRECTIONS_URL } from './contact.ts';
 
 const root = join(import.meta.dirname, '..');
 const solar = ISLANDS.find((i) => i.id === 'solar')!;
@@ -308,4 +310,37 @@ test('round 54 translation: every wheel link reads whole in Spanish and Chinese'
   }
   const es = makeTranslator('es', JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')));
   assert.equal(es.text('See all LED lighting products'), 'Ver todos los productos de Iluminación LED');
+});
+
+// Bob, of the menu's eleven big capitals: "this is so cluttered". Four big links to the home page's places; the ranges
+// and the ways to get help small beside them, in the wheel's order, each range straight to its products.
+test('round 54 menu: four big places, then the ranges and help, small', () => {
+  const home = menuLinks('');
+  assert.deepEqual(home.main.map((l) => l.label), ['What we sell', 'Our solution', 'Rewards', 'Visit the store']);
+  assert.deepEqual(home.main.map((l) => l.href), ['#products', '#solution', '#rewards', '#visit']);
+  assert.deepEqual(menuLinks('/').main[0].href, '/#products', 'from another page, back to the home page');
+  assert.deepEqual(home.ranges.map((l) => l.href), ['/products', ...ISLANDS.map((r) => `/products?range=${r.id}`)]);
+  assert.deepEqual(home.ranges.slice(1, 3).map((l) => l.label), ['Solar', 'LED lighting']);
+  assert.deepEqual(home.help.map((l) => l.href), ['/support', '/contact', '/quote', DIRECTIONS_URL]);
+  assert.equal(home.help.at(-1)!.external, true);
+});
+
+// Bob: "the cursor hover should has same logic as this site https://www.squared-media.nl/": a trail of small dots on a
+// fine grid that follows the pointer, wide and bright at its head, thin and faint at its tail, gone when it stops.
+test('round 54 cursor trail: a comet of dots, brighter and larger the more of the trail lies on a cell', () => {
+  assert.ok(TRAIL_CELL >= 6 && TRAIL_CELL <= 12, 'a fine grid');
+  assert.equal(dotLevel(0), -1, 'nothing where the trail has not been');
+  assert.equal(dotLevel(0.01), -1, 'too faint to draw');
+  let last = -1;
+  for (let h = 0; h <= 6; h += 0.05) {
+    const l = dotLevel(h);
+    assert.ok(l >= last, `never dimmer for more heat (${h})`);
+    last = l;
+  }
+  assert.equal(dotLevel(6), 3, 'the head is the brightest');
+  assert.ok(trailRadius(0) < 8 && trailRadius(1) > 28, 'thin at the tail, wide at the head');
+  for (let i = 0; i < 1; i += 0.1) assert.ok(trailRadius(i + 0.1) >= trailRadius(i));
+  // The site's greens: forest and leaf on the light grounds, mint and cream on the deep green.
+  assert.notEqual(dotColor('light', 3), dotColor('dark', 3));
+  for (const g of ['light', 'dark'] as const) for (let l = 0; l < 4; l++) assert.match(dotColor(g, l), /^rgba\(/);
 });

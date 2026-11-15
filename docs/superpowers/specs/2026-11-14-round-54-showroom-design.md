@@ -24,6 +24,10 @@ the end".
    "All products" and "Our solution". The globe opens the three languages in a pane under the capsule, each named in
    itself with the one in use ticked; it stays cream over dark sections, like the Menu button (Bob: "the header to
    change language doesnt appear good"; the capsule had been clipping the list).
+   The menu (Bob, of its eleven big capitals: "this is so cluttered"): four big places on the home page in the site's
+   light wide type, sentence case and no rules (What we sell, Our solution, Rewards, Visit the store); beside them on
+   wide screens and under them on phones, small, under quiet labels: Ranges (All products, then the six ranges, each
+   straight to its products) and Help (Support, Send a message, Request a quote, Get directions); then the languages.
 2. **First view: still, light, four facts** (`site11.html`, look C, picked 2026-11-15). Light green over the faint,
    slowly moving valley (as today, barely visible). Centred: "Aruba sunlight, **made useful.**" in the site's mix of
    light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
@@ -102,12 +106,14 @@ the end".
    Instagram), **Contact** (email, phone, address). A last thin line holds the copyright with the service line ("sells
    and delivers; it does not install"), the concept note with the link to jontaienergy.com, and the languages. The huge
    JONTAI ENERGY and the old three columns go. The footer is the same on every page.
-8. **A light under the pointer, everywhere but what can be pressed** (Bob: "i want the cursor hover to be everywhere
-   thats not clickable so like background thats not matter it should feel premium"): a soft light trails the mouse over
-   the page's grounds, a pale glow on the deep greens and a soft leaf-green light on the light ones, and fades away over
-   links, buttons and fields. Clearly visible, not faint (Bob, of a first fainter version: "i dont see any cursor hover
-   effects"). The wheel's names take the pointer only on their words, so the ground beside them stays ground. Not on the first view (its sun does this), the header, the menu or a product sheet; none for touch
-   or with reduced motion.
+8. **A trail of dots under the pointer** (Bob: "the cursor hover should has same logic as this site
+   https://www.squared-media.nl/"): the screen is a fine grid; the pointer's head eases after it and leaves a comet,
+   wide at the head and thin at the tail, and every cell it covers shows a dot, larger and brighter where more of it
+   lies, shimmering a little; when the pointer rests the comet draws in and fades within a second. Jontai's greens, not
+   the reference's: forest and leaf on the light grounds, mint and cream on the deep green. It fades over anything that
+   can be pressed (Bob, earlier: "everywhere thats not clickable"); none in the header, the menu or a product sheet,
+   none for touch or with reduced motion. It replaces the earlier soft light, and on the first view the sun now drifts
+   on its own instead of following the pointer, so the page has one cursor effect.
 9. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
    premium"): the smooth scroll the site already has (Lenis); headings rise into place line by line as they arrive,
    with their lines and buttons fading up just after; the Rewards cards and figures as in 3; the sentence as in 4; the
