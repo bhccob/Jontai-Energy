@@ -134,11 +134,10 @@
 
 /* ---------- Jontai Rewards: glass over a soft green light ---------- */
 
-/* The section's ground: plain white (Bob, round 21), a sheet over the first view (round 37). */
+/* A sheet over the first view (round 37); its white ground is set in air.css. */
 .loyal {
   isolation: isolate;
   overflow: clip;
-  background: #fff;
 }
 /* Round 54: the plans are open (no glass tiles); the close button of How it works keeps its glass. */
 .tier__close {

@@ -65,6 +65,7 @@ export interface Island {
   also?: string[];
 }
 
+// Solar first, then LED lighting (round 54, Bob: "the order should also matter so solar first then led lighting").
 export const ISLANDS: Island[] = [
   {
     id: 'solar',
@@ -76,6 +77,25 @@ export const ISLANDS: Island[] = [
     line: 'Everything that runs on the sun: panels and inverters for the home, and solar air conditioners, fans, street lamps and cameras.',
     also: ['solar-air-conditioners', 'solar-fans', 'solar-floor-fans', 'solar-fan-lights', 'solar-street-lamps', 'solar-wall-lamps', 'outdoor-cameras'],
     quote: 'inverter',
+  },
+  {
+    id: 'light',
+    name: 'LED lighting',
+    products: [
+      { id: 'bulbs', name: 'Bulbs', line: 'Everyday and filament styles, warm to daylight white.', image: 'light', size: [600, 710], quote: 'led', files: [400, 600], bulb: true },
+      // Round 53 (Bob: "we have normal street lamps standing with pole and the wall mounted one").
+      { id: 'solar-street-lamps', name: 'Solar street lamps', line: 'Round-headed lamps on a pole of their own, for paths, courtyards and parking.', image: 'pole-lamp', size: [544, 952], quote: 'street-lamp', rise: true, whole: { image: 'pole-lamp-full', size: [400, 1408], files: [200, 400] } },
+      { id: 'solar-wall-lamps', name: 'Solar wall lamps', line: 'All-in-one lamps on a bracket, for a wall or a post you already have.', image: 'street-lamp', size: [1200, 707], quote: 'street-lamp' },
+      { id: 'ceiling-lights', name: 'Ceiling lights', line: 'Slim ceiling panels and round downlights.', image: 'ceiling-lights', size: [1200, 611], quote: 'led' },
+      { id: 'led-tubes', name: 'Tubes and linear fixtures', line: 'LED tubes and long linear fittings.', image: 'tubes', size: [1200, 841], quote: 'led' },
+      { id: 'floodlights', name: 'Floodlights', line: 'For yards and storefronts.', image: 'floodlight', size: [1200, 1292], quote: 'led' },
+      { id: 'led-strips', name: 'LED strips', line: 'Flexible strip lights, warm to daylight white.', image: 'led-strip', size: [1200, 679], quote: 'led' },
+    ],
+    line: 'Bulbs, LED strips, ceiling panels, tubes, floodlights and solar street lamps.',
+    note: 'Stock changes often, so ask before you make the trip.',
+    quote: 'led',
+    // From tools/sky/fix-bulb.mjs, which turned the bulb the right way up into its socket.
+    lamp: { x: 57.27, y: 32.63, r: 10.98 },
   },
   {
     id: 'cooling',
@@ -100,25 +120,6 @@ export const ISLANDS: Island[] = [
     ],
     line: 'Power for when the grid goes down, from quiet batteries to generators.',
     quote: 'power-station',
-  },
-  {
-    id: 'light',
-    name: 'LED lighting',
-    products: [
-      { id: 'bulbs', name: 'Bulbs', line: 'Everyday and filament styles, warm to daylight white.', image: 'light', size: [600, 710], quote: 'led', files: [400, 600], bulb: true },
-      // Round 53 (Bob: "we have normal street lamps standing with pole and the wall mounted one").
-      { id: 'solar-street-lamps', name: 'Solar street lamps', line: 'Round-headed lamps on a pole of their own, for paths, courtyards and parking.', image: 'pole-lamp', size: [544, 952], quote: 'street-lamp', rise: true, whole: { image: 'pole-lamp-full', size: [400, 1408], files: [200, 400] } },
-      { id: 'solar-wall-lamps', name: 'Solar wall lamps', line: 'All-in-one lamps on a bracket, for a wall or a post you already have.', image: 'street-lamp', size: [1200, 707], quote: 'street-lamp' },
-      { id: 'ceiling-lights', name: 'Ceiling lights', line: 'Slim ceiling panels and round downlights.', image: 'ceiling-lights', size: [1200, 611], quote: 'led' },
-      { id: 'led-tubes', name: 'Tubes and linear fixtures', line: 'LED tubes and long linear fittings.', image: 'tubes', size: [1200, 841], quote: 'led' },
-      { id: 'floodlights', name: 'Floodlights', line: 'For yards and storefronts.', image: 'floodlight', size: [1200, 1292], quote: 'led' },
-      { id: 'led-strips', name: 'LED strips', line: 'Flexible strip lights, warm to daylight white.', image: 'led-strip', size: [1200, 679], quote: 'led' },
-    ],
-    line: 'Bulbs, LED strips, ceiling panels, tubes, floodlights and solar street lamps.',
-    note: 'Stock changes often, so ask before you make the trip.',
-    quote: 'led',
-    // From tools/sky/fix-bulb.mjs, which turned the bulb the right way up into its socket.
-    lamp: { x: 57.27, y: 32.63, r: 10.98 },
   },
   {
     id: 'security',

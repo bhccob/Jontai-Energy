@@ -46,8 +46,8 @@ export const SOLUTION_POINTS = ['Your own power', 'We fix what we sell', 'Prices
 export const WHEEL_COPY = {
   title: ['Six ranges.', 'One store.'],
   line: 'Six ranges and more. Keep scrolling to go through them.',
-  see: 'See {0} products',
-  seeOthers: 'See other products',
+  see: 'See all {0} products',
+  seeOthers: 'See all other products',
   delivery: 'How delivery works',
   end: ['Every product,', 'one by one.'],
   endButton: 'See all products',
@@ -55,14 +55,22 @@ export const WHEEL_COPY = {
   pictures: 'Pictures are illustrations, not specific stock.',
 };
 
+// Round 54, view only (Bob: "i want them to not be like a site that you can shop but only to view"): no search, no
+// counts, no quote; a product opens its short info (INFO_COPY).
 export const CATALOG_COPY = {
   title: ['All', 'products'],
-  line: 'Everything on the shelf at Cumana 73, one by one. Pick one to see what it is and ask for a quote.',
-  search: 'Search products',
+  line: 'Everything on the shelf at Cumana 73, one by one. Pick one to read what it is.',
   others: 'Others',
   all: 'All',
-  empty: 'Nothing matches that. Try another word, or ask us.',
   othersLine: 'Smaller things we sell, and anything else you ask us for.',
+};
+
+/** The short info a product opens on the All products page (round 54). */
+export const INFO_COPY = {
+  close: 'Close',
+  prev: 'Previous product',
+  next: 'Next product',
+  ask: 'Ask us about it',
 };
 
 export const MENU_COPY = { products: 'All products', solution: 'Our solution' };

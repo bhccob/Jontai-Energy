@@ -15,9 +15,9 @@ import { useHeaderFit } from './useHeaderFit';
 /** The six ranges, named as on the home page (lib/islands), then Rewards and the visit (polish, round 30). */
 const LINKS = [
   { id: 'solar', label: 'Solar' },
+  { id: 'light', label: 'LED lighting' },
   { id: 'cooling', label: 'Cooling' },
   { id: 'backup', label: 'Backup power' },
-  { id: 'light', label: 'LED lighting' },
   { id: 'security', label: 'Security' },
   { id: 'upstairs', label: 'Furniture' },
   { id: 'rewards', label: 'Rewards' },

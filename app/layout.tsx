@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Archivo } from 'next/font/google';
 import { SmoothScroll } from '@/components/providers/SmoothScroll';
 import { ConceptBanner } from '@/components/ui/ConceptBanner';
+import { CursorLight } from '@/components/ui/CursorLight';
 import { GlassLight } from '@/components/ui/GlassLight';
 import { RevealObserver } from '@/components/ui/RevealObserver';
 import { PageMotion } from '@/components/motion/PageMotion';
@@ -101,6 +102,7 @@ export default function RootLayout({ children, modal }: { children: ReactNode; m
         <RevealObserver />
         <PageMotion />
         <GlassLight />
+        <CursorLight />
         <ConceptBanner />
         <Translator />
         {!CONCEPT && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(store) }} />}

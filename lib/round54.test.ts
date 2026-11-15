@@ -4,10 +4,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
 import { heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
-import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeActions, rangeNote } from './catalog.ts';
+import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
+import { groundOf } from './cursorLight.ts';
 
 const root = join(import.meta.dirname, '..');
 const solar = ISLANDS.find((i) => i.id === 'solar')!;
@@ -36,13 +37,15 @@ test('round 54 wheel: the six ranges then Others, by name, each saying plainly w
   const solarItem = items[0];
   assert.equal(solarItem.count, shownIn(solar).length);
   // Bob: "the bottom bar just have to say see .... products".
-  assert.equal(solarItem.label, 'See Solar products');
+  assert.equal(solarItem.label, 'See all Solar products');
+  // Bob: "the order should also matter so solar first then led lighting".
+  assert.deepEqual(items.slice(0, 2).map((i) => i.id), ['solar', 'light']);
   assert.equal(solarItem.href, '/products?range=solar');
   const others = items.at(-1)!;
   assert.equal(others.name, 'Others');
   assert.equal(others.count, OTHERS.length);
   assert.equal(others.href, '/products?range=others');
-  assert.equal(others.label, 'See other products');
+  assert.equal(others.label, 'See all other products');
   assert.equal(rangeHref('light'), '/products?range=light');
   assert.equal(rangeIndexFromHash('#others', items.map((i) => i.id)), items.length - 1);
 });
@@ -65,7 +68,7 @@ test('round 54 wheel: a name is a light word and a bold word, and both are trans
 
 test('round 54 wheel: a link to a range, from this page or another, names which range to rest on', () => {
   const ids = ISLANDS.map((i) => i.id);
-  assert.equal(rangeIndexFromHash('#light', ids), 3);
+  assert.equal(rangeIndexFromHash('#light', ids), 1);
   assert.equal(rangeIndexFromHash('#solar', ids), 0);
   assert.equal(rangeIndexFromHash('#delivery', ids), ids.indexOf('upstairs'));
   assert.equal(rangeIndexFromHash('#products', ids), -1);
@@ -86,7 +89,7 @@ test('round 54 catalogue: a range from the address, or All for anything else', (
 test('round 54 catalogue: filters in order with their counts', () => {
   assert.deepEqual(
     CATALOG_FILTERS.map((f) => f.id),
-    ['all', 'solar', 'cooling', 'backup', 'light', 'security', 'upstairs', 'others'],
+    ['all', 'solar', 'light', 'cooling', 'backup', 'security', 'upstairs', 'others'],
   );
   const count = (id: string) => CATALOG_FILTERS.find((f) => f.id === id)!.count;
   assert.equal(count('all'), PRODUCTS.length);
@@ -112,6 +115,51 @@ test('round 54 catalogue: products by range and by name, Solar showing every sol
   assert.deepEqual(rangeActions('others'), []);
   assert.equal(rangeNote('all'), null);
   assert.equal(rangeNote('others'), null);
+});
+
+// Bob: "i want them to not be like a site that you can shop but only to view ... where they can click and see short info
+// of the products". A product opens its short info over the page; the address keeps which one (?item=), so Back closes it.
+test('round 54 catalogue: a product opens its short info from the address, and only a real one', () => {
+  const ids = PRODUCTS.map((p) => p.id);
+  assert.equal(itemFromParam('solar-panels', ids), 'solar-panels');
+  assert.equal(itemFromParam(['sofas', 'bulbs'], ids), 'sofas');
+  assert.equal(itemFromParam('nope', ids), null);
+  assert.equal(itemFromParam('', ids), null);
+  assert.equal(itemFromParam(null, ids), null);
+  assert.equal(itemFromParam(undefined, ids), null);
+});
+
+test('round 54 catalogue: the short info steps to the product before and after, in the order the page shows them', () => {
+  const ids = ['a', 'b', 'c'];
+  assert.deepEqual(neighbours(ids, 'a'), { prev: null, next: 'b', at: 1, of: 3 });
+  assert.deepEqual(neighbours(ids, 'b'), { prev: 'a', next: 'c', at: 2, of: 3 });
+  assert.deepEqual(neighbours(ids, 'c'), { prev: 'b', next: null, at: 3, of: 3 });
+  assert.deepEqual(neighbours(ids, 'z'), { prev: null, next: null, at: 0, of: 3 });
+  assert.deepEqual(neighbours(['a'], 'a'), { prev: null, next: null, at: 1, of: 1 });
+});
+
+test('round 54 catalogue: the short info is the product in brief, at most three points and four figures', () => {
+  const points = Array.from({ length: 5 }, (_, i) => ({ title: `Point ${i}`, line: `Line ${i}.` }));
+  const figures = Array.from({ length: 6 }, (_, i) => ({ label: `Figure ${i}`, value: `${i} kW` }));
+  const product = { id: 'x', name: 'X lamps', range: { id: 'light', name: 'LED lighting' } };
+  assert.deepEqual(shortInfo({ product, title: 'X lamps for yards', model: 'XL-1', intro: 'What it is.', figures, points }), {
+    id: 'x',
+    range: 'LED lighting',
+    title: 'X lamps for yards',
+    model: 'XL-1',
+    intro: 'What it is.',
+    figures: figures.slice(0, 4),
+    points: points.slice(0, 3),
+  });
+  assert.deepEqual(shortInfo({ product, title: 'X lamps', intro: 'What it is.', points: [] }), {
+    id: 'x',
+    range: 'LED lighting',
+    title: 'X lamps',
+    model: null,
+    intro: 'What it is.',
+    figures: [],
+    points: [],
+  });
 });
 
 test('round 54 first view: the hours fact puts what matters first', () => {
@@ -188,4 +236,19 @@ test('round 54: the whole pole lamp is published for the All products page', () 
   assert.deepEqual(lamp.whole?.files, [200, 400]);
   assert.deepEqual(lamp.whole?.size, [400, 1408]);
   for (const w of lamp.whole!.files) assert.ok(existsSync(join(root, 'public', 'sky', `range-pole-lamp-full-${w}.webp`)), `${w}`);
+});
+
+// Bob: "i want the cursor hover to be everywhere thats not clickable so like background ... it should feel premium". The
+// light under the pointer takes the ground it is over: a pale glow on the deep greens, a soft leaf tint on the light ones.
+test('round 54 cursor light: it reads the ground under the pointer from its colour, and looks past see-through ones', () => {
+  assert.equal(groundOf('rgb(14, 34, 25)'), 'dark');
+  assert.equal(groundOf('rgb(23, 61, 44)'), 'dark');
+  assert.equal(groundOf('rgb(246, 248, 242)'), 'light');
+  assert.equal(groundOf('rgb(255, 255, 255)'), 'light');
+  assert.equal(groundOf('rgb(233, 239, 227)'), 'light');
+  assert.equal(groundOf('rgba(0, 0, 0, 0)'), null);
+  assert.equal(groundOf('rgba(14, 34, 25, 0.3)'), null, 'too faint to be the ground');
+  assert.equal(groundOf('rgba(14, 34, 25, 0.9)'), 'dark');
+  assert.equal(groundOf('transparent'), null);
+  assert.equal(groundOf(''), null);
 });

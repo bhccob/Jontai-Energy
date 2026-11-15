@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
+import { CLICKABLE } from '@/lib/cursorLight';
 
 /** How quickly the light catches up with the pointer, and comes and goes (per frame, 0 to 1). */
-const FOLLOW = 0.06;
-const FADE = 0.05;
+const FOLLOW = 0.045;
+const FADE = 0.04;
 /** How long after the pointer leaves before the light drifts on its own, in ms. */
 const IDLE = 1200;
+/** How far the sun goes towards the pointer (1: all the way), so it leans after it rather than chasing it. */
+const REACH = 0.6;
 
 /**
  * Aruba sunlight under the pointer (round 54, Bob: "i want that so the first view page is interactive and seamless motion
@@ -14,7 +17,9 @@ const IDLE = 1200;
  * shines the green veil thins, so the valley under it shows through (sky.css, --sun-x, --sun-y, --sun-on). The valley
  * leans a touch the other way and the words a touch with it, for depth (--lean-x, --lean-y). With no pointer on the first
  * view (phones, or the pointer elsewhere) the light drifts slowly by itself. Nothing moves with reduced motion, and it
- * rests while the first view is out of sight or covered by Rewards.
+ * rests while the first view is out of sight or covered by Rewards. Softer since (Bob: "the cursor hover should be
+ * less"): the sun leans only part of the way towards the pointer, the veil thins less, and over a button or a link it
+ * holds where it is and dims, so only the ground answers the pointer (Bob: "everywhere thats not clickable").
  */
 export function HeroLight() {
   useEffect(() => {
@@ -28,19 +33,23 @@ export function HeroLight() {
     let y = ty;
     let glow = 0;
     let inside = false;
+    let pressable = false;
     let left = -Infinity;
     let seen = true;
     let frame = 0;
 
     const move = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
-      const r = hero.getBoundingClientRect();
-      tx = (e.clientX - r.left) / r.width;
-      ty = (e.clientY - r.top) / r.height;
       inside = true;
+      pressable = e.target instanceof Element && e.target.closest(CLICKABLE) !== null;
+      if (pressable) return;
+      const r = hero.getBoundingClientRect();
+      tx = 0.5 + ((e.clientX - r.left) / r.width - 0.5) * REACH;
+      ty = 0.34 + ((e.clientY - r.top) / r.height - 0.34) * REACH;
     };
     const leave = () => {
       inside = false;
+      pressable = false;
       left = performance.now();
     };
     const set = (name: string, value: string) => scope.style.setProperty(name, value);
@@ -48,13 +57,13 @@ export function HeroLight() {
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
       if (!seen || scope.dataset.covered === 'true') return;
-      let target = 1;
+      let target = pressable ? 0.35 : 0.8;
       if (!inside && now - left > IDLE) {
         // On its own: a slow loop round the top of the screen, a little softer than under the pointer.
         const t = now / 1000;
-        tx = 0.5 + Math.sin(t * 0.21) * 0.24;
-        ty = 0.34 + Math.sin(t * 0.33 + 1) * 0.1;
-        target = 0.55;
+        tx = 0.5 + Math.sin(t * 0.21) * 0.18;
+        ty = 0.34 + Math.sin(t * 0.33 + 1) * 0.07;
+        target = 0.45;
       }
       x += (tx - x) * FOLLOW;
       y += (ty - y) * FOLLOW;

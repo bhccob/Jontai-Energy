@@ -1002,7 +1002,11 @@
   "wheel|LED": "LED",
   "wheel|lighting": "照明",
   "Six ranges and more. Keep scrolling to go through them.": "六大品类，还有更多。继续往下滚动，逐一浏览。",
-  "See other products": "查看其他商品"
+  "See all other products": "查看全部其他商品",
+  "Everything on the shelf at Cumana 73, one by one. Pick one to read what it is.": "Cumana 73 店内的所有商品，一件一件看。点开一件，了解它是什么。",
+  "Previous product": "上一件商品",
+  "Next product": "下一件商品",
+  "Ask us about it": "向我们咨询"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} 星（满分 5 星）",
@@ -1025,6 +1029,6 @@
   ", opens at {0}": "，{0} 开门",
   ", opens tomorrow at {0}": "，明天 {0} 开门",
   "See all {0} others": "查看全部 {0} 件其他商品",
-  "See {0} products": "查看{0}产品"
+  "See all {0} products": "查看全部{0}产品"
  }
 }

@@ -34,14 +34,17 @@ the end".
    screen; on phones the facts sit two by two. The cursor brings it to life (Bob: "interactive and seamless motion
    with cursor hover effect"): the soft sun behind the headline follows the pointer, easing after it, and the green veil
    thins round it so the valley shows through there; the valley and the words lean a touch for depth. With no pointer
-   it drifts slowly on its own; with reduced motion it stays still.
+   it drifts slowly on its own; with reduced motion it stays still. Softer since (Bob: "the cursor hover should be
+   less"): the sun leans only part of the way to the pointer, the veil thins less, and over a button or a link it holds
+   where it is and dims.
 3. **Rewards.** The same content and rules (`lib/loyalty.ts`), laid out calmer: "Shop as usual. **Earn it back.**" with
    one line under it; the two plans side by side with a thin rule between, each its card shown small and tilted, a
    large figure ("**Afl. 25** back", "**10%** off"), one sentence and "How it works" (which opens the existing steps
    panel); then "See my points" and "Not sure which card fits? Ask us; a person answers." No pill or chip above the
    title (Bob, round 43). Motion: the heading rises into place line by line, the two cards float gently and lean toward
    the pointer, and the figures count up once when they come into view.
-4. **Our solution: the sentence.** It takes the place of the "Why Jontai" section. The screen holds one large paragraph
+4. **Our solution: the sentence.** It takes the place of the "Why Jontai" section. Its ground is the same plain white as
+   Rewards just above it (Bob: "the color background as our solution should be the same as loyalty area"). The screen holds one large paragraph
    that fills in as you scroll, the key promises turning bold green:
    "At Jontai, your home makes **its own power**, so the island's blackouts do not stop your day. We **fix what we
    sell**, even years later. Our prices are **hard to beat**, for the same quality or better. We sell **far more than
@@ -62,15 +65,24 @@ the end".
      no colour per range (Bob: "i dont want so much color pallete"). No product pictures on the home page.
    - Each one leads to its products on the All products page (`/products?range=<id>`, Others to its Others list): the
      name in front, marked by a small round arrow beside it that turns under the pointer (Bob: "something indicating
-     that its clickable"), and one minimal link at the foot that says only "See LED lighting products" (Others: "See
-     other products") on a hairline. Clicking another name turns the drum to it.
+     that its clickable"), and one minimal link at the foot that says only "See all LED lighting products" (Others:
+     "See all other products") on a hairline. Clicking another name turns the drum to it.
+   - The order matters (Bob: "solar first then led lighting"): Solar, LED lighting, Cooling, Backup power, Security,
+     Furniture, then Others. The menu, the footer and the All products page follow it.
    - After Others the screen lets go into the end band: "Every product, **one by one.**" with "See all products".
-6. **All products page** at `/products` (`products.html`, "Light pools"). Title "All **products**", one line, a filter
-   pill for each range plus Others (with counts), a search box, then every product in a grid of four: the product
-   standing in a soft pool of white light (no frame), the range in small text, the name in bold and a round arrow; it
-   opens the product's page as today (the sheet over the page). Others (SD cards, small solar lights, solar doorbells,
-   WiFi mesh) is a ruled list of words at the end. `/products?range=<id>` opens it on that range ("See the range").
-   Solar shows every solar product, as on the home page today (`shownIn`).
+6. **All products page** at `/products`, to look at, not to shop (Bob: "i want them to not be like a site that you
+   can shop but only to view so more minimal and better displayed"). Title "All **products**", one line ("Everything on
+   the shelf at Cumana 73, one by one. Pick one to read what it is."), the ranges as a row of plain names between two
+   hairlines (the one shown in ink, underlined; no pills, no counts, no search), then every product large, three to a
+   row: the product standing in a soft pool of white light (no frame), the range in small capitals and the name, which
+   underlines under the pointer. No buy buttons and no quote. A product opens its **short info** (Bob: "click and see
+   short info of the products ... same styling design as the page of display"): a sheet of the page's own light that
+   slides in from the side (from the foot on phones) over a soft shade, with the product large, its range, name, model,
+   what it is, up to four figures and three points on ruled lines, and "Ask us about it". Arrows (and the arrow keys)
+   step to the product before or after, with "2 / 19"; the cross, the shade, Escape or Back close it. The address keeps
+   the range and the product (`?range=`, `?item=`), so links and Back work, and nothing reloads. Others (SD cards, small
+   solar lights, solar doorbells, WiFi mesh) is a ruled list of words at the end, with "Ask us". Solar shows every solar
+   product, as on the home page (`shownIn`). The full product pages stay for direct links.
 7. **The footer: unchanged after all.** A simpler footer after squared-media.nl was built, then Bob asked for the old one
    back ("i want the old footer back also"); the round 53 footer stays as it was. The simple one was: On the light
    paper ground: a large centred question, "Questions? **A person answers.**", one line ("Call, send a message or come by
@@ -80,11 +92,16 @@ the end".
    Instagram), **Contact** (email, phone, address). A last thin line holds the copyright with the service line ("sells
    and delivers; it does not install"), the concept note with the link to jontaienergy.com, and the languages. The huge
    JONTAI ENERGY and the old three columns go. The footer is the same on every page.
-8. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
+8. **A light under the pointer, everywhere but what can be pressed** (Bob: "i want the cursor hover to be everywhere
+   thats not clickable so like background thats not matter it should feel premium"): a soft light trails the mouse over
+   the page's grounds, a pale glow on the deep greens and a faint leaf tint on the light ones, and fades away over links,
+   buttons and fields. Not on the first view (its sun does this), the header, the menu or a product sheet; none for touch
+   or with reduced motion.
+9. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
    premium"): the smooth scroll the site already has (Lenis); headings rise into place line by line as they arrive,
    with their lines and buttons fading up just after; the Rewards cards and figures as in 3; the sentence as in 4; the
    wheel's arrival, turning and resting motion as in 5; footer links underline from the left on hover.
-9. **Unchanged:** the reviews, the people behind it, Visit, the footer, the product pages and sheets, quote, support.
+10. **Unchanged:** the reviews, the people behind it, Visit, the footer, the product pages and sheets, quote, support.
 
 ## Goals
 

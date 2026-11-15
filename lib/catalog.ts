@@ -47,3 +47,57 @@ export function rangeNote(filter: CatalogFilter): string | null {
 export function rangeActions(filter: CatalogFilter): NonNullable<Island['actions']> {
   return ISLANDS.find((i) => i.id === filter)?.actions ?? [];
 }
+
+/** The product whose short info the address asks for (?item=), or none for anything that is not one of them. */
+export function itemFromParam(v: string | string[] | null | undefined, ids: string[]): string | null {
+  const first = Array.isArray(v) ? v[0] : v;
+  return first && ids.includes(first) ? first : null;
+}
+
+/** The products either side of one in the order the page shows them, and where it stands (1 based; 0 when absent). */
+export function neighbours(ids: string[], id: string): { prev: string | null; next: string | null; at: number; of: number } {
+  const i = ids.indexOf(id);
+  if (i < 0) return { prev: null, next: null, at: 0, of: ids.length };
+  return { prev: ids[i - 1] ?? null, next: ids[i + 1] ?? null, at: i + 1, of: ids.length };
+}
+
+export interface Point {
+  title: string;
+  line: string;
+}
+export interface Figure {
+  label: string;
+  value: string;
+}
+
+/** A product told briefly, for the short info on the All products page (round 54, Bob: "see short info of the
+ *  products"): its range, its heading, the model when there is one, what it is, up to four figures and three points. */
+export interface ShortInfo {
+  id: string;
+  range: string;
+  title: string;
+  model: string | null;
+  intro: string;
+  figures: Figure[];
+  points: Point[];
+}
+
+/** The short info from a product's full page (components/products/ProductDetail pageOf). */
+export function shortInfo(page: {
+  product: { id: string; range: { name: string } };
+  title: string;
+  model?: string | null;
+  intro: string;
+  figures?: Figure[] | null;
+  points: Point[];
+}): ShortInfo {
+  return {
+    id: page.product.id,
+    range: page.product.range.name,
+    title: page.title,
+    model: page.model ?? null,
+    intro: page.intro,
+    figures: (page.figures ?? []).slice(0, 4),
+    points: page.points.slice(0, 3),
+  };
+}

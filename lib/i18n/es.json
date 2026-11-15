@@ -1001,7 +1001,11 @@
   "wheel|LED": "Iluminación",
   "wheel|lighting": "LED",
   "Six ranges and more. Keep scrolling to go through them.": "Seis líneas y más. Sigue bajando para recorrerlas.",
-  "See other products": "Ver otros productos"
+  "See all other products": "Ver todos los otros productos",
+  "Everything on the shelf at Cumana 73, one by one. Pick one to read what it is.": "Todo lo que hay en Cumana 73, uno por uno. Elige uno para leer qué es.",
+  "Previous product": "Producto anterior",
+  "Next product": "Producto siguiente",
+  "Ask us about it": "Pregúntanos sobre esto"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} de 5 estrellas",
@@ -1024,6 +1028,6 @@
   ", opens at {0}": ", abre a las {0}",
   ", opens tomorrow at {0}": ", abre mañana a las {0}",
   "See all {0} others": "Ver los {0} otros",
-  "See {0} products": "Ver productos de {0}"
+  "See all {0} products": "Ver todos los productos de {0}"
  }
 }
