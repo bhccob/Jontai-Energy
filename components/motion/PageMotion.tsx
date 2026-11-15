@@ -17,7 +17,6 @@ const BELOW = (percent: number) => ({ y: 0, yPercent: percent });
 
 const MOTION = '(prefers-reduced-motion: no-preference)';
 /** Wide and tall enough for the footer to wait under the page (shell.css). */
-const LIFTED = '(min-width: 961px) and (min-height: 720px)';
 
 /**
  * The page's scroll motion, read from data attributes the sections render (see the redesign plan's attribute
@@ -144,7 +143,7 @@ export function PageMotion() {
           );
         });
 
-        // Fitted words rise letter by letter (data-chars="end" is handled with the screen's size, below).
+        // Fitted words rise letter by letter (Visit's street). data-chars="end" (round 54: no longer used) does not.
         gsap.utils.toArray<HTMLElement>('[data-chars]').filter((el) => outsideHero(el) && el.dataset.chars !== 'end').forEach((el) => {
           gsap.fromTo(el.querySelectorAll('.ci'), BELOW(110), { yPercent: 0, duration: 1.2, ease: 'expo.out', stagger: 0.045, scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
         });
@@ -164,24 +163,6 @@ export function PageMotion() {
             { clipPath: inset },
             { clipPath: 'inset(0px 0vw 0px 0vw round 0px)', ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 12%', scrub: 0.6 } },
           );
-        });
-      });
-
-      // data-chars="end" (the footer's JONTAI ENERGY) rises with the last stretch of the page: across the lift where
-      // the footer waits under the page, otherwise as it arrives, finishing by the end of the page however little
-      // follows it.
-      mm.add({ motion: MOTION, lifted: LIFTED }, (ctx) => {
-        const { motion, lifted } = ctx.conditions as Record<string, boolean>;
-        if (!motion) return;
-        gsap.utils.toArray<HTMLElement>('[data-chars="end"]').forEach((el) => {
-          gsap.fromTo(el.querySelectorAll('.ci'), BELOW(105), {
-            yPercent: 0,
-            ease: 'none',
-            stagger: 0.05,
-            scrollTrigger: lifted
-              ? { trigger: 'main', start: 'bottom bottom', end: 'max', scrub: true }
-              : { trigger: el, start: 'top bottom', end: 'clamp(bottom 85%)', scrub: true },
-          });
         });
       });
 

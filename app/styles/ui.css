@@ -276,8 +276,7 @@
 }
 /* The focus ring keeps at least 3:1 against whatever it sits on: mint on forest and deep, forest on oak and on the
    light product stage (which sits inside a dark section). */
-[data-tone='dark'] :focus-visible,
-.footer :focus-visible {
+[data-tone='dark'] :focus-visible {
   outline-color: var(--color-mint);
 }
 .chapter[data-tone='oak'] :focus-visible,

@@ -1,5 +1,5 @@
-/* The site shell of the type-led redesign: header, menu, footer and the concept notice. The header bar and the menu
-   are frosted; the footer and the notice stay solid. */
+/* The site shell of the type-led redesign: header, menu and the concept notice (the footer is in air.css). The header
+   and the menu are frosted; the notice stays solid. */
 
 main {
   position: relative;
@@ -336,105 +336,6 @@ main {
   .menu__links a:hover {
     color: var(--color-forest);
     translate: 12px 0;
-  }
-}
-
-/* ---------- Footer ---------- */
-
-.footer {
-  position: relative;
-  z-index: 0;
-  padding: clamp(80px, 12vh, 120px) var(--gutter) 28px;
-  background: var(--color-deep);
-  color: rgb(247 245 236 / 0.78);
-  text-align: center;
-}
-/* Room under the fine print for the concept notice, which is a strip along the bottom on phones. */
-.footer[data-concept] {
-  padding-bottom: calc(28px + var(--concept-h, 0px));
-}
-.footer__nav {
-  display: grid;
-  gap: 28px;
-  justify-items: center;
-}
-.footer__nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px 34px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.footer__nav :is(a, button) {
-  padding: 4px 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-size: 1.1rem;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  transition: color 250ms ease;
-}
-.footer__social {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 44px;
-}
-.footer__social a {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px rgb(247 245 236 / 0.25);
-  transition: box-shadow 250ms ease;
-}
-.footer__social svg {
-  width: 20px;
-  height: 20px;
-}
-.footer__mark {
-  margin: clamp(64px, 10vh, 110px) 0 0;
-  padding: 0.03em 0 0.02em;
-  color: var(--color-forest);
-  font-weight: 800;
-  font-size: 15vw;
-  letter-spacing: -0.05em;
-  line-height: 0.78;
-}
-.footer__fine {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid rgb(247 245 236 / 0.12);
-  font-size: 0.875rem;
-  text-align: left;
-}
-.footer__fine a {
-  color: var(--color-mint);
-}
-@media (hover: hover) and (pointer: fine) {
-  .footer__nav :is(a, button):hover {
-    color: var(--color-sand);
-  }
-  .footer__social a:hover {
-    box-shadow: inset 0 0 0 1.5px var(--color-sand);
-  }
-}
-/* Wide screens: the footer waits under the page, which lifts off it on the way to the end. */
-@media (min-width: 60.01rem) and (min-height: 720px) {
-  .footer {
-    position: sticky;
-    bottom: 0;
   }
 }
 
