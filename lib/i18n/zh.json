@@ -996,7 +996,11 @@
   "for every Afl. 500": "（每消费 Afl. 500）",
   "For every Afl. 500 you spend, a voucher to spend on anything in the store.": "每消费 Afl. 500，就得到一张代金券，全店商品都能用。",
   "Reach 5,000 points and everything is 10% off until the account's anniversary.": "累计达到 5,000 积分后，全店商品享 10% 折扣，直至账户周年日。",
-  "back": "返还"
+  "back": "返还",
+  "wheel|Backup": "备用",
+  "wheel|power": "电源",
+  "wheel|LED": "LED",
+  "wheel|lighting": "照明"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} 星（满分 5 星）",

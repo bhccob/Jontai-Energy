@@ -166,13 +166,6 @@
   }
 }
 
-.collection__all {
-  background: var(--lg-glint), var(--lg-deep);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: var(--lg-rim-dark), var(--lg-drop-deep);
-}
-
 /* ---------- The team and the reviews (the visit keeps its ruled lines) ---------- */
 
 /* The people behind it, flat (Bob, round 24): the "You?" tile a plain deep green with small corners, its button plain

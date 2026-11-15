@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
-import { WHEEL_PICKS, WHEEL_TINT, heldPosition, rangeHref, restProgress } from './wheel.ts';
+import { WHEEL_PICKS, WHEEL_TINT, heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress } from './wheel.ts';
 import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeNote } from './catalog.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
@@ -35,6 +35,32 @@ test('round 54 wheel: one pictured product of its own for every range, a tint fo
     assert.equal(WHEEL_TINT[r.id]?.length, 3, `${r.id} has a tint`);
   }
   assert.equal(rangeHref('light'), '/products?range=light');
+});
+
+test('round 54 wheel: a name is a light word and a bold word, and both are translated where the wheel shows them', () => {
+  assert.deepEqual(nameParts('Backup power'), ['Backup', 'power']);
+  assert.deepEqual(nameParts('LED lighting'), ['LED', 'lighting']);
+  assert.deepEqual(nameParts('Solar'), ['', 'Solar']);
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  for (const r of ISLANDS) {
+    const [light, bold] = nameParts(r.name);
+    if (!light) continue;
+    for (const w of [light, bold]) {
+      assert.ok(`wheel|${w}` in es, `es wheel|${w}`);
+      assert.ok(`wheel|${w}` in zh, `zh wheel|${w}`);
+    }
+  }
+});
+
+test('round 54 wheel: a link to a range, from this page or another, names which range to rest on', () => {
+  const ids = ISLANDS.map((i) => i.id);
+  assert.equal(rangeIndexFromHash('#light', ids), 3);
+  assert.equal(rangeIndexFromHash('#solar', ids), 0);
+  assert.equal(rangeIndexFromHash('#delivery', ids), ids.indexOf('upstairs'));
+  assert.equal(rangeIndexFromHash('#products', ids), -1);
+  assert.equal(rangeIndexFromHash('', ids), -1);
+  assert.equal(rangeIndexFromHash('#', ids), -1);
 });
 
 test('round 54 catalogue: a range from the address, or All for anything else', () => {

@@ -363,19 +363,6 @@ main.air {
   font-weight: 300;
   letter-spacing: -0.03em;
 }
-/* The small numbered kickers, after Novair's "(01) Projects". */
-:is(.collection__kicker) {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-:is(.collection__kicker) span {
-  margin-right: 6px;
-  opacity: 0.55;
-  font-variant-numeric: tabular-nums;
-}
 
 /* ---------- Our solution: one sentence that fills in as you read it (round 54) ---------- */
 
@@ -469,121 +456,8 @@ main.air {
   }
 }
 
-/* ---------- What we sell: the collection (deep green), laid out like a catalogue ---------- */
+/* ---------- Products in rows and rails (the product pages' "More in", round 39 onward) ---------- */
 
-/* Round 39 (Bob: "more business design and scrolling not too game like"): the six ranges one under the other on thin
-   rules, each with its words on the left and its products in a grid on the right. A plain scroll; the words stay in
-   view while their products pass. */
-.collection {
-  position: relative;
-  z-index: 1;
-  background: var(--deep);
-  color: var(--deep-ink);
-}
-.collection__inner {
-  padding: clamp(80px, 12vh, 140px) var(--gutter) clamp(90px, 14vh, 150px);
-}
-.collection__head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  align-items: end;
-  gap: 28px 6vw;
-  padding-bottom: clamp(44px, 7vh, 72px);
-}
-.collection__kicker {
-  color: var(--color-mint);
-}
-.collection__title {
-  margin-top: 20px;
-  font-size: clamp(2.6rem, 5vw, 5.6rem);
-}
-.collection__intro {
-  display: grid;
-  justify-items: start;
-  gap: 22px;
-}
-.collection__lead {
-  max-width: 30rem;
-  margin: 0;
-  color: var(--deep-muted);
-  font-size: 1rem;
-  line-height: 1.55;
-}
-.collection__all {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 46px;
-  padding: 0 20px;
-  border-radius: var(--radius-pill);
-  box-shadow: inset 0 0 0 1.5px rgb(244 246 239 / 0.35);
-  color: var(--deep-ink);
-  font-weight: 650;
-  text-decoration: none;
-  transition:
-    background-color 300ms ease,
-    color 300ms ease,
-    box-shadow 300ms ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .collection__all:hover {
-    background: var(--deep-ink);
-    color: var(--deep);
-    box-shadow: none;
-  }
-}
-.collection :focus-visible {
-  outline-color: var(--color-mint);
-}
-
-/* A range: a ruled row, its words on the left (held in view while the products pass), its products on the right. */
-.ranges {
-  border-top: 1px solid rgb(244 246 239 / 0.16);
-}
-.range {
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: 32px 5vw;
-  padding-block: clamp(40px, 6vh, 64px);
-  border-bottom: 1px solid rgb(244 246 239 / 0.16);
-  scroll-margin-top: var(--nav-h);
-}
-.range:focus {
-  outline: none;
-}
-.range__info {
-  position: sticky;
-  top: calc(var(--nav-h) + 32px);
-  align-self: start;
-  display: grid;
-  justify-items: start;
-  gap: 14px;
-}
-.range__count {
-  margin: 0;
-  color: var(--color-mint);
-  font-size: 0.78rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
-}
-.range__name {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-stretch: 112%;
-  font-size: clamp(1.9rem, 2.6vw, 2.8rem);
-  line-height: 1;
-  letter-spacing: -0.025em;
-  text-transform: uppercase;
-}
-.range__line {
-  max-width: 26rem;
-  margin: 0;
-  color: var(--deep-muted);
-  font-size: 0.98rem;
-  line-height: 1.55;
-}
 /* The figures as a short ruled list: label on the left, value on the right. */
 .range__facts {
   display: grid;
@@ -614,24 +488,6 @@ main.air {
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
-.range__note {
-  max-width: 24rem;
-  margin: 0;
-  color: rgb(244 246 239 / 0.55);
-  font-size: 0.76rem;
-  line-height: 1.45;
-}
-.range__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  margin-top: 4px;
-}
-.range__actions .textlink {
-  --link-line: rgb(184 216 168 / 0.5);
-  font-size: 0.92rem;
-}
-
 /* The products: two to a row, every frame the same size, its name and line under it. */
 .range__products {
   --rail-gap: clamp(14px, 1.6vw, 24px);
@@ -836,16 +692,6 @@ main.air {
   width: min(60cqw, 92cqh * var(--ar));
 }
 
-/* "Other": words only, the line and links beside its name. */
-.range__other {
-  display: grid;
-  align-content: start;
-  justify-items: start;
-  gap: 14px;
-}
-.range--other .range__info {
-  position: static;
-}
 /* Others (round 51): what we sell outside the six, as ruled lines of words (no pictures): the name, its line beside it. */
 .others {
   justify-self: stretch;
@@ -1517,17 +1363,6 @@ main.air {
   }
 }
 @media (max-width: 40rem) {
-  /* The ranges stack: the words, then the products two to a row under them. */
-  .collection__head {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .range {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 26px;
-  }
-  .range__info {
-    position: static;
-  }
   .range__products {
     --rail-gap: 12px;
     gap: 24px var(--rail-gap);

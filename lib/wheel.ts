@@ -41,3 +41,19 @@ export const restProgress = (index: number, count: number) => (index + 0.2) / co
 
 /** A range's products on the All products page. */
 export const rangeHref = (id: string) => `/products?range=${id}`;
+
+/**
+ * A range's name as the wheel sets it: the first words light, the last word bold ("Backup" + "power"), or a one-word
+ * name bold alone. Each part is translated in the wheel's own place (data-i18n-ctx="wheel", "wheel|Backup").
+ */
+export function nameParts(name: string): [string, string] {
+  const at = name.lastIndexOf(' ');
+  return at < 0 ? ['', name] : [name.slice(0, at), name.slice(at + 1)];
+}
+
+/** Which range a link's hash asks the wheel to rest on (#light, or #delivery for Furniture), or -1 for none. */
+export function rangeIndexFromHash(hash: string, ids: string[]): number {
+  const id = decodeURIComponent(hash.replace(/^#/, ''));
+  if (!id) return -1;
+  return ids.indexOf(id === 'delivery' ? 'upstairs' : id);
+}

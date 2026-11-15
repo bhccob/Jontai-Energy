@@ -1,0 +1,445 @@
+/* What we sell (round 54, Bob picked "D. The wheel"; "maybe dark green background?"). One held screen on deep green:
+   the six range names on a drum like a phone's date picker, one product for each range sliding past in step, and the
+   range in front's way to its products at the foot. WheelMotion sets data-held while it runs; without it (no scripts,
+   reduced motion) the six are still rows. As the block arrives it grows from a rounded card out to the edges (--sx,
+   --sr). Pictures are clean cut-outs: no haze round them, only a small shadow where they meet the floor. */
+
+.sell {
+  position: relative;
+  background: #0e2219;
+  color: #f4f6ef;
+  clip-path: inset(0 var(--sx, 0px) 0 var(--sx, 0px) round var(--sr, 0px) var(--sr, 0px) 0 0);
+}
+.sell__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px 48px;
+  padding: clamp(110px, 16vh, 150px) var(--gutter) clamp(40px, 7vh, 64px);
+}
+.sell__title,
+.sell__end-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.03em;
+}
+.sell__title {
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  line-height: 0.98;
+}
+.sell__title b,
+.sell__end-title b {
+  font-weight: 760;
+  font-stretch: 100%;
+}
+.sell__line {
+  max-width: 34ch;
+  margin: 0;
+  color: rgb(244 246 239 / 0.68);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* ---------- The wheel ---------- */
+
+.wheel {
+  --wn-size: clamp(2.4rem, 5vw, 5.2rem);
+  position: relative;
+}
+/* Where the menu's and the footer's range links land: on each still row, or where the wheel rests on that range. */
+.wheel__anchor {
+  position: absolute;
+  left: 0;
+  top: calc(var(--k) * 100% / 6);
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.wheel[data-held='true'] {
+  height: 640vh;
+}
+.wheel[data-held='true'] .wheel__anchor {
+  top: calc(var(--rest) * (100% - 100vh));
+}
+.wheel__held {
+  display: none;
+}
+.wheel[data-held='true'] .wheel__held {
+  display: block;
+  height: 100%;
+}
+.wheel[data-held='true'] .wheel__still {
+  display: none;
+}
+
+.wheel__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  background:
+    radial-gradient(70% 90% at 70% 45%, rgb(var(--tint, 220 244 208) / 0.09), transparent 75%),
+    #0e2219;
+}
+
+/* The drum of names: the one in front between two hairlines; the rest tilt away on the curve (WheelMotion). */
+.wheel__names {
+  position: relative;
+  perspective: 1100px;
+  perspective-origin: 30% 50%;
+}
+.wheel__band {
+  position: absolute;
+  left: var(--gutter);
+  right: 0;
+  top: 50%;
+  height: 1.24em;
+  transform: translateY(-50%);
+  border-top: 1px solid rgb(244 246 239 / 0.16);
+  border-bottom: 1px solid rgb(244 246 239 / 0.16);
+  font-size: var(--wn-size);
+  pointer-events: none;
+}
+.wn {
+  position: absolute;
+  left: var(--gutter);
+  top: 50%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: var(--wn-size);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: left;
+  cursor: pointer;
+  backface-visibility: hidden;
+}
+.wn b {
+  font-weight: 780;
+  font-stretch: 100%;
+}
+.wn:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 6px;
+}
+
+/* One product for each range, sliding past in step with the drum. */
+.wheel__stage {
+  position: relative;
+  overflow: hidden;
+}
+.ws {
+  position: absolute;
+  left: 4%;
+  right: 8%;
+  top: 124px;
+  bottom: 11vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.ws--hang {
+  top: -5vh;
+  align-items: flex-start;
+}
+.ws a {
+  position: relative;
+  display: flex;
+  align-items: inherit;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.ws__fig {
+  position: relative;
+  display: flex;
+  align-items: inherit;
+  justify-content: center;
+  height: 100%;
+  max-width: 100%;
+}
+.ws__fig img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 600ms var(--ease-out);
+}
+.ws__floor {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -10px;
+  height: 22px;
+  background: radial-gradient(50% 50% at 50% 50%, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.18) 55%, transparent 75%);
+  pointer-events: none;
+}
+.ws--hang .ws__floor {
+  display: none;
+}
+.ws__tag {
+  position: absolute;
+  left: 50%;
+  bottom: -66px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgb(244 246 239 / 0.22);
+  background: rgb(244 246 239 / 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #f4f6ef;
+  font-size: 0.875rem;
+  font-weight: 650;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition:
+    opacity 400ms ease,
+    transform 500ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ws a:hover img {
+    transform: translateY(-10px) scale(1.025);
+  }
+  .ws a:hover .ws__tag {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+.ws a:focus-visible .ws__tag {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.ws a:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 4px;
+}
+@keyframes ws-bob {
+  to {
+    translate: 0 -8px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ws a {
+    animation: ws-bob 6s ease-in-out infinite alternate;
+  }
+}
+
+/* The foot of the range in front: its way to its products, where it is among the six, and for Furniture how delivery
+   works. */
+.wheel__feet {
+  position: absolute;
+  z-index: 3;
+  left: var(--gutter);
+  bottom: 7vh;
+}
+.wheel__foot {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px 22px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 400ms ease,
+    visibility 0s linear 400ms;
+}
+.wheel__foot[data-on='true'] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 400ms ease;
+}
+.btn.wheel__go,
+.btn.wheel__all {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  background: #f4f6ef;
+  color: #0e2219;
+  font-weight: 650;
+  text-decoration: none;
+}
+.btn.wheel__go {
+  gap: 16px;
+  min-height: 58px;
+  padding: 0 9px 0 26px;
+  font-size: 1rem;
+}
+.wheel__arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-forest);
+  color: #f4f6ef;
+  transition: rotate 450ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .wheel__go:hover .wheel__arrow {
+    rotate: 45deg;
+  }
+}
+.wheel__no {
+  color: rgb(244 246 239 / 0.68);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.wheel__no b {
+  color: #f4f6ef;
+}
+.wheel__delivery {
+  color: #f4f6ef;
+  font-size: 0.875rem;
+}
+
+/* ---------- The same six, still ---------- */
+
+.wheel__still {
+  display: grid;
+  margin: 0;
+  padding: 0 var(--gutter) 40px;
+  list-style: none;
+}
+.wrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'name pic'
+    'go pic';
+  align-items: center;
+  gap: 16px 4vw;
+  padding: 34px 0;
+  border-top: 1px solid rgb(244 246 239 / 0.14);
+}
+.wrow__name {
+  grid-area: name;
+  align-self: end;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 4.4rem);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.wrow__name b {
+  font-weight: 780;
+  font-stretch: 100%;
+}
+.wrow__pic {
+  grid-area: pic;
+  display: flex;
+  justify-content: center;
+  height: clamp(220px, 34vh, 360px);
+}
+.wrow__pic img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.wrow .wheel__go {
+  grid-area: go;
+  align-self: start;
+  justify-self: start;
+}
+
+/* ---------- The band that ends What we sell ---------- */
+
+.sell__end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px 40px;
+  padding: 80px var(--gutter) 90px;
+  border-top: 1px solid rgb(244 246 239 / 0.14);
+}
+.sell__end-title {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+.btn.wheel__all {
+  min-height: 52px;
+  padding: 0 26px;
+}
+.sell__also {
+  flex-basis: 100%;
+  margin: 0;
+  color: rgb(244 246 239 / 0.68);
+  font-size: 0.97rem;
+}
+.sell__also a {
+  color: #f4f6ef;
+  font-weight: 650;
+}
+
+/* ---------- Phones: the drum above, the product under it ---------- */
+
+@media (max-width: 47.5rem) {
+  .wheel {
+    --wn-size: 10vw;
+  }
+  .wheel__pin {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 44vh minmax(0, 1fr);
+  }
+  .wheel__names {
+    margin-top: 64px;
+  }
+  .ws {
+    top: 0;
+    bottom: calc(4vh + 84px);
+    left: 8%;
+    right: 8%;
+  }
+  .ws--hang {
+    top: -2vh;
+  }
+  .ws__tag {
+    display: none;
+  }
+  .wheel__feet {
+    right: var(--gutter);
+    bottom: 4vh;
+  }
+  .wheel__foot {
+    right: 0;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    white-space: normal;
+  }
+  .btn.wheel__go {
+    min-height: 52px;
+    font-size: 0.95rem;
+  }
+  .wrow {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'name'
+      'pic'
+      'go';
+  }
+}

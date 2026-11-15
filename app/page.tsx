@@ -4,7 +4,7 @@ import { Header } from '@/components/ui/Header';
 import { Hero } from '@/components/home/Hero';
 import { Rewards } from '@/components/home/Rewards';
 import { Solution } from '@/components/home/Solution';
-import { Collection } from '@/components/home/Collection';
+import { Wheel } from '@/components/home/Wheel';
 import { Team } from '@/components/home/Team';
 import { Reviews } from '@/components/home/Reviews';
 import { Visit } from '@/components/sections/Visit';
@@ -15,10 +15,9 @@ import { SkyScope } from '@/components/sky/SkyScope';
 export const viewport: Viewport = { themeColor: '#dae9cd' };
 
 /**
- * The order (Bob, round 25): the first view, which Jontai Rewards slides up over (round 37: the two share .cover, so
- * the first view holds still only while Rewards covers it); why the store is different; the
- * six ranges as a collection; what customers say on Google, right after the products; the people behind it; the
- * visit; the footer. ("What we offer" is gone: it repeated what the page and the menu already show.) Each section has
+ * The order (Bob, round 25; round 54's parts): the first view, which Jontai Rewards slides up over (round 37: the two
+ * share .cover, so the first view holds still only while Rewards covers it); Our solution, the sentence; What we sell,
+ * the wheel; what customers say on Google, right after the products; the people behind it; the visit; the footer. ("What we offer" is gone: it repeated what the page and the menu already show.) Each section has
  * its own character and its own way of arriving, in two greens and the same type. Bundle offers sit in the header.
  */
 export default function Home() {
@@ -33,7 +32,7 @@ export default function Home() {
           <Rewards />
         </div>
         <Solution />
-        <Collection />
+        <Wheel />
         <Reviews />
         <Team />
         <Visit />
