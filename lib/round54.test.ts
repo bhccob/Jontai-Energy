@@ -9,7 +9,7 @@ import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { DEAL_MEDIA, STACK_MEDIA, cardNumber, cardTone, fanSlot, stackTilt } from './solutionDeck.ts';
+import { DEAL_MEDIA, STACK_MEDIA, cardCount, cardNumber, cardTone, slideShape, stackTilt } from './solutionDeck.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -371,23 +371,27 @@ test('round 54 Rewards and Our solution: both run taller', () => {
 });
 
 // Bob, after the 3 x 2 grid: "no i want more simple card design view, something like https://www.squared-media.nl/
-// where its more cinematic and have animation and seem more like business, do not copy exact". The line stays on top;
-// under it six tall numbered cards are dealt in one by one as the page scrolls and land in a gentle fan (wide screens),
-// or stack into a deck (tablets and phones).
-test('round 54 Our solution deck: six numbered cards, three tones, a gentle fan', () => {
+// where its more cinematic and have animation and seem more like business, do not copy exact". That became design 1
+// (the fan deal, 8b36495). Bob asked for similar options and, of designs 2 to 4, said "maybe design 3": the slide. The
+// line stays on top; on wide screens the section holds while the six tall numbered cards run across the screen on a
+// strip, each leaning away from the middle and standing straight as it passes it, with a count and a rule under them.
+// Tablets and phones keep the deck.
+test('round 54 Our solution, design 3: six numbered cards, three tones, leaning as they pass', () => {
   const six = [0, 1, 2, 3, 4, 5];
   assert.deepEqual(six.map(cardNumber), ['01', '02', '03', '04', '05', '06']);
   assert.deepEqual(six.map(cardTone), ['deep', 'green', 'mint', 'deep', 'green', 'mint']);
-  const fan = six.map((i) => fanSlot(i, 6));
-  fan.forEach((f, i) => {
-    assert.equal(f.tilt, -fan[5 - i].tilt, `tilt mirrors at ${i}`);
-    assert.equal(f.lift, fan[5 - i].lift, `lift mirrors at ${i}`);
-    assert.ok(Math.abs(f.tilt) <= 4.5, `a business-like tilt: ${f.tilt}`);
-    assert.ok(f.lift >= 0 && f.lift <= 20, `a low arc: ${f.lift}`);
-    if (i) assert.ok(f.tilt > fan[i - 1].tilt, 'the tilts open left to right');
-  });
-  assert.ok(Math.abs(fan[2].tilt) < 1 && Math.abs(fan[3].tilt) < 1, 'the middle cards stand nearly straight');
-  assert.ok(fan[0].lift > fan[2].lift, 'the outer cards sit lower, so the row reads as a hand');
+  assert.equal(cardCount(1, 6), '02 / 06');
+  assert.equal(cardCount(5, 6), '06 / 06');
+  assert.deepEqual(slideShape(0), { tilt: 0, drop: 0, scale: 1 }, 'straight and level in the middle of the screen');
+  for (const d of [0.1, 0.3, 0.6, 1]) {
+    const right = slideShape(d), left = slideShape(-d);
+    assert.equal(left.tilt, -right.tilt, `the lean mirrors at ${d}`);
+    assert.equal(left.drop, right.drop);
+    assert.equal(left.scale, right.scale);
+    assert.ok(right.tilt > 0 && right.tilt <= 7, `a card right of the middle leans right, a little: ${right.tilt}`);
+    assert.ok(right.drop > 0 && right.drop <= 46 && right.scale < 1 && right.scale >= 0.92, 'and sits back');
+  }
+  assert.deepEqual(slideShape(3), slideShape(1), 'no further than a screen away');
   const stack = six.map(stackTilt);
   stack.forEach((t, i) => {
     assert.ok(Math.abs(t) > 0 && Math.abs(t) <= 2, `a slight lean in the deck: ${t}`);
@@ -405,15 +409,19 @@ test('round 54 Our solution deck: the deal, its CSS and its script share one scr
   assert.match(STACK_MEDIA, /prefers-reduced-motion: no-preference/);
   assert.ok(air.includes(`@media ${DEAL_MEDIA} {`), 'the held stage is laid out in CSS for the screens the script deals on');
   assert.match(air, /\.solution__stage \{[^}]*position: sticky;/, 'the stage holds while the cards are dealt');
-  // The deck's held cards are laid out for exactly the screens the script sinks them on, and never reach the fan.
+  // The deck's held cards are laid out for exactly the screens the script sinks them on, and never reach the strip.
   const deckScreens = STACK_MEDIA.replaceAll('(prefers-reduced-motion: no-preference) and ', '');
   assert.ok(air.includes(`@media ${deckScreens} {`), `the deck is laid out for ${deckScreens}`);
   assert.match(deck, /DEAL_MEDIA/);
   assert.match(deck, /STACK_MEDIA/);
-  assert.match(deck, /scrub/, 'the deal follows the scroll both ways');
+  assert.match(deck, /scrub/, 'the slide follows the scroll both ways');
+  assert.match(deck, /slideShape/);
+  assert.match(deck, /cardCount/);
   assert.match(solution, /<ol className="solution__cards"/, 'the six promises in order');
   assert.match(solution, /cardNumber\(i\)/);
   assert.match(solution, /SOLUTION_CARDS\.map/);
   assert.match(solution, /<SolutionDeck \/>/);
-  assert.doesNotMatch(solution, /data-reveal style/, 'no fade of their own on top of the deal');
+  assert.match(solution, /className="solution__meter" aria-hidden="true"/, 'the count and the rule under the strip');
+  assert.match(air, /\.solution__meter \{[^}]*display: none;/, 'shown only while the strip runs');
+  assert.doesNotMatch(solution, /data-reveal style/, 'no fade of their own on top of the slide');
 });

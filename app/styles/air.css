@@ -381,13 +381,13 @@ main.air {
   letter-spacing: -0.03em;
 }
 
-/* ---------- Our solution: the line on top, six cards dealt under it (round 54) ---------- */
+/* ---------- Our solution: the line on top, six cards sliding past under it (round 54) ---------- */
 
 /* The top is laid out as Rewards' is (Bob: "Line on top"): the line large on the left, a short line and Visit the store
    at its foot on the right. Under it six tall cards (Bob: "more simple card design view, something like squared-media
    where its more cinematic and have animation and seem more like business, do not copy exact"): a number, the promise
-   and one plain line, on one of three greens. Wide screens deal them into a fan while the section holds; tablets and
-   phones stack them into a deck (SolutionDeck, lib/solutionDeck). */
+   and one plain line, on one of three greens. Wide screens run them across on a strip while the section holds
+   (design 3, the slide); tablets and phones stack them into a deck (SolutionDeck, lib/solutionDeck). */
 .solution {
   position: relative;
   /* Over Rewards' shadow, which would otherwise draw a faint line where the two whites meet. */
@@ -557,41 +557,32 @@ main.air {
   }
 }
 
-/* Wide screens: the fan. The six cards stand in one row, each over the right edge of the one before, tilted a little
-   more toward the ends and sitting a little lower there, so the row reads as a hand held out. The words keep to the
-   part of a card the next one leaves open. */
+/* Wide screens without motion: the cards stand in two rows of three under the line. */
 @media (min-width: 75rem) and (min-height: 40rem) {
   .solution__cards {
-    container-type: inline-size;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 21rem));
     justify-content: center;
-    align-items: center;
-    --cw: min(22rem, calc(100cqi / 4.8), calc((100vh - 360px) * 0.8));
+    gap: 24px;
   }
   .solution__slot {
-    flex: none;
-    width: var(--cw);
-    rotate: var(--tilt);
-    translate: 0 var(--lift);
-    transform-origin: 50% 100%;
-  }
-  .solution__slot + .solution__slot {
-    margin-left: calc(var(--cw) * -0.28);
-  }
-  .solution__body {
-    max-width: 70%;
+    width: auto;
   }
 }
 
-/* The deal (SolutionDeck): the section becomes a tall track and its stage holds still under the header while the
-   cards are dealt in. Only with motion allowed; otherwise the fan simply stands under the line. */
+/* Design 3, the slide (SolutionDeck): the section becomes a tall track and its stage holds still under the header
+   while the strip of cards runs across the screen; a count and a rule under the strip follow it. Only with motion
+   allowed. */
+.solution__meter {
+  display: none;
+}
 @media (prefers-reduced-motion: no-preference) and (min-width: 75rem) and (min-height: 40rem) {
   .solution {
     padding-top: 0;
     padding-bottom: clamp(48px, 8vh, 96px);
   }
   .solution__track {
-    height: 330vh;
+    height: 340vh;
   }
   .solution__stage {
     position: sticky;
@@ -599,21 +590,62 @@ main.air {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: calc(var(--nav-h) + clamp(16px, 4vh, 48px)) 0 clamp(24px, 5vh, 56px);
+    padding: calc(var(--nav-h) + clamp(16px, 4vh, 48px)) 0 clamp(24px, 5vh, 48px);
   }
   .solution__head {
     flex: none;
     margin-bottom: 0;
   }
   .solution__line {
-    font-size: min(clamp(2.4rem, 5.4vw, 6.2rem), 9.5vh);
+    font-size: min(clamp(2.4rem, 5.4vw, 6.2rem), 9vh);
   }
-  /* The fan takes the room the line leaves (the line runs to four lines in Spanish), so the cards always fit. */
-  .solution__cards {
+  /* The strip takes the room the line leaves (the line runs to four lines in Spanish), so the cards always fit, with
+     room under them for the lean and the count. */
+  .solution__deck {
+    position: relative;
     flex: 1;
     min-height: 0;
     container-type: size;
-    --cw: min(22rem, calc(100cqi / 4.8), calc((100cqh - 48px) * 0.8));
+    --cw: min(23rem, 26vw, calc((100cqh - 96px) * 0.8));
+  }
+  .solution__cards {
+    position: absolute;
+    top: calc(50% - 16px);
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 28px;
+    translate: 0 -50%;
+  }
+  .solution__slot {
+    flex: none;
+    width: var(--cw);
+  }
+  .solution__meter {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--leaf-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .solution__rule {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    background: rgb(23 61 44 / 0.12);
+  }
+  .solution__fill {
+    position: absolute;
+    inset: 0;
+    background: #2f8f55;
+    transform-origin: 0 50%;
+    scale: 0 1;
   }
 }
 

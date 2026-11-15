@@ -60,13 +60,16 @@ the end".
    and seem more like business, do not copy exact"): each only a number (01 to 06), the promise and one plain line:
    Your own power, We fix what we sell, Prices hard to beat, More than solar, Every customer matters, Always learning.
    Three grounds in turn from the site's greens (deep, brand green, pale mint), larger corners, a soft shadow, nothing
-   to press. On wide screens the section holds still under the header while the cards are dealt in one by one as the
-   page scrolls, each rising from below at a slight angle and landing in a low fan across the page, each over the
-   right edge of the one before (the words keep to the part left open); scrolling back takes them away again. The fan
-   takes whatever room the line leaves (four lines in Spanish). On tablets and phones the cards stack into a deck:
-   each stops under the header a little lower than the last and the next slides over it, the covered one sinking back
-   and dimming slightly. Reduced motion: the fan or the deck, still. This replaced the long sentence that filled in
-   word by word, then the 3 x 2 grid. **No people, names or photos** (Bob: remove Bob and Chakho).
+   to press. Design 1 (Bob's name for it, commit 8b36495) dealt the cards into a low fan. Bob: "this is good design is
+   there more option thats similair"; of three mock-ups (2 the spread, 3 the slide, 4 the turn) he said "maybe design
+   3". So, on wide screens, the section holds still under the header while the six cards run in from the right and
+   across the screen on a strip as the page scrolls; each leans away from the middle of the screen and sits back a
+   little, standing straight and full size as it passes the middle. Under the strip a count (01 / 06 to 06 / 06) and a
+   thin rule fill as it runs; scrolling back runs it back. The strip takes whatever room the line leaves (four lines in
+   Spanish). Wide screens with reduced motion show the cards in two rows of three. On tablets and phones the cards
+   stack into a deck: each stops under the header a little lower than the last and the next slides over it, the
+   covered one sinking back and dimming slightly (reduced motion: the deck, still). This replaced the long sentence
+   that filled in word by word, then the 3 x 2 grid. **No people, names or photos** (Bob: remove Bob and Chakho).
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home
    page's six range rows are replaced by one held screen, opened by the heading "6+ ranges. **One store.**" (Bob: "maybe 6+
