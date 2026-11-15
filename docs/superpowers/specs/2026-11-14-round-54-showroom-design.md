@@ -31,7 +31,10 @@ the end".
    store"; **Jontai Rewards** "**Afl. 25 back** for every Afl. 500" (from `lib/loyalty.ts`). No big JONTAI, no scene, and
    no handover effect: the words rise in once as the page opens, and when you scroll the first view holds still while
    Rewards slides up over it as a sheet with rounded top corners (Bob: "C and rewards slides over"). It fits one
-   screen; on phones the facts sit two by two.
+   screen; on phones the facts sit two by two. The cursor brings it to life (Bob: "interactive and seamless motion
+   with cursor hover effect"): the soft sun behind the headline follows the pointer, easing after it, and the green veil
+   thins round it so the valley shows through there; the valley and the words lean a touch for depth. With no pointer
+   it drifts slowly on its own; with reduced motion it stays still.
 3. **Rewards.** The same content and rules (`lib/loyalty.ts`), laid out calmer: "Shop as usual. **Earn it back.**" with
    one line under it; the two plans side by side with a thin rule between, each its card shown small and tilted, a
    large figure ("**Afl. 25** back", "**10%** off"), one sentence and "How it works" (which opens the existing steps
@@ -55,11 +58,12 @@ the end".
    from the screen's sides, out to the full width.
    - The names of the six ranges and **Others** stand large across the middle of the screen on a drum, like a phone's
      date picker: the one in front between two hairlines at full strength, the ones above and below tilting away on the
-     curve and fading. Scrolling turns the drum one name at a time, resting on each before it turns on, under a faint
-     wash of that range's colour. No product pictures on the home page.
-   - Each one leads to its products on the All products page (`/products?range=<id>`, Others to its Others list): a
-     large cream button at the foot, "See all 7 LED lighting products" (Others: "See all 4 others"), with "04 / 07"
-     beside it, and the name in front itself. Clicking another name turns the drum to it.
+     curve and fading. Scrolling turns the drum one name at a time, resting on each before it turns on. One deep green,
+     no colour per range (Bob: "i dont want so much color pallete"). No product pictures on the home page.
+   - Each one leads to its products on the All products page (`/products?range=<id>`, Others to its Others list): the
+     name in front, marked by a small round arrow beside it that turns under the pointer (Bob: "something indicating
+     that its clickable"), and one minimal link at the foot that says only "See LED lighting products" (Others: "See
+     other products") on a hairline. Clicking another name turns the drum to it.
    - After Others the screen lets go into the end band: "Every product, **one by one.**" with "See all products".
 6. **All products page** at `/products` (`products.html`, "Light pools"). Title "All **products**", one line, a filter
    pill for each range plus Others (with counts), a search box, then every product in a grid of four: the product
@@ -133,8 +137,8 @@ the end".
 
 ## My calls (settled after the builder check; Bob can overrule)
 
-- **Delivery.** While Furniture is in front, the wheel's foot adds "How delivery works", which opens the existing
-  delivery panel. The footer's `#delivery` link lands there.
+- **Delivery.** "How delivery works" opens beside Furniture's note on the All products page (the wheel's foot only says
+  "See ... products"). The footer's `#delivery` link lands on Furniture in the wheel.
 - **The range notes move to the All products page.** The wheel shows names only, so the notes appear on `/products`
   under the matching filter: Cooling's "Jontai Energy sells and delivers; it does not install.", LED lighting's "Stock
   changes often, so ask before you make the trip." and Furniture's "Large-item delivery available."
