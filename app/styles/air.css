@@ -55,247 +55,153 @@ main.air {
   box-shadow: 0 -24px 60px -28px rgb(8 22 15 / 0.45);
   color: var(--leaf-ink);
 }
+/* Round 54, calmer: the line in light and bold with one sentence beside it, then the two plans side by side with a
+   thin rule between, then "See my points" and a person to ask. No chip, no tiles. */
 .loyal__top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
   align-items: end;
-  gap: 18px 40px;
+  gap: 18px 48px;
+  margin-bottom: clamp(48px, 8vh, 80px);
 }
-.loyal__chip {
+.loyal__kicker {
   grid-column: 1 / -1;
-  justify-self: start;
   margin: 0;
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--color-mint);
-  color: var(--leaf-ink);
+  color: var(--leaf-muted);
   font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .loyal__title {
-  font-size: clamp(2.8rem, 6.6vw, 7.4rem);
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  font-size: clamp(2.8rem, 5.4vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
 }
-.loyal__indent {
-  padding-left: 1.3em;
+.loyal__title b {
+  font-weight: 760;
+  font-stretch: 100%;
+  letter-spacing: -0.035em;
 }
 .loyal__side {
   margin: 0;
   color: var(--leaf-muted);
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   line-height: 1.55;
 }
 
-/* The two programs. Each is a field with a soft diagonal light, its number huge, its card in the corner. */
-.tiers {
+/* The two plans: its card small and tilted, floating a little; its figure large, one sentence, how it works. */
+.plans {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: clamp(40px, 6vh, 64px);
+  gap: 0 6vw;
 }
-.tier {
-  --lx: 70%;
-  position: relative;
-  min-height: clamp(460px, 62vh, 560px);
-  /* clip, not hidden: a hidden box can still be scrolled from inside (by focus), which would shift the whole tile. */
-  overflow: clip;
-  border-radius: 28px;
-  padding: clamp(26px, 3vw, 40px);
-  background:
-    linear-gradient(115deg, transparent 0 calc(var(--lx) - 18%), rgb(255 255 255 / 0.45) calc(var(--lx) - 6%), transparent calc(var(--lx) + 10%)),
-    linear-gradient(160deg, #e8efdd, #d6e3c9);
-  color: var(--leaf-ink);
-  transition: --lx 900ms var(--ease-out);
+.plan {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  align-content: start;
+  gap: 24px 34px;
 }
-@property --lx {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 70%;
+.plan + .plan {
+  padding-left: 6vw;
+  border-left: 1px solid var(--leaf-rule);
 }
-.tier:hover {
-  --lx: 40%;
+.plan__card {
+  width: clamp(170px, 15vw, 230px);
+  rotate: -5deg;
 }
-.tier--business {
-  background:
-    linear-gradient(115deg, transparent 0 calc(var(--lx) - 18%), rgb(184 216 168 / 0.12) calc(var(--lx) - 6%), transparent calc(var(--lx) + 10%)),
-    linear-gradient(160deg, #1b3b2b, #0e2219);
-  color: var(--deep-ink);
+.plan--business .plan__card {
+  rotate: 4deg;
 }
-/* The tile is a column, so its button sits at its foot whatever the text above it. */
-.tier {
+@keyframes plan-drift {
+  from {
+    translate: 0 -6px;
+    rotate: -0.6deg;
+  }
+  to {
+    translate: 0 6px;
+    rotate: 0.6deg;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .plan__float {
+    animation: plan-drift 7s ease-in-out infinite alternate;
+  }
+  .plan--business .plan__float {
+    animation-delay: -3.5s;
+  }
+}
+.plan__kicker {
   display: flex;
-  flex-direction: column;
-}
-.tier__text {
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: min(19rem, 52%);
-}
-.tier__kicker {
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin: 0;
+  color: var(--leaf-muted);
   font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  opacity: 0.75;
 }
-.tier__badge {
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--color-mint);
-  color: var(--deep);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-}
-.tier--business .tier__kicker {
-  opacity: 1;
-  color: rgb(244 246 239 / 0.8);
-}
-.tier__figure {
-  margin: clamp(18px, 3vh, 32px) 0 0;
+.plan__fig {
+  margin: 10px 0 0;
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(3.6rem, 7vw, 7rem);
-  line-height: 0.9;
-  letter-spacing: -0.045em;
+  font-size: clamp(2.6rem, 3.8vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
   font-variant-numeric: lining-nums;
 }
-.tier__per {
-  margin: 10px 0 0;
-  opacity: 0.7;
-  font-size: 0.95rem;
+.plan__fig b {
+  font-weight: 760;
+  font-stretch: 100%;
 }
-.tier__title {
-  margin: clamp(16px, 2.6vh, 26px) 0 8px;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-stretch: 108%;
-  font-size: clamp(1.3rem, 1.2vw + 0.8rem, 1.7rem);
-  letter-spacing: -0.02em;
-}
-.tier__body {
-  margin: 0;
-  opacity: 0.78;
-  font-size: 0.98rem;
+.plan__line {
+  max-width: 34ch;
+  margin: 12px 0 0;
+  color: var(--leaf-muted);
   line-height: 1.55;
 }
-.tier__meta {
-  margin: 12px 0 22px;
-  opacity: 0.6;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.tier__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 46px;
-  margin-top: auto;
-  padding: 0 20px;
+.plan__how {
+  margin-top: 16px;
+  padding: 0 0 3px;
   border: 0;
-  border-radius: var(--radius-pill);
+  border-bottom: 1.5px solid currentColor;
   background: none;
-  box-shadow: inset 0 0 0 1.5px currentColor;
-  color: inherit;
+  color: var(--leaf-ink);
   font: inherit;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: 650;
   cursor: pointer;
-  transition:
-    background-color 300ms ease,
-    color 300ms ease,
-    scale 120ms ease-out;
 }
-.tier__cta--fill {
-  background: var(--color-mint);
-  color: var(--deep);
-  box-shadow: none;
-}
-.tier__cta:active {
-  scale: 0.97;
-}
-.tier__cta svg {
-  transition: translate 450ms var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .tier__cta:hover svg {
-    translate: 0 -3px;
-  }
-  .tier__cta:not(.tier__cta--fill):hover {
-    background: var(--leaf-ink);
-    color: #f4f6ef;
-    box-shadow: none;
-  }
-  .tier__cta--fill:hover {
-    background: #cfe6c3;
-  }
-}
-.tier :focus-visible {
-  outline: 2px solid currentColor;
+.plan :focus-visible {
+  outline: 2px solid var(--leaf-ink);
   outline-offset: 3px;
 }
-/* Its card, peeking out of the corner; under the pointer it lifts and turns over to show the reward. */
-.tier__card {
-  position: absolute;
-  z-index: 1;
-  right: -8%;
-  bottom: -14%;
-  width: min(54%, 27rem);
-  rotate: -9deg;
-  transition:
-    rotate 900ms var(--ease-out),
-    translate 900ms var(--ease-out);
-}
-.tier:hover .tier__card {
-  rotate: -4deg;
-  translate: -4% -10%;
-}
 
-/* How it works, sliding up inside the tile from its foot; the rest of the tile dims behind it. */
-.tier__info {
-  position: absolute;
-  z-index: 4;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  padding: clamp(20px, 2.4vw, 30px);
-  border-radius: 22px;
-  background: #fbfcf8;
-  box-shadow: 0 30px 60px -30px rgb(14 34 25 / 0.5);
-  color: var(--leaf-ink);
-  transform: translateY(calc(100% + 20px));
-  transition: transform 700ms cubic-bezier(0.76, 0, 0.24, 1);
+/* How it works opens under its plan and closes again. */
+.plan__info {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 650ms cubic-bezier(0.76, 0, 0.24, 1);
 }
-.tier--business .tier__info {
-  background: #f3f7ee;
+.plan[data-open] .plan__info {
+  grid-template-rows: 1fr;
 }
-.tier[data-open] .tier__info {
-  transform: none;
+.plan__info-in {
+  overflow: hidden;
+  min-height: 0;
 }
-.tier::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: rgb(14 34 25 / 0.35);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 500ms ease;
-}
-.tier[data-open]::after {
-  opacity: 1;
+.plan__info-in > :first-child {
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--leaf-rule);
 }
 .tier__info-head {
   display: flex;
@@ -308,9 +214,8 @@ main.air {
   font-family: var(--font-display);
   font-weight: 400;
   font-stretch: 112%;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
 }
 .tier__close {
   display: inline-grid;
@@ -365,96 +270,51 @@ main.air {
   translate: 0 2px;
   color: #2e6b45;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .tier__info li {
-    opacity: 0;
-    translate: 0 12px;
-    transition:
-      opacity 400ms ease,
-      translate 600ms var(--ease-out);
-  }
-  .tier[data-open] .tier__info li {
-    opacity: 1;
-    translate: 0 0;
-    transition-delay: calc(250ms + var(--i, 0) * 60ms);
-  }
-}
-.tier__info :focus-visible {
-  outline: 2px solid var(--leaf-ink);
-  outline-offset: 2px;
-}
 
-/* The two strips under them: how to join, and a person to ask. */
-.loyal__strip {
+/* See my points, and a person to ask. */
+.loyal__end {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px 24px;
-  margin-top: 16px;
-  padding: 16px 16px 16px 26px;
-  border-radius: 20px;
-  box-shadow: inset 0 0 0 1px var(--leaf-rule);
-}
-.loyal__strip p {
-  margin: 0;
-  color: var(--leaf-muted);
-}
-.loyal__strip-kicker {
-  margin-right: 10px;
-  color: var(--leaf-ink);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-/* The strip with the member login: deep green, the button mint and larger (Bob, round 27: "see my points button should
-   be more visible"). */
-.loyal__strip:has(.member__open) {
-  padding: 14px 14px 14px 28px;
-  background: var(--leaf-ink);
-  box-shadow: none;
-}
-/* Only the strip's own line. */
-.loyal__strip:has(.member__open) > p {
-  color: rgb(247 245 236 / 0.82);
-}
-.loyal__strip:has(.member__open) > p .loyal__strip-kicker {
-  color: #b8d8a8;
+  gap: 16px 24px;
+  margin-top: clamp(48px, 8vh, 72px);
+  padding-top: 28px;
+  border-top: 1px solid var(--leaf-rule);
 }
 .loyal .btn.member__open {
-  min-height: 60px;
-  padding-inline: 36px;
-  background: #b8d8a8;
-  color: var(--leaf-ink);
-  font-size: 1.0625rem;
+  min-height: 56px;
+  padding-inline: 30px;
+}
+.loyal__ask {
+  color: var(--leaf-muted);
+  text-decoration: underline;
+  text-decoration-color: rgb(23 61 44 / 0.3);
+  text-underline-offset: 5px;
 }
 @media (hover: hover) and (pointer: fine) {
-  .loyal .btn.member__open:hover {
-    background: #cbe5bd;
+  .loyal__ask:hover {
+    color: var(--leaf-ink);
+    text-decoration-color: currentColor;
   }
 }
-.loyal__strip--soft {
-  margin-top: 10px;
-  padding-block: 18px;
-  background: rgb(23 61 44 / 0.05);
-  box-shadow: none;
+@media (max-width: 60rem) {
+  .loyal__top,
+  .plans {
+    grid-template-columns: 1fr;
+  }
+  .plan + .plan {
+    margin-top: 36px;
+    padding: 36px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--leaf-rule);
+  }
 }
-.loyal__ask-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-right: 10px;
-  color: var(--leaf-ink);
-  font-weight: 700;
-  text-decoration: none;
-}
-.loyal__ask-link svg {
-  transition: translate 450ms var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .loyal__ask-link:hover svg {
-    translate: 4px 0;
+@media (max-width: 30rem) {
+  .plan {
+    grid-template-columns: 1fr;
+  }
+  .plan__card {
+    width: 190px;
   }
 }
 .loyal .btn--primary {
@@ -1765,19 +1625,6 @@ main.air {
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 60rem) {
-  .loyal__top,
-  .tiers {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .tier {
-    min-height: 560px;
-  }
-  .tier__text {
-    max-width: 22rem;
-  }
-  .tier__card {
-    width: min(58%, 24rem);
-  }
   .why__top {
     flex-direction: column;
   }
@@ -1820,21 +1667,6 @@ main.air {
   }
 }
 @media (max-width: 40rem) {
-  .tier {
-    min-height: 0;
-    padding-bottom: 62%;
-  }
-  .tier__text {
-    max-width: none;
-  }
-  .tier__card {
-    width: 78%;
-    right: -10%;
-    bottom: -8%;
-  }
-  .loyal__strip {
-    padding: 18px 20px;
-  }
   /* The ranges stack: the words, then the products two to a row under them. */
   .collection__head {
     grid-template-columns: minmax(0, 1fr);

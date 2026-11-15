@@ -1,5 +1,6 @@
 // The words round 54 adds to the site, in one place so the dictionaries can be checked against them (round54.test).
 // Strings with {0} holes are translator patterns (lib/i18n), the rest are plain strings.
+import { BUSINESS_DISCOUNT, BUSINESS_GOAL, REWARD_STEP_AFL, formatAfl, formatPoints } from './loyalty.ts';
 
 export const FIRST_VIEW = {
   title: ['Aruba sunlight,', 'made useful.'],
@@ -80,4 +81,12 @@ export const HOURS_COPY = {
   until: ', until {0}',
   opensAt: ', opens at {0}',
   opensTomorrow: ', opens tomorrow at {0}',
+};
+
+/** Rewards, laid out calmer (round 54): a plan's figure is its number in bold, then "back" or "off". */
+export const REWARDS_COPY = {
+  homeLine: `For every ${formatAfl(REWARD_STEP_AFL)} you spend, a voucher to spend on anything in the store.`,
+  businessLine: `Reach ${formatPoints(BUSINESS_GOAL)} and everything is ${BUSINESS_DISCOUNT}% off until the account's anniversary.`,
+  back: 'back',
+  off: 'off',
 };

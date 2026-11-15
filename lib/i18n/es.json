@@ -992,7 +992,10 @@
   "Open now": "Abierto ahora",
   "Closed now": "Cerrado ahora",
   "Afl. 25 back": "Afl. 25 de vuelta",
-  "for every Afl. 500": "por cada Afl. 500"
+  "for every Afl. 500": "por cada Afl. 500",
+  "For every Afl. 500 you spend, a voucher to spend on anything in the store.": "Por cada Afl. 500 que gastes, un vale para usar en cualquier cosa de la tienda.",
+  "Reach 5,000 points and everything is 10% off until the account's anniversary.": "Llega a 5,000 puntos y todo tiene un 10% de descuento hasta el aniversario de la cuenta.",
+  "back": "de vuelta"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} de 5 estrellas",
