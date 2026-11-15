@@ -20,6 +20,7 @@ export function pageOf(slug: string) {
     title: d.title ?? product.name,
     model: d.model ?? panel?.model,
     intro: d.intro ?? panel?.intro ?? product.line,
+    summary: d.summary,
     highlight: panel?.highlight,
     figures: panel?.figures,
     points: d.points ?? panel?.points ?? [],

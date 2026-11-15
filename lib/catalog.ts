@@ -70,6 +70,10 @@ export interface Figure {
   value: string;
 }
 
+/** The ranges whose short info keeps its detail (model, figures, points): their products are one product each (Bob:
+ *  "cooling and backup power is fine"). Elsewhere a product is a kind of product, told in one general line. */
+export const DETAILED_RANGES = ['cooling', 'backup'];
+
 /** A product told briefly, for the short info on the All products page (round 54, Bob: "see short info of the
  *  products"): its range, its heading, the model when there is one, what it is, up to four figures and three points. */
 export interface ShortInfo {
@@ -82,19 +86,27 @@ export interface ShortInfo {
   points: Point[];
 }
 
-/** The short info from a product's full page (components/products/ProductDetail pageOf). */
+/**
+ * The short info from a product's full page (components/products/ProductDetail pageOf). In Cooling and Backup power it
+ * keeps the model, what it is, up to four figures and three points. In the other ranges, where a product is a kind of
+ * product (Bulbs, Ceiling lights, Outdoor cameras), it is the one general line alone (Bob: "not go too much detailed
+ * into some products since its like a subcategory/subgenre").
+ */
 export function shortInfo(page: {
-  product: { id: string; range: { name: string } };
+  product: { id: string; range: { id: string; name: string } };
   title: string;
   model?: string | null;
   intro: string;
+  summary?: string;
   figures?: Figure[] | null;
   points: Point[];
 }): ShortInfo {
+  const base = { id: page.product.id, range: page.product.range.name, title: page.title };
+  if (!DETAILED_RANGES.includes(page.product.range.id)) {
+    return { ...base, model: null, intro: page.summary ?? page.intro, figures: [], points: [] };
+  }
   return {
-    id: page.product.id,
-    range: page.product.range.name,
-    title: page.title,
+    ...base,
     model: page.model ?? null,
     intro: page.intro,
     figures: (page.figures ?? []).slice(0, 4),

@@ -4,7 +4,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
 import { WHEEL_REST, heldPosition, nameParts, rangeHref, settleOn, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
-import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
+import { CATALOG_FILTERS, DETAILED_RANGES, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
+import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
@@ -161,28 +162,52 @@ test('round 54 catalogue: the short info steps to the product before and after, 
   assert.deepEqual(neighbours(['a'], 'a'), { prev: null, next: null, at: 1, of: 1 });
 });
 
-test('round 54 catalogue: the short info is the product in brief, at most three points and four figures', () => {
+test('round 54 catalogue: in Cooling and Backup power the short info keeps its detail, at most three points and four figures', () => {
+  // Bob: "cooling and backup power is fine".
   const points = Array.from({ length: 5 }, (_, i) => ({ title: `Point ${i}`, line: `Line ${i}.` }));
   const figures = Array.from({ length: 6 }, (_, i) => ({ label: `Figure ${i}`, value: `${i} kW` }));
-  const product = { id: 'x', name: 'X lamps', range: { id: 'light', name: 'LED lighting' } };
-  assert.deepEqual(shortInfo({ product, title: 'X lamps for yards', model: 'XL-1', intro: 'What it is.', figures, points }), {
+  const product = { id: 'x', name: 'X coolers', range: { id: 'cooling', name: 'Cooling' } };
+  assert.deepEqual(shortInfo({ product, title: 'X coolers for porches', model: 'XC-1', intro: 'What it is.', summary: 'X coolers, in short.', figures, points }), {
     id: 'x',
-    range: 'LED lighting',
-    title: 'X lamps for yards',
-    model: 'XL-1',
+    range: 'Cooling',
+    title: 'X coolers for porches',
+    model: 'XC-1',
     intro: 'What it is.',
     figures: figures.slice(0, 4),
     points: points.slice(0, 3),
   });
-  assert.deepEqual(shortInfo({ product, title: 'X lamps', intro: 'What it is.', points: [] }), {
+  assert.deepEqual(shortInfo({ product: { ...product, range: { id: 'backup', name: 'Backup power' } }, title: 'X', intro: 'What it is.', points: [] }), {
     id: 'x',
-    range: 'LED lighting',
-    title: 'X lamps',
+    range: 'Backup power',
+    title: 'X',
     model: null,
     intro: 'What it is.',
     figures: [],
     points: [],
   });
+});
+
+// Bob: "inside the dedicated product page the descriptions should be like not go too much detailed into some products
+// since its like a subcategory/subgenre". Elsewhere a product is a kind of product: one short line on what it is and
+// what it is for, with no model, no figures and no feature points.
+test('round 54 catalogue: in the other ranges the short info is one general line', () => {
+  const product = { id: 'x', name: 'X lamps', range: { id: 'light', name: 'LED lighting' } };
+  const page = { product, title: 'X lamps', model: 'XL-1', intro: 'A very particular lamp with a 12 W chip.', summary: 'Lamps of the X kind, for yards.', figures: [{ label: 'power', value: '12 W' }], points: [{ title: 'A', line: 'B.' }] };
+  assert.deepEqual(shortInfo(page), { id: 'x', range: 'LED lighting', title: 'X lamps', model: null, intro: 'Lamps of the X kind, for yards.', figures: [], points: [] });
+});
+
+test('round 54 catalogue: every product outside Cooling and Backup power has its general line, short, with no figures, in all three languages', () => {
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  for (const p of PRODUCTS) {
+    if (DETAILED_RANGES.includes(p.range.id)) continue;
+    const line = DETAILS[p.id]?.summary;
+    assert.ok(line, `${p.id} has a general line`);
+    assert.ok(line.length <= 130, `${p.id} is short (${line.length})`);
+    assert.doesNotMatch(line, /\d/, `${p.id} has no figures`);
+    assert.ok(line in es, `es: ${line}`);
+    assert.ok(line in zh, `zh: ${line}`);
+  }
 });
 
 test('round 54 first view: the hours fact puts what matters first', () => {
@@ -309,3 +334,11 @@ test('round 54 menu: four big places, then the ranges and help, small', () => {
   assert.equal(home.help.at(-1)!.external, true);
 });
 
+
+// Bob: "also maybe 6+ ranges isntead of just 6 ranges": there are six ranges and Others, so the page says 6+.
+test('round 54 copy: the ranges are 6+, wherever the page counts them', () => {
+  assert.deepEqual(copy.WHEEL_COPY.title, ['6+ ranges.', 'One store.']);
+  assert.equal(copy.FACT_RANGES.strong, '6+ ranges');
+  const said = JSON.stringify(Object.values(copy));
+  assert.doesNotMatch(said, /Six ranges/i, 'nowhere still says six');
+});

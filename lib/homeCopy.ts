@@ -11,7 +11,7 @@ export const FIRST_VIEW = {
 
 export const FACT_LABELS = ['Hours', 'The store', 'What we sell', 'Jontai Rewards'];
 export const FACT_STORE = { strong: 'Cumana 73', rest: ', Oranjestad' };
-export const FACT_RANGES = { strong: 'Six ranges', rest: ', one store' };
+export const FACT_RANGES = { strong: '6+ ranges', rest: ', one store' };
 
 /** Our solution: one sentence in fragments, the six promises marked as keys (bold green as it fills). */
 export const SOLUTION: { text: string; key?: true }[] = [
@@ -44,8 +44,9 @@ export const SOLUTION_KICKER = 'Our solution';
 export const SOLUTION_POINTS = ['Your own power', 'We fix what we sell', 'Prices hard to beat', 'More than solar', 'Every customer matters', 'Always learning'];
 
 export const WHEEL_COPY = {
-  title: ['Six ranges.', 'One store.'],
-  line: 'Six ranges and more. Keep scrolling to go through them.',
+  // Six ranges and Others (Bob: "maybe 6+ ranges isntead of just 6 ranges").
+  title: ['6+ ranges.', 'One store.'],
+  line: 'Every range, one at a time. Keep scrolling to go through them.',
   see: 'See all {0} products',
   seeOthers: 'See all other products',
   delivery: 'How delivery works',
