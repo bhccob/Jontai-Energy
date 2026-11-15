@@ -227,13 +227,16 @@ test('round 54 first view: every hours line splits into parts the dictionaries k
   }
 });
 
-test('round 54 sentence:the fragments read as the agreed sentence, with six promises in bold', () => {
-  assert.equal(
-    copy.solutionText(),
-    "At Jontai, your home makes its own power, so the island's blackouts do not stop your day. We fix what we sell, even years later. Our prices are hard to beat, for the same quality or better. We sell far more than solar. Every customer matters, long after the sale. And our family keeps learning, to bring tomorrow's ideas home.",
+// Bob picked C from three card directions for Our solution ("C is looking best but iwant more simple cards"): one line
+// held on the left, six simple cards beside it, each a promise and one plain line, with no numbers.
+test('round 54 Our solution: one line, then six simple cards', () => {
+  assert.equal(copy.solutionText(), 'Your home makes its own power. We stand behind it.');
+  assert.equal(copy.SOLUTION.filter((f) => f.key).length, 1);
+  assert.deepEqual(
+    copy.SOLUTION_CARDS.map((c) => c.title),
+    ['Your own power', 'We fix what we sell', 'Prices hard to beat', 'More than solar', 'Every customer matters', 'Always learning'],
   );
-  assert.equal(copy.SOLUTION.filter((f) => f.key).length, 6);
-  assert.equal(copy.SOLUTION_POINTS.length, 6);
+  for (const c of copy.SOLUTION_CARDS) assert.ok(c.line.length <= 90 && c.line.endsWith('.'), `one short line: ${c.line}`);
 });
 
 test('round 54: every new word is in both dictionaries', () => {
@@ -266,6 +269,13 @@ test('round 54 sentence: each Spanish fragment fills every English word slot, so
   const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
   const words = (t: string) => t.trim().split(/\s+/).length;
   for (const f of copy.SOLUTION) assert.ok(words(es[f.text.trim()]) >= words(f.text), `${f.text} -> ${es[f.text.trim()]}`);
+});
+
+// Each fragment's words are their own boxes, so a line can break between two fragments: a Chinese fragment that starts
+// with its full stop ("。我们…") put that full stop alone at the start of a line. The full stop ends the fragment before.
+test('round 54 Our solution: no Chinese fragment starts with punctuation, so none starts a line with it', () => {
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  for (const f of copy.SOLUTION) assert.doesNotMatch(zh[f.text.trim()], /^[，。、：；！？]/, `${f.text} -> ${zh[f.text.trim()]}`);
 });
 
 test('round 54 sentence: the spaces between fragments sit inside the fragments, so Chinese can drop them', () => {
@@ -353,6 +363,9 @@ test('round 54 Rewards and Our solution: both run taller', () => {
   assert.match(air, /\.plans \{[^}]*grid-template-columns: 1fr;/, 'the plans sit one under the other');
   assert.match(air, /\.plan \{[^}]*min-height: /, 'each plan is a tall row');
   assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'Our solution is not held on one screen');
-  assert.match(solution, /className="solution__text" data-fill/, "the sentence fills in with the page's own fill");
-  assert.ok(!existsSync(join(root, 'components', 'home', 'SolutionMotion.tsx')), 'and no second motion of its own');
+  assert.ok(!existsSync(join(root, 'components', 'home', 'SolutionMotion.tsx')), 'and has no motion of its own');
+  // Direction C: the line stays in view on the left while the cards pass on the right; the cards carry no numbers.
+  assert.match(air, /\.solution__side \{[^}]*position: sticky;/);
+  assert.match(solution, /SOLUTION_CARDS\.map/);
+  assert.doesNotMatch(solution, /padStart/, 'no 01 to 06 on the cards');
 });

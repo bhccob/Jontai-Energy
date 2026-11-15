@@ -381,11 +381,11 @@ main.air {
   letter-spacing: -0.03em;
 }
 
-/* ---------- Our solution: one sentence that fills in as you read it (round 54) ---------- */
+/* ---------- Our solution: one line held on the left, six simple cards on the right (round 54, direction C) ---------- */
 
-/* Bob: "our solutions ... gotta be more verticaly long(er)". No longer held on one screen: the sentence runs large down
-   the page, longer than a screen, and its words fill in as they rise toward the middle (data-fill, PageMotion), the
-   points rising in after it (data-reveal); without scripts, or with reduced motion, the sentence shows full. */
+/* Bob picked C from three card directions ("C is looking best but iwant more simple cards"), after asking for it to run
+   longer down the page. The line stays in view while the six cards pass beside it; on phones the line sits above them.
+   Cards are the plain kind his notes allow: a soft green ground, small corners, no frame, no numbers, nothing to press. */
 .solution {
   position: relative;
   /* Over Rewards' shadow, which would otherwise draw a faint line where the two whites meet. */
@@ -393,72 +393,97 @@ main.air {
   /* The same white as Rewards above it, so the two read as one sheet (round 54). */
   background: #fff;
   color: var(--leaf-ink);
-  padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(120px, 22vh, 260px);
+  padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(120px, 20vh, 240px);
 }
 .solution__body {
   display: grid;
-  gap: clamp(28px, 5vh, 56px);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 32px 6vw;
+}
+.solution__side {
+  position: sticky;
+  top: calc(var(--nav-h) + clamp(24px, 5vh, 56px));
+  align-self: start;
 }
 .solution__kick {
-  margin: 0;
+  margin: 0 0 24px;
   color: #2f8f55;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-/* Large, across the whole width (Bob: "maybe our solutions text area should be bigger"), and now free of the one-screen
-   fit, larger still, so it runs down the page. */
-.solution__text {
+.solution__line {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.4rem, 6.2vw, 7.6rem);
-  line-height: 1.06;
+  font-size: clamp(2.4rem, 4.4vw, 5.2rem);
+  line-height: 1.04;
   letter-spacing: -0.035em;
 }
 .solution__key {
   color: #2f8f55;
   font-weight: 760;
 }
-.solution__points {
+.solution__sub {
+  max-width: 34ch;
+  margin: 26px 0 0;
+  color: var(--leaf-muted);
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+.solution__visit {
+  margin-top: 24px;
+}
+.solution__cards {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 32px;
-  margin: clamp(32px, 7vh, 96px) 0 0;
+  gap: 14px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.solution__points li {
+.solution__card {
   display: grid;
-  align-content: start;
-  gap: 14px;
-  padding-top: 22px;
-  border-top: 1px solid var(--leaf-rule);
-  font-size: 1.1rem;
-  font-weight: 700;
+  gap: 12px;
+  padding: clamp(28px, 3vw, 40px);
+  border-radius: 12px;
+  background: #f2f6ef;
 }
-.solution__points svg {
-  width: 32px;
-  height: 32px;
+.solution__card svg {
+  margin-bottom: 8px;
   color: #2f8f55;
 }
-/* Narrow screens: the sentence as large as the width allows, the points two to a row. */
+.solution__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  font-weight: 720;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+.solution__text {
+  max-width: 40ch;
+  margin: 0;
+  color: var(--leaf-muted);
+  font-size: 1.08rem;
+  line-height: 1.5;
+}
+/* Narrow screens: the line above the cards, scrolling with the page. */
 @media (max-width: 60rem) {
-  .solution__text {
-    font-size: clamp(2rem, 9.2vw, 4.2rem);
-    line-height: 1.08;
+  .solution__body {
+    grid-template-columns: 1fr;
   }
-  .solution__points {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 20px;
+  .solution__side {
+    position: static;
+    margin-bottom: 24px;
   }
-  .solution__points li {
-    gap: 10px;
-    padding-top: 16px;
-    font-size: 0.98rem;
+  .solution__line {
+    font-size: clamp(2.1rem, 9vw, 3.6rem);
   }
-  .solution__points svg {
+  .solution__sub {
+    font-size: 1.05rem;
+  }
+  .solution__card svg {
     width: 26px;
     height: 26px;
   }

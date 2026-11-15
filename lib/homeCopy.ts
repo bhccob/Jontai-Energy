@@ -13,21 +13,14 @@ export const FACT_LABELS = ['Hours', 'The store', 'What we sell', 'Jontai Reward
 export const FACT_STORE = { strong: 'Cumana 73', rest: ', Oranjestad' };
 export const FACT_RANGES = { strong: '6+ ranges', rest: ', one store' };
 
-/** Our solution: one sentence in fragments, the six promises marked as keys (bold green as it fills). */
+/**
+ * Our solution, direction C (Bob: "C is looking best but iwant more simple cards"): one line held on the left, in
+ * fragments with its promise marked as the key (bold green), and six simple cards beside it.
+ */
 export const SOLUTION: { text: string; key?: true }[] = [
-  { text: 'At Jontai, your home makes' },
+  { text: 'Your home makes' },
   { text: 'its own power', key: true },
-  { text: ", so the island's blackouts do not stop your day. We" },
-  { text: 'fix what we sell', key: true },
-  { text: ', even years later. Our prices are' },
-  { text: 'hard to beat', key: true },
-  { text: ', for the same quality or better. We sell' },
-  { text: 'far more than solar', key: true },
-  { text: '.' },
-  { text: 'Every customer matters', key: true },
-  { text: ', long after the sale. And our family' },
-  { text: 'keeps learning', key: true },
-  { text: ", to bring tomorrow's ideas home." },
+  { text: '. We stand behind it.' },
 ];
 
 /** Whether a fragment of the sentence follows the one before it with a space (not before , or .). */
@@ -41,7 +34,16 @@ export const solutionPieces = () => SOLUTION.map((f, i) => ({ ...f, text: (i && 
 export const solutionText = () => SOLUTION.map((f, i) => (i && spaceBefore(f.text) ? ' ' : '') + f.text).join('');
 
 export const SOLUTION_KICKER = 'Our solution';
-export const SOLUTION_POINTS = ['Your own power', 'We fix what we sell', 'Prices hard to beat', 'More than solar', 'Every customer matters', 'Always learning'];
+export const SOLUTION_SUB = 'Six promises from one family-owned store at Cumana 73, Oranjestad.';
+/** The six promises, each a card: the promise and one plain line (the lines keep to what the old sentence said). */
+export const SOLUTION_CARDS: { title: string; line: string }[] = [
+  { title: 'Your own power', line: "Your home makes its own power, so the island's blackouts do not stop your day." },
+  { title: 'We fix what we sell', line: 'Even years after you bought it.' },
+  { title: 'Prices hard to beat', line: 'For the same quality or better.' },
+  { title: 'More than solar', line: 'Solar, LED lighting, cooling, backup power, cameras and furniture, in one store.' },
+  { title: 'Every customer matters', line: 'Long after the sale, a person answers.' },
+  { title: 'Always learning', line: "Our family keeps learning, to bring tomorrow's ideas home." },
+];
 
 export const WHEEL_COPY = {
   // Six ranges and Others (Bob: "maybe 6+ ranges isntead of just 6 ranges").
