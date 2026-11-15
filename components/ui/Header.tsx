@@ -7,6 +7,7 @@ import { Headset, UserCircle } from '@phosphor-icons/react/dist/ssr';
 import { LangChoices, LangSwitch } from '@/components/i18n/LangSwitch';
 import { MemberLogin, openMemberLogin } from '@/components/sections/MemberLogin';
 import { DIRECTIONS_URL } from '@/lib/contact';
+import { MENU_COPY } from '@/lib/homeCopy';
 import { QUOTE_ACTION } from '@/lib/quote';
 import { useHeaderFit } from './useHeaderFit';
 
@@ -31,6 +32,8 @@ function isDark(el: HTMLElement) {
 }
 
 /**
+ * Header B (round 54): one floating glass capsule that never moves, with the mark and name, a pill of three icons
+ * (Support, Member, the language; each word for screen readers and as a tooltip) and a round Menu button. Before it:
  * The header: one still bar (round 35, Bob: "just make it not move and more clean designed like bigger and more
  * minimal"). It keeps its place, height and width from the top of the page to the foot, and holds four things: the
  * store's mark and name, Support (round 48, in the place of the Bundles & discounts button, which is off for now),
@@ -120,23 +123,26 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
           {/* Support, in the bar on every page (round 48, Bob: "add support on the header where its visible"), where the
               Bundles & discounts button was (off for now: BundleOffer, lib/bundles). Its icon alone; its word slides out
               on hover or focus (round 49, shell.css). */}
-          <a href="/support" className="nav__support" aria-current={pathname === '/support' ? 'page' : undefined}>
-            <Headset size={24} weight="regular" aria-hidden="true" />
-            <span className="nav__support-label nav__slide">Support</span>
-          </a>
-          <button
-            type="button"
-            className="nav__member"
-            aria-haspopup="dialog"
-            onClick={() => {
-              setOpen(false);
-              openMemberLogin();
-            }}
-          >
-            <UserCircle size={24} weight="regular" aria-hidden="true" />
-            <span className="nav__member-label nav__slide">Member</span>
-          </button>
-          <LangSwitch />
+          <div className="nav__icons">
+            <a href="/support" className="nav__support" title="Support" aria-current={pathname === '/support' ? 'page' : undefined}>
+              <Headset size={24} weight="regular" aria-hidden="true" />
+              <span className="nav__support-label nav__slide">Support</span>
+            </a>
+            <button
+              type="button"
+              className="nav__member"
+              title="Member"
+              aria-haspopup="dialog"
+              onClick={() => {
+                setOpen(false);
+                openMemberLogin();
+              }}
+            >
+              <UserCircle size={24} weight="regular" aria-hidden="true" />
+              <span className="nav__member-label nav__slide">Member</span>
+            </button>
+            <LangSwitch />
+          </div>
           <button
             ref={toggle}
             type="button"
@@ -157,7 +163,7 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
               <i />
               <i />
             </span>
-            Menu
+            <span className="nav__label">Menu</span>
           </a>
         </div>
       </header>
@@ -170,6 +176,16 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
               </a>
             </li>
           ))}
+          <li>
+            <a href="/products" aria-current={pathname === '/products' ? 'page' : undefined} onClick={close}>
+              {MENU_COPY.products}
+            </a>
+          </li>
+          <li>
+            <a href={`${base}#solution`} onClick={close}>
+              {MENU_COPY.solution}
+            </a>
+          </li>
           <li>
             <a href="/support" aria-current={pathname === '/support' ? 'page' : undefined} onClick={close}>
               Support

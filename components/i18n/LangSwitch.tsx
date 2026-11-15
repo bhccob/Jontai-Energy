@@ -54,6 +54,7 @@ export function LangSwitch() {
         aria-expanded={open}
         aria-controls={`${id}-list`}
         aria-label={`${info.label}: ${info.name}`}
+        title={info.label}
         onClick={() => setOpen((v) => !v)}
       >
         <Globe size={22} weight="regular" aria-hidden="true" />
