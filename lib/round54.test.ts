@@ -232,6 +232,8 @@ test('round 54 first view: every hours line splits into parts the dictionaries k
 test('round 54 Our solution: one line, then six simple cards', () => {
   assert.equal(copy.solutionText(), 'Your home makes its own power. We stand behind it.');
   assert.equal(copy.SOLUTION.filter((f) => f.key).length, 1);
+  // Set on two lines, the second starting at "We stand behind it." (the full stop ends the green phrase).
+  assert.deepEqual(copy.SOLUTION.filter((f) => f.newLine).map((f) => f.text), ['We stand behind it.']);
   assert.deepEqual(
     copy.SOLUTION_CARDS.map((c) => c.title),
     ['Your own power', 'We fix what we sell', 'Prices hard to beat', 'More than solar', 'Every customer matters', 'Always learning'],
@@ -364,8 +366,10 @@ test('round 54 Rewards and Our solution: both run taller', () => {
   assert.match(air, /\.plan \{[^}]*min-height: /, 'each plan is a tall row');
   assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'Our solution is not held on one screen');
   assert.ok(!existsSync(join(root, 'components', 'home', 'SolutionMotion.tsx')), 'and has no motion of its own');
-  // Direction C: the line stays in view on the left while the cards pass on the right; the cards carry no numbers.
-  assert.match(air, /\.solution__side \{[^}]*position: sticky;/);
+  // Bob, after C was built side by side: "not quite right" ... "The layout itself", then "Line on top, 3 x 2 grid". The
+  // line runs across the top and the six cards sit under it, three to a row; nothing is held, and no numbers.
+  assert.doesNotMatch(air, /\.solution__side/, 'no column held beside the cards');
+  assert.match(air, /\.solution__cards \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/);
   assert.match(solution, /SOLUTION_CARDS\.map/);
   assert.doesNotMatch(solution, /padStart/, 'no 01 to 06 on the cards');
 });

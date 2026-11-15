@@ -381,11 +381,12 @@ main.air {
   letter-spacing: -0.03em;
 }
 
-/* ---------- Our solution: one line held on the left, six simple cards on the right (round 54, direction C) ---------- */
+/* ---------- Our solution: the line on top, six simple cards under it (round 54) ---------- */
 
-/* Bob picked C from three card directions ("C is looking best but iwant more simple cards"), after asking for it to run
-   longer down the page. The line stays in view while the six cards pass beside it; on phones the line sits above them.
-   Cards are the plain kind his notes allow: a soft green ground, small corners, no frame, no numbers, nothing to press. */
+/* Bob picked the simple cards of direction C ("C is looking best but iwant more simple cards"), then, with the line held
+   beside them "not quite right", "Line on top, 3 x 2 grid". The top is laid out as Rewards' is: the line large on the
+   left, a short line and Visit the store at its foot on the right. The cards are the plain kind his notes allow: a soft
+   green ground, small corners, no frame, no numbers, nothing to press. */
 .solution {
   position: relative;
   /* Over Rewards' shadow, which would otherwise draw a faint line where the two whites meet. */
@@ -395,18 +396,16 @@ main.air {
   color: var(--leaf-ink);
   padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(120px, 20vh, 240px);
 }
-.solution__body {
+.solution__head {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 32px 6vw;
-}
-.solution__side {
-  position: sticky;
-  top: calc(var(--nav-h) + clamp(24px, 5vh, 56px));
-  align-self: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  align-items: end;
+  gap: 18px 48px;
+  margin-bottom: clamp(48px, 9vh, 104px);
 }
 .solution__kick {
-  margin: 0 0 24px;
+  grid-column: 1 / -1;
+  margin: 0 0 6px;
   color: #2f8f55;
   font-size: 0.8rem;
   font-weight: 700;
@@ -417,71 +416,85 @@ main.air {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.4rem, 4.4vw, 5.2rem);
-  line-height: 1.04;
+  font-size: clamp(2.4rem, 5.4vw, 6.2rem);
+  line-height: 1.02;
   letter-spacing: -0.035em;
 }
+/* The green phrase stays whole on one line ("its / own power." read badly). */
 .solution__key {
   color: #2f8f55;
   font-weight: 760;
+  white-space: nowrap;
+}
+/* "We stand behind it." starts a line of its own. */
+.solution__then {
+  display: block;
 }
 .solution__sub {
   max-width: 34ch;
-  margin: 26px 0 0;
+  margin: 0;
   color: var(--leaf-muted);
   font-size: 1.15rem;
   line-height: 1.55;
 }
 .solution__visit {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 .solution__cards {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .solution__card {
   display: grid;
+  align-content: start;
   gap: 12px;
-  padding: clamp(28px, 3vw, 40px);
+  padding: clamp(28px, 2.8vw, 40px);
   border-radius: 12px;
   background: #f2f6ef;
 }
 .solution__card svg {
-  margin-bottom: 8px;
+  margin-bottom: 14px;
   color: #2f8f55;
 }
 .solution__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  font-size: clamp(1.5rem, 2.1vw, 2.2rem);
   font-weight: 720;
-  line-height: 1.04;
+  line-height: 1.06;
   letter-spacing: -0.035em;
 }
 .solution__text {
-  max-width: 40ch;
+  max-width: 36ch;
   margin: 0;
   color: var(--leaf-muted);
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   line-height: 1.5;
 }
-/* Narrow screens: the line above the cards, scrolling with the page. */
+/* Tablets: the head stacks and the cards sit two to a row. */
 @media (max-width: 60rem) {
-  .solution__body {
+  .solution__head {
     grid-template-columns: 1fr;
   }
-  .solution__side {
-    position: static;
-    margin-bottom: 24px;
+  .solution__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+/* Phones: one card to a row. */
+@media (max-width: 36rem) {
   .solution__line {
-    font-size: clamp(2.1rem, 9vw, 3.6rem);
+    font-size: clamp(2.1rem, 9vw, 3rem);
   }
   .solution__sub {
     font-size: 1.05rem;
+  }
+  .solution__cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
   .solution__card svg {
     width: 26px;

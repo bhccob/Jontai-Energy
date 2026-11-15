@@ -14,13 +14,14 @@ export const FACT_STORE = { strong: 'Cumana 73', rest: ', Oranjestad' };
 export const FACT_RANGES = { strong: '6+ ranges', rest: ', one store' };
 
 /**
- * Our solution, direction C (Bob: "C is looking best but iwant more simple cards"): one line held on the left, in
- * fragments with its promise marked as the key (bold green), and six simple cards beside it.
+ * Our solution (Bob picked the simple cards of direction C, then "Line on top, 3 x 2 grid"): one line across the top,
+ * in fragments with its promise marked as the key (bold green), set on two lines (newLine), and six simple cards under
+ * it. The full stop ends the green phrase, so in Chinese it never starts a line on its own.
  */
-export const SOLUTION: { text: string; key?: true }[] = [
+export const SOLUTION: { text: string; key?: true; newLine?: true }[] = [
   { text: 'Your home makes' },
-  { text: 'its own power', key: true },
-  { text: '. We stand behind it.' },
+  { text: 'its own power.', key: true },
+  { text: 'We stand behind it.', newLine: true },
 ];
 
 /** Whether a fragment of the sentence follows the one before it with a space (not before , or .). */

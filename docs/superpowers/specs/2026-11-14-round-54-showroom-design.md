@@ -49,17 +49,17 @@ the end".
    text); then "See my points" and "Not sure which card fits? Ask us; a person answers." No pill or chip above the
    title (Bob, round 43). Motion: the heading rises into place line by line, the two cards float gently and lean toward
    the pointer, and the figures count up once when they come into view.
-4. **Our solution: a line and six cards** (direction C, picked 2026-11-15 from three card directions; Bob: "C is
-   looking best but iwant more simple cards"). It takes the place of the "Why Jontai" section. Its ground is the same
+4. **Our solution: a line and six cards** (picked 2026-11-15 from three card directions: Bob chose the simple cards of
+   direction C, "C is looking best but iwant more simple cards", then, with the line held beside the cards "not quite
+   right", the layout "Line on top, 3 x 2 grid"). It takes the place of the "Why Jontai" section. Its ground is the same
    plain white as Rewards just above it (Bob: "the color background as our solution should be the same as loyalty
-   area"), and it runs well over a screen long (Bob: "our solutions ... gotta be more verticaly long(er)"). On the left,
-   held in view while the cards pass: "Your home makes **its own power**. We stand behind it." (rising word by word),
-   then "Six promises from one family-owned store at Cumana 73, Oranjestad." and Visit the store. On the right, six
-   simple cards, each a small icon, the promise and one plain line: Your own power, We fix what we sell, Prices hard to
-   beat, More than solar, Every customer matters, Always learning. The cards are a soft green ground with small
-   corners, no frame, no numbers and nothing to press; each fades up as it comes into view. On phones the line sits
-   above the cards. This replaced the long sentence that filled in word by word. **No people, names or photos** (Bob:
-   remove Bob and Chakho).
+   area"). The top is laid out like the top of Rewards: "Your home makes **its own power.**" / "We stand behind it."
+   large on two lines (rising word by word), and at its foot on the right "Six promises from one family-owned store at
+   Cumana 73, Oranjestad." and Visit the store. Under it six simple cards, three to a row (two on tablets, one on
+   phones), each a small icon, the promise and one plain line: Your own power, We fix what we sell, Prices hard to beat,
+   More than solar, Every customer matters, Always learning. The cards are a soft green ground with small corners, no
+   frame, no numbers and nothing to press; each row fades up in turn. This replaced the long sentence that filled in
+   word by word. **No people, names or photos** (Bob: remove Bob and Chakho).
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home
    page's six range rows are replaced by one held screen, opened by the heading "6+ ranges. **One store.**" (Bob: "maybe 6+
