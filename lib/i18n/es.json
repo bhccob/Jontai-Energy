@@ -999,7 +999,8 @@
   "wheel|Backup": "Energía de",
   "wheel|power": "respaldo",
   "wheel|LED": "Iluminación",
-  "wheel|lighting": "LED"
+  "wheel|lighting": "LED",
+  "Six ranges and more. Keep scrolling to go through them.": "Seis líneas y más. Sigue bajando para recorrerlas."
  },
  "patterns": {
   "{0} out of 5 stars": "{0} de 5 estrellas",
@@ -1020,6 +1021,7 @@
   "See all {0}": "Ver {0}",
   ", until {0}": ", hasta las {0}",
   ", opens at {0}": ", abre a las {0}",
-  ", opens tomorrow at {0}": ", abre mañana a las {0}"
+  ", opens tomorrow at {0}": ", abre mañana a las {0}",
+  "See all {0} others": "Ver los {0} otros"
  }
 }

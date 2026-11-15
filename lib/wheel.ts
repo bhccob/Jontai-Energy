@@ -1,15 +1,7 @@
-// The range wheel on the home page (round 54): one product stands for each range (Bob's idea), the names turn on a drum
-// as the page scrolls, and the screen rests on each range before it turns to the next.
-
-/** The product that stands for each range, by range id (lib/islands). */
-export const WHEEL_PICKS: Record<string, string> = {
-  solar: 'solar-panels',
-  cooling: 'solar-air-conditioners',
-  backup: 'portable-power-stations',
-  light: 'bulbs',
-  security: 'outdoor-cameras',
-  upstairs: 'lounge-chairs',
-};
+// The range wheel on the home page (round 54): the six ranges and Others by name (Bob: "maybe six ranges products should
+// not include the image? and include others"), turning on a drum as the page scrolls, resting on each before the next.
+import { WHEEL_COPY } from './homeCopy.ts';
+import { ISLANDS, OTHERS, shownIn } from './islands.ts';
 
 /** A faint wash of colour for each range, as r, g, b: sun, sea glass, leaf, lamp, slate mist, sand. */
 export const WHEEL_TINT: Record<string, [number, number, number]> = {
@@ -19,6 +11,7 @@ export const WHEEL_TINT: Record<string, [number, number, number]> = {
   light: [255, 208, 140],
   security: [196, 216, 236],
   upstairs: [236, 210, 176],
+  others: [214, 226, 206],
 };
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
@@ -56,4 +49,26 @@ export function rangeIndexFromHash(hash: string, ids: string[]): number {
   const id = decodeURIComponent(hash.replace(/^#/, ''));
   if (!id) return -1;
   return ids.indexOf(id === 'delivery' ? 'upstairs' : id);
+}
+
+/** One place on the wheel: a range, or Others at the end. `label` is its button, "See all 9 Solar products". */
+export interface WheelItem {
+  id: string;
+  name: string;
+  count: number;
+  href: string;
+  label: string;
+}
+
+const fill = (pattern: string, ...values: (string | number)[]) => values.reduce<string>((s, v, i) => s.replace(`{${i}}`, String(v)), pattern);
+
+/** The six ranges in the home page's order, then Others. */
+export function wheelItems(): WheelItem[] {
+  return [
+    ...ISLANDS.map((r) => {
+      const count = shownIn(r).length;
+      return { id: r.id, name: r.name, count, href: rangeHref(r.id), label: fill(WHEEL_COPY.seeAll, count, r.name) };
+    }),
+    { id: 'others', name: 'Others', count: OTHERS.length, href: rangeHref('others'), label: fill(WHEEL_COPY.seeOthers, OTHERS.length) },
+  ];
 }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
-import { WHEEL_PICKS, WHEEL_TINT, heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress } from './wheel.ts';
+import { WHEEL_TINT, heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
 import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeNote } from './catalog.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
@@ -26,15 +26,25 @@ test('round 54 wheel: it rests on each range, then turns to the next', () => {
   }
 });
 
-test('round 54 wheel: one pictured product of its own for every range, a tint for each, and a link to its products', () => {
-  for (const r of ISLANDS) {
-    const pick = PRODUCTS.find((p) => p.id === WHEEL_PICKS[r.id]);
-    assert.ok(pick, `${r.id} has a pick`);
-    assert.equal(pick!.range.id, r.id, `${r.id}: the pick is its own product`);
-    assert.ok(hasPicture(pick!), `${r.id}: the pick has a picture`);
-    assert.equal(WHEEL_TINT[r.id]?.length, 3, `${r.id} has a tint`);
-  }
+test('round 54 wheel: the six ranges then Others, by name, each with a tint, its count and a link to its products', () => {
+  // Bob: "maybe six ranges products should not include the image? and include others".
+  const items = wheelItems();
+  assert.deepEqual(
+    items.map((i) => i.id),
+    [...ISLANDS.map((r) => r.id), 'others'],
+  );
+  const solarItem = items[0];
+  assert.equal(solarItem.count, shownIn(solar).length);
+  assert.equal(solarItem.label, `See all ${shownIn(solar).length} Solar products`);
+  assert.equal(solarItem.href, '/products?range=solar');
+  const others = items.at(-1)!;
+  assert.equal(others.name, 'Others');
+  assert.equal(others.count, OTHERS.length);
+  assert.equal(others.href, '/products?range=others');
+  assert.equal(others.label, `See all ${OTHERS.length} others`);
+  for (const i of items) assert.equal(WHEEL_TINT[i.id]?.length, 3, `${i.id} has a tint`);
   assert.equal(rangeHref('light'), '/products?range=light');
+  assert.equal(rangeIndexFromHash('#others', items.map((i) => i.id)), items.length - 1);
 });
 
 test('round 54 wheel: a name is a light word and a bold word, and both are translated where the wheel shows them', () => {

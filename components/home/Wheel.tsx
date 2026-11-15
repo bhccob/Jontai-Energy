@@ -2,25 +2,19 @@ import type { CSSProperties } from 'react';
 import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
-import { ISLANDS, PRODUCTS, hasPicture, shownIn, type Island, type Pictured } from '@/lib/islands';
+import { ISLANDS } from '@/lib/islands';
 import { WHEEL_COPY } from '@/lib/homeCopy';
-import { contactHref } from '@/lib/message';
-import { WHEEL_PICKS, nameParts, rangeHref, restProgress } from '@/lib/wheel';
-import { RangePicture } from '@/components/products/RangePicture';
+import { nameParts, restProgress, wheelItems, type WheelItem } from '@/lib/wheel';
 import { WheelMotion } from './WheelMotion';
 
-const N = ISLANDS.length;
+const ITEMS = wheelItems();
+const N = ITEMS.length;
 const two = (n: number) => String(n).padStart(2, '0');
-const SIZES = '(max-width: 47.5rem) 84vw, 46vw';
+/** The panels a range opens (Furniture: how delivery works). */
+const actionsOf = (id: string) => ISLANDS.find((r) => r.id === id)?.actions ?? [];
 
-/** The product that stands for a range. */
-function pickOf(range: Island): Pictured {
-  const p = PRODUCTS.find((x) => x.id === WHEEL_PICKS[range.id]);
-  if (!p || !hasPicture(p)) throw new Error(`No pictured pick for ${range.id}`);
-  return p;
-}
-
-/** A range's name, light then bold, translated in the wheel's own place. */
+/** A name, light then bold, translated in the wheel's own place. The space sits inside the light part, so Chinese can
+ *  drop it. */
 function Name({ name }: { name: string }) {
   const [light, bold] = nameParts(name);
   return (
@@ -31,26 +25,41 @@ function Name({ name }: { name: string }) {
   );
 }
 
-/** "See all 9 Solar products": one sentence, so the translator's pattern can reorder it. */
-const seeAll = (range: Island) =>
-  WHEEL_COPY.seeAll.replace('{0}', String(shownIn(range).length)).replace('{1}', range.name);
+/** "See all 9 Solar products", and for Furniture how delivery works. */
+function Acts({ item }: { item: WheelItem }) {
+  return (
+    <>
+      <a href={item.href} className="btn wheel__go">
+        <span>{item.label}</span>
+        <span className="wheel__arrow" aria-hidden="true">
+          <ArrowUpRight size={18} weight="bold" />
+        </span>
+      </a>
+      {actionsOf(item.id).map((a) => (
+        <OpenCategoryButton key={a.panel} id={a.panel} className="textlink wheel__delivery">
+          {a.label}
+        </OpenCategoryButton>
+      ))}
+    </>
+  );
+}
 
 /**
- * What we sell (round 54, Bob picked "D. The wheel"): one held screen on deep green. The six range names stand on a drum
- * like a phone's date picker and turn one at a time as the page scrolls, resting on each; one product stands for each
- * range and slides past in step. Each range leads to its products on the All products page three ways: the big button,
- * the picture and the name in front. After Furniture the page lets go into "Every product, one by one." Without
- * scripts, or with reduced motion, the six are still rows instead (wheel.css). The anchors the menu and the footer use
- * (#solar ... #upstairs, #delivery) sit where the wheel rests on each range.
+ * What we sell (round 54, Bob picked "D. The wheel", then: "maybe six ranges products should not include the image? and
+ * include others"): one held screen on deep green where the names of the six ranges and Others stand large on a drum,
+ * like a phone's date picker, and turn one at a time as the page scrolls, resting on each. The name in front leads to
+ * its products on the All products page, as does the button under it. After Others the page lets go into "Every
+ * product, one by one." Without scripts, or with reduced motion, they are still rows instead (wheel.css). The anchors
+ * the menu and the footer use (#solar ... #upstairs, #delivery, #others) sit where the wheel rests on each.
  */
 export function Wheel() {
   return (
-    <div id="products" className="sell" aria-labelledby="sell-title">
+    <div id="products" className="sell">
       <header className="sell__head">
         <h2 id="sell-title" className="sell__title" data-words>
           <span>
-            <Words text={WHEEL_COPY.title[0]} />
-          </span>{' '}
+            <Words text={`${WHEEL_COPY.title[0]} `} />
+          </span>
           <b>
             <Words text={WHEEL_COPY.title[1]} />
           </b>
@@ -60,100 +69,57 @@ export function Wheel() {
         </p>
       </header>
 
-      <section className="wheel" aria-labelledby="sell-title">
-        {ISLANDS.map((r, k) => (
-          <span key={r.id} id={r.id} className="wheel__anchor" style={{ '--k': k, '--rest': restProgress(k, N) } as CSSProperties} />
+      <section className="wheel" aria-labelledby="sell-title" style={{ '--n': N } as CSSProperties}>
+        {ITEMS.map((it, k) => (
+          <span key={it.id} id={it.id} className="wheel__anchor" style={{ '--k': k, '--rest': restProgress(k, N) } as CSSProperties} />
         ))}
-        <span id="delivery" className="wheel__anchor" style={{ '--k': N - 1, '--rest': restProgress(N - 1, N) } as CSSProperties} />
+        <span id="delivery" className="wheel__anchor" style={{ '--k': N - 2, '--rest': restProgress(N - 2, N) } as CSSProperties} />
 
         {/* The held screen */}
         <div className="wheel__held">
           <div className="wheel__pin">
             <div className="wheel__names">
               <span className="wheel__band" aria-hidden="true" />
-              {ISLANDS.map((r, k) => (
-                <button key={r.id} type="button" className="wn" data-k={k} data-id={r.id}>
-                  <Name name={r.name} />
+              {ITEMS.map((it, k) => (
+                <button key={it.id} type="button" className="wn" data-k={k} data-id={it.id} data-href={it.href}>
+                  <Name name={it.name} />
                 </button>
               ))}
             </div>
-            <div className="wheel__stage">
-              {ISLANDS.map((r, k) => {
-                const p = pickOf(r);
-                return (
-                  <div key={r.id} className={`ws${p.bulb ? ' ws--hang' : ''}`} data-k={k}>
-                    <a href={rangeHref(r.id)} aria-label={seeAll(r)}>
-                      <span className="ws__fig">
-                        <RangePicture p={p} sizes={SIZES} eager={k === 0} />
-                        <span className="ws__floor" aria-hidden="true" />
-                      </span>
-                      <span className="ws__tag" aria-hidden="true">
-                        {WHEEL_COPY.hover.replace('{0}', r.name)} <ArrowUpRight size={15} weight="bold" />
-                      </span>
-                    </a>
-                  </div>
-                );
-              })}
-            </div>
             <div className="wheel__feet">
-              {ISLANDS.map((r, k) => (
-                <div key={r.id} className="wheel__foot" data-k={k} data-on={k === 0}>
-                  <a href={rangeHref(r.id)} className="btn wheel__go">
-                    <span>{seeAll(r)}</span>
-                    <span className="wheel__arrow" aria-hidden="true">
-                      <ArrowUpRight size={18} weight="bold" />
-                    </span>
-                  </a>
+              {ITEMS.map((it, k) => (
+                <div key={it.id} className="wheel__foot" data-k={k} data-on={k === 0}>
+                  <Acts item={it} />
                   <span className="wheel__no">
-                    <b>{two(k + 1)}</b> / {two(N)}
+                    <b>{two(k + 1)}</b>
+                    {` / ${two(N)}`}
                   </span>
-                  {r.actions?.map((a) => (
-                    <OpenCategoryButton key={a.panel} id={a.panel} className="textlink wheel__delivery">
-                      {a.label}
-                    </OpenCategoryButton>
-                  ))}
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* The same six, still: without scripts or with reduced motion */}
+        {/* The same seven, still: without scripts or with reduced motion */}
         <ol className="wheel__still">
-          {ISLANDS.map((r) => {
-            const p = pickOf(r);
-            return (
-              <li key={r.id} className={`wrow${p.bulb ? ' wrow--hang' : ''}`}>
-                <h3 className="wrow__name">
-                  <Name name={r.name} />
-                </h3>
-                <a href={rangeHref(r.id)} className="wrow__pic" aria-label={seeAll(r)}>
-                  <RangePicture p={p} sizes={SIZES} />
-                </a>
-                <div className="wrow__acts">
-                  <a href={rangeHref(r.id)} className="btn wheel__go">
-                    <span>{seeAll(r)}</span>
-                    <span className="wheel__arrow" aria-hidden="true">
-                      <ArrowUpRight size={18} weight="bold" />
-                    </span>
-                  </a>
-                  {r.actions?.map((a) => (
-                    <OpenCategoryButton key={a.panel} id={a.panel} className="textlink wheel__delivery">
-                      {a.label}
-                    </OpenCategoryButton>
-                  ))}
-                </div>
-              </li>
-            );
-          })}
+          {ITEMS.map((it) => (
+            <li key={it.id} className="wrow">
+              <h3 className="wrow__name">
+                <Name name={it.name} />
+              </h3>
+              <div className="wrow__acts">
+                <Acts item={it} />
+              </div>
+            </li>
+          ))}
         </ol>
       </section>
 
       <div className="sell__end">
         <p className="sell__end-title" data-words>
           <span>
-            <Words text={WHEEL_COPY.end[0]} />
-          </span>{' '}
+            <Words text={`${WHEEL_COPY.end[0]} `} />
+          </span>
           <b>
             <Words text={WHEEL_COPY.end[1]} />
           </b>
@@ -161,12 +127,6 @@ export function Wheel() {
         <a href="/products" className="btn wheel__all">
           {WHEEL_COPY.endButton}
         </a>
-        <p className="sell__also">
-          {`${WHEEL_COPY.also} `}
-          <a href={contactHref('question')}>{WHEEL_COPY.askUs}</a>
-          {'. '}
-          <span>{WHEEL_COPY.pictures}</span>
-        </p>
       </div>
       <WheelMotion />
     </div>

@@ -45,13 +45,12 @@ export const SOLUTION_POINTS = ['Your own power', 'We fix what we sell', 'Prices
 
 export const WHEEL_COPY = {
   title: ['Six ranges.', 'One store.'],
-  line: 'One product stands for each range. Keep scrolling to go through them.',
+  line: 'Six ranges and more. Keep scrolling to go through them.',
   seeAll: 'See all {0} {1} products',
-  hover: 'See all {0}',
+  seeOthers: 'See all {0} others',
   delivery: 'How delivery works',
   end: ['Every product,', 'one by one.'],
   endButton: 'See all products',
-  also: 'Also SD cards, small solar lights, solar doorbells and WiFi mesh.',
   askUs: 'Ask us',
   pictures: 'Pictures are illustrations, not specific stock.',
 };
