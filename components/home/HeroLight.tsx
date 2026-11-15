@@ -9,7 +9,7 @@ const FADE = 0.04;
 /** How long after the pointer leaves before the light drifts on its own, in ms. */
 const IDLE = 1200;
 /** How far the sun goes towards the pointer (1: all the way), so it leans after it rather than chasing it. */
-const REACH = 0.6;
+const REACH = 0.75;
 
 /**
  * Aruba sunlight under the pointer (round 54, Bob: "i want that so the first view page is interactive and seamless motion
@@ -57,13 +57,13 @@ export function HeroLight() {
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
       if (!seen || scope.dataset.covered === 'true') return;
-      let target = pressable ? 0.35 : 0.8;
+      let target = pressable ? 0.35 : 1;
       if (!inside && now - left > IDLE) {
         // On its own: a slow loop round the top of the screen, a little softer than under the pointer.
         const t = now / 1000;
-        tx = 0.5 + Math.sin(t * 0.21) * 0.18;
-        ty = 0.34 + Math.sin(t * 0.33 + 1) * 0.07;
-        target = 0.45;
+        tx = 0.5 + Math.sin(t * 0.21) * 0.2;
+        ty = 0.34 + Math.sin(t * 0.33 + 1) * 0.08;
+        target = 0.5;
       }
       x += (tx - x) * FOLLOW;
       y += (ty - y) * FOLLOW;

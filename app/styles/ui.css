@@ -83,8 +83,10 @@
   white-space: nowrap;
 }
 /* A fitted word (FitText) takes its width from its row and never pushes the row wider: without the containment its
-   nowrap text would set the column's minimum width, and the column would grow to the word instead of the word to it. */
-[data-fit] {
+   nowrap text would set the column's minimum width, and the column would grow to the word instead of the word to it.
+   Only the fitted text's own paragraph: the header marks its fit with data-fit too (useHeaderFit), and clipping it cut
+   the language list off (round 54). */
+p[data-fit] {
   contain: inline-size;
   overflow: hidden;
 }
@@ -336,7 +338,8 @@ html[data-i18n='wait'] body {
 /* ---------- The light that follows the pointer over the grounds (round 54, CursorLight) ---------- */
 
 /* Above the page but never in the way: it lets every click through, and fades out over anything that can be pressed.
-   Two glows, one per kind of ground, cross-fade as the pointer moves from light to deep green. */
+   Two glows, one per kind of ground, cross-fade as the pointer moves from light to deep green. Strong enough to see
+   (Bob, after a first fainter version: "i dont see any cursor hover effects"), soft enough to stay a light. */
 .cursor-light {
   position: fixed;
   left: 0;
@@ -357,11 +360,11 @@ html[data-i18n='wait'] body {
   transition: opacity 700ms ease;
 }
 .cursor-light__glow--dark {
-  background: radial-gradient(closest-side, rgb(218 233 205 / 0.075), rgb(218 233 205 / 0.03) 55%, transparent);
+  background: radial-gradient(closest-side, rgb(186 226 170 / 0.15), rgb(186 226 170 / 0.055) 45%, transparent);
   opacity: 0;
 }
 .cursor-light__glow--light {
-  background: radial-gradient(closest-side, rgb(150 196 128 / 0.085), rgb(150 196 128 / 0.03) 55%, transparent);
+  background: radial-gradient(closest-side, rgb(124 184 104 / 0.18), rgb(124 184 104 / 0.07) 45%, transparent);
 }
 .cursor-light[data-ground='dark'] .cursor-light__glow--dark {
   opacity: 1;

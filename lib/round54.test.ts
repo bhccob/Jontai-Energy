@@ -9,6 +9,7 @@ import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
 import { groundOf } from './cursorLight.ts';
+import { makeTranslator } from './i18n/translate.ts';
 
 const root = join(import.meta.dirname, '..');
 const solar = ISLANDS.find((i) => i.id === 'solar')!;
@@ -251,4 +252,39 @@ test('round 54 cursor light: it reads the ground under the pointer from its colo
   assert.equal(groundOf('rgba(14, 34, 25, 0.9)'), 'dark');
   assert.equal(groundOf('transparent'), null);
   assert.equal(groundOf(''), null);
+});
+
+// Bob: "the header to change language doesnt appear good". The header marks how it fits with data-fit (useHeaderFit), as
+// the footer's fitted name does (FitText); the name's rule clipped the header too, cutting the language list off and
+// scrolling the capsule's contents up when it opened. The rule is the fitted text's alone.
+test('round 54 header: the fitted-text rule that clips its box never reaches the header', () => {
+  const ui = readFileSync(join(root, 'app', 'styles', 'ui.css'), 'utf8');
+  assert.doesNotMatch(ui, /(^|[\s,}])\[data-fit\]\s*[{,]/m, 'a bare [data-fit] rule also matches the header');
+  assert.match(ui, /p\[data-fit\]\s*\{[^}]*overflow: hidden/);
+});
+
+// Spanish showed "Ver Solar products" and "Ver los LED productos de lighting" under the wheel: older, looser patterns
+// ("See all {0}", "See all {0} {1} products") came first in the dictionary and won. The most fitting pattern wins now:
+// the one with the fewest holes, then the most fixed words, wherever it sits in the dictionary.
+test('round 54 translation: the most fitting pattern wins, not the first one listed', () => {
+  const t = makeTranslator('es', {
+    strings: { 'LED lighting': 'Iluminación LED' },
+    patterns: { 'See all {0}': 'Ver {0}', 'See all {0} {1} products': 'Ver los {0} productos de {1}', 'See all {0} products': 'Ver todos los productos de {0}' },
+  });
+  assert.equal(t.text('See all Solar products'), 'Ver todos los productos de Solar');
+  assert.equal(t.text('See all LED lighting products'), 'Ver todos los productos de Iluminación LED');
+  assert.equal(t.text('See all reviews'), 'Ver reviews');
+});
+
+test('round 54 translation: every wheel link reads whole in Spanish and Chinese', () => {
+  for (const lang of ['es', 'zh'] as const) {
+    const dict = JSON.parse(readFileSync(join(root, 'lib', 'i18n', `${lang}.json`), 'utf8'));
+    const t = makeTranslator(lang, dict);
+    for (const item of wheelItems()) {
+      const out = t.text(item.label) ?? '';
+      assert.doesNotMatch(out, /products|See all/, `${lang}: ${item.label} -> ${out}`);
+    }
+  }
+  const es = makeTranslator('es', JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')));
+  assert.equal(es.text('See all LED lighting products'), 'Ver todos los productos de Iluminación LED');
 });

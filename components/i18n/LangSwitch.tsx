@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react';
-import { Globe } from '@phosphor-icons/react/dist/ssr';
+import { Check, Globe } from '@phosphor-icons/react/dist/ssr';
 import { LANGS, langInfo, type Lang } from '@/lib/i18n/langs';
 import { i18n } from '@/lib/i18n/store';
 
@@ -9,7 +9,7 @@ const useLang = () => useSyncExternalStore(i18n.subscribe, i18n.get, i18n.server
 
 /**
  * The header's language button (Bob, round 33): a globe and the language in use; it opens a small list of the three,
- * each named in itself. The page changes language at once, without a reload, and the choice is kept for the next visit.
+ * each named in itself, the one in use ticked (round 54: a pane of the capsule's own glass under it). The page changes language at once, without a reload, and the choice is kept for the next visit.
  * Escape, a pick, or a click anywhere else closes the list. Phones pick in the menu instead (LangChoices).
  */
 export function LangSwitch() {
@@ -66,7 +66,8 @@ export function LangSwitch() {
         {LANGS.map((l) => (
           <li key={l.id}>
             <button type="button" lang={l.html} aria-current={l.id === lang} onClick={() => choose(l.id)}>
-              {l.name}
+              <span>{l.name}</span>
+              {l.id === lang && <Check size={16} weight="bold" aria-hidden="true" />}
             </button>
           </li>
         ))}

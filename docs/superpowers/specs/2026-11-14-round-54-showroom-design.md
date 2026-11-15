@@ -21,7 +21,9 @@ the end".
 1. **Header B, minimal.** One floating glass capsule that never moves or hides: the mark and "Jontai Energy" on the
    left; on the right one pill holding three icons (Support, Member, language) and a round Menu button with two lines
    and no word. It turns deep green with pale ink over dark sections, as today. The full-screen menu stays and gains
-   "All products" and "Our solution".
+   "All products" and "Our solution". The globe opens the three languages in a pane under the capsule, each named in
+   itself with the one in use ticked; it stays cream over dark sections, like the Menu button (Bob: "the header to
+   change language doesnt appear good"; the capsule had been clipping the list).
 2. **First view: still, light, four facts** (`site11.html`, look C, picked 2026-11-15). Light green over the faint,
    slowly moving valley (as today, barely visible). Centred: "Aruba sunlight, **made useful.**" in the site's mix of
    light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
@@ -94,8 +96,9 @@ the end".
    JONTAI ENERGY and the old three columns go. The footer is the same on every page.
 8. **A light under the pointer, everywhere but what can be pressed** (Bob: "i want the cursor hover to be everywhere
    thats not clickable so like background thats not matter it should feel premium"): a soft light trails the mouse over
-   the page's grounds, a pale glow on the deep greens and a faint leaf tint on the light ones, and fades away over links,
-   buttons and fields. Not on the first view (its sun does this), the header, the menu or a product sheet; none for touch
+   the page's grounds, a pale glow on the deep greens and a soft leaf-green light on the light ones, and fades away over
+   links, buttons and fields. Clearly visible, not faint (Bob, of a first fainter version: "i dont see any cursor hover
+   effects"). The wheel's names take the pointer only on their words, so the ground beside them stays ground. Not on the first view (its sun does this), the header, the menu or a product sheet; none for touch
    or with reduced motion.
 9. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
    premium"): the smooth scroll the site already has (Lenis); headings rise into place line by line as they arrive,

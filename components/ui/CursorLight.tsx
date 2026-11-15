@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { CLICKABLE, NO_LIGHT, groundOf } from '@/lib/cursorLight';
 
 /** The light's width in px, and how quickly it catches up with the pointer (per frame, 0 to 1). */
-const SIZE = 560;
+const SIZE = 680;
 const FOLLOW = 0.11;
 
 type Ground = 'dark' | 'light';
