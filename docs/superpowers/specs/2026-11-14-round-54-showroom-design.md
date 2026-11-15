@@ -55,11 +55,18 @@ the end".
    plain white as Rewards just above it (Bob: "the color background as our solution should be the same as loyalty
    area"). The top is laid out like the top of Rewards: "Your home makes **its own power.**" / "We stand behind it."
    large on two lines (rising word by word), and at its foot on the right "Six promises from one family-owned store at
-   Cumana 73, Oranjestad." and Visit the store. Under it six simple cards, three to a row (two on tablets, one on
-   phones), each a small icon, the promise and one plain line: Your own power, We fix what we sell, Prices hard to beat,
-   More than solar, Every customer matters, Always learning. The cards are a soft green ground with small corners, no
-   frame, no numbers and nothing to press; each row fades up in turn. This replaced the long sentence that filled in
-   word by word. **No people, names or photos** (Bob: remove Bob and Chakho).
+   Cumana 73, Oranjestad." and Visit the store. Under it six tall cards (after the 3 x 2 grid, Bob: "no i want more
+   simple card design view, something like https://www.squared-media.nl/ where its more cinematic and have animation
+   and seem more like business, do not copy exact"): each only a number (01 to 06), the promise and one plain line:
+   Your own power, We fix what we sell, Prices hard to beat, More than solar, Every customer matters, Always learning.
+   Three grounds in turn from the site's greens (deep, brand green, pale mint), larger corners, a soft shadow, nothing
+   to press. On wide screens the section holds still under the header while the cards are dealt in one by one as the
+   page scrolls, each rising from below at a slight angle and landing in a low fan across the page, each over the
+   right edge of the one before (the words keep to the part left open); scrolling back takes them away again. The fan
+   takes whatever room the line leaves (four lines in Spanish). On tablets and phones the cards stack into a deck:
+   each stops under the header a little lower than the last and the next slides over it, the covered one sinking back
+   and dimming slightly. Reduced motion: the fan or the deck, still. This replaced the long sentence that filled in
+   word by word, then the 3 x 2 grid. **No people, names or photos** (Bob: remove Bob and Chakho).
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home
    page's six range rows are replaced by one held screen, opened by the heading "6+ ranges. **One store.**" (Bob: "maybe 6+

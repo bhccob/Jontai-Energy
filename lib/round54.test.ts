@@ -9,6 +9,7 @@ import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
+import { DEAL_MEDIA, STACK_MEDIA, cardNumber, cardTone, fanSlot, stackTilt } from './solutionDeck.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -228,7 +229,7 @@ test('round 54 first view: every hours line splits into parts the dictionaries k
 });
 
 // Bob picked C from three card directions for Our solution ("C is looking best but iwant more simple cards"): one line
-// held on the left, six simple cards beside it, each a promise and one plain line, with no numbers.
+// on top and six cards, each a promise and one plain line.
 test('round 54 Our solution: one line, then six simple cards', () => {
   assert.equal(copy.solutionText(), 'Your home makes its own power. We stand behind it.');
   assert.equal(copy.SOLUTION.filter((f) => f.key).length, 1);
@@ -364,12 +365,55 @@ test('round 54 Rewards and Our solution: both run taller', () => {
   const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
   assert.match(air, /\.plans \{[^}]*grid-template-columns: 1fr;/, 'the plans sit one under the other');
   assert.match(air, /\.plan \{[^}]*min-height: /, 'each plan is a tall row');
-  assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'Our solution is not held on one screen');
-  assert.ok(!existsSync(join(root, 'components', 'home', 'SolutionMotion.tsx')), 'and has no motion of its own');
-  // Bob, after C was built side by side: "not quite right" ... "The layout itself", then "Line on top, 3 x 2 grid". The
-  // line runs across the top and the six cards sit under it, three to a row; nothing is held, and no numbers.
+  assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'no attribute set by a script decides the layout');
   assert.doesNotMatch(air, /\.solution__side/, 'no column held beside the cards');
-  assert.match(air, /\.solution__cards \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/);
+  assert.match(solution, /className="solution__head"/, 'the line stays on top');
+});
+
+// Bob, after the 3 x 2 grid: "no i want more simple card design view, something like https://www.squared-media.nl/
+// where its more cinematic and have animation and seem more like business, do not copy exact". The line stays on top;
+// under it six tall numbered cards are dealt in one by one as the page scrolls and land in a gentle fan (wide screens),
+// or stack into a deck (tablets and phones).
+test('round 54 Our solution deck: six numbered cards, three tones, a gentle fan', () => {
+  const six = [0, 1, 2, 3, 4, 5];
+  assert.deepEqual(six.map(cardNumber), ['01', '02', '03', '04', '05', '06']);
+  assert.deepEqual(six.map(cardTone), ['deep', 'green', 'mint', 'deep', 'green', 'mint']);
+  const fan = six.map((i) => fanSlot(i, 6));
+  fan.forEach((f, i) => {
+    assert.equal(f.tilt, -fan[5 - i].tilt, `tilt mirrors at ${i}`);
+    assert.equal(f.lift, fan[5 - i].lift, `lift mirrors at ${i}`);
+    assert.ok(Math.abs(f.tilt) <= 4.5, `a business-like tilt: ${f.tilt}`);
+    assert.ok(f.lift >= 0 && f.lift <= 20, `a low arc: ${f.lift}`);
+    if (i) assert.ok(f.tilt > fan[i - 1].tilt, 'the tilts open left to right');
+  });
+  assert.ok(Math.abs(fan[2].tilt) < 1 && Math.abs(fan[3].tilt) < 1, 'the middle cards stand nearly straight');
+  assert.ok(fan[0].lift > fan[2].lift, 'the outer cards sit lower, so the row reads as a hand');
+  const stack = six.map(stackTilt);
+  stack.forEach((t, i) => {
+    assert.ok(Math.abs(t) > 0 && Math.abs(t) <= 2, `a slight lean in the deck: ${t}`);
+    if (i) assert.notEqual(Math.sign(t), Math.sign(stack[i - 1]), 'each card leans the other way from the one under it');
+  });
+});
+
+test('round 54 Our solution deck: the deal, its CSS and its script share one screen rule', () => {
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  const deckPath = join(root, 'components', 'home', 'SolutionDeck.tsx');
+  assert.ok(existsSync(deckPath), 'the cards have their own motion');
+  const deck = readFileSync(deckPath, 'utf8');
+  assert.match(DEAL_MEDIA, /prefers-reduced-motion: no-preference/, 'reduced motion is never dealt');
+  assert.match(STACK_MEDIA, /prefers-reduced-motion: no-preference/);
+  assert.ok(air.includes(`@media ${DEAL_MEDIA} {`), 'the held stage is laid out in CSS for the screens the script deals on');
+  assert.match(air, /\.solution__stage \{[^}]*position: sticky;/, 'the stage holds while the cards are dealt');
+  // The deck's held cards are laid out for exactly the screens the script sinks them on, and never reach the fan.
+  const deckScreens = STACK_MEDIA.replaceAll('(prefers-reduced-motion: no-preference) and ', '');
+  assert.ok(air.includes(`@media ${deckScreens} {`), `the deck is laid out for ${deckScreens}`);
+  assert.match(deck, /DEAL_MEDIA/);
+  assert.match(deck, /STACK_MEDIA/);
+  assert.match(deck, /scrub/, 'the deal follows the scroll both ways');
+  assert.match(solution, /<ol className="solution__cards"/, 'the six promises in order');
+  assert.match(solution, /cardNumber\(i\)/);
   assert.match(solution, /SOLUTION_CARDS\.map/);
-  assert.doesNotMatch(solution, /padStart/, 'no 01 to 06 on the cards');
+  assert.match(solution, /<SolutionDeck \/>/);
+  assert.doesNotMatch(solution, /data-reveal style/, 'no fade of their own on top of the deal');
 });
