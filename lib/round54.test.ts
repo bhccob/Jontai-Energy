@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
-import { heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
+import { WHEEL_REST, heldPosition, nameParts, rangeHref, settleOn, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
 import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
@@ -18,7 +18,9 @@ test('round 54 wheel: it rests on each range, then turns to the next', () => {
   assert.equal(heldPosition(0, 6), 0);
   assert.equal(heldPosition(1, 6), 5);
   for (let k = 0; k < 6; k++) assert.equal(heldPosition(restProgress(k, 6), 6), k, `rests on ${k}`);
-  assert.equal(heldPosition(0.75 / 6, 6), 0.5, 'halfway through the first turn');
+  // Bob: "better scrolling feel": a short rest on each name and a longer, gentler turn, instead of half and half.
+  assert.ok(WHEEL_REST > 0 && WHEEL_REST <= 0.3, 'the rest is the shorter part of each stretch');
+  assert.ok(Math.abs(heldPosition((WHEEL_REST + (1 - WHEEL_REST) / 2) / 6, 6) - 0.5) < 1e-9, 'halfway through the first turn');
   assert.equal(heldPosition(5.5 / 6, 6), 5, 'the last range holds');
   let last = -1;
   for (let i = 0; i <= 1000; i++) {
@@ -26,6 +28,25 @@ test('round 54 wheel: it rests on each range, then turns to the next', () => {
     assert.ok(p >= last, `never turns back at ${i / 1000}`);
     last = p;
   }
+});
+
+test('round 54 wheel: stopped between two names, it clicks on to the next one the way it was going; resting, it stays', () => {
+  const n = 7;
+  const at = (k: number, part: number) => (k + part) / n;
+  // Resting on a name, or before the first and after the last: nothing to settle.
+  for (let k = 0; k < n; k++) for (const dir of [-1, 0, 1]) assert.equal(settleOn(restProgress(k, n), n, dir), -1, `rests on ${k}`);
+  assert.equal(settleOn(0, n, 1), -1);
+  assert.equal(settleOn(-0.1, n, 1), -1, 'above the wheel');
+  assert.equal(settleOn(1.2, n, -1), -1, 'below the wheel');
+  assert.equal(settleOn(at(n - 1, 0.6), n, 1), -1, 'the last name only rests');
+  // Mid-turn: one mouse-wheel notch down from a name goes on to the next one, up goes back; still, the nearer one.
+  const turnAt = (k: number, t: number) => at(k, WHEEL_REST + (1 - WHEEL_REST) * t);
+  assert.equal(settleOn(turnAt(2, 0.15), n, 1), 3, 'a nudge down turns to the next');
+  assert.equal(settleOn(turnAt(2, 0.85), n, -1), 2, 'a nudge up turns back');
+  assert.equal(settleOn(turnAt(2, 0.2), n, 0), 2);
+  assert.equal(settleOn(turnAt(2, 0.8), n, 0), 3);
+  assert.equal(settleOn(turnAt(5, 0.5), n, 1), 6);
+  assert.equal(settleOn(turnAt(0, 0.5), n, -1), 0);
 });
 
 test('round 54 wheel: the six ranges then Others, by name, each saying plainly where it leads', () => {

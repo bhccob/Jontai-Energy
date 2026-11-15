@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { i18n } from '@/lib/i18n/store';
 import { spread, type Translator as T } from '@/lib/i18n/translate';
 
@@ -121,6 +122,11 @@ function walk(root: Node, t: T | null) {
  * render is always English, as the server sent it; a saved choice applies right after, and the head script keeps the
  * page hidden for that moment so English never flashes (app/layout, html[data-i18n]).
  */
+/** The page's new words change its heights (a longer Spanish paragraph, a shorter Chinese one), so every scroll-driven
+ *  section measures where it starts and ends again, once the new text is laid out (round 54: the wheel's rests sat
+ *  about 100px off in Spanish and Chinese). */
+const remeasure = () => requestAnimationFrame(() => ScrollTrigger.refresh());
+
 export function Translator() {
   const { t, lang } = useSyncExternalStore(i18n.subscribe, i18n.get, i18n.server);
   // Whether the page holds a translation, so going back to English has something to undo.
@@ -141,6 +147,7 @@ export function Translator() {
         walk(document.body, null);
         if (title) walk(title, null);
         applied.current = false;
+        remeasure();
       }
       return;
     }
@@ -148,6 +155,7 @@ export function Translator() {
     if (title) walk(title, t);
     applied.current = true;
     document.documentElement.removeAttribute('data-i18n');
+    remeasure();
     const seen = new MutationObserver((records) => {
       for (const r of records) {
         if (r.type === 'characterData') walk(r.target, t);

@@ -73,6 +73,12 @@ the end".
      "See all other products") on a hairline. Clicking another name turns the drum to it.
    - The order matters (Bob: "solar first then led lighting"): Solar, LED lighting, Cooling, Backup power, Security,
      Furniture, then Others. The menu, the footer and the All products page follow it.
+   - Large and well apart (Bob: "six range products gotta be bigger and more seperated also better scrolling feel"):
+     names about 150px tall on a laptop, neighbours about one and a half name heights apart (more on phones), the outer
+     ones melting into the green at the drum's top and foot. A name too wide for the screen in the language shown is
+     set down on its own. Each name rests briefly, then the drum turns in a long, gentle ease; when the scroll stops part
+     way through a turn the page glides on to the next name the way it was going, like a phone's date picker, so one
+     mouse-wheel notch turns one name.
    - After Others the screen lets go into the end band: "Every product, **one by one.**" with "See all products".
 6. **All products page** at `/products`, to look at, not to shop (Bob: "i want them to not be like a site that you
    can shop but only to view so more minimal and better displayed"). Title "All **products**", one line ("Everything on
