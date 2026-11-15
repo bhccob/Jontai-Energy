@@ -8,7 +8,7 @@ import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neigh
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { TRAIL_CELL, dotColor, dotLevel, groundOf, trailRadius } from './cursorLight.ts';
+import { CONTENT, MOTE_STEP, emitCount, groundOf, insideAny, moteColor, moteLook, stepMote, type Mote } from './cursorLight.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -325,22 +325,55 @@ test('round 54 menu: four big places, then the ranges and help, small', () => {
   assert.equal(home.help.at(-1)!.external, true);
 });
 
-// Bob: "the cursor hover should has same logic as this site https://www.squared-media.nl/": a trail of small dots on a
-// fine grid that follows the pointer, wide and bright at its head, thin and faint at its tail, gone when it stops.
-test('round 54 cursor trail: a comet of dots, brighter and larger the more of the trail lies on a cell', () => {
-  assert.ok(TRAIL_CELL >= 6 && TRAIL_CELL <= 12, 'a fine grid');
-  assert.equal(dotLevel(0), -1, 'nothing where the trail has not been');
-  assert.equal(dotLevel(0.01), -1, 'too faint to draw');
-  let last = -1;
-  for (let h = 0; h <= 6; h += 0.05) {
-    const l = dotLevel(h);
-    assert.ok(l >= last, `never dimmer for more heat (${h})`);
-    last = l;
+// Bob: "the cursor hover should has same logic as this site https://www.squared-media.nl/", then: "the cursor doesnt
+// disspear when theres clickable stuff it only need to appear in certain places like in background that doesnt matter
+// much and also dont need EXACT same styling". A trail that follows the moving pointer and is gone when it rests, in
+// Jontai's own look: specks of sunlight that rise from its path and fade, only ever on the plain ground.
+test('round 54 cursor trail: specks rise from the path, shrink and fade, faster when the pointer reaches something', () => {
+  const m: Mote = { x: 100, y: 100, vx: 10, vy: -20, life: 0.8, span: 0.8, size: 3, tone: 1 };
+  const a = stepMote(m, 0.1, 1)!;
+  assert.ok(a.y < 100 && a.x > 100, 'drifts up and along');
+  assert.ok(Math.abs(a.life - 0.7) < 1e-9, 'ages with time');
+  const fresh = moteLook(m);
+  const older = moteLook(a);
+  assert.ok(older.alpha < fresh.alpha && older.radius < fresh.radius, 'fades and shrinks as it ages');
+  assert.equal(stepMote({ ...m, life: 0.05 }, 0.1, 1), null, 'gone at the end of its life');
+  assert.equal(stepMote(m, 0.1, 10), null, 'gone at once when told to hurry');
+  assert.equal(moteLook({ ...m, life: 0 }).alpha, 0);
+});
+
+test('round 54 cursor trail: more specks the further the pointer moves, none when it is still', () => {
+  assert.equal(emitCount(0), 0);
+  assert.equal(emitCount(MOTE_STEP - 1), 0);
+  assert.equal(emitCount(MOTE_STEP), 1);
+  // A slow pointer on a fast screen moves 2px a frame: the distance kept over frames still makes specks.
+  let kept = 0;
+  let made = 0;
+  for (let frame = 0; frame < 60; frame++) {
+    kept += 2;
+    const n = emitCount(kept);
+    kept -= n * MOTE_STEP;
+    made += n;
   }
-  assert.equal(dotLevel(6), 3, 'the head is the brightest');
-  assert.ok(trailRadius(0) < 8 && trailRadius(1) > 28, 'thin at the tail, wide at the head');
-  for (let i = 0; i < 1; i += 0.1) assert.ok(trailRadius(i + 0.1) >= trailRadius(i));
-  // The site's greens: forest and leaf on the light grounds, mint and cream on the deep green.
-  assert.notEqual(dotColor('light', 3), dotColor('dark', 3));
-  for (const g of ['light', 'dark'] as const) for (let l = 0; l < 4; l++) assert.match(dotColor(g, l), /^rgba\(/);
+  assert.ok(made >= 15, `2px a frame for a second leaves a trail (${made})`);
+  assert.ok(emitCount(200) <= 4, 'never a flood');
+  for (let d = 0; d < 60; d++) assert.ok(emitCount(d + 1) >= emitCount(d));
+});
+
+test('round 54 cursor trail: only on the plain ground, never on text, pictures or anything that can be pressed', () => {
+  for (const sel of ['a', 'button', 'h2', 'p', 'li', '.wn > *']) assert.ok(CONTENT.split(',').map((s) => s.trim()).includes(sel), sel);
+  // The wheel's names span the screen to centre their words; only the words count, or the whole band would be closed.
+  assert.ok(!CONTENT.split(',').map((s) => s.trim()).includes('.wn'));
+  // The first view's valley is a picture behind everything: it is ground, not content, or the first view has no trail.
+  for (const media of ['img', 'picture', 'video']) {
+    assert.ok(!CONTENT.split(',').map((s) => s.trim()).includes(media), `${media} alone would catch the valley`);
+    assert.ok(CONTENT.includes(`${media}:not(.sky *)`), `${media}, but not the sky's`);
+  }
+  const rects = [{ l: 100, t: 100, r: 200, b: 140 }];
+  assert.equal(insideAny(150, 120, rects, 0), true);
+  assert.equal(insideAny(95, 120, rects, 0), false);
+  assert.equal(insideAny(95, 120, rects, 8), true, 'a little room is kept round it');
+  assert.equal(insideAny(150, 300, rects, 8), false);
+  assert.notEqual(moteColor('light', 2), moteColor('dark', 2));
+  for (const g of ['light', 'dark'] as const) for (let t = 0; t < 3; t++) assert.match(moteColor(g, t), /^\d+, \d+, \d+$/);
 });

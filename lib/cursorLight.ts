@@ -24,38 +24,98 @@ export function groundOf(color: string): 'dark' | 'light' | null {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.3 ? 'dark' : 'light';
 }
 
-// ---------- The trail (round 54, after squared-media.nl's logic, in Jontai's greens) ----------
+// ---------- The trail (round 54): squared-media.nl's logic, Jontai's own look ----------
 
-/** The grid the trail is drawn on, in px: one dot per cell at most. */
-export const TRAIL_CELL = 9;
+/**
+ * What the trail never lies on: anything that can be pressed, and the page's words and pictures. It shows only on the
+ * plain ground between them (Bob: "it only need to appear in certain places like in background that doesnt matter
+ * much"). The wheel's names count by their words alone: their buttons span the screen to centre them.
+ */
+export const CONTENT = [
+  'a',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'label',
+  'summary',
+  '[role="button"]',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'p',
+  'li',
+  'dt',
+  'dd',
+  'blockquote',
+  'figure',
+  // Pictures, but not the first view's valley: it lies behind everything, as ground.
+  'img:not(.sky *)',
+  'picture:not(.sky *)',
+  'video:not(.sky *)',
+  'svg',
+  'table',
+  '.wn > *',
+].join(', ');
 
-/** How wide the trail is, in px, along its length: i is 0 at the tail and 1 at the head. */
-export const trailRadius = (i: number) => 4 + 32 * Math.pow(Math.min(1, Math.max(0, i)), 1.6);
-
-/** How bright a cell's dot is, from how much of the trail lies on it: -1 (no dot), then 0 (faintest) to 3. */
-export function dotLevel(heat: number): number {
-  const d = 1 - Math.exp(-1.1 * Math.max(0, heat));
-  if (d < 0.05) return -1;
-  return Math.min(3, Math.floor(d * 4));
+export interface Box {
+  l: number;
+  t: number;
+  r: number;
+  b: number;
 }
 
-const COLORS: Record<'light' | 'dark', string[]> = {
-  // Faint ink, then leaf, then the brand's forest green at the head.
-  light: ['rgba(23, 61, 44, 0.22)', 'rgba(23, 61, 44, 0.42)', 'rgba(63, 154, 107, 0.78)', 'rgba(47, 143, 85, 0.96)'],
-  // Faint cream, then mint, then pale mint at the head.
-  dark: ['rgba(244, 246, 239, 0.24)', 'rgba(244, 246, 239, 0.46)', 'rgba(124, 196, 154, 0.82)', 'rgba(190, 232, 200, 0.96)'],
+/** Whether a point lies on any of the boxes, with `pad` px of room kept round each. */
+export function insideAny(x: number, y: number, boxes: Box[], pad: number): boolean {
+  for (const b of boxes) if (x >= b.l - pad && x <= b.r + pad && y >= b.t - pad && y <= b.b + pad) return true;
+  return false;
+}
+
+/** A speck of light left behind by the pointer: where it is, how it drifts (px a second), how long it has left of its
+ *  span (s), its size (px radius when new) and its tone (0 faint, 1 middle, 2 bright). */
+export interface Mote {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  span: number;
+  size: number;
+  tone: number;
+}
+
+/** A speck one step later: drifting on, slowing a little, and older; `hurry` ages it faster (the pointer has reached
+ *  something). Null once its life is over. */
+export function stepMote(m: Mote, dt: number, hurry: number): Mote | null {
+  const life = m.life - dt * hurry;
+  if (life <= 0) return null;
+  const drag = Math.pow(0.4, dt);
+  return { ...m, x: m.x + m.vx * dt, y: m.y + m.vy * dt, vx: m.vx * drag, vy: m.vy * drag, life };
+}
+
+/** How a speck looks for its age: it shrinks to two fifths and fades out as its life runs down. */
+export function moteLook(m: Mote): { radius: number; alpha: number } {
+  const k = Math.max(0, Math.min(1, m.life / m.span));
+  return { radius: m.size * (0.4 + 0.6 * k), alpha: Math.pow(k, 1.3) };
+}
+
+/** How far the pointer travels, in px, for each speck it leaves. */
+export const MOTE_STEP = 5;
+
+/** How many specks the pointer leaves for how far it has travelled since the last one (px): none when still, a few
+ *  at most however fast it goes. The caller keeps the distance over frames, so a slow pointer or a fast screen (a
+ *  little movement each frame) still leaves its trail. */
+export const emitCount = (distance: number) => Math.min(4, Math.floor(distance / MOTE_STEP));
+
+const TONES: Record<'light' | 'dark', string[]> = {
+  // Ink, leaf and the brand's forest green on the light grounds.
+  light: ['23, 61, 44', '63, 154, 107', '47, 143, 85'],
+  // Cream, mint and pale sunlit mint on the deep green.
+  dark: ['244, 246, 239', '124, 196, 154', '214, 240, 214'],
 };
 
-/** A dot's colour on a ground, by its level. */
-export const dotColor = (ground: 'light' | 'dark', level: number) => COLORS[ground][Math.min(3, Math.max(0, level))];
-
-/** A dot's size, in px radius, by its level; `jitter` (0 to 1) varies it a little so the trail shimmers. */
-export const dotSize = (level: number, jitter: number) => [0.8, 1.15, 1.6, 2.15][Math.min(3, Math.max(0, level))] * (0.85 + 0.3 * jitter);
-
-/** A steady pseudo-random number (0 to 1) for a cell at a moment, so each dot shimmers on its own. */
-export function cellNoise(x: number, y: number, t: number): number {
-  let n = (Math.imul(x, 73856093) ^ Math.imul(y, 19349663) ^ Math.imul(t, 83492791)) >>> 0;
-  n = (n ^ (n >>> 13)) >>> 0;
-  n = Math.imul(n, 1274126177) >>> 0;
-  return (n % 1000) / 1000;
-}
+/** A speck's colour (r, g, b) on a ground, by its tone. */
+export const moteColor = (ground: 'light' | 'dark', tone: number) => TONES[ground][Math.min(2, Math.max(0, tone))];

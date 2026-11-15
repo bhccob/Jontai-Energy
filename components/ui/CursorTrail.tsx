@@ -1,17 +1,20 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { CLICKABLE, NO_LIGHT, TRAIL_CELL, cellNoise, dotColor, dotLevel, dotSize, groundOf, trailRadius } from '@/lib/cursorLight';
+import { CLICKABLE, CONTENT, MOTE_STEP, NO_LIGHT, emitCount, groundOf, insideAny, moteColor, moteLook, stepMote, type Box, type Mote } from '@/lib/cursorLight';
 
 type Ground = 'dark' | 'light';
 
 /** How quickly the trail's head catches up with the pointer (per frame at 60 fps, 0 to 1). */
-const FOLLOW = 0.14;
-/** How many of the head's past places the trail keeps, and at most how many of them light the grid each frame. */
-const LENGTH = 90;
-const SAMPLES = 56;
-/** How long the shimmer holds one pattern, in ms. */
-const SHIMMER = 320;
+const FOLLOW = 0.22;
+/** At most this many specks at once. */
+const MOST = 220;
+/** Room kept round the page's words, pictures and buttons, in px: no speck comes nearer. */
+const ROOM = 10;
+/** How often the boxes of the page's content are read again while the trail is alive, in ms. */
+const REREAD = 350;
+/** How much faster specks age once the pointer is on something (so the trail is gone at once). */
+const HURRY = 7;
 const TAU = Math.PI * 2;
 
 /** The ground an element sits on: the first colour behind it that is not see-through, looking outwards. */
@@ -27,14 +30,17 @@ function groundAt(el: Element | null, seen: WeakMap<Element, Ground | null>): Gr
   return 'light';
 }
 
+const rand = (a: number, b: number) => a + Math.random() * (b - a);
+
 /**
- * A trail of small dots that follows the pointer (round 54, Bob: "the cursor hover should has same logic as this site
- * https://www.squared-media.nl/"). The screen is a fine grid; the pointer's head eases after it and leaves a comet
- * behind, wide at the head and thin at the tail, and every cell the comet covers shows a dot: larger and brighter
- * where more of it lies, shimmering a little. When the pointer rests, the comet draws in and fades within a second and
- * the drawing stops. In the site's greens: forest and leaf on the light grounds, mint and cream on the deep green.
- * Over anything that can be pressed it fades away (Bob: "everywhere thats not clickable"), and the header, the menu and
- * an open product sheet have none. A mouse only, and none with reduced motion.
+ * Specks of sunlight that follow the pointer over the page's plain ground (round 54). The logic is squared-media.nl's,
+ * as Bob asked ("the cursor hover should has same logic as this site"): a trail that follows the moving pointer, thick
+ * where it is and thinning behind it, gone soon after it rests. The look is Jontai's own (Bob: "dont need EXACT same
+ * styling"): small round specks rise from the pointer's path like pollen in sunlight, shrink and fade; forest and leaf
+ * on the light grounds, cream and mint on the deep green. It lives only on the ground between things (Bob: "it only
+ * need to appear in certain places like in background that doesnt matter much"): no speck is drawn on or near a word,
+ * a picture or anything that can be pressed, and once the pointer reaches one, the trail is gone at once. None in the
+ * header, the menu or a product sheet, none for touch, none with reduced motion; it rests when there is nothing to draw.
  */
 export function CursorTrail() {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -47,43 +53,55 @@ export function CursorTrail() {
     const ctx = el.getContext('2d');
     if (!ctx) return;
 
-    let w = 0;
-    let h = 0;
-    let cols = 0;
-    let rows = 0;
-    let heat = new Float32Array(0);
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = window.innerWidth;
-      h = window.innerHeight;
-      el.width = Math.floor(w * dpr);
-      el.height = Math.floor(h * dpr);
-      el.style.width = `${w}px`;
-      el.style.height = `${h}px`;
+      el.width = Math.floor(window.innerWidth * dpr);
+      el.height = Math.floor(window.innerHeight * dpr);
+      el.style.width = `${window.innerWidth}px`;
+      el.style.height = `${window.innerHeight}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.ceil(w / TRAIL_CELL) + 1;
-      rows = Math.ceil(h / TRAIL_CELL) + 1;
-      heat = new Float32Array(cols * rows);
+      stale = true;
     };
-    size();
 
     const seen = new WeakMap<Element, Ground | null>();
-    const pointer = { x: w / 2, y: h / 2 };
-    const head = { x: pointer.x, y: pointer.y };
-    const trail: { x: number; y: number }[] = [];
+    const pointer = { x: 0, y: 0 };
+    const head = { x: 0, y: 0 };
+    let motes: Mote[] = [];
+    let boxes: Box[] = [];
+    let readAt = -Infinity;
+    let stale = true;
     let placed = false;
-    let energy = 0; // 1 when the pointer moves, running down while it rests
-    let shown = 0; // how visible the trail is, easing after the energy (0 over something pressable)
     let on = false;
     let ground: Ground = 'light';
     let pending: Element | null = null;
+    let travel = 0; // how far the head has gone since it last left a speck, px
     let running = false;
     let frame = 0;
     let last = 0;
-    let dirty: { x: number; y: number; w: number; h: number } | null = null;
+    size();
 
+    // Where the words, pictures and buttons in sight are, so the specks keep off them. Only ones really showing count:
+    // the closed menu's links and the footer waiting under the page have places too, but nothing to keep off.
+    const read = (now: number) => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      boxes = [];
+      document.querySelectorAll(CONTENT).forEach((node) => {
+        const r = node.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0 || r.bottom < 0 || r.top > h || r.right < 0 || r.left > w) return;
+        const cx = (Math.max(r.left, 0) + Math.min(r.right, w - 1)) / 2;
+        const cy = (Math.max(r.top, 0) + Math.min(r.bottom, h - 1)) / 2;
+        const top = document.elementFromPoint(cx, cy);
+        if (!top || !(node === top || node.contains(top))) return;
+        boxes.push({ l: r.left, t: r.top, r: r.right, b: r.bottom });
+      });
+      readAt = now;
+      stale = false;
+    };
+
+    // Whether the pointer is on the plain ground, and which.
     const look = (at: Element | null) => {
-      on = !!at && !at.closest(NO_LIGHT) && !at.closest(CLICKABLE);
+      on = !!at && !at.closest(NO_LIGHT) && !at.closest(CONTENT) && !at.closest(CLICKABLE);
       if (on) ground = groundAt(at, seen);
     };
 
@@ -94,89 +112,70 @@ export function CursorTrail() {
         look(pending);
         pending = null;
       }
+      if (stale || now - readAt > REREAD) read(now);
+
+      // The head eases after the pointer; specks are left along the way it moved, on the plain ground only.
       const k = 1 - Math.pow(1 - FOLLOW, dt * 60);
+      const fromX = head.x;
+      const fromY = head.y;
       head.x += (pointer.x - head.x) * k;
       head.y += (pointer.y - head.y) * k;
-      energy = Math.max(0, energy - 1.2 * dt);
-      shown += ((on ? energy : 0) - shown) * Math.min(1, 8 * dt);
-      trail.push({ x: head.x, y: head.y });
-      if (trail.length > LENGTH) trail.shift();
-
-      if (dirty) {
-        ctx.clearRect(dirty.x, dirty.y, dirty.w, dirty.h);
-        dirty = null;
+      const moved = Math.hypot(head.x - fromX, head.y - fromY);
+      travel = on ? Math.min(travel + moved, MOTE_STEP * 4) : 0;
+      if (on && dt > 0) {
+        const n = Math.min(emitCount(travel), MOST - motes.length);
+        travel -= emitCount(travel) * MOTE_STEP;
+        const vx = (head.x - fromX) / dt;
+        for (let i = 0; i < n; i++) {
+          const t = (i + Math.random()) / n;
+          const x = fromX + (head.x - fromX) * t + rand(-5, 5);
+          const y = fromY + (head.y - fromY) * t + rand(-5, 5);
+          if (insideAny(x, y, boxes, ROOM)) continue;
+          const bright = Math.random();
+          const span = rand(0.6, 1.05);
+          motes.push({
+            x,
+            y,
+            vx: rand(-14, 14) + vx * 0.06,
+            vy: rand(-36, -10),
+            life: span,
+            span,
+            size: rand(1.6, 3.6),
+            tone: bright > 0.8 ? 2 : bright > 0.35 ? 1 : 0,
+          });
+        }
       }
-      if (shown < 0.01 && energy === 0) {
+
+      const hurry = on ? 1 : HURRY;
+      const next: Mote[] = [];
+      for (const m of motes) {
+        const s = stepMote(m, dt, hurry);
+        if (s) next.push(s);
+      }
+      motes = next;
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      for (const m of motes) {
+        if (insideAny(m.x, m.y, boxes, ROOM * 0.5)) continue;
+        const { radius, alpha } = moteLook(m);
+        const rgb = moteColor(ground, m.tone);
+        // The brightest specks carry a faint halo of their own light.
+        if (m.tone === 2) {
+          ctx.fillStyle = `rgba(${rgb}, ${(alpha * 0.18).toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, radius * 2.6, 0, TAU);
+          ctx.fill();
+        }
+        ctx.fillStyle = `rgba(${rgb}, ${(alpha * (ground === 'light' ? 0.75 : 0.85)).toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, radius, 0, TAU);
+        ctx.fill();
+      }
+
+      if (!motes.length && moved < 0.2) {
         running = false;
-        trail.length = 0;
         return;
       }
-      if (trail.length < 4 || shown < 0.01) {
-        frame = requestAnimationFrame(tick);
-        return;
-      }
-
-      // Lay the comet on the grid: each place it has been warms the cells round it, more and wider towards the head.
-      const breathe = 1 + 0.06 * Math.sin((now / 1000) * 1.6) * (1 - energy);
-      const reachScale = 0.4 + 0.6 * shown;
-      const stride = Math.max(1, Math.ceil(trail.length / SAMPLES));
-      let c0 = cols;
-      let c1 = -1;
-      let r0 = rows;
-      let r1 = -1;
-      for (let j = 0; j < trail.length; j += stride) {
-        const p = trail[j];
-        const i = j / (trail.length - 1);
-        const r = trailRadius(i) * breathe * reachScale;
-        const amount = (0.16 + Math.pow(i, 1.8)) * stride * 0.5;
-        const inv = 1 / (2 * r * r);
-        const reach = 2.2 * r;
-        const ca = Math.max(0, Math.floor((p.x - reach) / TRAIL_CELL));
-        const cb = Math.min(cols - 1, Math.ceil((p.x + reach) / TRAIL_CELL));
-        const ra = Math.max(0, Math.floor((p.y - reach) / TRAIL_CELL));
-        const rb = Math.min(rows - 1, Math.ceil((p.y + reach) / TRAIL_CELL));
-        if (ca > cb || ra > rb) continue;
-        c0 = Math.min(c0, ca);
-        c1 = Math.max(c1, cb);
-        r0 = Math.min(r0, ra);
-        r1 = Math.max(r1, rb);
-        for (let y = ra; y <= rb; y++) {
-          const dy = y * TRAIL_CELL + TRAIL_CELL / 2 - p.y;
-          const row = y * cols;
-          for (let x = ca; x <= cb; x++) {
-            const dx = x * TRAIL_CELL + TRAIL_CELL / 2 - p.x;
-            heat[row + x] += amount * Math.exp(-(dx * dx + dy * dy) * inv);
-          }
-        }
-      }
-      if (c0 > c1) {
-        frame = requestAnimationFrame(tick);
-        return;
-      }
-
-      // One dot per warm cell, gathered by brightness so each brightness is one fill.
-      const dots = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];
-      const moment = Math.floor(now / SHIMMER);
-      for (let y = r0; y <= r1; y++) {
-        const row = y * cols;
-        const cy = y * TRAIL_CELL + TRAIL_CELL / 2;
-        for (let x = c0; x <= c1; x++) {
-          const level = dotLevel(heat[row + x]);
-          heat[row + x] = 0;
-          if (level < 0) continue;
-          const cx = x * TRAIL_CELL + TRAIL_CELL / 2;
-          const radius = dotSize(level, cellNoise(x, y, moment + level));
-          dots[level].moveTo(cx + radius, cy);
-          dots[level].arc(cx, cy, radius, 0, TAU);
-        }
-      }
-      ctx.globalAlpha = shown;
-      dots.forEach((d, level) => {
-        ctx.fillStyle = dotColor(ground, level);
-        ctx.fill(d);
-      });
-      ctx.globalAlpha = 1;
-      dirty = { x: (c0 - 1) * TRAIL_CELL, y: (r0 - 1) * TRAIL_CELL, w: (c1 - c0 + 3) * TRAIL_CELL, h: (r1 - r0 + 3) * TRAIL_CELL };
       frame = requestAnimationFrame(tick);
     };
 
@@ -195,12 +194,12 @@ export function CursorTrail() {
         head.x = pointer.x;
         head.y = pointer.y;
       }
-      energy = 1;
       pending = e.target instanceof Element ? e.target : null;
       wake();
     };
-    // The page slides under a resting pointer: what lies under it may change (a button arriving under it).
+    // The page slides under a resting pointer: the boxes move, and what lies under the pointer may change.
     const scrolled = () => {
+      stale = true;
       if (running && placed) pending = document.elementFromPoint(pointer.x, pointer.y);
     };
     const out = (e: MouseEvent) => {

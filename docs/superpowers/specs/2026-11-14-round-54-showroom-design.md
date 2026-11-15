@@ -106,14 +106,16 @@ the end".
    Instagram), **Contact** (email, phone, address). A last thin line holds the copyright with the service line ("sells
    and delivers; it does not install"), the concept note with the link to jontaienergy.com, and the languages. The huge
    JONTAI ENERGY and the old three columns go. The footer is the same on every page.
-8. **A trail of dots under the pointer** (Bob: "the cursor hover should has same logic as this site
-   https://www.squared-media.nl/"): the screen is a fine grid; the pointer's head eases after it and leaves a comet,
-   wide at the head and thin at the tail, and every cell it covers shows a dot, larger and brighter where more of it
-   lies, shimmering a little; when the pointer rests the comet draws in and fades within a second. Jontai's greens, not
-   the reference's: forest and leaf on the light grounds, mint and cream on the deep green. It fades over anything that
-   can be pressed (Bob, earlier: "everywhere thats not clickable"); none in the header, the menu or a product sheet,
-   none for touch or with reduced motion. It replaces the earlier soft light, and on the first view the sun now drifts
-   on its own instead of following the pointer, so the page has one cursor effect.
+8. **A trail under the pointer, on the plain ground only** (Bob: "the cursor hover should has same logic as this site
+   https://www.squared-media.nl/", then "the cursor doesnt disspear when theres clickable stuff it only need to appear
+   in certain places like in background that doesnt matter much and also dont need EXACT same styling"). squared's
+   logic: a trail that follows the moving pointer, full where it is and thinning behind, gone soon after it rests.
+   Jontai's own look: small round specks of sunlight rise from the pointer's path like pollen, shrink and fade within
+   about a second; forest and leaf on the light grounds, cream and mint on the deep green. It lives only on the ground
+   between things: no speck is drawn on or near a word, a picture or anything that can be pressed (only what really
+   shows counts: not the closed menu, not the footer waiting under the page; the first view's valley counts as
+   ground), and once the pointer reaches one the trail is gone at once. None in the header, the menu or a product
+   sheet, none for touch, none with reduced motion. On the first view the sun drifts on its own.
 9. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
    premium"): the smooth scroll the site already has (Lenis); headings rise into place line by line as they arrive,
    with their lines and buttons fading up just after; the Rewards cards and figures as in 3; the sentence as in 4; the
