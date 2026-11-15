@@ -1,0 +1,290 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
+import { heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
+import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
+import { REWARDS_FACT, hoursFact } from './firstView.ts';
+import { openState } from './store.ts';
+import * as copy from './homeCopy.ts';
+import { groundOf } from './cursorLight.ts';
+import { makeTranslator } from './i18n/translate.ts';
+
+const root = join(import.meta.dirname, '..');
+const solar = ISLANDS.find((i) => i.id === 'solar')!;
+
+test('round 54 wheel: it rests on each range, then turns to the next', () => {
+  assert.equal(heldPosition(0, 6), 0);
+  assert.equal(heldPosition(1, 6), 5);
+  for (let k = 0; k < 6; k++) assert.equal(heldPosition(restProgress(k, 6), 6), k, `rests on ${k}`);
+  assert.equal(heldPosition(0.75 / 6, 6), 0.5, 'halfway through the first turn');
+  assert.equal(heldPosition(5.5 / 6, 6), 5, 'the last range holds');
+  let last = -1;
+  for (let i = 0; i <= 1000; i++) {
+    const p = heldPosition(i / 1000, 6);
+    assert.ok(p >= last, `never turns back at ${i / 1000}`);
+    last = p;
+  }
+});
+
+test('round 54 wheel: the six ranges then Others, by name, each saying plainly where it leads', () => {
+  // Bob: "maybe six ranges products should not include the image? and include others".
+  const items = wheelItems();
+  assert.deepEqual(
+    items.map((i) => i.id),
+    [...ISLANDS.map((r) => r.id), 'others'],
+  );
+  const solarItem = items[0];
+  assert.equal(solarItem.count, shownIn(solar).length);
+  // Bob: "the bottom bar just have to say see .... products".
+  assert.equal(solarItem.label, 'See all Solar products');
+  // Bob: "the order should also matter so solar first then led lighting".
+  assert.deepEqual(items.slice(0, 2).map((i) => i.id), ['solar', 'light']);
+  assert.equal(solarItem.href, '/products?range=solar');
+  const others = items.at(-1)!;
+  assert.equal(others.name, 'Others');
+  assert.equal(others.count, OTHERS.length);
+  assert.equal(others.href, '/products?range=others');
+  assert.equal(others.label, 'See all other products');
+  assert.equal(rangeHref('light'), '/products?range=light');
+  assert.equal(rangeIndexFromHash('#others', items.map((i) => i.id)), items.length - 1);
+});
+
+test('round 54 wheel: a name is a light word and a bold word, and both are translated where the wheel shows them', () => {
+  assert.deepEqual(nameParts('Backup power'), ['Backup', 'power']);
+  assert.deepEqual(nameParts('LED lighting'), ['LED', 'lighting']);
+  assert.deepEqual(nameParts('Solar'), ['', 'Solar']);
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  for (const r of ISLANDS) {
+    const [light, bold] = nameParts(r.name);
+    if (!light) continue;
+    for (const w of [light, bold]) {
+      assert.ok(`wheel|${w}` in es, `es wheel|${w}`);
+      assert.ok(`wheel|${w}` in zh, `zh wheel|${w}`);
+    }
+  }
+});
+
+test('round 54 wheel: a link to a range, from this page or another, names which range to rest on', () => {
+  const ids = ISLANDS.map((i) => i.id);
+  assert.equal(rangeIndexFromHash('#light', ids), 1);
+  assert.equal(rangeIndexFromHash('#solar', ids), 0);
+  assert.equal(rangeIndexFromHash('#delivery', ids), ids.indexOf('upstairs'));
+  assert.equal(rangeIndexFromHash('#products', ids), -1);
+  assert.equal(rangeIndexFromHash('', ids), -1);
+  assert.equal(rangeIndexFromHash('#', ids), -1);
+});
+
+test('round 54 catalogue: a range from the address, or All for anything else', () => {
+  assert.equal(filterFromParam('light'), 'light');
+  assert.equal(filterFromParam('others'), 'others');
+  assert.equal(filterFromParam('nope'), 'all');
+  assert.equal(filterFromParam(''), 'all');
+  assert.equal(filterFromParam(undefined), 'all');
+  assert.equal(filterFromParam(null), 'all');
+  assert.equal(filterFromParam(['cooling', 'solar']), 'cooling');
+});
+
+test('round 54 catalogue: filters in order with their counts', () => {
+  assert.deepEqual(
+    CATALOG_FILTERS.map((f) => f.id),
+    ['all', 'solar', 'light', 'cooling', 'backup', 'security', 'upstairs', 'others'],
+  );
+  const count = (id: string) => CATALOG_FILTERS.find((f) => f.id === id)!.count;
+  assert.equal(count('all'), PRODUCTS.length);
+  assert.equal(count('solar'), shownIn(solar).length);
+  assert.equal(count('others'), OTHERS.length);
+  assert.equal(CATALOG_FILTERS[1].label, solar.name);
+});
+
+test('round 54 catalogue: products by range and by name, Solar showing every solar product', () => {
+  assert.deepEqual(catalogProducts('others', ''), []);
+  assert.deepEqual(
+    catalogProducts('solar', '').map((p) => p.id),
+    shownIn(solar).map((p) => p.id),
+  );
+  const fans = catalogProducts('all', '  FAN ');
+  assert.equal(fans.length, 3);
+  for (const p of fans) assert.match(p.name, /fan/i);
+  assert.equal(catalogProducts('all', '').length, PRODUCTS.length);
+  assert.match(rangeNote('cooling') ?? '', /does not install/);
+  // How delivery works opens from Furniture's products (it left the wheel's foot).
+  assert.deepEqual(rangeActions('upstairs'), [{ label: 'How delivery works', panel: 'furniture' }]);
+  assert.deepEqual(rangeActions('all'), []);
+  assert.deepEqual(rangeActions('others'), []);
+  assert.equal(rangeNote('all'), null);
+  assert.equal(rangeNote('others'), null);
+});
+
+// Bob: "i want them to not be like a site that you can shop but only to view ... where they can click and see short info
+// of the products". A product opens its short info over the page; the address keeps which one (?item=), so Back closes it.
+test('round 54 catalogue: a product opens its short info from the address, and only a real one', () => {
+  const ids = PRODUCTS.map((p) => p.id);
+  assert.equal(itemFromParam('solar-panels', ids), 'solar-panels');
+  assert.equal(itemFromParam(['sofas', 'bulbs'], ids), 'sofas');
+  assert.equal(itemFromParam('nope', ids), null);
+  assert.equal(itemFromParam('', ids), null);
+  assert.equal(itemFromParam(null, ids), null);
+  assert.equal(itemFromParam(undefined, ids), null);
+});
+
+test('round 54 catalogue: the short info steps to the product before and after, in the order the page shows them', () => {
+  const ids = ['a', 'b', 'c'];
+  assert.deepEqual(neighbours(ids, 'a'), { prev: null, next: 'b', at: 1, of: 3 });
+  assert.deepEqual(neighbours(ids, 'b'), { prev: 'a', next: 'c', at: 2, of: 3 });
+  assert.deepEqual(neighbours(ids, 'c'), { prev: 'b', next: null, at: 3, of: 3 });
+  assert.deepEqual(neighbours(ids, 'z'), { prev: null, next: null, at: 0, of: 3 });
+  assert.deepEqual(neighbours(['a'], 'a'), { prev: null, next: null, at: 1, of: 1 });
+});
+
+test('round 54 catalogue: the short info is the product in brief, at most three points and four figures', () => {
+  const points = Array.from({ length: 5 }, (_, i) => ({ title: `Point ${i}`, line: `Line ${i}.` }));
+  const figures = Array.from({ length: 6 }, (_, i) => ({ label: `Figure ${i}`, value: `${i} kW` }));
+  const product = { id: 'x', name: 'X lamps', range: { id: 'light', name: 'LED lighting' } };
+  assert.deepEqual(shortInfo({ product, title: 'X lamps for yards', model: 'XL-1', intro: 'What it is.', figures, points }), {
+    id: 'x',
+    range: 'LED lighting',
+    title: 'X lamps for yards',
+    model: 'XL-1',
+    intro: 'What it is.',
+    figures: figures.slice(0, 4),
+    points: points.slice(0, 3),
+  });
+  assert.deepEqual(shortInfo({ product, title: 'X lamps', intro: 'What it is.', points: [] }), {
+    id: 'x',
+    range: 'LED lighting',
+    title: 'X lamps',
+    model: null,
+    intro: 'What it is.',
+    figures: [],
+    points: [],
+  });
+});
+
+test('round 54 first view: the hours fact puts what matters first', () => {
+  assert.deepEqual(hoursFact('Open now, until 7:00 PM'), { strong: 'Open now', rest: ', until 7:00 PM' });
+  assert.deepEqual(hoursFact('Closed now, opens tomorrow at 9:00 AM'), { strong: 'Closed now', rest: ', opens tomorrow at 9:00 AM' });
+  assert.deepEqual(hoursFact('Open every day'), { strong: 'Open every day', rest: '' });
+  assert.deepEqual(REWARDS_FACT, { strong: 'Afl. 25 back', rest: 'for every Afl. 500' });
+});
+
+test('round 54 first view: every hours line splits into parts the dictionaries know', () => {
+  const lines = [openState(2, 10).line, openState(2, 7).line, openState(2, 20).line, openState(0, 15).line];
+  const asPattern = (rest: string) => rest.replace(/\d{1,2}:\d{2} [AP]M/, '{0}');
+  for (const line of lines) {
+    const { strong, rest } = hoursFact(line);
+    assert.ok([copy.HOURS_COPY.open, copy.HOURS_COPY.closed].includes(strong), `${line}: ${strong}`);
+    assert.ok([copy.HOURS_COPY.until, copy.HOURS_COPY.opensAt, copy.HOURS_COPY.opensTomorrow].includes(asPattern(rest)), `${line}: ${rest}`);
+  }
+});
+
+test('round 54 sentence:the fragments read as the agreed sentence, with six promises in bold', () => {
+  assert.equal(
+    copy.solutionText(),
+    "At Jontai, your home makes its own power, so the island's blackouts do not stop your day. We fix what we sell, even years later. Our prices are hard to beat, for the same quality or better. We sell far more than solar. Every customer matters, long after the sale. And our family keeps learning, to bring tomorrow's ideas home.",
+  );
+  assert.equal(copy.SOLUTION.filter((f) => f.key).length, 6);
+  assert.equal(copy.SOLUTION_POINTS.length, 6);
+});
+
+test('round 54: every new word is in both dictionaries', () => {
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8'));
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8'));
+  const words: string[] = [];
+  const walk = (v: unknown) => {
+    if (typeof v === 'string') words.push(v);
+    else if (Array.isArray(v)) v.forEach(walk);
+    else if (v && typeof v === 'object') Object.values(v).forEach(walk);
+  };
+  for (const [name, v] of Object.entries(copy)) if (typeof v !== 'function') walk(v);
+  walk(REWARDS_FACT);
+  assert.ok(words.length > 40, `found ${words.length} strings in ${Object.keys(copy).join(', ')}`);
+  const pattern = (d: { patterns: Record<string, string> }, w: string) => Object.hasOwn(d.patterns, w);
+  for (const w of new Set(words)) {
+    if (w.includes('{0}')) {
+      assert.ok(pattern(es, w), `es pattern: ${w}`);
+      assert.ok(pattern(zh, w), `zh pattern: ${w}`);
+    } else {
+      assert.ok(w.trim() in es.strings, `es: ${w}`);
+      assert.ok(w.trim() in zh.strings, `zh: ${w}`);
+    }
+  }
+});
+
+test('round 54 sentence: each Spanish fragment fills every English word slot, so no gap is left between words', () => {
+  // The translator shares a translated fragment out over the English fragment's word slots (components/ui/Split): a
+  // translation with fewer words than slots leaves empty slots, which show as double spaces.
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const words = (t: string) => t.trim().split(/\s+/).length;
+  for (const f of copy.SOLUTION) assert.ok(words(es[f.text.trim()]) >= words(f.text), `${f.text} -> ${es[f.text.trim()]}`);
+});
+
+test('round 54 sentence: the spaces between fragments sit inside the fragments, so Chinese can drop them', () => {
+  // A space in a node of its own is never translated, so in Chinese it would show between the characters.
+  const pieces = copy.solutionPieces();
+  assert.equal(pieces.map((p) => p.text).join(''), copy.solutionText());
+  for (const p of pieces) assert.match(p.text, /\S/, 'no piece is only a space');
+  pieces.slice(1).forEach((p, i) => {
+    if (copy.spaceBefore(copy.SOLUTION[i + 1].text)) assert.ok(p.text.startsWith(' '), `"${p.text}" carries its space`);
+  });
+});
+
+test('round 54: the whole pole lamp is published for the All products page', () => {
+  const lamp = PRODUCTS.find((p) => p.id === 'solar-street-lamps')!;
+  assert.equal(lamp.whole?.image, 'pole-lamp-full');
+  assert.deepEqual(lamp.whole?.files, [200, 400]);
+  assert.deepEqual(lamp.whole?.size, [400, 1408]);
+  for (const w of lamp.whole!.files) assert.ok(existsSync(join(root, 'public', 'sky', `range-pole-lamp-full-${w}.webp`)), `${w}`);
+});
+
+// Bob: "i want the cursor hover to be everywhere thats not clickable so like background ... it should feel premium". The
+// light under the pointer takes the ground it is over: a pale glow on the deep greens, a soft leaf tint on the light ones.
+test('round 54 cursor light: it reads the ground under the pointer from its colour, and looks past see-through ones', () => {
+  assert.equal(groundOf('rgb(14, 34, 25)'), 'dark');
+  assert.equal(groundOf('rgb(23, 61, 44)'), 'dark');
+  assert.equal(groundOf('rgb(246, 248, 242)'), 'light');
+  assert.equal(groundOf('rgb(255, 255, 255)'), 'light');
+  assert.equal(groundOf('rgb(233, 239, 227)'), 'light');
+  assert.equal(groundOf('rgba(0, 0, 0, 0)'), null);
+  assert.equal(groundOf('rgba(14, 34, 25, 0.3)'), null, 'too faint to be the ground');
+  assert.equal(groundOf('rgba(14, 34, 25, 0.9)'), 'dark');
+  assert.equal(groundOf('transparent'), null);
+  assert.equal(groundOf(''), null);
+});
+
+// Bob: "the header to change language doesnt appear good". The header marks how it fits with data-fit (useHeaderFit), as
+// the footer's fitted name does (FitText); the name's rule clipped the header too, cutting the language list off and
+// scrolling the capsule's contents up when it opened. The rule is the fitted text's alone.
+test('round 54 header: the fitted-text rule that clips its box never reaches the header', () => {
+  const ui = readFileSync(join(root, 'app', 'styles', 'ui.css'), 'utf8');
+  assert.doesNotMatch(ui, /(^|[\s,}])\[data-fit\]\s*[{,]/m, 'a bare [data-fit] rule also matches the header');
+  assert.match(ui, /p\[data-fit\]\s*\{[^}]*overflow: hidden/);
+});
+
+// Spanish showed "Ver Solar products" and "Ver los LED productos de lighting" under the wheel: older, looser patterns
+// ("See all {0}", "See all {0} {1} products") came first in the dictionary and won. The most fitting pattern wins now:
+// the one with the fewest holes, then the most fixed words, wherever it sits in the dictionary.
+test('round 54 translation: the most fitting pattern wins, not the first one listed', () => {
+  const t = makeTranslator('es', {
+    strings: { 'LED lighting': 'Iluminación LED' },
+    patterns: { 'See all {0}': 'Ver {0}', 'See all {0} {1} products': 'Ver los {0} productos de {1}', 'See all {0} products': 'Ver todos los productos de {0}' },
+  });
+  assert.equal(t.text('See all Solar products'), 'Ver todos los productos de Solar');
+  assert.equal(t.text('See all LED lighting products'), 'Ver todos los productos de Iluminación LED');
+  assert.equal(t.text('See all reviews'), 'Ver reviews');
+});
+
+test('round 54 translation: every wheel link reads whole in Spanish and Chinese', () => {
+  for (const lang of ['es', 'zh'] as const) {
+    const dict = JSON.parse(readFileSync(join(root, 'lib', 'i18n', `${lang}.json`), 'utf8'));
+    const t = makeTranslator(lang, dict);
+    for (const item of wheelItems()) {
+      const out = t.text(item.label) ?? '';
+      assert.doesNotMatch(out, /products|See all/, `${lang}: ${item.label} -> ${out}`);
+    }
+  }
+  const es = makeTranslator('es', JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')));
+  assert.equal(es.text('See all LED lighting products'), 'Ver todos los productos de Iluminación LED');
+});

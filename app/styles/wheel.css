@@ -1,0 +1,306 @@
+/* What we sell (round 54, Bob picked "D. The wheel"; "maybe dark green background?"; then "maybe six ranges products
+   should not include the image? and include others"). One held screen on deep green: the names of the six ranges and
+   Others stand large on a drum like a phone's date picker, and the range in front's way to its products sits at the
+   foot. WheelMotion sets data-held while it runs; without it (no scripts, reduced motion) they are still rows. As the
+   block arrives it grows from a rounded card out to the edges (--sx, --sr). --n is how many names there are. */
+
+.sell {
+  position: relative;
+  background: #0e2219;
+  color: #f4f6ef;
+  clip-path: inset(0 var(--sx, 0px) 0 var(--sx, 0px) round var(--sr, 0px) var(--sr, 0px) 0 0);
+}
+.sell__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px 48px;
+  padding: clamp(110px, 16vh, 150px) var(--gutter) clamp(40px, 7vh, 64px);
+}
+.sell__title,
+.sell__end-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.03em;
+}
+.sell__title {
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  line-height: 0.98;
+}
+.sell__title b,
+.sell__end-title b {
+  font-weight: 760;
+  font-stretch: 100%;
+}
+.sell__line {
+  max-width: 34ch;
+  margin: 0;
+  color: rgb(244 246 239 / 0.68);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* ---------- The wheel ---------- */
+
+.wheel {
+  --wn-size: clamp(3rem, min(8vw, 13vh), 8.5rem);
+  position: relative;
+}
+/* Where the menu's and the footer's range links land: on each still row, or where the wheel rests on that range. */
+.wheel__anchor {
+  position: absolute;
+  left: 0;
+  top: calc(var(--k) * 100% / var(--n));
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.wheel[data-held='true'] {
+  height: calc(100vh + var(--n) * 90vh);
+}
+.wheel[data-held='true'] .wheel__anchor {
+  top: calc(var(--rest) * (100% - 100vh));
+}
+.wheel__held {
+  display: none;
+}
+.wheel[data-held='true'] .wheel__held {
+  display: block;
+  height: 100%;
+}
+.wheel[data-held='true'] .wheel__still {
+  display: none;
+}
+
+.wheel__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #0e2219;
+}
+
+/* The drum of names, across the middle of the screen: the one in front between two hairlines; the rest tilt away on
+   the curve (WheelMotion). */
+.wheel__names {
+  position: absolute;
+  inset: 0 0 12vh;
+  perspective: 1300px;
+  perspective-origin: 50% 50%;
+}
+.wheel__band {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: 50%;
+  height: 1.22em;
+  transform: translateY(-50%);
+  border-top: 1px solid rgb(244 246 239 / 0.16);
+  border-bottom: 1px solid rgb(244 246 239 / 0.16);
+  font-size: var(--wn-size);
+  pointer-events: none;
+}
+.wn {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: 50%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: var(--wn-size);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  backface-visibility: hidden;
+  /* The button spans the screen so the name can centre; only its words take the pointer, so the ground either side
+     stays ground (the cursor light shows there, round 54). A click on the words still reaches the button. */
+  pointer-events: none;
+}
+.wn > * {
+  pointer-events: auto;
+}
+.wn b {
+  font-weight: 780;
+  font-stretch: 100%;
+}
+/* The name in front leads to its products: a small round arrow beside it says so, and turns under the pointer. */
+.wn__go {
+  display: inline-grid;
+  place-items: center;
+  width: 0.46em;
+  height: 0.46em;
+  margin-left: 0.22em;
+  vertical-align: 0.12em;
+  border-radius: 50%;
+  border: 1.5px solid rgb(244 246 239 / 0.5);
+  opacity: 0;
+  scale: 0.7;
+  transition:
+    opacity 400ms ease,
+    scale 500ms var(--ease-out),
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+.wn__go svg {
+  width: 0.24em;
+  height: 0.24em;
+  transition: rotate 450ms var(--ease-out);
+}
+.wn[aria-current] .wn__go {
+  opacity: 1;
+  scale: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wn[aria-current]:hover .wn__go {
+    border-color: #f4f6ef;
+    background: #f4f6ef;
+    color: #0e2219;
+  }
+  .wn[aria-current]:hover .wn__go svg {
+    rotate: 45deg;
+  }
+}
+.wn:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 6px;
+}
+
+/* The foot of the one in front: only "See ... products", on a hairline, its arrow nudging under the pointer. */
+.wheel__feet {
+  position: absolute;
+  z-index: 3;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 8vh;
+  height: 40px;
+}
+.wheel__foot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 400ms ease,
+    visibility 0s linear 400ms;
+}
+.wheel__foot[data-on='true'] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 400ms ease;
+}
+.wheel__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 2px 8px;
+  border-bottom: 1px solid rgb(244 246 239 / 0.35);
+  color: #f4f6ef;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  transition: border-color 300ms ease;
+}
+.wheel__go svg {
+  transition: translate 450ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .wheel__go:hover {
+    border-color: #f4f6ef;
+  }
+  .wheel__go:hover svg {
+    translate: 3px -3px;
+  }
+}
+.wheel__go:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 6px;
+}
+
+/* ---------- The same seven, still ---------- */
+
+.wheel__still {
+  display: grid;
+  margin: 0;
+  padding: 0 var(--gutter) 40px;
+  list-style: none;
+}
+.wrow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px 4vw;
+  padding: 30px 0;
+  border-top: 1px solid rgb(244 246 239 / 0.14);
+}
+.wrow__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 4.4rem);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.wrow__name b {
+  font-weight: 780;
+  font-stretch: 100%;
+}
+
+/* ---------- The band that ends What we sell ---------- */
+
+.sell__end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px 40px;
+  padding: 80px var(--gutter) 90px;
+  border-top: 1px solid rgb(244 246 239 / 0.14);
+}
+.sell__end-title {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+.btn.wheel__all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: var(--radius-pill);
+  background: #f4f6ef;
+  color: #0e2219;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 47.5rem) {
+  .wheel {
+    --wn-size: clamp(2.4rem, 12.5vw, 4rem);
+  }
+  .wheel__names {
+    inset: 60px 0 calc(4vh + 120px);
+  }
+  .wheel__feet {
+    bottom: 5vh;
+  }
+  .wheel__go {
+    font-size: 1rem;
+  }
+}

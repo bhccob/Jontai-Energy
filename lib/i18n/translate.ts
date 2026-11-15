@@ -53,8 +53,11 @@ export function makeTranslator(lang: Lang, dict: Dict): Translator {
         return '(.+?)';
       })
       .join('');
-    return { re: new RegExp(`^${source}$`), order, out };
+    return { re: new RegExp(`^${source}$`), order, out, fixed: en.replace(/\{\d\}/g, '').length };
   });
+  // The most fitting pattern first, wherever it sits in the dictionary: the fewest holes, then the most fixed text. A
+  // looser one listed earlier ("See all {0}") would otherwise swallow a closer one ("See all {0} products"; round 54).
+  patterns.sort((a, b) => a.order.length - b.order.length || b.fixed - a.fixed);
   /** A whole string: the dictionary, a time, or a pattern whose holes are translated the same way ("5,000 points"). */
   const whole = (key: string, depth: number): string | undefined => {
     const known = strings.get(key) ?? localTime(lang, key);

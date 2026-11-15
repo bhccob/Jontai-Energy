@@ -12,7 +12,7 @@ const data = JSON.parse(readFileSync(join(root, 'data', 'products.json'), 'utf8'
 test('six ranges, in the order the page walks them, with the anchors the footer and menu link to', () => {
   assert.deepEqual(
     ISLANDS.map((i) => i.id),
-    ['solar', 'cooling', 'backup', 'light', 'security', 'upstairs'],
+    ['solar', 'light', 'cooling', 'backup', 'security', 'upstairs'],
   );
 });
 
