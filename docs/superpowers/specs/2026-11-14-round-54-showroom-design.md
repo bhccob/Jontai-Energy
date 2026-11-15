@@ -46,7 +46,9 @@ the end".
    title (Bob, round 43). Motion: the heading rises into place line by line, the two cards float gently and lean toward
    the pointer, and the figures count up once when they come into view.
 4. **Our solution: the sentence.** It takes the place of the "Why Jontai" section. Its ground is the same plain white as
-   Rewards just above it (Bob: "the color background as our solution should be the same as loyalty area"). The screen holds one large paragraph
+   Rewards just above it (Bob: "the color background as our solution should be the same as loyalty area"). The sentence
+   is large and runs the full width (Bob: "maybe our solutions text area should be bigger"), sized by the screen's
+   height too so it and the points fit one screen; Spanish, about a fifth longer, is set a size down. The screen holds one large paragraph
    that fills in as you scroll, the key promises turning bold green:
    "At Jontai, your home makes **its own power**, so the island's blackouts do not stop your day. We **fix what we
    sell**, even years later. Our prices are **hard to beat**, for the same quality or better. We sell **far more than

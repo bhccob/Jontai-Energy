@@ -404,14 +404,19 @@ main.air {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+/* Large, across the whole width (Bob: "maybe our solutions text area should be bigger"), sized by the screen's height
+   too so the sentence and the points still fit one screen. */
 .solution__text {
-  max-width: 30ch;
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.6rem, min(3.3vw, 4.6vh), 3.5rem);
-  line-height: 1.12;
+  font-size: clamp(1.8rem, min(4.8vw, 7vh), 5.6rem);
+  line-height: 1.08;
   letter-spacing: -0.035em;
+}
+/* Spanish runs about a fifth longer: a size down, so it fits the same screen. */
+html[lang='es'] .solution__text {
+  font-size: clamp(1.7rem, min(4.4vw, 6.4vh), 5.1rem);
 }
 .solution__key {
   color: #2f8f55;
@@ -452,7 +457,10 @@ main.air {
    screen even on a small phone. */
 @media (max-width: 60rem) {
   .solution__text {
-    font-size: clamp(1.3rem, min(6.6vw, 3.5vh), 2.6rem);
+    font-size: clamp(1.4rem, min(7.6vw, 3.9vh), 2.8rem);
+  }
+  html[lang='es'] .solution__text {
+    font-size: clamp(1.3rem, min(7vw, 3.5vh), 2.6rem);
   }
   .solution__points {
     grid-template-columns: repeat(3, minmax(0, 1fr));
