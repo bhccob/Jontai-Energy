@@ -127,8 +127,8 @@
   text-align: center;
   cursor: pointer;
   backface-visibility: hidden;
-  /* The button spans the screen so the name can centre; only its words take the pointer, so the ground either side
-     stays ground (the cursor light shows there, round 54). A click on the words still reaches the button. */
+  /* The button spans the screen so the name can centre; only its words take the pointer (and show the hand), so the
+     ground either side is not a link. A click on the words still reaches the button. */
   pointer-events: none;
 }
 .wn > * {

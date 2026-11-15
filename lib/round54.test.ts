@@ -8,7 +8,6 @@ import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neigh
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { CONTENT, MOTE_STEP, emitCount, groundOf, insideAny, moteColor, moteLook, stepMote, type Mote } from './cursorLight.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -262,21 +261,6 @@ test('round 54: the whole pole lamp is published for the All products page', () 
   for (const w of lamp.whole!.files) assert.ok(existsSync(join(root, 'public', 'sky', `range-pole-lamp-full-${w}.webp`)), `${w}`);
 });
 
-// Bob: "i want the cursor hover to be everywhere thats not clickable so like background ... it should feel premium". The
-// light under the pointer takes the ground it is over: a pale glow on the deep greens, a soft leaf tint on the light ones.
-test('round 54 cursor light: it reads the ground under the pointer from its colour, and looks past see-through ones', () => {
-  assert.equal(groundOf('rgb(14, 34, 25)'), 'dark');
-  assert.equal(groundOf('rgb(23, 61, 44)'), 'dark');
-  assert.equal(groundOf('rgb(246, 248, 242)'), 'light');
-  assert.equal(groundOf('rgb(255, 255, 255)'), 'light');
-  assert.equal(groundOf('rgb(233, 239, 227)'), 'light');
-  assert.equal(groundOf('rgba(0, 0, 0, 0)'), null);
-  assert.equal(groundOf('rgba(14, 34, 25, 0.3)'), null, 'too faint to be the ground');
-  assert.equal(groundOf('rgba(14, 34, 25, 0.9)'), 'dark');
-  assert.equal(groundOf('transparent'), null);
-  assert.equal(groundOf(''), null);
-});
-
 // Bob: "the header to change language doesnt appear good". The header marks how it fits with data-fit (useHeaderFit), as
 // the footer's fitted name does (FitText); the name's rule clipped the header too, cutting the language list off and
 // scrolling the capsule's contents up when it opened. The rule is the fitted text's alone.
@@ -325,55 +309,3 @@ test('round 54 menu: four big places, then the ranges and help, small', () => {
   assert.equal(home.help.at(-1)!.external, true);
 });
 
-// Bob: "the cursor hover should has same logic as this site https://www.squared-media.nl/", then: "the cursor doesnt
-// disspear when theres clickable stuff it only need to appear in certain places like in background that doesnt matter
-// much and also dont need EXACT same styling". A trail that follows the moving pointer and is gone when it rests, in
-// Jontai's own look: specks of sunlight that rise from its path and fade, only ever on the plain ground.
-test('round 54 cursor trail: specks rise from the path, shrink and fade, faster when the pointer reaches something', () => {
-  const m: Mote = { x: 100, y: 100, vx: 10, vy: -20, life: 0.8, span: 0.8, size: 3, tone: 1 };
-  const a = stepMote(m, 0.1, 1)!;
-  assert.ok(a.y < 100 && a.x > 100, 'drifts up and along');
-  assert.ok(Math.abs(a.life - 0.7) < 1e-9, 'ages with time');
-  const fresh = moteLook(m);
-  const older = moteLook(a);
-  assert.ok(older.alpha < fresh.alpha && older.radius < fresh.radius, 'fades and shrinks as it ages');
-  assert.equal(stepMote({ ...m, life: 0.05 }, 0.1, 1), null, 'gone at the end of its life');
-  assert.equal(stepMote(m, 0.1, 10), null, 'gone at once when told to hurry');
-  assert.equal(moteLook({ ...m, life: 0 }).alpha, 0);
-});
-
-test('round 54 cursor trail: more specks the further the pointer moves, none when it is still', () => {
-  assert.equal(emitCount(0), 0);
-  assert.equal(emitCount(MOTE_STEP - 1), 0);
-  assert.equal(emitCount(MOTE_STEP), 1);
-  // A slow pointer on a fast screen moves 2px a frame: the distance kept over frames still makes specks.
-  let kept = 0;
-  let made = 0;
-  for (let frame = 0; frame < 60; frame++) {
-    kept += 2;
-    const n = emitCount(kept);
-    kept -= n * MOTE_STEP;
-    made += n;
-  }
-  assert.ok(made >= 15, `2px a frame for a second leaves a trail (${made})`);
-  assert.ok(emitCount(200) <= 4, 'never a flood');
-  for (let d = 0; d < 60; d++) assert.ok(emitCount(d + 1) >= emitCount(d));
-});
-
-test('round 54 cursor trail: only on the plain ground, never on text, pictures or anything that can be pressed', () => {
-  for (const sel of ['a', 'button', 'h2', 'p', 'li', '.wn > *']) assert.ok(CONTENT.split(',').map((s) => s.trim()).includes(sel), sel);
-  // The wheel's names span the screen to centre their words; only the words count, or the whole band would be closed.
-  assert.ok(!CONTENT.split(',').map((s) => s.trim()).includes('.wn'));
-  // The first view's valley is a picture behind everything: it is ground, not content, or the first view has no trail.
-  for (const media of ['img', 'picture', 'video']) {
-    assert.ok(!CONTENT.split(',').map((s) => s.trim()).includes(media), `${media} alone would catch the valley`);
-    assert.ok(CONTENT.includes(`${media}:not(.sky *)`), `${media}, but not the sky's`);
-  }
-  const rects = [{ l: 100, t: 100, r: 200, b: 140 }];
-  assert.equal(insideAny(150, 120, rects, 0), true);
-  assert.equal(insideAny(95, 120, rects, 0), false);
-  assert.equal(insideAny(95, 120, rects, 8), true, 'a little room is kept round it');
-  assert.equal(insideAny(150, 300, rects, 8), false);
-  assert.notEqual(moteColor('light', 2), moteColor('dark', 2));
-  for (const g of ['light', 'dark'] as const) for (let t = 0; t < 3; t++) assert.match(moteColor(g, t), /^\d+, \d+, \d+$/);
-});

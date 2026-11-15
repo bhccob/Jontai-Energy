@@ -37,12 +37,10 @@ the end".
    store"; **Jontai Rewards** "**Afl. 25 back** for every Afl. 500" (from `lib/loyalty.ts`). No big JONTAI, no scene, and
    no handover effect: the words rise in once as the page opens, and when you scroll the first view holds still while
    Rewards slides up over it as a sheet with rounded top corners (Bob: "C and rewards slides over"). It fits one
-   screen; on phones the facts sit two by two. The cursor brings it to life (Bob: "interactive and seamless motion
-   with cursor hover effect"): the soft sun behind the headline follows the pointer, easing after it, and the green veil
-   thins round it so the valley shows through there; the valley and the words lean a touch for depth. With no pointer
-   it drifts slowly on its own; with reduced motion it stays still. Softer since (Bob: "the cursor hover should be
-   less"): the sun leans only part of the way to the pointer, the veil thins less, and over a button or a link it holds
-   where it is and dims.
+   screen; on phones the facts sit two by two. The soft sun behind the headline drifts slowly round the top of the
+   screen and the green veil thins round it so the valley shows through there; the valley and the words lean a touch
+   for depth. (It followed the pointer for a while; cursor effects were dropped, see 8.) With reduced motion it stays
+   still.
 3. **Rewards.** The same content and rules (`lib/loyalty.ts`), laid out calmer: "Shop as usual. **Earn it back.**" with
    one line under it; the two plans side by side with a thin rule between, each its card shown small and tilted, a
    large figure ("**Afl. 25** back", "**10%** off"), one sentence and "How it works" (which opens the existing steps
@@ -106,16 +104,9 @@ the end".
    Instagram), **Contact** (email, phone, address). A last thin line holds the copyright with the service line ("sells
    and delivers; it does not install"), the concept note with the link to jontaienergy.com, and the languages. The huge
    JONTAI ENERGY and the old three columns go. The footer is the same on every page.
-8. **A trail under the pointer, on the plain ground only** (Bob: "the cursor hover should has same logic as this site
-   https://www.squared-media.nl/", then "the cursor doesnt disspear when theres clickable stuff it only need to appear
-   in certain places like in background that doesnt matter much and also dont need EXACT same styling"). squared's
-   logic: a trail that follows the moving pointer, full where it is and thinning behind, gone soon after it rests.
-   Jontai's own look: small round specks of sunlight rise from the pointer's path like pollen, shrink and fade within
-   about a second; forest and leaf on the light grounds, cream and mint on the deep green. It lives only on the ground
-   between things: no speck is drawn on or near a word, a picture or anything that can be pressed (only what really
-   shows counts: not the closed menu, not the footer waiting under the page; the first view's valley counts as
-   ground), and once the pointer reaches one the trail is gone at once. None in the header, the menu or a product
-   sheet, none for touch, none with reduced motion. On the first view the sun drifts on its own.
+8. **No cursor effect.** A light, then a dot trail after squared-media.nl, then rising specks were tried and dropped
+   (Bob: "remove the cursor thing idea"). The pointer is the system's own; on the first view the sun drifts slowly by
+   itself.
 9. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
    premium"): the smooth scroll the site already has (Lenis); headings rise into place line by line as they arrive,
    with their lines and buttons fading up just after; the Rewards cards and figures as in 3; the sentence as in 4; the

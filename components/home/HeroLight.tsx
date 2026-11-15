@@ -10,10 +10,9 @@ const GLOW = 0.6;
  * Aruba sunlight drifting over the first view (round 54). The soft sun behind the headline moves slowly by itself in a
  * loop round the top of the screen; where it shines the green veil thins, so the valley under it shows through
  * (sky.css, --sun-x, --sun-y, --sun-on), and the valley and the words lean a touch with it for depth (--lean-x,
- * --lean-y). It first followed the pointer (Bob: "interactive and seamless motion with cursor hover effect"); since Bob
- * asked for the cursor to work as squared-media.nl's does, the trail of dots (CursorTrail) answers the pointer here as
- * everywhere, and the sun keeps to its own slow drift. Nothing moves with reduced motion, and it rests while the first
- * view is out of sight or covered by Rewards.
+ * --lean-y). It once followed the pointer; Bob later dropped cursor effects altogether ("remove the cursor thing
+ * idea"), so the sun keeps to its own slow drift. Nothing moves with reduced motion, and it rests while the first view
+ * is out of sight or covered by Rewards.
  */
 export function HeroLight() {
   useEffect(() => {
