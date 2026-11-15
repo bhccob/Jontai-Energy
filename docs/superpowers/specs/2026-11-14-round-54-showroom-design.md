@@ -42,22 +42,24 @@ the end".
    for depth. (It followed the pointer for a while; cursor effects were dropped, see 8.) With reduced motion it stays
    still.
 3. **Rewards.** The same content and rules (`lib/loyalty.ts`), laid out calmer: "Shop as usual. **Earn it back.**" with
-   one line under it; the two plans side by side with a thin rule between, each its card shown small and tilted, a
-   large figure ("**Afl. 25** back", "**10%** off"), one sentence and "How it works" (which opens the existing steps
-   panel); then "See my points" and "Not sure which card fits? Ask us; a person answers." No pill or chip above the
+   one line under it; the two plans one under the other with a thin rule between, each a tall row of its own (Bob:
+   "loyalty program area gotta be bigger ... more verticaly long(er)"): its card shown large and tilted on one side
+   (the home card left, the business card right; above the text on phones), and on the other a large figure
+   ("**Afl. 25** back", "**10%** off"), one sentence and "How it works" (which opens the existing steps panel under the
+   text); then "See my points" and "Not sure which card fits? Ask us; a person answers." No pill or chip above the
    title (Bob, round 43). Motion: the heading rises into place line by line, the two cards float gently and lean toward
    the pointer, and the figures count up once when they come into view.
 4. **Our solution: the sentence.** It takes the place of the "Why Jontai" section. Its ground is the same plain white as
    Rewards just above it (Bob: "the color background as our solution should be the same as loyalty area"). The sentence
-   is large and runs the full width (Bob: "maybe our solutions text area should be bigger"), sized by the screen's
-   height too so it and the points fit one screen; Spanish, about a fifth longer, is set a size down. The screen holds one large paragraph
-   that fills in as you scroll, the key promises turning bold green:
+   is large and runs the full width (Bob: "maybe our solutions text area should be bigger"), and runs down the page,
+   longer than a screen, no longer held on one (Bob: "our solutions ... gotta be more verticaly long(er)"). One large
+   paragraph fills in word by word as it rises toward the middle of the screen, the key promises turning bold green:
    "At Jontai, your home makes **its own power**, so the island's blackouts do not stop your day. We **fix what we
    sell**, even years later. Our prices are **hard to beat**, for the same quality or better. We sell **far more than
    solar**. **Every customer matters**, long after the sale. And our family **keeps learning**, to bring tomorrow's
    ideas home."
-   When it is full, six small icon points appear under it: Your own power, We fix what we sell, Prices hard to beat,
-   More than solar, Every customer matters, Always learning. The paragraph and the points fit one screen. **No people,
+   After it, six icon points rise in: Your own power, We fix what we sell, Prices hard to beat, More than solar, Every
+   customer matters, Always learning (six across; two to a row on phones). **No people,
    names or photos** (Bob: remove Bob and Chakho).
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home

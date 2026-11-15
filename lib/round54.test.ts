@@ -342,3 +342,17 @@ test('round 54 copy: the ranges are 6+, wherever the page counts them', () => {
   const said = JSON.stringify(Object.values(copy));
   assert.doesNotMatch(said, /Six ranges/i, 'nowhere still says six');
 });
+
+// Bob: "i feel like loyalty program area gotta be bigger same with our solutions they gotta be more verticaly long(er)".
+// Rewards: the two plans one under the other, each a tall row with its card large. Our solution: no longer held on one
+// screen, so the sentence can run large down the page, its words filling in as they pass with the page's own fill
+// (PageMotion data-fill); a second fill of its own on the same words made them fill out of order.
+test('round 54 Rewards and Our solution: both run taller', () => {
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8');
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  assert.match(air, /\.plans \{[^}]*grid-template-columns: 1fr;/, 'the plans sit one under the other');
+  assert.match(air, /\.plan \{[^}]*min-height: /, 'each plan is a tall row');
+  assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'Our solution is not held on one screen');
+  assert.match(solution, /className="solution__text" data-fill/, "the sentence fills in with the page's own fill");
+  assert.ok(!existsSync(join(root, 'components', 'home', 'SolutionMotion.tsx')), 'and no second motion of its own');
+});
