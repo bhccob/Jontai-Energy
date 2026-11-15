@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { FACT_LABELS, FACT_RANGES, FACT_STORE, FIRST_VIEW, spaceBefore } from '@/lib/homeCopy';
 import { REWARDS_FACT, type Fact } from '@/lib/firstView';
+import { HeroLight } from './HeroLight';
 import { HeroSkyMotion } from './HeroSkyMotion';
 import { OpenStatus } from './OpenStatus';
 
@@ -19,8 +20,8 @@ const Line = ({ fact }: { fact: Fact }) => (
  * The first view (round 54, Bob: "C and rewards slides over"): still and light, with no scene and no big JONTAI. The
  * line in the site's mix of light and bold, one sentence that says what the store is, two ways in, and four facts on a
  * ruled line across the foot: the hours (live), the store, what it sells and what Rewards gives back. The words rise in
- * once as the page opens; when the page scrolls the first view holds still and Rewards slides up over it like a sheet
- * (round 37, HeroSkyMotion). Before it, rounds 39 to 53: JONTAI across the foot in forest ink.
+ * once as the page opens; the sun behind them follows the pointer and lights the valley under it (HeroLight); when
+ * the page scrolls the first view holds still and Rewards slides up over it like a sheet (round 37, HeroSkyMotion). Before it, rounds 39 to 53: JONTAI across the foot in forest ink.
  */
 export function Hero() {
   const [light, bold] = FIRST_VIEW.title;
@@ -80,6 +81,7 @@ export function Hero() {
       </dl>
 
       <HeroSkyMotion />
+      <HeroLight />
     </section>
   );
 }

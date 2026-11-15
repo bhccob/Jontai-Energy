@@ -1,17 +1,12 @@
 import type { CSSProperties } from 'react';
 import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
-import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
 import { Words } from '@/components/ui/Split';
-import { ISLANDS } from '@/lib/islands';
 import { WHEEL_COPY } from '@/lib/homeCopy';
 import { nameParts, restProgress, wheelItems, type WheelItem } from '@/lib/wheel';
 import { WheelMotion } from './WheelMotion';
 
 const ITEMS = wheelItems();
 const N = ITEMS.length;
-const two = (n: number) => String(n).padStart(2, '0');
-/** The panels a range opens (Furniture: how delivery works). */
-const actionsOf = (id: string) => ISLANDS.find((r) => r.id === id)?.actions ?? [];
 
 /** A name, light then bold, translated in the wheel's own place. The space sits inside the light part, so Chinese can
  *  drop it. */
@@ -25,22 +20,13 @@ function Name({ name }: { name: string }) {
   );
 }
 
-/** "See all 9 Solar products", and for Furniture how delivery works. */
-function Acts({ item }: { item: WheelItem }) {
+/** "See Solar products" and a small arrow: all the foot says (Bob: "just have to say see .... products"). */
+function Go({ item }: { item: WheelItem }) {
   return (
-    <>
-      <a href={item.href} className="btn wheel__go">
-        <span>{item.label}</span>
-        <span className="wheel__arrow" aria-hidden="true">
-          <ArrowUpRight size={18} weight="bold" />
-        </span>
-      </a>
-      {actionsOf(item.id).map((a) => (
-        <OpenCategoryButton key={a.panel} id={a.panel} className="textlink wheel__delivery">
-          {a.label}
-        </OpenCategoryButton>
-      ))}
-    </>
+    <a href={item.href} className="wheel__go">
+      <span>{item.label}</span>
+      <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
+    </a>
   );
 }
 
@@ -48,9 +34,11 @@ function Acts({ item }: { item: WheelItem }) {
  * What we sell (round 54, Bob picked "D. The wheel", then: "maybe six ranges products should not include the image? and
  * include others"): one held screen on deep green where the names of the six ranges and Others stand large on a drum,
  * like a phone's date picker, and turn one at a time as the page scrolls, resting on each. The name in front leads to
- * its products on the All products page, as does the button under it. After Others the page lets go into "Every
+ * its products on the All products page (an arrow beside it says so), as does "See ... products" under it. One deep
+ * green, no colour per range (Bob: "i dont want so much color pallete"). After Others the page lets go into "Every
  * product, one by one." Without scripts, or with reduced motion, they are still rows instead (wheel.css). The anchors
- * the menu and the footer use (#solar ... #upstairs, #delivery, #others) sit where the wheel rests on each.
+ * the menu and the footer use (#solar ... #upstairs, #delivery, #others) sit where the wheel rests on each; how
+ * delivery works opens from Furniture's products on the All products page.
  */
 export function Wheel() {
   return (
@@ -83,17 +71,18 @@ export function Wheel() {
               {ITEMS.map((it, k) => (
                 <button key={it.id} type="button" className="wn" data-k={k} data-id={it.id} data-href={it.href}>
                   <Name name={it.name} />
+                  {/* The name in front leads to its products: this arrow says so (Bob: "something indicating that its
+                      clickable"). */}
+                  <span className="wn__go" aria-hidden="true">
+                    <ArrowUpRight weight="bold" />
+                  </span>
                 </button>
               ))}
             </div>
             <div className="wheel__feet">
               {ITEMS.map((it, k) => (
                 <div key={it.id} className="wheel__foot" data-k={k} data-on={k === 0}>
-                  <Acts item={it} />
-                  <span className="wheel__no">
-                    <b>{two(k + 1)}</b>
-                    {` / ${two(N)}`}
-                  </span>
+                  <Go item={it} />
                 </div>
               ))}
             </div>
@@ -107,9 +96,7 @@ export function Wheel() {
               <h3 className="wrow__name">
                 <Name name={it.name} />
               </h3>
-              <div className="wrow__acts">
-                <Acts item={it} />
-              </div>
+              <Go item={it} />
             </li>
           ))}
         </ol>

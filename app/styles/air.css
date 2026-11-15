@@ -51,7 +51,8 @@ main.air {
      show. */
   padding: calc(var(--nav-h) + clamp(12px, 2.4vh, 28px)) var(--gutter) clamp(80px, 12vh, 140px);
   border-radius: clamp(20px, 2.4vw, 36px) clamp(20px, 2.4vw, 36px) 0 0;
-  background: #fff;
+  /* Round 54 (Bob: "keep the background with a same color palletes"): the same light ground as the sections after it. */
+  background: #f6f8f2;
   box-shadow: 0 -24px 60px -28px rgb(8 22 15 / 0.45);
   color: var(--leaf-ink);
 }

@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
-import { WHEEL_TINT, heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
-import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeNote } from './catalog.ts';
+import { heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
+import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeActions, rangeNote } from './catalog.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
@@ -26,7 +26,7 @@ test('round 54 wheel: it rests on each range, then turns to the next', () => {
   }
 });
 
-test('round 54 wheel: the six ranges then Others, by name, each with a tint, its count and a link to its products', () => {
+test('round 54 wheel: the six ranges then Others, by name, each saying plainly where it leads', () => {
   // Bob: "maybe six ranges products should not include the image? and include others".
   const items = wheelItems();
   assert.deepEqual(
@@ -35,14 +35,14 @@ test('round 54 wheel: the six ranges then Others, by name, each with a tint, its
   );
   const solarItem = items[0];
   assert.equal(solarItem.count, shownIn(solar).length);
-  assert.equal(solarItem.label, `See all ${shownIn(solar).length} Solar products`);
+  // Bob: "the bottom bar just have to say see .... products".
+  assert.equal(solarItem.label, 'See Solar products');
   assert.equal(solarItem.href, '/products?range=solar');
   const others = items.at(-1)!;
   assert.equal(others.name, 'Others');
   assert.equal(others.count, OTHERS.length);
   assert.equal(others.href, '/products?range=others');
-  assert.equal(others.label, `See all ${OTHERS.length} others`);
-  for (const i of items) assert.equal(WHEEL_TINT[i.id]?.length, 3, `${i.id} has a tint`);
+  assert.equal(others.label, 'See other products');
   assert.equal(rangeHref('light'), '/products?range=light');
   assert.equal(rangeIndexFromHash('#others', items.map((i) => i.id)), items.length - 1);
 });
@@ -106,6 +106,10 @@ test('round 54 catalogue: products by range and by name, Solar showing every sol
   for (const p of fans) assert.match(p.name, /fan/i);
   assert.equal(catalogProducts('all', '').length, PRODUCTS.length);
   assert.match(rangeNote('cooling') ?? '', /does not install/);
+  // How delivery works opens from Furniture's products (it left the wheel's foot).
+  assert.deepEqual(rangeActions('upstairs'), [{ label: 'How delivery works', panel: 'furniture' }]);
+  assert.deepEqual(rangeActions('all'), []);
+  assert.deepEqual(rangeActions('others'), []);
   assert.equal(rangeNote('all'), null);
   assert.equal(rangeNote('others'), null);
 });

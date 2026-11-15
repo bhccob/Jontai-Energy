@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, MagnifyingGlass } from '@phosphor-icons/react';
-import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeNote, type CatalogFilter } from '@/lib/catalog';
+import { OpenCategoryButton } from '@/components/catalog/OpenCategoryButton';
+import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeActions, rangeNote, type CatalogFilter } from '@/lib/catalog';
 import { CATALOG_COPY, WHEEL_COPY } from '@/lib/homeCopy';
 import { OTHERS, hasPicture } from '@/lib/islands';
 import { contactHref } from '@/lib/message';
@@ -60,7 +61,16 @@ export function CatalogView({ filter, query = '', onQuery }: { filter: CatalogFi
           </label>
         )}
       </div>
-      {note && <p className="cat__note">{note}</p>}
+      {note && (
+        <p className="cat__note">
+          {`${note} `}
+          {rangeActions(filter).map((a) => (
+            <OpenCategoryButton key={a.panel} id={a.panel} className="textlink cat__note-act">
+              {a.label}
+            </OpenCategoryButton>
+          ))}
+        </p>
+      )}
 
       {filter !== 'others' &&
         (list.length ? (

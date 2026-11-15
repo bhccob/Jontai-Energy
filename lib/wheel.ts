@@ -3,17 +3,6 @@
 import { WHEEL_COPY } from './homeCopy.ts';
 import { ISLANDS, OTHERS, shownIn } from './islands.ts';
 
-/** A faint wash of colour for each range, as r, g, b: sun, sea glass, leaf, lamp, slate mist, sand. */
-export const WHEEL_TINT: Record<string, [number, number, number]> = {
-  solar: [255, 226, 160],
-  cooling: [180, 232, 226],
-  backup: [220, 244, 208],
-  light: [255, 208, 140],
-  security: [196, 216, 236],
-  upstairs: [236, 210, 176],
-  others: [214, 226, 206],
-};
-
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
@@ -51,7 +40,7 @@ export function rangeIndexFromHash(hash: string, ids: string[]): number {
   return ids.indexOf(id === 'delivery' ? 'upstairs' : id);
 }
 
-/** One place on the wheel: a range, or Others at the end. `label` is its button, "See all 9 Solar products". */
+/** One place on the wheel: a range, or Others at the end. `label` is its link, "See Solar products". */
 export interface WheelItem {
   id: string;
   name: string;
@@ -67,8 +56,8 @@ export function wheelItems(): WheelItem[] {
   return [
     ...ISLANDS.map((r) => {
       const count = shownIn(r).length;
-      return { id: r.id, name: r.name, count, href: rangeHref(r.id), label: fill(WHEEL_COPY.seeAll, count, r.name) };
+      return { id: r.id, name: r.name, count, href: rangeHref(r.id), label: fill(WHEEL_COPY.see, r.name) };
     }),
-    { id: 'others', name: 'Others', count: OTHERS.length, href: rangeHref('others'), label: fill(WHEEL_COPY.seeOthers, OTHERS.length) },
+    { id: 'others', name: 'Others', count: OTHERS.length, href: rangeHref('others'), label: WHEEL_COPY.seeOthers },
   ];
 }

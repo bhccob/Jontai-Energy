@@ -80,9 +80,7 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background:
-    radial-gradient(60% 70% at 50% 46%, rgb(var(--tint, 220 244 208) / 0.1), transparent 75%),
-    #0e2219;
+  background: #0e2219;
 }
 
 /* The drum of names, across the middle of the screen: the one in front between two hairlines; the rest tilt away on
@@ -129,20 +127,57 @@
   font-weight: 780;
   font-stretch: 100%;
 }
+/* The name in front leads to its products: a small round arrow beside it says so, and turns under the pointer. */
+.wn__go {
+  display: inline-grid;
+  place-items: center;
+  width: 0.46em;
+  height: 0.46em;
+  margin-left: 0.22em;
+  vertical-align: 0.12em;
+  border-radius: 50%;
+  border: 1.5px solid rgb(244 246 239 / 0.5);
+  opacity: 0;
+  scale: 0.7;
+  transition:
+    opacity 400ms ease,
+    scale 500ms var(--ease-out),
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+.wn__go svg {
+  width: 0.24em;
+  height: 0.24em;
+  transition: rotate 450ms var(--ease-out);
+}
+.wn[aria-current] .wn__go {
+  opacity: 1;
+  scale: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wn[aria-current]:hover .wn__go {
+    border-color: #f4f6ef;
+    background: #f4f6ef;
+    color: #0e2219;
+  }
+  .wn[aria-current]:hover .wn__go svg {
+    rotate: 45deg;
+  }
+}
 .wn:focus-visible {
   outline: 2px solid var(--color-mint);
   outline-offset: 6px;
 }
 
-/* The foot of the one in front: its way to its products, where it is among them, and for Furniture how delivery
-   works. */
+/* The foot of the one in front: only "See ... products", on a hairline, its arrow nudging under the pointer. */
 .wheel__feet {
   position: absolute;
   z-index: 3;
   left: var(--gutter);
   right: var(--gutter);
-  bottom: 7vh;
-  height: 58px;
+  bottom: 8vh;
+  height: 40px;
 }
 .wheel__foot {
   position: absolute;
@@ -150,8 +185,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px 22px;
-  white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   transition:
@@ -163,49 +196,33 @@
   visibility: visible;
   transition: opacity 400ms ease;
 }
-.btn.wheel__go,
-.btn.wheel__all {
+.wheel__go {
   display: inline-flex;
   align-items: center;
-  border-radius: var(--radius-pill);
-  background: #f4f6ef;
-  color: #0e2219;
-  font-weight: 650;
-  text-decoration: none;
-}
-.btn.wheel__go {
-  gap: 16px;
-  min-height: 58px;
-  padding: 0 9px 0 26px;
-  font-size: 1rem;
-}
-.wheel__arrow {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--color-forest);
+  gap: 10px;
+  padding: 0 2px 8px;
+  border-bottom: 1px solid rgb(244 246 239 / 0.35);
   color: #f4f6ef;
-  transition: rotate 450ms var(--ease-out);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  transition: border-color 300ms ease;
+}
+.wheel__go svg {
+  transition: translate 450ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .wheel__go:hover .wheel__arrow {
-    rotate: 45deg;
+  .wheel__go:hover {
+    border-color: #f4f6ef;
+  }
+  .wheel__go:hover svg {
+    translate: 3px -3px;
   }
 }
-.wheel__no {
-  color: rgb(244 246 239 / 0.68);
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.wheel__no b {
-  color: #f4f6ef;
-}
-.wheel__delivery {
-  color: #f4f6ef;
-  font-size: 0.875rem;
+.wheel__go:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 6px;
 }
 
 /* ---------- The same seven, still ---------- */
@@ -238,12 +255,6 @@
   font-weight: 780;
   font-stretch: 100%;
 }
-.wrow__acts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px 22px;
-}
 
 /* ---------- The band that ends What we sell ---------- */
 
@@ -260,8 +271,15 @@
   font-size: clamp(1.8rem, 3vw, 2.6rem);
 }
 .btn.wheel__all {
+  display: inline-flex;
+  align-items: center;
   min-height: 52px;
   padding: 0 26px;
+  border-radius: var(--radius-pill);
+  background: #f4f6ef;
+  color: #0e2219;
+  font-weight: 650;
+  text-decoration: none;
 }
 
 /* ---------- Phones ---------- */
@@ -274,17 +292,9 @@
     inset: 60px 0 calc(4vh + 120px);
   }
   .wheel__feet {
-    bottom: 4vh;
-    height: auto;
+    bottom: 5vh;
   }
-  .wheel__foot {
-    inset: auto 0 0;
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    white-space: normal;
-  }
-  .btn.wheel__go {
-    min-height: 52px;
-    font-size: 0.95rem;
+  .wheel__go {
+    font-size: 1rem;
   }
 }

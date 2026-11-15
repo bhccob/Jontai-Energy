@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useLenis } from 'lenis/react';
 import { scrollTargets } from '@/components/providers/scrollTargets';
-import { WHEEL_TINT, heldPosition, rangeIndexFromHash, restProgress } from '@/lib/wheel';
+import { heldPosition, rangeIndexFromHash, restProgress } from '@/lib/wheel';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -14,8 +14,8 @@ const MOTION = '(prefers-reduced-motion: no-preference)';
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
 /**
- * Turns the wheel as the page scrolls (Wheel): the drum of names, the wash of the range's colour, the foot of the range in
- * front, and the name in front marked as current. Clicking a name turns the
+ * Turns the wheel as the page scrolls (Wheel): the drum of names, the foot of the one in front, and the name in front
+ * marked as current (its arrow shows then). Clicking a name turns the
  * wheel to it; clicking the name in front opens its products. As What we sell arrives it grows from a rounded card out
  * to the screen's edges. With reduced motion none of this runs and the still rows show instead (wheel.css).
  */
@@ -51,11 +51,6 @@ export function WheelMotion() {
           el.style.transform = `translateY(-50%) translateZ(${-radius}px) rotateX(${(-d * step).toFixed(3)}deg) translateZ(${radius}px)`;
           el.style.opacity = Math.max(0, 1 - a * 0.34).toFixed(3);
         });
-        const i = Math.min(n - 2, Math.floor(pos));
-        const t = pos - i;
-        const from = WHEEL_TINT[ids[i]];
-        const to = WHEEL_TINT[ids[i + 1]];
-        if (from && to) pin.style.setProperty('--tint', from.map((c, j) => Math.round(c + (to[j] - c) * t)).join(' '));
         const now = Math.round(pos);
         if (now !== front) {
           front = now;

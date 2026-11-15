@@ -110,6 +110,10 @@
   color: var(--leaf-muted);
   font-size: 0.95rem;
 }
+.cat__note-act {
+  color: var(--leaf-ink);
+  font-size: 0.95rem;
+}
 
 /* The products: four to a row, each in its pool of light. */
 .cat__grid {

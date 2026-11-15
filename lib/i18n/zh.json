@@ -1001,7 +1001,8 @@
   "wheel|power": "电源",
   "wheel|LED": "LED",
   "wheel|lighting": "照明",
-  "Six ranges and more. Keep scrolling to go through them.": "六大品类，还有更多。继续往下滚动，逐一浏览。"
+  "Six ranges and more. Keep scrolling to go through them.": "六大品类，还有更多。继续往下滚动，逐一浏览。",
+  "See other products": "查看其他商品"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} 星（满分 5 星）",
@@ -1023,6 +1024,7 @@
   ", until {0}": "，{0} 打烊",
   ", opens at {0}": "，{0} 开门",
   ", opens tomorrow at {0}": "，明天 {0} 开门",
-  "See all {0} others": "查看全部 {0} 件其他商品"
+  "See all {0} others": "查看全部 {0} 件其他商品",
+  "See {0} products": "查看{0}产品"
  }
 }

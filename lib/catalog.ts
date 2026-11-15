@@ -42,3 +42,8 @@ export function catalogProducts(filter: CatalogFilter, query: string): Listed[] 
 export function rangeNote(filter: CatalogFilter): string | null {
   return ISLANDS.find((i) => i.id === filter)?.note ?? null;
 }
+
+/** The panels a range opens beside its note (Furniture: how delivery works). */
+export function rangeActions(filter: CatalogFilter): NonNullable<Island['actions']> {
+  return ISLANDS.find((i) => i.id === filter)?.actions ?? [];
+}
