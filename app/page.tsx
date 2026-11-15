@@ -3,7 +3,7 @@ import { CatalogProvider } from '@/components/catalog/CatalogProvider';
 import { Header } from '@/components/ui/Header';
 import { Hero } from '@/components/home/Hero';
 import { Rewards } from '@/components/home/Rewards';
-import { Why } from '@/components/home/Why';
+import { Solution } from '@/components/home/Solution';
 import { Collection } from '@/components/home/Collection';
 import { Team } from '@/components/home/Team';
 import { Reviews } from '@/components/home/Reviews';
@@ -32,7 +32,7 @@ export default function Home() {
           </SkyScope>
           <Rewards />
         </div>
-        <Why />
+        <Solution />
         <Collection />
         <Reviews />
         <Team />

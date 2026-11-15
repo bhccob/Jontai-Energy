@@ -364,239 +364,109 @@ main.air {
   letter-spacing: -0.03em;
 }
 /* The small numbered kickers, after Novair's "(01) Projects". */
-:is(.why__kicker, .collection__kicker) {
+:is(.collection__kicker) {
   margin: 0;
   font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.01em;
 }
-:is(.why__kicker, .collection__kicker) span {
+:is(.collection__kicker) span {
   margin-right: 6px;
   opacity: 0.55;
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Why Jontai (deep green) ---------- */
+/* ---------- Our solution: one sentence that fills in as you read it (round 54) ---------- */
 
-.why {
+/* Held for three screens of scroll while its words fill in (SolutionMotion sets data-held); without that, or with
+   reduced motion, it is an ordinary screen with the sentence full. */
+.solution {
   position: relative;
-  z-index: 1;
-  padding: clamp(110px, 16vh, 180px) var(--gutter) clamp(90px, 14vh, 150px);
-  background: var(--deep);
-  color: var(--deep-ink);
+  background: #f6f8f2;
+  color: var(--leaf-ink);
 }
-.why__top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
+.solution[data-held='true'] {
+  height: 300vh;
 }
-.why__kicker {
-  color: var(--color-mint);
-}
-.why__side {
-  max-width: 22rem;
-  margin: 0;
-  color: var(--deep-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  text-align: right;
-}
-/* The sentence on the left, the store in three figures on the right (round 21). */
-.why__main {
+.solution__pin {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  align-items: end;
-  gap: clamp(40px, 6vw, 110px);
-  margin-top: clamp(40px, 7vh, 72px);
+  align-content: center;
+  gap: clamp(26px, 4.5vh, 46px);
+  min-height: 100svh;
+  padding: calc(var(--nav-h) + 40px) var(--gutter) 60px;
 }
-/* The sentence, filled in word by word (PageMotion, data-fill). */
-.why__big {
-  max-width: 20ch;
+.solution[data-held='true'] .solution__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 0;
+  padding-top: calc(var(--nav-h) + 24px);
+}
+.solution__kick {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-stretch: 108%;
-  font-size: clamp(2.4rem, 4.6vw, 5.4rem);
-  line-height: 1.06;
-  letter-spacing: -0.03em;
-}
-.why__big .soft {
-  color: var(--deep-muted);
-}
-
-/* ---------- The store in three figures ---------- */
-
-.tally {
-  margin: 0;
-}
-.tally__row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: end;
-  gap: 6px clamp(18px, 2vw, 32px);
-  padding: 18px 0 20px;
-  border-top: 1px solid rgb(244 246 239 / 0.18);
-}
-.tally__row:last-child {
-  border-bottom: 1px solid rgb(244 246 239 / 0.18);
-}
-.tally__row dt {
-  display: contents;
-}
-.tally__row dd {
-  grid-column: 2;
-  margin: 0;
-  color: var(--deep-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-/* The figure: a quiet outlined 0, then the digit itself, solid, rolling up to its value. */
-.tally__num {
-  grid-row: 1 / span 2;
-  display: inline-flex;
-  font-family: var(--font-display);
-  font-weight: 200;
-  font-stretch: 125%;
-  font-size: clamp(4rem, 7vw, 8rem);
-  line-height: 0.8;
-  letter-spacing: -0.05em;
-  font-variant-numeric: tabular-nums;
-  transition: translate 600ms var(--ease-out);
-}
-.tally__zero {
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(184 216 168 / 0.55);
-}
-.tally__roll {
-  display: inline-block;
-  height: 0.8em;
-  overflow: hidden;
-  color: var(--deep-ink);
-}
-.tally__roll > span {
-  display: flex;
-  flex-direction: column;
-  line-height: 0.8;
-  translate: 0 calc(var(--n) * -0.8em);
-}
-.tally__roll > span > span {
-  height: 0.8em;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .js .tally__row:not(.is-in) .tally__roll > span {
-    translate: 0 0;
-  }
-  .tally__roll > span {
-    transition: translate 1600ms cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(200ms + var(--i, 0) * 160ms);
-  }
-}
-.tally__label {
-  grid-column: 2;
-  align-self: end;
-  color: var(--deep-ink);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-stretch: 112%;
-  font-size: clamp(1.2rem, 1.2vw + 0.6rem, 1.6rem);
-  letter-spacing: -0.01em;
+  color: #2f8f55;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: color 400ms ease;
 }
-@media (hover: hover) and (pointer: fine) {
-  .tally__row:hover .tally__num {
-    translate: 10px 0;
-  }
-  .tally__row:hover .tally__roll,
-  .tally__row:hover .tally__label {
-    color: var(--color-mint);
-  }
+.solution__text {
+  max-width: 30ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.9rem, min(3.3vw, 6.4vh), 3.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
 }
-
-/* ---------- The three things the store does differently ---------- */
-
-.why__points {
+.solution__key {
+  color: #2f8f55;
+  font-weight: 760;
+}
+.solution__points {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  margin: clamp(80px, 12vh, 130px) 0 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 26px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.why__points li {
-  position: relative;
+.solution__points li {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: 0 clamp(16px, 1.6vw, 26px);
-  padding: 28px clamp(18px, 2.4vw, 40px) 8px;
+  align-content: start;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--leaf-rule);
+  font-size: 0.97rem;
+  font-weight: 700;
 }
-.why__points li:first-child {
-  padding-left: 0;
+.solution__points svg {
+  color: #2f8f55;
 }
-.why__points li + li {
-  border-left: 1px solid rgb(244 246 239 / 0.14);
+.solution[data-held='true'] .solution__points {
+  opacity: 0;
+  translate: 0 20px;
+  transition:
+    opacity 800ms var(--ease-out),
+    translate 900ms var(--ease-out);
 }
-.why__points .rule {
-  position: absolute;
-  inset: 0 0 auto;
-  color: rgb(244 246 239 / 0.3);
+.solution[data-held='true'] .solution__points.is-on {
+  opacity: 1;
+  translate: 0 0;
 }
-/* The number in thin outlined capitals, filling with mint under the pointer. */
-.why__num {
-  font-family: var(--font-display);
-  font-weight: 200;
-  font-stretch: 125%;
-  font-size: clamp(3.2rem, 4.6vw, 5.4rem);
-  line-height: 0.82;
-  letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(184 216 168 / 0.6);
-  font-variant-numeric: tabular-nums;
-  transition: color 500ms ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .why__points li:hover .why__num {
-    color: var(--color-mint);
+@media (max-width: 60rem) {
+  .solution__text {
+    font-size: clamp(1.6rem, 7vw, 2.6rem);
   }
-  .why__points li:hover .why__lens {
-    rotate: -8deg;
+  .solution__points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
   }
-}
-.why__point {
-  display: grid;
-  justify-items: start;
-  gap: 12px;
-}
-/* The icon in a small round lens of glass. */
-.why__lens {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--lg-glint-dark), var(--lg-deep);
-  box-shadow: var(--lg-rim-dark), 0 10px 20px -12px rgb(0 0 0 / 0.6);
-  color: var(--color-mint);
-  transition: rotate 600ms var(--ease-out);
-}
-.why__name {
-  margin: 4px 0 0;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-stretch: 112%;
-  font-size: clamp(1.25rem, 1.2vw + 0.6rem, 1.7rem);
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-.why__points p {
-  max-width: 24em;
-  margin: 0;
-  color: var(--deep-muted);
-  font-size: 1rem;
-  line-height: 1.55;
+  .solution__points li {
+    padding-top: 10px;
+    font-size: 0.9rem;
+  }
 }
 
 /* ---------- What we sell: the collection (deep green), laid out like a catalogue ---------- */
@@ -1625,26 +1495,6 @@ main.air {
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 60rem) {
-  .why__top {
-    flex-direction: column;
-  }
-  .why__side {
-    text-align: left;
-  }
-  .why__main {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .why__points {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-  }
-  .why__points li,
-  .why__points li:first-child {
-    padding: 24px 0 8px;
-  }
-  .why__points li + li {
-    border-left: 0;
-  }
   .team__top {
     grid-template-columns: minmax(0, 1fr);
   }
