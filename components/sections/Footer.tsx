@@ -1,80 +1,81 @@
-import { Words } from '@/components/ui/Split';
-import { LangChoices } from '@/components/i18n/LangSwitch';
-import { FOOTER_COPY, MENU_COPY } from '@/lib/homeCopy';
+import { FitText } from '@/components/ui/FitText';
+import { FooterFocus } from '@/components/ui/FooterFocus';
+import { ISLANDS } from '@/lib/islands';
 import { QUOTE_ACTION } from '@/lib/quote';
-import { CONCEPT, OFFICIAL_URL, STORE } from '@/lib/store';
-
-const tel = `tel:${STORE.phone.replace(/\s+/g, '')}`;
+import { CONCEPT, OFFICIAL_URL, SERVICE_LINE, STORE } from '@/lib/store';
 
 /**
- * The page's last word, simple (round 54, Bob: "the footer should be more simple like squared-media.nl"): on the light
- * ground, one question with two ways to answer it (a message, a call), then four short columns of plain links (pages,
- * help, follow, contact) and one thin line with the copyright, what the store does, the concept note and the
- * languages. The big JONTAI ENERGY and the lift are gone. `base` is '/' on pages other than home, so the section links
- * lead back to it.
+ * The page's last word, in the page's own voice (Bob, round 12: the old footer's narrow bold capitals did not belong):
+ * the owner's line in thin wide capitals, then the ranges, the store and the socials in three quiet columns, then
+ * JONTAI ENERGY across the width, rising with the last stretch of scroll. `base` is '/' on pages other than home, so
+ * the section links lead back to it.
  */
 export function Footer({ base = '' }: { base?: string }) {
-  const [pages, help] = [FOOTER_COPY.pages, FOOTER_COPY.help];
   return (
-    <footer className="ft" data-concept={CONCEPT || undefined}>
-      <div className="ft__ask">
-        <h2 className="ft__title" data-words>
-          <span>
-            <Words text={FOOTER_COPY.ask[0]} />
-          </span>{' '}
-          <b>
-            <Words text={FOOTER_COPY.ask[1]} />
-          </b>
-        </h2>
-        <p className="ft__line">{FOOTER_COPY.line}</p>
-        <div className="ft__acts">
-          <a href="/contact" className="btn ft__btn">
-            {FOOTER_COPY.message}
-          </a>
-          <a href={tel} className="btn ft__btn ft__btn--line">
-            {STORE.phone}
-          </a>
-        </div>
-      </div>
-
-      <nav className="ft__cols" aria-label="Footer">
-        <div>
-          <h2 className="ft__head">{FOOTER_COPY.heads[0]}</h2>
-          <a href={`${base}#products`}>{pages[0]}</a>
-          <a href="/products">{MENU_COPY.products}</a>
-          <a href={`${base}#rewards`}>{pages[2]}</a>
-          <a href="/quote">{QUOTE_ACTION}</a>
-          <a href={`${base}#visit`}>{pages[4]}</a>
-        </div>
-        <div>
-          <h2 className="ft__head">{FOOTER_COPY.heads[1]}</h2>
-          <a href="/support">{help[0]}</a>
-          <a href="/support#questions">{help[1]}</a>
-          <a href={`${base}#delivery`}>{help[2]}</a>
-        </div>
-        <div>
-          <h2 className="ft__head">{FOOTER_COPY.heads[2]}</h2>
-          <a href={STORE.facebook} target="_blank" rel="noopener noreferrer">
-            Facebook
-          </a>
-          <a href={STORE.instagram} target="_blank" rel="noopener noreferrer">
-            Instagram
-          </a>
-        </div>
-        <div>
-          <h2 className="ft__head">{FOOTER_COPY.heads[3]}</h2>
-          <a href={`mailto:${STORE.email}`}>{STORE.email}</a>
-          <a href={tel}>{STORE.phone}</a>
-          <a href={STORE.maps} target="_blank" rel="noopener noreferrer">
-            {STORE.street}, {STORE.city}, {STORE.country}
-          </a>
-        </div>
-      </nav>
-
-      <div className="ft__base">
-        <p>
-          © {new Date().getFullYear()} {STORE.name} · <span>{FOOTER_COPY.service}</span>
+    <footer className="footer" data-concept={CONCEPT || undefined}>
+      <div className="footer__top">
+        <p className="footer__say">
+          Aruba sunlight,
+          <br />
+          made useful.
         </p>
+        <nav className="footer__nav" aria-label="Footer">
+          <div>
+            <h2 className="footer__head">Ranges</h2>
+            <ul>
+              {/* The six ranges, named and ordered as on the home page, each leading to its place there (polish,
+                  round 30). */}
+              {ISLANDS.map((r) => (
+                <li key={r.id}>
+                  <a href={`${base}#${r.id}`}>{r.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2 className="footer__head">Store</h2>
+            <ul>
+              <li>
+                <a href="/quote">{QUOTE_ACTION}</a>
+              </li>
+              <li>
+                <a href={`${base}#rewards`}>Rewards</a>
+              </li>
+              <li>
+                <a href={`${base}#delivery`}>Large-item delivery</a>
+              </li>
+              <li>
+                <a href={`${base}#visit`}>Visit</a>
+              </li>
+              <li>
+                <a href="/support#questions">Questions</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="footer__head">Follow</h2>
+            <ul>
+              <li>
+                <a href={STORE.facebook} target="_blank" rel="noopener noreferrer">
+                  Facebook
+                </a>
+              </li>
+              <li>
+                <a href={STORE.instagram} target="_blank" rel="noopener noreferrer">
+                  Instagram
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <FitText text="JONTAI ENERGY" chars="end" className="footer__mark" />
+      <FooterFocus />
+      <div className="footer__fine">
+        <p>
+          © {new Date().getFullYear()} {STORE.name} · {STORE.street}, {STORE.city}, {STORE.country}
+        </p>
+        <p>{SERVICE_LINE}</p>
         {CONCEPT && (
           <p>
             A concept redesign, not the official Jontai Energy website. The store&rsquo;s own site is{' '}
@@ -84,7 +85,6 @@ export function Footer({ base = '' }: { base?: string }) {
             .
           </p>
         )}
-        <LangChoices />
       </div>
     </footer>
   );

@@ -56,16 +56,6 @@ export const WHEEL_COPY = {
   pictures: 'Pictures are illustrations, not specific stock.',
 };
 
-export const FOOTER_COPY = {
-  ask: ['Questions?', 'A person answers.'],
-  line: 'Call, send a message or come by Cumana 73. Someone at the store reads every message.',
-  message: 'Send a message',
-  heads: ['Pages', 'Help', 'Follow', 'Contact'],
-  pages: ['What we sell', 'All products', 'Rewards', 'Request a quote', 'Visit'],
-  help: ['Support', 'Questions', 'Large-item delivery'],
-  service: 'Jontai Energy sells and delivers; it does not install.',
-};
-
 export const CATALOG_COPY = {
   title: ['All', 'products'],
   line: 'Everything on the shelf at Cumana 73, one by one. Pick one to see what it is and ask for a quote.',
