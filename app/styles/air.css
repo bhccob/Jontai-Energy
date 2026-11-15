@@ -49,7 +49,7 @@ main.air {
   z-index: 2;
   /* Starts just under the header (round 24), so once it has covered the first view the title and most of the cards
      show. */
-  padding: calc(var(--nav-h) + clamp(12px, 2.4vh, 28px)) var(--gutter) clamp(80px, 12vh, 140px);
+  padding: calc(var(--nav-h) + clamp(12px, 2.4vh, 28px)) var(--gutter) clamp(96px, 16vh, 200px);
   border-radius: clamp(20px, 2.4vw, 36px) clamp(20px, 2.4vw, 36px) 0 0;
   /* Plain white (round 21); Our solution after it shares it (round 54, Bob: "the color background as our solution should
      be the same as loyalty area"). */
@@ -57,14 +57,15 @@ main.air {
   box-shadow: 0 -24px 60px -28px rgb(8 22 15 / 0.45);
   color: var(--leaf-ink);
 }
-/* Round 54, calmer: the line in light and bold with one sentence beside it, then the two plans side by side with a
-   thin rule between, then "See my points" and a person to ask. No chip, no tiles. */
+/* Round 54, calmer: the line in light and bold with one sentence beside it, then the two plans one under the other
+   with a thin rule between, then "See my points" and a person to ask. No chip, no tiles. Larger and taller than one
+   screen (Bob: "loyalty program area gotta be bigger ... more verticaly long(er)"). */
 .loyal__top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
   align-items: end;
   gap: 18px 48px;
-  margin-bottom: clamp(48px, 8vh, 80px);
+  margin-bottom: clamp(24px, 4vh, 48px);
 }
 .loyal__kicker {
   grid-column: 1 / -1;
@@ -80,7 +81,7 @@ main.air {
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(2.8rem, 5.4vw, 5.6rem);
+  font-size: clamp(3rem, 7vw, 7.8rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
 }
@@ -92,33 +93,40 @@ main.air {
 .loyal__side {
   margin: 0;
   color: var(--leaf-muted);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   line-height: 1.55;
 }
 
-/* The two plans: its card small and tilted, floating a little; its figure large, one sentence, how it works. */
+/* The two plans, one under the other: each a tall row, its card large and tilted, floating a little, on one side (the
+   business card on the right); its figure large, one sentence and how it works on the other. */
 .plans {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 6vw;
+  grid-template-columns: 1fr;
 }
 .plan {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
-  align-content: start;
-  gap: 24px 34px;
+  gap: 40px 6vw;
+  min-height: clamp(30rem, 76vh, 50rem);
+  padding-block: clamp(48px, 8vh, 96px);
 }
 .plan + .plan {
-  padding-left: 6vw;
-  border-left: 1px solid var(--leaf-rule);
+  border-top: 1px solid var(--leaf-rule);
 }
 .plan__card {
-  width: clamp(170px, 15vw, 230px);
+  justify-self: center;
+  width: clamp(240px, 31vw, 460px);
   rotate: -5deg;
 }
 .plan--business .plan__card {
+  grid-column: 2;
+  grid-row: 1;
   rotate: 4deg;
+}
+.plan--business .plan__text {
+  grid-column: 1;
+  grid-row: 1;
 }
 @keyframes plan-drift {
   from {
@@ -154,7 +162,7 @@ main.air {
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(2.6rem, 3.8vw, 3.8rem);
+  font-size: clamp(3rem, 6vw, 6.6rem);
   line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: lining-nums;
@@ -167,12 +175,13 @@ main.air {
 }
 .plan__line {
   max-width: 34ch;
-  margin: 12px 0 0;
+  margin: 18px 0 0;
   color: var(--leaf-muted);
+  font-size: 1.15rem;
   line-height: 1.55;
 }
 .plan__how {
-  margin-top: 16px;
+  margin-top: 22px;
   padding: 0 0 3px;
   border: 0;
   border-bottom: 1.5px solid currentColor;
@@ -187,9 +196,9 @@ main.air {
   outline-offset: 3px;
 }
 
-/* How it works opens under its plan and closes again. */
+/* How it works opens under its plan's text and closes again. */
 .plan__info {
-  grid-column: 1 / -1;
+  max-width: 34rem;
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 650ms cubic-bezier(0.76, 0, 0.24, 1);
@@ -211,6 +220,8 @@ main.air {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  /* Room for the close button's glass rim, which the folding panel would otherwise cut on the right. */
+  padding: 6px 6px 0 0;
 }
 .tier__info-title {
   margin: 0;
@@ -300,24 +311,27 @@ main.air {
     text-decoration-color: currentColor;
   }
 }
+/* Narrow screens: each plan's card above its text, still large. */
 @media (max-width: 60rem) {
-  .loyal__top,
-  .plans {
+  .loyal__top {
     grid-template-columns: 1fr;
   }
-  .plan + .plan {
-    margin-top: 36px;
-    padding: 36px 0 0;
-    border-left: 0;
-    border-top: 1px solid var(--leaf-rule);
-  }
-}
-@media (max-width: 30rem) {
   .plan {
     grid-template-columns: 1fr;
+    gap: 36px;
+    min-height: 0;
+    padding-block: 56px;
   }
-  .plan__card {
-    width: 190px;
+  .plan__card,
+  .plan--business .plan__card {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    width: min(76vw, 360px);
+    margin-left: 8px;
+  }
+  .plan--business .plan__text {
+    grid-row: 2;
   }
 }
 .loyal .btn--primary {
@@ -369,32 +383,21 @@ main.air {
 
 /* ---------- Our solution: one sentence that fills in as you read it (round 54) ---------- */
 
-/* Held for three screens of scroll while its words fill in (SolutionMotion sets data-held); without that, or with
-   reduced motion, it is an ordinary screen with the sentence full. */
+/* Bob: "our solutions ... gotta be more verticaly long(er)". No longer held on one screen: the sentence runs large down
+   the page, longer than a screen, and its words fill in as they rise toward the middle (data-fill, PageMotion), the
+   points rising in after it (data-reveal); without scripts, or with reduced motion, the sentence shows full. */
 .solution {
   position: relative;
+  /* Over Rewards' shadow, which would otherwise draw a faint line where the two whites meet. */
+  z-index: 2;
   /* The same white as Rewards above it, so the two read as one sheet (round 54). */
   background: #fff;
   color: var(--leaf-ink);
+  padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(120px, 22vh, 260px);
 }
-.solution[data-held='true'] {
-  height: 300vh;
-}
-.solution__pin {
+.solution__body {
   display: grid;
-  /* safe: when a long translation is taller than the screen it runs on downward, never up under the header. */
-  align-content: safe center;
-  gap: clamp(20px, 3.6vh, 46px);
-  min-height: 100svh;
-  padding: calc(var(--nav-h) + 40px) var(--gutter) 60px;
-}
-.solution[data-held='true'] .solution__pin {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  min-height: 0;
-  padding-top: calc(var(--nav-h) + 20px);
-  padding-bottom: 28px;
+  gap: clamp(28px, 5vh, 56px);
 }
 .solution__kick {
   margin: 0;
@@ -404,19 +407,15 @@ main.air {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-/* Large, across the whole width (Bob: "maybe our solutions text area should be bigger"), sized by the screen's height
-   too so the sentence and the points still fit one screen. */
+/* Large, across the whole width (Bob: "maybe our solutions text area should be bigger"), and now free of the one-screen
+   fit, larger still, so it runs down the page. */
 .solution__text {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.8rem, min(4.8vw, 7vh), 5.6rem);
-  line-height: 1.08;
+  font-size: clamp(2.4rem, 6.2vw, 7.6rem);
+  line-height: 1.06;
   letter-spacing: -0.035em;
-}
-/* Spanish runs about a fifth longer: a size down, so it fits the same screen. */
-html[lang='es'] .solution__text {
-  font-size: clamp(1.7rem, min(4.4vw, 6.4vh), 5.1rem);
 }
 .solution__key {
   color: #2f8f55;
@@ -425,58 +424,43 @@ html[lang='es'] .solution__text {
 .solution__points {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 26px;
-  margin: 0;
+  gap: 32px;
+  margin: clamp(32px, 7vh, 96px) 0 0;
   padding: 0;
   list-style: none;
 }
 .solution__points li {
   display: grid;
   align-content: start;
-  gap: 8px;
-  padding-top: 16px;
+  gap: 14px;
+  padding-top: 22px;
   border-top: 1px solid var(--leaf-rule);
-  font-size: 0.97rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 .solution__points svg {
+  width: 32px;
+  height: 32px;
   color: #2f8f55;
 }
-.solution[data-held='true'] .solution__points {
-  opacity: 0;
-  translate: 0 20px;
-  transition:
-    opacity 800ms var(--ease-out),
-    translate 900ms var(--ease-out);
-}
-.solution[data-held='true'] .solution__points.is-on {
-  opacity: 1;
-  translate: 0 0;
-}
-/* Phones: the sentence follows the screen's height too, and the points sit three to a row, so all of it fits one
-   screen even on a small phone. */
+/* Narrow screens: the sentence as large as the width allows, the points two to a row. */
 @media (max-width: 60rem) {
   .solution__text {
-    font-size: clamp(1.4rem, min(7.6vw, 3.9vh), 2.8rem);
-  }
-  html[lang='es'] .solution__text {
-    font-size: clamp(1.3rem, min(7vw, 3.5vh), 2.6rem);
+    font-size: clamp(2rem, 9.2vw, 4.2rem);
+    line-height: 1.08;
   }
   .solution__points {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
   }
   .solution__points li {
-    gap: 6px;
-    padding-top: 10px;
-    font-size: 0.8rem;
+    gap: 10px;
+    padding-top: 16px;
+    font-size: 0.98rem;
   }
   .solution__points svg {
-    width: 20px;
-    height: 20px;
-  }
-  .solution[data-held='true'] .solution__pin {
-    gap: 22px;
+    width: 26px;
+    height: 26px;
   }
 }
 

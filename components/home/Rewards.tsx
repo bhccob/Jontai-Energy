@@ -91,9 +91,10 @@ function RewardBack({ kind }: { kind: Kind }) {
 }
 
 /**
- * One plan (round 54, laid out calmer): its card small and tilted, floating a little and leaning toward the pointer
- * (LoyaltyCard), who it is for, its figure large (counting up once, PageMotion data-count), one sentence, and "How it
- * works", which opens the three steps and what to know under it and closes again with the X or Escape.
+ * One plan (round 54): a tall row of its own (Bob: "loyalty program area gotta be bigger"), its card large and tilted,
+ * floating a little and leaning toward the pointer (LoyaltyCard); beside it who it is for, its figure large (counting
+ * up once, PageMotion data-count), one sentence, and "How it works", which opens the three steps and what to know under
+ * the text and closes again with the X or Escape.
  */
 function Plan({ kind, card, kicker, figure, line }: { kind: Kind; card: ReactNode; kicker: ReactNode; figure: ReactNode; line: string }) {
   const id = useId();
@@ -133,39 +134,39 @@ function Plan({ kind, card, kicker, figure, line }: { kind: Kind; card: ReactNod
         <button ref={opener} type="button" className="plan__how" aria-expanded={open} aria-controls={`${id}-info`} onClick={() => setOpen((v) => !v)}>
           How it works
         </button>
-      </div>
-      <div ref={panel} id={`${id}-info`} className="plan__info" role="region" aria-label="How it works">
-        <div className="plan__info-in">
-          <div className="tier__info-head">
-            <p className="tier__info-title">How it works</p>
-            <button
-              type="button"
-              className="tier__close"
-              aria-label="Close"
-              onClick={() => {
-                setOpen(false);
-                opener.current?.focus({ preventScroll: true });
-              }}
-            >
-              <X size={18} weight="bold" aria-hidden="true" />
-            </button>
+        <div ref={panel} id={`${id}-info`} className="plan__info" role="region" aria-label="How it works">
+          <div className="plan__info-in">
+            <div className="tier__info-head">
+              <p className="tier__info-title">How it works</p>
+              <button
+                type="button"
+                className="tier__close"
+                aria-label="Close"
+                onClick={() => {
+                  setOpen(false);
+                  opener.current?.focus({ preventScroll: true });
+                }}
+              >
+                <X size={18} weight="bold" aria-hidden="true" />
+              </button>
+            </div>
+            <ol className="tier__steps">
+              {info.steps.map((s, i) => (
+                <li key={s} style={{ '--i': i } as CSSProperties}>
+                  <span>{String(i + 1).padStart(2, '0')}</span>
+                  {s}
+                </li>
+              ))}
+            </ol>
+            <ul className="tier__facts">
+              {info.facts.map((f, i) => (
+                <li key={f} style={{ '--i': i + 3 } as CSSProperties}>
+                  <Check size={15} weight="bold" aria-hidden="true" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ol className="tier__steps">
-            {info.steps.map((s, i) => (
-              <li key={s} style={{ '--i': i } as CSSProperties}>
-                <span>{String(i + 1).padStart(2, '0')}</span>
-                {s}
-              </li>
-            ))}
-          </ol>
-          <ul className="tier__facts">
-            {info.facts.map((f, i) => (
-              <li key={f} style={{ '--i': i + 3 } as CSSProperties}>
-                <Check size={15} weight="bold" aria-hidden="true" />
-                {f}
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </article>
@@ -173,9 +174,10 @@ function Plan({ kind, card, kicker, figure, line }: { kind: Kind; card: ReactNod
 }
 
 /**
- * Jontai Rewards (round 54, calmer): the line in light and bold with one sentence beside it; the two plans side by side
- * with a thin rule between, each its card, its figure, one sentence and how it works; then "See my points" and a person
- * to ask. No chip above the title (Bob, round 43). The rules are lib/loyalty's.
+ * Jontai Rewards (round 54, calmer): the line in light and bold with one sentence beside it; the two plans one under
+ * the other with a thin rule between, each a tall row with its card on one side (left for the home, right for the
+ * business) and its figure, one sentence and how it works on the other; then "See my points" and a person to ask. No
+ * chip above the title (Bob, round 43). The rules are lib/loyalty's.
  */
 export function Rewards() {
   return (
