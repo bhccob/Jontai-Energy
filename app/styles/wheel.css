@@ -46,7 +46,9 @@
 /* ---------- The wheel ---------- */
 
 .wheel {
-  --wn-size: clamp(3rem, min(8vw, 13vh), 8.5rem);
+  /* Large (Bob: "six range products gotta be bigger and more seperated"); WheelMotion sets a name's own --wn-fit below
+     1 only when that name, in the language shown, would not fit the width. */
+  --wn-size: clamp(3.4rem, min(11vw, 17vh), 11rem);
   position: relative;
 }
 /* Where the menu's and the footer's range links land: on each still row, or where the wheel rests on that range. */
@@ -59,7 +61,7 @@
   pointer-events: none;
 }
 .wheel[data-held='true'] {
-  height: calc(100vh + var(--n) * 90vh);
+  height: calc(100vh + var(--n) * 75vh);
 }
 .wheel[data-held='true'] .wheel__anchor {
   top: calc(var(--rest) * (100% - 100vh));
@@ -90,6 +92,9 @@
   inset: 0 0 12vh;
   perspective: 1300px;
   perspective-origin: 50% 50%;
+  /* The outer names melt into the green at the drum's top and foot, clear of the header and of the link below. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 9%, #000 18%, #000 80%, transparent);
+  mask-image: linear-gradient(to bottom, transparent 9%, #000 18%, #000 80%, transparent);
 }
 .wheel__band {
   position: absolute;
@@ -113,7 +118,7 @@
   background: none;
   color: inherit;
   font-family: var(--font-display);
-  font-size: var(--wn-size);
+  font-size: calc(var(--wn-size) * var(--wn-fit, 1));
   font-weight: 300;
   font-stretch: 112%;
   letter-spacing: -0.045em;
@@ -122,8 +127,8 @@
   text-align: center;
   cursor: pointer;
   backface-visibility: hidden;
-  /* The button spans the screen so the name can centre; only its words take the pointer, so the ground either side
-     stays ground (the cursor light shows there, round 54). A click on the words still reaches the button. */
+  /* The button spans the screen so the name can centre; only its words take the pointer (and show the hand), so the
+     ground either side is not a link. A click on the words still reaches the button. */
   pointer-events: none;
 }
 .wn > * {
@@ -292,10 +297,10 @@
 
 @media (max-width: 47.5rem) {
   .wheel {
-    --wn-size: clamp(2.4rem, 12.5vw, 4rem);
+    --wn-size: clamp(2.6rem, 14vw, 4.6rem);
   }
   .wheel__names {
-    inset: 60px 0 calc(4vh + 120px);
+    inset: 70px 0 calc(4vh + 70px);
   }
   .wheel__feet {
     bottom: 5vh;

@@ -16,6 +16,10 @@ export interface ProductDetail {
   title?: string;
   /** A product panel to tell it from; the fields below replace the panel's own. */
   panel?: PanelId;
+  /** One short, general line on what this kind of product is and what it is for, for the short info on the All products
+   *  page outside Cooling and Backup power (round 54, Bob: "not go too much detailed into some products since its like
+   *  a subcategory"). No models and no figures. */
+  summary?: string;
   /** The model, or a short line on what kind of product it is. */
   model?: string;
   intro?: string;
@@ -29,6 +33,7 @@ const STOCK = 'Stock changes often, so message us on WhatsApp before you make th
 
 export const DETAILS: Record<string, ProductDetail> = {
   'solar-panels': {
+    summary: 'Panels that make your own power from the sun, for a whole-house system or to run a solar air conditioner.',
     model: 'For rooftops and the solar air conditioner',
     intro: 'Panels for rooftop systems, and for running the solar air conditioner directly during the day.',
     points: [
@@ -38,7 +43,7 @@ export const DETAILS: Record<string, ProductDetail> = {
       { title: 'Ask what is in stock', line: 'Ask which wattages are in stock this week.' },
     ],
   },
-  'hybrid-inverters': { panel: 'inverter' },
+  'hybrid-inverters': { summary: 'The heart of a home solar system: it brings the panels, the batteries and the grid together to power the house.', panel: 'inverter' },
   'solar-air-conditioners': { panel: 'solar-ac' },
   // Round 53 (Bob: "theres more options in fan"; pictures approved): three fans, each with its own panel and page.
   'solar-fans': {
@@ -76,6 +81,7 @@ export const DETAILS: Record<string, ProductDetail> = {
   'portable-power-stations': { panel: 'power-station' },
   generators: { panel: 'generator' },
   bulbs: {
+    summary: 'LED bulbs for every room, in everyday shapes and clear filament styles, using far less power than the old ones.',
     model: 'Everyday and filament styles',
     intro: 'LED bulbs for every room, from everyday shapes to clear filament globes that look like the old glass bulbs and use far less power.',
     points: [
@@ -87,6 +93,7 @@ export const DETAILS: Record<string, ProductDetail> = {
   },
   // Round 53 (Bob: "we have normal street lamps standing with pole and the wall mounted one"; pictures approved).
   'solar-street-lamps': {
+    summary: 'Solar lamps on their own poles, for paths, courtyards, parking and streets, with no wiring to the grid.',
     model: 'On a pole of its own',
     intro: 'A round-headed lamp on a pole of its own, with the solar panel built into the top of the head, for paths, courtyards, parking and streets.',
     points: [
@@ -97,6 +104,7 @@ export const DETAILS: Record<string, ProductDetail> = {
     ],
   },
   'solar-wall-lamps': {
+    summary: 'Solar lamps for a wall or a post, to light entrances, yards and driveways with no wiring.',
     model: 'All-in-one, on a bracket',
     intro: 'All-in-one lamps with the solar panel built in, on a bracket for a wall or a post you already have.',
     points: [
@@ -107,6 +115,7 @@ export const DETAILS: Record<string, ProductDetail> = {
     ],
   },
   'ceiling-lights': {
+    summary: 'LED ceiling lights for homes, offices and shops, from slim panels to round downlights.',
     model: 'Slim panels and round downlights',
     intro: 'Slim LED panels and round downlights that sit flush in the ceiling, for homes, offices and shops.',
     points: [
@@ -117,6 +126,7 @@ export const DETAILS: Record<string, ProductDetail> = {
     ],
   },
   'led-tubes': {
+    summary: 'LED tubes and linear fittings for garages, workshops, shops and offices.',
     model: 'Tubes and linear fittings',
     intro: 'LED tubes for tube fittings, and long linear fittings with the light built in, for garages, workshops, shops and offices.',
     points: [
@@ -127,6 +137,7 @@ export const DETAILS: Record<string, ProductDetail> = {
     ],
   },
   floodlights: {
+    summary: 'Bright LED floodlights for yards, storefronts, signs and parking.',
     model: 'For yards and storefronts',
     intro: 'Bright, wide light for yards, storefronts, signs and parking, on a bracket you can angle where you need it.',
     points: [
@@ -136,6 +147,7 @@ export const DETAILS: Record<string, ProductDetail> = {
     ],
   },
   'led-strips': {
+    summary: 'Flexible LED strip light for shelves, counters, ceiling edges and stairs.',
     model: 'Flexible strip light',
     intro: 'Flexible LED strip that follows a shelf, a counter, a ceiling edge or a staircase, in warm to daylight white.',
     points: [
@@ -146,6 +158,7 @@ export const DETAILS: Record<string, ProductDetail> = {
   },
   // Round 51 (Bob: "a mounted one thats for outside ... it can turn, they work with SD card and that we also sell").
   'outdoor-cameras': {
+    summary: 'Security cameras for outside the home or the shop, powered by their own solar panels.',
     model: 'Mounted outside, with its own solar panel',
     intro: 'A camera with its own solar panel, mounted on a wall or a pole outside. It turns to look around, and records to an SD card.',
     points: [
@@ -158,6 +171,7 @@ export const DETAILS: Record<string, ProductDetail> = {
   },
   // Round 52 (Bob: "also add indoors camera that works with electricity").
   'indoor-cameras': {
+    summary: 'Security cameras for inside the home or the shop.',
     model: 'Plugs into a socket, stands on a table',
     intro: 'A small camera for inside the home or the shop. It plugs into a socket, stands on a table or a shelf, turns to look around the room and records to an SD card.',
     points: [
@@ -168,6 +182,6 @@ export const DETAILS: Record<string, ProductDetail> = {
       { title: 'Ask what is on the shelf', line: 'Connection, night view and storage differ by model, so ask which ones are in stock.' },
     ],
   },
-  sofas: { panel: 'furniture', title: 'Sofas', model: 'One floor up, Cumana 73' },
-  'lounge-chairs': { panel: 'furniture', title: 'Lounge chairs', model: 'One floor up, Cumana 73' },
+  sofas: { summary: 'Sofas for the living room, on show upstairs in the store and delivered to your door.', panel: 'furniture', title: 'Sofas', model: 'One floor up, Cumana 73' },
+  'lounge-chairs': { summary: 'Lounge chairs to sit back in, on show upstairs in the store and delivered to your door.', panel: 'furniture', title: 'Lounge chairs', model: 'One floor up, Cumana 73' },
 };

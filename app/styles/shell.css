@@ -278,64 +278,106 @@ main {
 :root:not(.js) .nav__menu--plain {
   display: inline-flex;
 }
-.menu__links {
+/* Round 54 (Bob: "this is so cluttered"): four big places on the home page, in the site's light wide type, sentence case
+   and no rules; under the pointer one goes forest and leans in while the others step back. Then, small, the ranges (All
+   products first) and the ways to get help, each group under a quiet label, and the languages. Beside the places on
+   wide screens, under them on phones. */
+.menu__main {
+  display: grid;
+  gap: clamp(2px, 0.8vh, 8px);
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-rule);
 }
-.menu__links a {
-  display: block;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--color-rule);
-  /* The page's thin wide capitals (polish, round 30), as the headings across the site. */
+.menu__main a {
+  display: inline-block;
+  padding: 4px 0;
+  font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  font-size: clamp(1.6rem, 7vw, 2.2rem);
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  line-height: 1;
+  font-size: clamp(2.3rem, 9vw, 3.2rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
   text-decoration: none;
   transition:
-    color 250ms ease,
-    translate 400ms var(--ease-out);
+    color 300ms ease,
+    opacity 300ms ease,
+    translate 450ms var(--ease-out);
 }
-.menu__links a[aria-current='page'] {
+.menu__side {
+  display: grid;
+  align-content: start;
+  gap: 26px;
+  margin-top: clamp(32px, 6vh, 56px);
+}
+.menu__group {
+  display: grid;
+  gap: 10px;
+}
+.menu__label {
+  margin: 0;
+  color: var(--color-muted, rgb(23 61 44 / 0.6));
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.menu__small {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu__small a {
+  display: inline-block;
+  padding: 2px 0 4px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-size 450ms var(--ease-out);
+}
+.menu__all a {
+  font-weight: 760;
+}
+.menu__main a[aria-current='page'],
+.menu__small a[aria-current='page'] {
   color: var(--color-forest);
 }
-.menu .actions {
-  margin-top: auto;
-  padding-top: 32px;
-}
-.menu .actions .btn {
-  flex: 1 1 auto;
-}
-/* Wide screens: the sections in two columns of big words, the ways to reach the store under them. */
-@media (min-width: 60.01rem) {
-  .menu {
-    padding-top: calc(var(--nav-h) + clamp(32px, 7vh, 72px));
-  }
-  .menu__links {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: var(--gutter);
-    border-top: 0;
-  }
-  .menu__links li:nth-child(-n + 2) {
-    border-top: 1px solid var(--color-rule);
-  }
-  .menu__links a {
-    padding: clamp(12px, 1.8vh, 18px) 0;
-    font-size: clamp(2.2rem, 3.6vw, 3.8rem);
-  }
-  .menu .actions .btn {
-    flex: 0 0 auto;
-  }
+.menu__side .lang-row {
+  margin-top: 0;
 }
 @media (hover: hover) and (pointer: fine) {
-  .menu__links a:hover {
+  .menu__main:hover a {
+    opacity: 0.38;
+  }
+  .menu__main a:hover {
+    opacity: 1;
     color: var(--color-forest);
-    translate: 12px 0;
+    translate: 10px 0;
+  }
+  .menu__small a:hover {
+    background-size: 100% 1.5px;
+  }
+}
+/* Wide screens: the places large on the left, the small groups in a column on the right, both resting low. */
+@media (min-width: 60.01rem) {
+  .menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(16rem, 1fr);
+    align-content: center;
+    align-items: end;
+    column-gap: var(--gutter);
+    padding-top: calc(var(--nav-h) + clamp(32px, 7vh, 72px));
+  }
+  .menu__main a {
+    font-size: clamp(3rem, 5.6vw, 5.6rem);
+  }
+  .menu__side {
+    margin-top: 0;
+    padding-bottom: 10px;
   }
 }
 

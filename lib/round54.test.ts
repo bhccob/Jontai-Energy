@@ -3,13 +3,15 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
-import { heldPosition, nameParts, rangeHref, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
-import { CATALOG_FILTERS, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
+import { WHEEL_REST, heldPosition, nameParts, rangeHref, settleOn, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
+import { CATALOG_FILTERS, DETAILED_RANGES, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
+import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { groundOf } from './cursorLight.ts';
 import { makeTranslator } from './i18n/translate.ts';
+import { menuLinks } from './menu.ts';
+import { DIRECTIONS_URL } from './contact.ts';
 
 const root = join(import.meta.dirname, '..');
 const solar = ISLANDS.find((i) => i.id === 'solar')!;
@@ -18,7 +20,9 @@ test('round 54 wheel: it rests on each range, then turns to the next', () => {
   assert.equal(heldPosition(0, 6), 0);
   assert.equal(heldPosition(1, 6), 5);
   for (let k = 0; k < 6; k++) assert.equal(heldPosition(restProgress(k, 6), 6), k, `rests on ${k}`);
-  assert.equal(heldPosition(0.75 / 6, 6), 0.5, 'halfway through the first turn');
+  // Bob: "better scrolling feel": a short rest on each name and a longer, gentler turn, instead of half and half.
+  assert.ok(WHEEL_REST > 0 && WHEEL_REST <= 0.3, 'the rest is the shorter part of each stretch');
+  assert.ok(Math.abs(heldPosition((WHEEL_REST + (1 - WHEEL_REST) / 2) / 6, 6) - 0.5) < 1e-9, 'halfway through the first turn');
   assert.equal(heldPosition(5.5 / 6, 6), 5, 'the last range holds');
   let last = -1;
   for (let i = 0; i <= 1000; i++) {
@@ -26,6 +30,25 @@ test('round 54 wheel: it rests on each range, then turns to the next', () => {
     assert.ok(p >= last, `never turns back at ${i / 1000}`);
     last = p;
   }
+});
+
+test('round 54 wheel: stopped between two names, it clicks on to the next one the way it was going; resting, it stays', () => {
+  const n = 7;
+  const at = (k: number, part: number) => (k + part) / n;
+  // Resting on a name, or before the first and after the last: nothing to settle.
+  for (let k = 0; k < n; k++) for (const dir of [-1, 0, 1]) assert.equal(settleOn(restProgress(k, n), n, dir), -1, `rests on ${k}`);
+  assert.equal(settleOn(0, n, 1), -1);
+  assert.equal(settleOn(-0.1, n, 1), -1, 'above the wheel');
+  assert.equal(settleOn(1.2, n, -1), -1, 'below the wheel');
+  assert.equal(settleOn(at(n - 1, 0.6), n, 1), -1, 'the last name only rests');
+  // Mid-turn: one mouse-wheel notch down from a name goes on to the next one, up goes back; still, the nearer one.
+  const turnAt = (k: number, t: number) => at(k, WHEEL_REST + (1 - WHEEL_REST) * t);
+  assert.equal(settleOn(turnAt(2, 0.15), n, 1), 3, 'a nudge down turns to the next');
+  assert.equal(settleOn(turnAt(2, 0.85), n, -1), 2, 'a nudge up turns back');
+  assert.equal(settleOn(turnAt(2, 0.2), n, 0), 2);
+  assert.equal(settleOn(turnAt(2, 0.8), n, 0), 3);
+  assert.equal(settleOn(turnAt(5, 0.5), n, 1), 6);
+  assert.equal(settleOn(turnAt(0, 0.5), n, -1), 0);
 });
 
 test('round 54 wheel: the six ranges then Others, by name, each saying plainly where it leads', () => {
@@ -139,28 +162,52 @@ test('round 54 catalogue: the short info steps to the product before and after, 
   assert.deepEqual(neighbours(['a'], 'a'), { prev: null, next: null, at: 1, of: 1 });
 });
 
-test('round 54 catalogue: the short info is the product in brief, at most three points and four figures', () => {
+test('round 54 catalogue: in Cooling and Backup power the short info keeps its detail, at most three points and four figures', () => {
+  // Bob: "cooling and backup power is fine".
   const points = Array.from({ length: 5 }, (_, i) => ({ title: `Point ${i}`, line: `Line ${i}.` }));
   const figures = Array.from({ length: 6 }, (_, i) => ({ label: `Figure ${i}`, value: `${i} kW` }));
-  const product = { id: 'x', name: 'X lamps', range: { id: 'light', name: 'LED lighting' } };
-  assert.deepEqual(shortInfo({ product, title: 'X lamps for yards', model: 'XL-1', intro: 'What it is.', figures, points }), {
+  const product = { id: 'x', name: 'X coolers', range: { id: 'cooling', name: 'Cooling' } };
+  assert.deepEqual(shortInfo({ product, title: 'X coolers for porches', model: 'XC-1', intro: 'What it is.', summary: 'X coolers, in short.', figures, points }), {
     id: 'x',
-    range: 'LED lighting',
-    title: 'X lamps for yards',
-    model: 'XL-1',
+    range: 'Cooling',
+    title: 'X coolers for porches',
+    model: 'XC-1',
     intro: 'What it is.',
     figures: figures.slice(0, 4),
     points: points.slice(0, 3),
   });
-  assert.deepEqual(shortInfo({ product, title: 'X lamps', intro: 'What it is.', points: [] }), {
+  assert.deepEqual(shortInfo({ product: { ...product, range: { id: 'backup', name: 'Backup power' } }, title: 'X', intro: 'What it is.', points: [] }), {
     id: 'x',
-    range: 'LED lighting',
-    title: 'X lamps',
+    range: 'Backup power',
+    title: 'X',
     model: null,
     intro: 'What it is.',
     figures: [],
     points: [],
   });
+});
+
+// Bob: "inside the dedicated product page the descriptions should be like not go too much detailed into some products
+// since its like a subcategory/subgenre". Elsewhere a product is a kind of product: one short line on what it is and
+// what it is for, with no model, no figures and no feature points.
+test('round 54 catalogue: in the other ranges the short info is one general line', () => {
+  const product = { id: 'x', name: 'X lamps', range: { id: 'light', name: 'LED lighting' } };
+  const page = { product, title: 'X lamps', model: 'XL-1', intro: 'A very particular lamp with a 12 W chip.', summary: 'Lamps of the X kind, for yards.', figures: [{ label: 'power', value: '12 W' }], points: [{ title: 'A', line: 'B.' }] };
+  assert.deepEqual(shortInfo(page), { id: 'x', range: 'LED lighting', title: 'X lamps', model: null, intro: 'Lamps of the X kind, for yards.', figures: [], points: [] });
+});
+
+test('round 54 catalogue: every product outside Cooling and Backup power has its general line, short, with no figures, in all three languages', () => {
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  for (const p of PRODUCTS) {
+    if (DETAILED_RANGES.includes(p.range.id)) continue;
+    const line = DETAILS[p.id]?.summary;
+    assert.ok(line, `${p.id} has a general line`);
+    assert.ok(line.length <= 130, `${p.id} is short (${line.length})`);
+    assert.doesNotMatch(line, /\d/, `${p.id} has no figures`);
+    assert.ok(line in es, `es: ${line}`);
+    assert.ok(line in zh, `zh: ${line}`);
+  }
 });
 
 test('round 54 first view: the hours fact puts what matters first', () => {
@@ -239,21 +286,6 @@ test('round 54: the whole pole lamp is published for the All products page', () 
   for (const w of lamp.whole!.files) assert.ok(existsSync(join(root, 'public', 'sky', `range-pole-lamp-full-${w}.webp`)), `${w}`);
 });
 
-// Bob: "i want the cursor hover to be everywhere thats not clickable so like background ... it should feel premium". The
-// light under the pointer takes the ground it is over: a pale glow on the deep greens, a soft leaf tint on the light ones.
-test('round 54 cursor light: it reads the ground under the pointer from its colour, and looks past see-through ones', () => {
-  assert.equal(groundOf('rgb(14, 34, 25)'), 'dark');
-  assert.equal(groundOf('rgb(23, 61, 44)'), 'dark');
-  assert.equal(groundOf('rgb(246, 248, 242)'), 'light');
-  assert.equal(groundOf('rgb(255, 255, 255)'), 'light');
-  assert.equal(groundOf('rgb(233, 239, 227)'), 'light');
-  assert.equal(groundOf('rgba(0, 0, 0, 0)'), null);
-  assert.equal(groundOf('rgba(14, 34, 25, 0.3)'), null, 'too faint to be the ground');
-  assert.equal(groundOf('rgba(14, 34, 25, 0.9)'), 'dark');
-  assert.equal(groundOf('transparent'), null);
-  assert.equal(groundOf(''), null);
-});
-
 // Bob: "the header to change language doesnt appear good". The header marks how it fits with data-fit (useHeaderFit), as
 // the footer's fitted name does (FitText); the name's rule clipped the header too, cutting the language list off and
 // scrolling the capsule's contents up when it opened. The rule is the fitted text's alone.
@@ -287,4 +319,26 @@ test('round 54 translation: every wheel link reads whole in Spanish and Chinese'
   }
   const es = makeTranslator('es', JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')));
   assert.equal(es.text('See all LED lighting products'), 'Ver todos los productos de Iluminación LED');
+});
+
+// Bob, of the menu's eleven big capitals: "this is so cluttered". Four big links to the home page's places; the ranges
+// and the ways to get help small beside them, in the wheel's order, each range straight to its products.
+test('round 54 menu: four big places, then the ranges and help, small', () => {
+  const home = menuLinks('');
+  assert.deepEqual(home.main.map((l) => l.label), ['What we sell', 'Our solution', 'Rewards', 'Visit the store']);
+  assert.deepEqual(home.main.map((l) => l.href), ['#products', '#solution', '#rewards', '#visit']);
+  assert.deepEqual(menuLinks('/').main[0].href, '/#products', 'from another page, back to the home page');
+  assert.deepEqual(home.ranges.map((l) => l.href), ['/products', ...ISLANDS.map((r) => `/products?range=${r.id}`)]);
+  assert.deepEqual(home.ranges.slice(1, 3).map((l) => l.label), ['Solar', 'LED lighting']);
+  assert.deepEqual(home.help.map((l) => l.href), ['/support', '/contact', '/quote', DIRECTIONS_URL]);
+  assert.equal(home.help.at(-1)!.external, true);
+});
+
+
+// Bob: "also maybe 6+ ranges isntead of just 6 ranges": there are six ranges and Others, so the page says 6+.
+test('round 54 copy: the ranges are 6+, wherever the page counts them', () => {
+  assert.deepEqual(copy.WHEEL_COPY.title, ['6+ ranges.', 'One store.']);
+  assert.equal(copy.FACT_RANGES.strong, '6+ ranges');
+  const said = JSON.stringify(Object.values(copy));
+  assert.doesNotMatch(said, /Six ranges/i, 'nowhere still says six');
 });

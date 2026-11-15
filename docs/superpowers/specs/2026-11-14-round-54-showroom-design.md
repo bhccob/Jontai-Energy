@@ -24,21 +24,23 @@ the end".
    "All products" and "Our solution". The globe opens the three languages in a pane under the capsule, each named in
    itself with the one in use ticked; it stays cream over dark sections, like the Menu button (Bob: "the header to
    change language doesnt appear good"; the capsule had been clipping the list).
+   The menu (Bob, of its eleven big capitals: "this is so cluttered"): four big places on the home page in the site's
+   light wide type, sentence case and no rules (What we sell, Our solution, Rewards, Visit the store); beside them on
+   wide screens and under them on phones, small, under quiet labels: Ranges (All products, then the six ranges, each
+   straight to its products) and Help (Support, Send a message, Request a quote, Get directions); then the languages.
 2. **First view: still, light, four facts** (`site11.html`, look C, picked 2026-11-15). Light green over the faint,
    slowly moving valley (as today, barely visible). Centred: "Aruba sunlight, **made useful.**" in the site's mix of
    light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
    family-owned store in Oranjestad."), and two buttons, "Visit the store" (forest) and "See what we sell" (glass pill).
    Along the foot, four facts on one ruled line, each with a small label: **Hours** "**Open now**, until 7:00 PM" (live,
-   from the store hours, as today); **The store** "**Cumana 73**, Oranjestad"; **What we sell** "**Six ranges**, one
+   from the store hours, as today); **The store** "**Cumana 73**, Oranjestad"; **What we sell** "**6+ ranges**, one
    store"; **Jontai Rewards** "**Afl. 25 back** for every Afl. 500" (from `lib/loyalty.ts`). No big JONTAI, no scene, and
    no handover effect: the words rise in once as the page opens, and when you scroll the first view holds still while
    Rewards slides up over it as a sheet with rounded top corners (Bob: "C and rewards slides over"). It fits one
-   screen; on phones the facts sit two by two. The cursor brings it to life (Bob: "interactive and seamless motion
-   with cursor hover effect"): the soft sun behind the headline follows the pointer, easing after it, and the green veil
-   thins round it so the valley shows through there; the valley and the words lean a touch for depth. With no pointer
-   it drifts slowly on its own; with reduced motion it stays still. Softer since (Bob: "the cursor hover should be
-   less"): the sun leans only part of the way to the pointer, the veil thins less, and over a button or a link it holds
-   where it is and dims.
+   screen; on phones the facts sit two by two. The soft sun behind the headline drifts slowly round the top of the
+   screen and the green veil thins round it so the valley shows through there; the valley and the words lean a touch
+   for depth. (It followed the pointer for a while; cursor effects were dropped, see 8.) With reduced motion it stays
+   still.
 3. **Rewards.** The same content and rules (`lib/loyalty.ts`), laid out calmer: "Shop as usual. **Earn it back.**" with
    one line under it; the two plans side by side with a thin rule between, each its card shown small and tilted, a
    large figure ("**Afl. 25** back", "**10%** off"), one sentence and "How it works" (which opens the existing steps
@@ -59,8 +61,9 @@ the end".
    names or photos** (Bob: remove Bob and Chakho).
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home
-   page's six range rows are replaced by one held screen, opened by the heading "Six ranges. **One store.**" and the line
-   "Six ranges and more. Keep scrolling to go through them." The whole What we sell block, its end band included, is the
+   page's six range rows are replaced by one held screen, opened by the heading "6+ ranges. **One store.**" (Bob: "maybe 6+
+   ranges isntead of just 6 ranges": six ranges and Others) and the line "Every range, one at a time. Keep scrolling to go
+   through them." The whole What we sell block, its end band included, is the
    site's deep green, and the header turns deep green over it. As the block arrives it grows from a rounded card, inset
    from the screen's sides, out to the full width.
    - The names of the six ranges and **Others** stand large across the middle of the screen on a drum, like a phone's
@@ -73,6 +76,12 @@ the end".
      "See all other products") on a hairline. Clicking another name turns the drum to it.
    - The order matters (Bob: "solar first then led lighting"): Solar, LED lighting, Cooling, Backup power, Security,
      Furniture, then Others. The menu, the footer and the All products page follow it.
+   - Large and well apart (Bob: "six range products gotta be bigger and more seperated also better scrolling feel"):
+     names about 150px tall on a laptop, neighbours about one and a half name heights apart (more on phones), the outer
+     ones melting into the green at the drum's top and foot. A name too wide for the screen in the language shown is
+     set down on its own. Each name rests briefly, then the drum turns in a long, gentle ease; when the scroll stops part
+     way through a turn the page glides on to the next name the way it was going, like a phone's date picker, so one
+     mouse-wheel notch turns one name.
    - After Others the screen lets go into the end band: "Every product, **one by one.**" with "See all products".
 6. **All products page** at `/products`, to look at, not to shop (Bob: "i want them to not be like a site that you
    can shop but only to view so more minimal and better displayed"). Title "All **products**", one line ("Everything on
@@ -82,7 +91,10 @@ the end".
    underlines under the pointer. No buy buttons and no quote. A product opens its **short info** (Bob: "click and see
    short info of the products ... same styling design as the page of display"): a sheet of the page's own light that
    slides in from the side (from the foot on phones) over a soft shade, with the product large, its range, name, model,
-   what it is, up to four figures and three points on ruled lines, and "Ask us about it". Arrows (and the arrow keys)
+   what it is, up to four figures and three points on ruled lines, and "Ask us about it". That detail is kept for Cooling
+   and Backup power only (Bob: "cooling and backup power is fine"); elsewhere a product is a kind of product (Bulbs,
+   Ceiling lights, Outdoor cameras), so its short info is one general line on what it is and what it is for, with no
+   model, figures or points (Bob: "not go too much detailed into some products since its like a subcategory"). Arrows (and the arrow keys)
    step to the product before or after, with "2 / 19"; the cross, the shade, Escape or Back close it. The address keeps
    the range and the product (`?range=`, `?item=`), so links and Back work, and nothing reloads. Others (SD cards, small
    solar lights, solar doorbells, WiFi mesh) is a ruled list of words at the end, with "Ask us". Solar shows every solar
@@ -96,12 +108,9 @@ the end".
    Instagram), **Contact** (email, phone, address). A last thin line holds the copyright with the service line ("sells
    and delivers; it does not install"), the concept note with the link to jontaienergy.com, and the languages. The huge
    JONTAI ENERGY and the old three columns go. The footer is the same on every page.
-8. **A light under the pointer, everywhere but what can be pressed** (Bob: "i want the cursor hover to be everywhere
-   thats not clickable so like background thats not matter it should feel premium"): a soft light trails the mouse over
-   the page's grounds, a pale glow on the deep greens and a soft leaf-green light on the light ones, and fades away over
-   links, buttons and fields. Clearly visible, not faint (Bob, of a first fainter version: "i dont see any cursor hover
-   effects"). The wheel's names take the pointer only on their words, so the ground beside them stays ground. Not on the first view (its sun does this), the header, the menu or a product sheet; none for touch
-   or with reduced motion.
+8. **No cursor effect.** A light, then a dot trail after squared-media.nl, then rising specks were tried and dropped
+   (Bob: "remove the cursor thing idea"). The pointer is the system's own; on the first view the sun drifts slowly by
+   itself.
 9. **Motion through the page** (Bob: "more motion or animation so the site is not completely still", "cinematic and
    premium"): the smooth scroll the site already has (Lenis); headings rise into place line by line as they arrive,
    with their lines and buttons fading up just after; the Rewards cards and figures as in 3; the sentence as in 4; the
