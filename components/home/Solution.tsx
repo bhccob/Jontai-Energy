@@ -1,7 +1,6 @@
-import { Fragment } from 'react';
 import { Heart, LightbulbFilament, Lightning, SquaresFour, Tag, Wrench } from '@phosphor-icons/react/dist/ssr';
 import { Words } from '@/components/ui/Split';
-import { SOLUTION, SOLUTION_KICKER, SOLUTION_POINTS, spaceBefore } from '@/lib/homeCopy';
+import { SOLUTION_KICKER, SOLUTION_POINTS, solutionPieces } from '@/lib/homeCopy';
 import { SolutionMotion } from './SolutionMotion';
 
 /** One icon for each point, in the points' order. */
@@ -21,13 +20,10 @@ export function Solution() {
           {SOLUTION_KICKER}
         </h2>
         <p className="solution__text">
-          {SOLUTION.map((f, i) => (
-            <Fragment key={f.text}>
-              {i > 0 && spaceBefore(f.text) ? ' ' : ''}
-              <span className={f.key ? 'solution__key' : undefined}>
-                <Words text={f.text} />
-              </span>
-            </Fragment>
+          {solutionPieces().map((f) => (
+            <span key={f.text} className={f.key ? 'solution__key' : undefined}>
+              <Words text={f.text} />
+            </span>
           ))}
         </p>
         <ul className="solution__points">

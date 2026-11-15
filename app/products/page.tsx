@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { CatalogProvider } from '@/components/catalog/CatalogProvider';
-import { Catalog } from '@/components/products/Catalog';
+import { Catalog, CatalogView } from '@/components/products/Catalog';
 import { Footer } from '@/components/sections/Footer';
 import { Header } from '@/components/ui/Header';
 import { CATALOG_COPY } from '@/lib/homeCopy';
@@ -22,11 +22,14 @@ export default function ProductsPage() {
       <main id="main" className="cat">
         <header className="cat__head">
           <h1 className="cat__title" data-i18n-ctx="catalog-title">
-            {CATALOG_COPY.title[0]} <b>{CATALOG_COPY.title[1]}</b>
+            {`${CATALOG_COPY.title[0]} `}
+            <b>{CATALOG_COPY.title[1]}</b>
           </h1>
           <p className="cat__line">{CATALOG_COPY.line}</p>
         </header>
-        <Suspense fallback={null}>
+        {/* Reading ?range= needs the visitor's address, so the server sends the page with All, and the range picked
+            replaces it as soon as scripts run. */}
+        <Suspense fallback={<CatalogView filter="all" />}>
           <Catalog />
         </Suspense>
       </main>

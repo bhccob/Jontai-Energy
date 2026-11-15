@@ -361,10 +361,13 @@
   max-height: 100%;
   object-fit: contain;
 }
-.wrow .wheel__go {
+.wrow__acts {
   grid-area: go;
   align-self: start;
-  justify-self: start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
 }
 
 /* ---------- The band that ends What we sell ---------- */

@@ -11,8 +11,7 @@ const at = (d: number) => ({ '--d': d }) as CSSProperties;
 const Line = ({ fact }: { fact: Fact }) => (
   <>
     <b>{fact.strong}</b>
-    {fact.rest && spaceBefore(fact.rest) ? ' ' : ''}
-    {fact.rest}
+    {fact.rest && spaceBefore(fact.rest) ? ` ${fact.rest}` : fact.rest}
   </>
 );
 

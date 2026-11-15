@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeNote, type CatalogFilter } from '@/lib/catalog';
@@ -13,42 +13,50 @@ import { RangePicture } from './RangePicture';
 
 const SIZES = '(max-width: 47.5rem) 44vw, (max-width: 75rem) 30vw, 22vw';
 
+/** Where a range's pill leads: the page on that range, or the page with all of them. */
+const hrefOf = (id: CatalogFilter) => (id === 'all' ? '/products' : `/products?range=${id}`);
+
 /**
  * Every product, one by one (round 54, the All products page): a pill for each range and Others with how many each
  * holds, a search by name, then the products in a grid, each standing in a soft pool of light with its range, its name
  * and a round arrow. A product opens its page in the sheet over this page, so Back returns here as it was. The range
  * picked lives in the address (?range=), so "See the range" on the home page opens here on it and Back keeps it.
+ * The pills are links, so they work before scripts arrive too.
  */
 export function Catalog() {
   const params = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
   // While a product's sheet is open over this page the address is the product's; the page keeps its own range.
   const kept = useRef<CatalogFilter>('all');
   if (pathname === '/products') kept.current = filterFromParam(params?.get('range'));
-  const filter = kept.current;
   const [query, setQuery] = useState('');
+  return <CatalogView filter={kept.current} query={query} onQuery={setQuery} />;
+}
+
+/**
+ * The page's content for a range and a search, with no reading of the address: what the server sends before scripts
+ * (the page's Suspense fallback shows it for All) and what Catalog shows once they run.
+ */
+export function CatalogView({ filter, query = '', onQuery }: { filter: CatalogFilter; query?: string; onQuery?: (q: string) => void }) {
   const list = useMemo(() => catalogProducts(filter, query), [filter, query]);
   const note = rangeNote(filter);
   const showOthers = filter === 'all' || filter === 'others';
-
-  const pick = (id: CatalogFilter) => router.replace(id === 'all' ? '/products' : `/products?range=${id}`, { scroll: false });
 
   return (
     <>
       <div className="cat__tools">
         <div className="cat__filters" role="group" aria-label="Ranges">
           {CATALOG_FILTERS.map((f) => (
-            <button key={f.id} type="button" className="cat__filter" aria-pressed={f.id === filter} onClick={() => pick(f.id)}>
+            <Link key={f.id} href={hrefOf(f.id)} replace scroll={false} className="cat__filter" aria-current={f.id === filter ? 'true' : undefined}>
               {f.label}
               <sup>{f.count}</sup>
-            </button>
+            </Link>
           ))}
         </div>
         {filter !== 'others' && (
           <label className="cat__search">
             <MagnifyingGlass size={18} weight="bold" aria-hidden="true" />
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={CATALOG_COPY.search} aria-label={CATALOG_COPY.search} />
+            <input type="search" value={query} onChange={(e) => onQuery?.(e.target.value)} readOnly={!onQuery} placeholder={CATALOG_COPY.search} aria-label={CATALOG_COPY.search} />
           </label>
         )}
       </div>

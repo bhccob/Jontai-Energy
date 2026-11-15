@@ -25,7 +25,7 @@ function Name({ name }: { name: string }) {
   const [light, bold] = nameParts(name);
   return (
     <span data-i18n-ctx="wheel">
-      {light && <span className="wn__light">{light} </span>}
+      {light && <span className="wn__light">{`${light} `}</span>}
       <b>{bold}</b>
     </span>
   );
@@ -130,12 +130,19 @@ export function Wheel() {
                 <a href={rangeHref(r.id)} className="wrow__pic" aria-label={seeAll(r)}>
                   <RangePicture p={p} sizes={SIZES} />
                 </a>
-                <a href={rangeHref(r.id)} className="btn wheel__go">
-                  <span>{seeAll(r)}</span>
-                  <span className="wheel__arrow" aria-hidden="true">
-                    <ArrowUpRight size={18} weight="bold" />
-                  </span>
-                </a>
+                <div className="wrow__acts">
+                  <a href={rangeHref(r.id)} className="btn wheel__go">
+                    <span>{seeAll(r)}</span>
+                    <span className="wheel__arrow" aria-hidden="true">
+                      <ArrowUpRight size={18} weight="bold" />
+                    </span>
+                  </a>
+                  {r.actions?.map((a) => (
+                    <OpenCategoryButton key={a.panel} id={a.panel} className="textlink wheel__delivery">
+                      {a.label}
+                    </OpenCategoryButton>
+                  ))}
+                </div>
               </li>
             );
           })}
@@ -155,8 +162,10 @@ export function Wheel() {
           {WHEEL_COPY.endButton}
         </a>
         <p className="sell__also">
-          {WHEEL_COPY.also} <a href={contactHref('question')}>{WHEEL_COPY.askUs}</a>
-          {'.'} <span>{WHEEL_COPY.pictures}</span>
+          {`${WHEEL_COPY.also} `}
+          <a href={contactHref('question')}>{WHEEL_COPY.askUs}</a>
+          {'. '}
+          <span>{WHEEL_COPY.pictures}</span>
         </p>
       </div>
       <WheelMotion />

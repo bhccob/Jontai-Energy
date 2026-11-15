@@ -158,6 +158,16 @@ test('round 54 sentence: each Spanish fragment fills every English word slot, so
   for (const f of copy.SOLUTION) assert.ok(words(es[f.text.trim()]) >= words(f.text), `${f.text} -> ${es[f.text.trim()]}`);
 });
 
+test('round 54 sentence: the spaces between fragments sit inside the fragments, so Chinese can drop them', () => {
+  // A space in a node of its own is never translated, so in Chinese it would show between the characters.
+  const pieces = copy.solutionPieces();
+  assert.equal(pieces.map((p) => p.text).join(''), copy.solutionText());
+  for (const p of pieces) assert.match(p.text, /\S/, 'no piece is only a space');
+  pieces.slice(1).forEach((p, i) => {
+    if (copy.spaceBefore(copy.SOLUTION[i + 1].text)) assert.ok(p.text.startsWith(' '), `"${p.text}" carries its space`);
+  });
+});
+
 test('round 54: the whole pole lamp is published for the All products page', () => {
   const lamp = PRODUCTS.find((p) => p.id === 'solar-street-lamps')!;
   assert.equal(lamp.whole?.image, 'pole-lamp-full');

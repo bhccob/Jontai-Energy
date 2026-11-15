@@ -33,6 +33,10 @@ export const SOLUTION: { text: string; key?: true }[] = [
 /** Whether a fragment of the sentence follows the one before it with a space (not before , or .). */
 export const spaceBefore = (text: string) => !/^[,.]/.test(text);
 
+/** The fragments as the page sets them: each carries the space before it, so no space stands in a node of its own
+ *  (the translator leaves such a node alone, and in Chinese it would show between the characters). */
+export const solutionPieces = () => SOLUTION.map((f, i) => ({ ...f, text: (i && spaceBefore(f.text) ? ' ' : '') + f.text }));
+
 /** The sentence as one line of text. */
 export const solutionText = () => SOLUTION.map((f, i) => (i && spaceBefore(f.text) ? ' ' : '') + f.text).join('');
 
