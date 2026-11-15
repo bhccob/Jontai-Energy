@@ -150,6 +150,14 @@ test('round 54: every new word is in both dictionaries', () => {
   }
 });
 
+test('round 54 sentence: each Spanish fragment fills every English word slot, so no gap is left between words', () => {
+  // The translator shares a translated fragment out over the English fragment's word slots (components/ui/Split): a
+  // translation with fewer words than slots leaves empty slots, which show as double spaces.
+  const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
+  const words = (t: string) => t.trim().split(/\s+/).length;
+  for (const f of copy.SOLUTION) assert.ok(words(es[f.text.trim()]) >= words(f.text), `${f.text} -> ${es[f.text.trim()]}`);
+});
+
 test('round 54: the whole pole lamp is published for the All products page', () => {
   const lamp = PRODUCTS.find((p) => p.id === 'solar-street-lamps')!;
   assert.equal(lamp.whole?.image, 'pole-lamp-full');

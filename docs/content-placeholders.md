@@ -60,6 +60,13 @@ Every product in the six ranges has its own page at `/products/<id>` (`lib/produ
 
 Round 51: the street lamp page names two kinds (on a pole of their own, mounted on a wall); the solar fans page names standing fans, floor fans and fan lights; the security range now shows one product, outdoor solar cameras that turn and record to an SD card, with words of their own (the old site camera is gone). Round 52: the indoor camera, which plugs into a socket, stands on a table and turns, has its own page (`/products/indoor-cameras`) with no figures. Round 53: it has its picture now, beside the outdoor camera (which now shows two lenses). Street lamps are two products (Solar street lamps on a pole, Solar wall lamps on a bracket) and the fans three (standing, floor, fan lights), each with its own page and no figures; the owner should confirm each is carried. The camera quote topic now reads "Security camera". The Others row lists SD cards (16 GB to 256 GB), small solar lights, solar doorbells and WiFi mesh, words only (`OTHERS` in `lib/islands.ts`). The owner should confirm all of these are carried.
 
+## Round 54 (2026-11-15)
+
+- **Our solution:** a sentence in the store's voice, from Bob's own brief, replacing "Why Jontai". The owner should confirm each promise: power of your own, repairs years later, prices hard to beat, more than solar, every customer matters, a family that keeps learning.
+- **First view facts:** the opening hours come live from `lib/store.ts` and the Rewards line from `lib/loyalty.ts`.
+- **All products page** (`/products`): every product with its home range. Solar lists every solar product. Range notes (installation, stock, delivery) show under their filter, and Others is listed at the foot. The whole pole lamp (`public/sky/range-pole-lamp-full-*.webp`) is cut from the round 53 source picture.
+- **Footer:** gives the phone, email, address and socials from `lib/store.ts`.
+
 ## Added in round 12 (2026-11-11)
 
 - **Reviews** (`lib/reviews.ts`): four real Google reviews of the store, read from its Google Maps listing on 2026-11-11, with the listing's own 4.5 rating and 73-review count. Reviewer names are shortened to a first name and an initial; texts are the reviewers' own words with spacing and one spelling slip tidied and one cut marked. Update the rating, count and date together, and swap reviews freely.
