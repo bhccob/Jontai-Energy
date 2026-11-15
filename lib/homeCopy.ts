@@ -72,3 +72,12 @@ export const CATALOG_COPY = {
 };
 
 export const MENU_COPY = { products: 'All products', solution: 'Our solution' };
+
+/** The open-now line in two parts for the first view's Hours fact (lib/firstView hoursFact): the state, then the time. */
+export const HOURS_COPY = {
+  open: 'Open now',
+  closed: 'Closed now',
+  until: ', until {0}',
+  opensAt: ', opens at {0}',
+  opensTomorrow: ', opens tomorrow at {0}',
+};

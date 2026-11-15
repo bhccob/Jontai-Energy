@@ -988,7 +988,11 @@
   "Every product,": "Cada producto,",
   "one by one.": "uno por uno.",
   "See all products": "Ver todos los productos",
-  "Also SD cards, small solar lights, solar doorbells and WiFi mesh.": "También tarjetas SD, pequeñas luces solares, timbres solares y WiFi mesh."
+  "Also SD cards, small solar lights, solar doorbells and WiFi mesh.": "También tarjetas SD, pequeñas luces solares, timbres solares y WiFi mesh.",
+  "Open now": "Abierto ahora",
+  "Closed now": "Cerrado ahora",
+  "Afl. 25 back": "Afl. 25 de vuelta",
+  "for every Afl. 500": "por cada Afl. 500"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} de 5 estrellas",
@@ -1006,6 +1010,9 @@
   "Sunrise at {0}": "Amanece a las {0}",
   "{0} points": "{0} puntos",
   "See all {0} {1} products": "Ver los {0} productos de {1}",
-  "See all {0}": "Ver {0}"
+  "See all {0}": "Ver {0}",
+  ", until {0}": ", hasta las {0}",
+  ", opens at {0}": ", abre a las {0}",
+  ", opens tomorrow at {0}": ", abre mañana a las {0}"
  }
 }

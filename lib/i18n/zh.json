@@ -989,7 +989,11 @@
   "Every product,": "每一件产品，",
   "one by one.": "逐一呈现。",
   "See all products": "查看全部产品",
-  "Also SD cards, small solar lights, solar doorbells and WiFi mesh.": "还有 SD 卡、小型太阳能灯、太阳能门铃和 WiFi Mesh。"
+  "Also SD cards, small solar lights, solar doorbells and WiFi mesh.": "还有 SD 卡、小型太阳能灯、太阳能门铃和 WiFi Mesh。",
+  "Open now": "营业中",
+  "Closed now": "未营业",
+  "Afl. 25 back": "返还 Afl. 25",
+  "for every Afl. 500": "（每消费 Afl. 500）"
  },
  "patterns": {
   "{0} out of 5 stars": "{0} 星（满分 5 星）",
@@ -1007,6 +1011,9 @@
   "Sunrise at {0}": "{0} 日出",
   "{0} points": "{0} 积分",
   "See all {0} {1} products": "查看全部 {0} 件{1}产品",
-  "See all {0}": "查看全部{0}"
+  "See all {0}": "查看全部{0}",
+  ", until {0}": "，{0} 打烊",
+  ", opens at {0}": "，{0} 开门",
+  ", opens tomorrow at {0}": "，明天 {0} 开门"
  }
 }

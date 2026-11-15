@@ -6,6 +6,7 @@ import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
 import { WHEEL_PICKS, WHEEL_TINT, heldPosition, rangeHref, restProgress } from './wheel.ts';
 import { CATALOG_FILTERS, catalogProducts, filterFromParam, rangeNote } from './catalog.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
+import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
 
 const root = join(import.meta.dirname, '..');
@@ -80,7 +81,17 @@ test('round 54 first view: the hours fact puts what matters first', () => {
   assert.deepEqual(REWARDS_FACT, { strong: 'Afl. 25 back', rest: 'for every Afl. 500' });
 });
 
-test('round 54 sentence: the fragments read as the agreed sentence, with six promises in bold', () => {
+test('round 54 first view: every hours line splits into parts the dictionaries know', () => {
+  const lines = [openState(2, 10).line, openState(2, 7).line, openState(2, 20).line, openState(0, 15).line];
+  const asPattern = (rest: string) => rest.replace(/\d{1,2}:\d{2} [AP]M/, '{0}');
+  for (const line of lines) {
+    const { strong, rest } = hoursFact(line);
+    assert.ok([copy.HOURS_COPY.open, copy.HOURS_COPY.closed].includes(strong), `${line}: ${strong}`);
+    assert.ok([copy.HOURS_COPY.until, copy.HOURS_COPY.opensAt, copy.HOURS_COPY.opensTomorrow].includes(asPattern(rest)), `${line}: ${rest}`);
+  }
+});
+
+test('round 54 sentence:the fragments read as the agreed sentence, with six promises in bold', () => {
   assert.equal(
     copy.solutionText(),
     "At Jontai, your home makes its own power, so the island's blackouts do not stop your day. We fix what we sell, even years later. Our prices are hard to beat, for the same quality or better. We sell far more than solar. Every customer matters, long after the sale. And our family keeps learning, to bring tomorrow's ideas home.",
@@ -99,6 +110,7 @@ test('round 54: every new word is in both dictionaries', () => {
     else if (v && typeof v === 'object') Object.values(v).forEach(walk);
   };
   for (const [name, v] of Object.entries(copy)) if (typeof v !== 'function') walk(v);
+  walk(REWARDS_FACT);
   assert.ok(words.length > 40, `found ${words.length} strings in ${Object.keys(copy).join(', ')}`);
   const pattern = (d: { patterns: Record<string, string> }, w: string) => Object.hasOwn(d.patterns, w);
   for (const w of new Set(words)) {

@@ -184,12 +184,6 @@
     transform: translateY(105%);
   }
 }
-@keyframes hero-letter {
-  from {
-    opacity: 0;
-    transform: translateY(70%);
-  }
-}
 @media (prefers-reduced-motion: no-preference) {
   .sky {
     animation: sky-open 1500ms cubic-bezier(0.76, 0, 0.24, 1) both;
@@ -202,38 +196,16 @@
     animation: hero-line 1300ms var(--ease-out) both;
     animation-delay: calc(var(--d, 0) * 1ms + 120ms);
   }
-  .hero__name .ci {
-    animation: hero-letter 1500ms var(--ease-out) both;
-  }
-  .hero__name .c:nth-child(1) .ci {
-    animation-delay: 700ms;
-  }
-  .hero__name .c:nth-child(2) .ci {
-    animation-delay: 770ms;
-  }
-  .hero__name .c:nth-child(3) .ci {
-    animation-delay: 840ms;
-  }
-  .hero__name .c:nth-child(4) .ci {
-    animation-delay: 910ms;
-  }
-  .hero__name .c:nth-child(5) .ci {
-    animation-delay: 980ms;
-  }
-  .hero__name .c:nth-child(6) .ci {
-    animation-delay: 1050ms;
-  }
 }
 
-/* Few things, on one axis: the words in the middle of the sky, JONTAI under them across the foot of the screen. With
-   the islands gone (round 38) the first view is one screen tall (taller only when a short screen needs it), the words
-   in the middle of the room the name leaves them. */
+/* Round 54 (Bob: "C and rewards slides over"): one screen, still and light. The words in the middle of the room, four
+   facts on a ruled line across the foot. No JONTAI, no scene. */
 .hero {
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: 100svh;
+  min-height: 600px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   padding: var(--nav-h) var(--gutter) 0;
   overflow: clip;
   text-align: center;
@@ -241,108 +213,97 @@
 .hero__top {
   position: relative;
   z-index: 4;
-  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 64rem;
-  padding-block: clamp(24px, 5vh, 56px);
-}
-/* JONTAI (round 39, Bob: "jontai text below gotta be better styled"; he picked "Forest ink on a hairline"). Round 41
-   (Bob, after the Windore example: "needs work like fading"): the whole word across the width in the words' colour, on a
-   faint rule, fading from solid at the top of its letters into the landscape at the foot, where the screen cuts it. */
-.hero__mark {
-  align-self: stretch;
-  padding-top: clamp(14px, 2.2vh, 22px);
-  border-top: 1px solid rgb(23 61 44 / 0.22);
-}
-.hero__name {
-  width: 100%;
-  margin: 0 0 -0.1em;
-  color: var(--sky-ink);
-  -webkit-mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.55) 58%, transparent 96%);
-  mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.55) 58%, transparent 96%);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-stretch: 125%;
-  font-size: 22vw;
-  line-height: 0.78;
-  letter-spacing: -0.03em;
-  text-align: left;
-}
-.hero__name .c {
-  overflow: clip;
-}
-
-/* Whether the store is open now, over the headline (round 43, Bob on the "Bon bini" time pill: "looks like its ai
-   generated"): plain text in the words' colour, as a sentence, with no pill, no dot, no rule and no spaced capitals. */
-.hero__eyebrow {
-  margin-bottom: clamp(14px, 2.2vh, 22px);
-}
-.hero__eyebrow .status {
-  display: inline;
-  color: var(--sky-soft);
-  font-size: 1rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-.hero__eyebrow .status i {
-  display: none;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding-block: clamp(16px, 3vh, 40px);
 }
 
 .hero__display {
   margin: 0;
+  color: var(--sky-ink);
   font-family: var(--font-display);
   font-weight: 300;
   font-stretch: 112%;
-  /* On short, wide screens it also follows the height, so the words keep clear of JONTAI. */
-  font-size: clamp(2.8rem, min(5.8vw, 11.5vh), 7rem);
-  line-height: 0.92;
+  /* On short, wide screens it also follows the height, so the facts keep their room. */
+  font-size: clamp(2.9rem, min(7.4vw, 12.5vh), 8.2rem);
+  line-height: 0.96;
   letter-spacing: -0.035em;
-  text-transform: uppercase;
+}
+.hero__display b {
+  font-weight: 780;
+  font-stretch: 100%;
+  letter-spacing: -0.04em;
 }
 /* Each line rises out of its own box; the padding keeps descenders and the comma inside it. */
 .hero__mask {
   display: block;
   overflow: clip;
-  padding-bottom: 0.06em;
-  margin-bottom: -0.06em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
 .hero__line {
   display: block;
 }
 .hero__lead {
-  max-width: 36rem;
+  max-width: 46ch;
   margin: clamp(18px, 2.8vh, 28px) 0 0;
   color: var(--sky-soft);
   font-size: clamp(1.05rem, 0.3vw + 0.98rem, 1.2rem);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 14px 28px;
+  gap: 12px;
   margin-top: clamp(20px, 3vh, 30px);
 }
-.hero__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
+
+/* The four facts: a label in small capitals, then the line, the part that matters in bold. */
+.hero__facts {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 clamp(22px, 4.5vh, 44px);
+  border-top: 1px solid rgb(23 61 44 / 0.22);
+  text-align: left;
+}
+.hero__fact {
+  padding: 18px 16px 2px 0;
+}
+.hero__fact + .hero__fact {
+  padding-left: 18px;
+  border-left: 1px solid rgb(23 61 44 / 0.1);
+}
+.hero__fact dt {
+  color: var(--sky-soft);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hero__fact dd {
+  margin: 8px 0 0;
   color: var(--sky-ink);
-  font-weight: 650;
-  text-decoration: none;
+  font-size: clamp(1.05rem, 1.5vw, 1.45rem);
+  font-weight: 300;
+  font-stretch: 110%;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
-.hero__more svg {
-  transition: transform 450ms var(--ease-out);
+.hero__fact b {
+  font-weight: 720;
+  font-stretch: 100%;
 }
-@media (hover: hover) and (pointer: fine) {
-  .hero__more:hover svg {
-    transform: translateY(4px);
-  }
+.hero__fact .status {
+  display: inline;
 }
 
 /* ---------- Header over the sky ---------- */
@@ -530,18 +491,13 @@
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 40rem) {
-  /* On phones the name is small: it stands whole above the concept note, fading less, so it still reads. */
+  /* Phones: the words a size down, the buttons full width, the facts two by two. */
   .hero {
+    min-height: 0;
     padding-top: calc(var(--nav-h) + 8px);
-    padding-bottom: 44px;
-  }
-  .hero__name {
-    margin-bottom: 0;
-    -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgb(0 0 0 / 0.7) 70%, rgb(0 0 0 / 0.35) 100%);
-    mask-image: linear-gradient(to bottom, #000 30%, rgb(0 0 0 / 0.7) 70%, rgb(0 0 0 / 0.35) 100%);
   }
   .hero__display {
-    font-size: clamp(2.5rem, 11.4vw, 4rem);
+    font-size: clamp(2.5rem, 12.6vw, 4rem);
   }
   .hero__actions {
     flex-direction: column;
@@ -549,5 +505,36 @@
   }
   .hero__actions .btn {
     align-self: stretch;
+  }
+  /* The concept note sits along the foot of a phone's screen: the facts keep clear of it. */
+  .hero__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 40px;
+  }
+  .hero__top {
+    padding-block: 10px;
+  }
+  .hero__lead {
+    margin-top: 14px;
+  }
+  .hero__actions {
+    margin-top: 18px;
+    gap: 10px;
+  }
+  .hero__fact,
+  .hero__fact + .hero__fact {
+    padding: 12px 12px 10px 0;
+    border-left: 0;
+    border-top: 1px solid rgb(23 61 44 / 0.1);
+  }
+  .hero__fact:nth-child(even) {
+    padding-left: 14px;
+    border-left: 1px solid rgb(23 61 44 / 0.1);
+  }
+  .hero__fact:nth-child(-n + 2) {
+    border-top: 0;
+  }
+  .hero__fact dd {
+    font-size: 1rem;
   }
 }
