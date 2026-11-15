@@ -31,6 +31,9 @@ export interface Product {
   bulb?: boolean;
   /** The pole lamp: its head and the top of its pole, rising from the foot of its frame (round 53). */
   rise?: boolean;
+  /** The whole product where no frame holds it (round 54, the All products page): the pole lamp standing on its pole.
+   *  public/sky/range-<image>-<w>.webp at the widths in files. */
+  whole?: { image: string; size: [number, number]; files: [number, number] };
 }
 
 /** A product with its picture. */
@@ -104,7 +107,7 @@ export const ISLANDS: Island[] = [
     products: [
       { id: 'bulbs', name: 'Bulbs', line: 'Everyday and filament styles, warm to daylight white.', image: 'light', size: [600, 710], quote: 'led', files: [400, 600], bulb: true },
       // Round 53 (Bob: "we have normal street lamps standing with pole and the wall mounted one").
-      { id: 'solar-street-lamps', name: 'Solar street lamps', line: 'Round-headed lamps on a pole of their own, for paths, courtyards and parking.', image: 'pole-lamp', size: [544, 952], quote: 'street-lamp', rise: true },
+      { id: 'solar-street-lamps', name: 'Solar street lamps', line: 'Round-headed lamps on a pole of their own, for paths, courtyards and parking.', image: 'pole-lamp', size: [544, 952], quote: 'street-lamp', rise: true, whole: { image: 'pole-lamp-full', size: [400, 1408], files: [200, 400] } },
       { id: 'solar-wall-lamps', name: 'Solar wall lamps', line: 'All-in-one lamps on a bracket, for a wall or a post you already have.', image: 'street-lamp', size: [1200, 707], quote: 'street-lamp' },
       { id: 'ceiling-lights', name: 'Ceiling lights', line: 'Slim ceiling panels and round downlights.', image: 'ceiling-lights', size: [1200, 611], quote: 'led' },
       { id: 'led-tubes', name: 'Tubes and linear fixtures', line: 'LED tubes and long linear fittings.', image: 'tubes', size: [1200, 841], quote: 'led' },
