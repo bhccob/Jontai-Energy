@@ -96,16 +96,18 @@
     display: none;
   }
 }
-/* The veil over the valley (round 47, forest green since round 54): thinner through the middle, so the hills and the
-   moving mist show through the green. Round 54, Bob: "make background image lighter": thinned from nearly solid (0.9
-   to 0.95), still thick enough for the pale words. */
+/* The veil over the valley (round 47, forest green since round 54): nearly solid, a touch thinner through the middle,
+   so the hills and the moving mist are only the faintest texture in the green. Round 54, Bob: "make background image
+   lighter", then, when a thinner veil showed it more, "no im neat the background image should be less visible": thicker
+   than at first (0.9 to 0.95). */
 .sky__ink {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgb(var(--veil) / 0.8) 0%, rgb(var(--veil) / 0.68) 40%, rgb(var(--veil) / 0.68) 65%, rgb(var(--veil) / 0.8) 100%);
+  background: linear-gradient(to bottom, rgb(var(--veil) / 0.97) 0%, rgb(var(--veil) / 0.94) 40%, rgb(var(--veil) / 0.94) 65%, rgb(var(--veil) / 0.97) 100%);
   /* Round 54: where the sun shines (HeroLight) the veil thins, so the valley under it shows through. */
-  /* Gentle: the valley stays a soft texture (rounds 42 to 47), only clearer round the light. */
-  --sun-hole: radial-gradient(circle min(28vmax, 440px) at var(--sun-x, 50%) var(--sun-y, 30%), rgb(0 0 0 / calc(1 - 0.34 * var(--sun-on, 0))) 0%, rgb(0 0 0 / calc(1 - 0.15 * var(--sun-on, 0))) 50%, #000 100%);
+  /* Gentle: the valley stays a soft texture (rounds 42 to 47), only a little clearer round the light (less since Bob's
+     "less visible"). */
+  --sun-hole: radial-gradient(circle min(28vmax, 440px) at var(--sun-x, 50%) var(--sun-y, 30%), rgb(0 0 0 / calc(1 - 0.12 * var(--sun-on, 0))) 0%, rgb(0 0 0 / calc(1 - 0.05 * var(--sun-on, 0))) 50%, #000 100%);
   -webkit-mask-image: var(--sun-hole);
   mask-image: var(--sun-hole);
 }

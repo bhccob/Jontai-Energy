@@ -442,9 +442,10 @@ test('round 54 first view: the forest green of Visit, with pale words', () => {
   assert.match(header, /\[data-tone="dark"\]/, 'the header reads it as a dark ground');
   assert.match(page, /themeColor: '#173d2c'/, "the browser's bars match the first view");
   assert.doesNotMatch(sky, /\.sky-scope \.hero__actions \.btn--primary \{/, 'no light-ground button over the dark-ground one');
-  // Then Bob: "make background image lighter". The veil thins, so the valley shows lighter through the green, but stays
-  // thick enough for the pale words.
+  // Then Bob: "make background image lighter", and after a thinner veil showed the valley more: "no im neat the
+  // background image should be less visible". The veil is thicker than at first (0.9 to 0.95), so the valley is only
+  // the faintest texture in the green.
   const veil = [...(/\.sky__ink \{[^}]*?background: linear-gradient\(([^;]*)\);/.exec(sky)?.[1] ?? '').matchAll(/--veil\) \/ ([\d.]+)/g)].map((m) => Number(m[1]));
   assert.equal(veil.length, 4, 'four stops in the veil');
-  for (const a of veil) assert.ok(a >= 0.6 && a <= 0.8, `the valley shows through, the words stay readable: ${a}`);
+  for (const a of veil) assert.ok(a >= 0.94 && a < 1, `the valley barely shows: ${a}`);
 });
