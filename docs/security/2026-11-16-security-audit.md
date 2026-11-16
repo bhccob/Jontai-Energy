@@ -112,9 +112,9 @@ No secret was ever committed. No key needs rotating.
 ### L4. Personal details in git metadata
 
 - Two personal Gmail addresses and a laptop host name are commit authors. Every public repo shows these.
-- `update-i18n.ps1:1` and `update-i18n-v2.ps1:1` hold a local Windows path with your user name. Older docs in the history
-  do too.
-- These cannot be removed without rewriting history. That is not needed for safety. See Bob's to do.
+- `update-i18n.ps1:1` and `update-i18n-v2.ps1:1` held a local Windows path with your user name. Both scripts (and the
+  old `audit.txt`) were deleted on 16 November 2026. Older commits still hold the path, as do older docs.
+- Removing them from old commits means rewriting history. That is not needed for safety. See Bob's to do.
 
 ### L5. Framework banner
 
@@ -171,8 +171,8 @@ These need your accounts. Nothing here is urgent: no key leaked.
    example 5 requests per 10 minutes per IP). This audit could not read the current firewall settings.
 5. **Vercel, Environment variables:** when the site goes official, add `RESEND_API_KEY` as a Sensitive variable,
    Production only. If it ever shows up anywhere public, rotate it in Resend at once.
-6. **Optional clean-up:** delete what is no longer used: `update-i18n.ps1`, `update-i18n-v2.ps1`, `audit.txt`, and the
-   legacy static site (`index.html`, `pages/`, `assets/`). Your call.
+6. **Optional clean-up:** the old i18n scripts and `audit.txt` are deleted. The legacy static site (`index.html`,
+   `pages/`, `assets/`) is still there if you want it gone too. Your call.
 7. **History rewrite:** not needed, since no secret was committed. Only if you want the author emails gone from old
    commits. That means rewriting history and force-pushing every branch, which breaks every open clone and worktree.
    I did not do it.
