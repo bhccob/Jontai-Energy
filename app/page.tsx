@@ -4,6 +4,7 @@ import { Header } from '@/components/ui/Header';
 import { Hero } from '@/components/home/Hero';
 import { Rewards } from '@/components/home/Rewards';
 import { Solution } from '@/components/home/Solution';
+import { Story } from '@/components/home/Story';
 import { Wheel } from '@/components/home/Wheel';
 import { Team } from '@/components/home/Team';
 import { Reviews } from '@/components/home/Reviews';
@@ -17,9 +18,10 @@ export const viewport: Viewport = { themeColor: '#173d2c' };
 /**
  * The order (round 54, Bob: "make everything better ordered", then "do your order"): 1. the first view, which What we
  * sell slides up over (the two share .cover, so the first view holds still only while What we sell covers it; Rewards
- * did this from round 37), 2. What we sell, the wheel, 3. Our solution, under the wheel's green hem: why buy here,
- * 4. what customers say on Google, the proof of it, 5. Rewards, a reason to come back, 6. the people behind it, 7. the
- * visit and the footer. White and mist take turns between the two greens, so each section reads as its own.
+ * did this from round 37), 2. What we sell, the wheel, 3. Our solution: why buy here (since round 56, Design 1, the
+ * two share one held stage with no cut between them, Story), then its green hem over 4. what customers say on Google,
+ * the proof of it, 5. Rewards, a reason to come back, 6. the people behind it, 7. the visit and the footer. White and
+ * mist take turns between the two greens, so each section reads as its own.
  */
 export default function Home() {
   return (
@@ -30,9 +32,11 @@ export default function Home() {
           <SkyScope>
             <Hero />
           </SkyScope>
-          <Wheel />
+          <Story>
+            <Wheel />
+            <Solution />
+          </Story>
         </div>
-        <Solution />
         <Reviews />
         <Rewards />
         <Team />

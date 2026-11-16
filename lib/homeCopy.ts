@@ -4,14 +4,16 @@ import { BUSINESS_DISCOUNT, BUSINESS_GOAL, REWARD_STEP_AFL, formatAfl, formatPoi
 
 export const FIRST_VIEW = {
   title: ['Aruba sunlight,', 'made useful.'],
-  lead: 'Solar, backup power, lighting, cooling, security cameras and furniture, from one family-owned store in Oranjestad.',
+  // Seven ranges since round 56, so the list ends "and more" (Others) instead of naming six as if they were all.
+  lead: 'Solar, backup power, lighting, cooling, security cameras, furniture and more, from one family-owned store in Oranjestad.',
   primary: 'Visit the store',
   secondary: 'See what we sell',
 };
 
 export const FACT_LABELS = ['Hours', 'The store', 'What we sell', 'Jontai Rewards'];
 export const FACT_STORE = { strong: 'Cumana 73', rest: ', Oranjestad' };
-export const FACT_RANGES = { strong: '6+ ranges', rest: ', one store' };
+// Round 56 (Design 1): the store has 7 ranges, Others the seventh (it was "6+ ranges" from round 54).
+export const FACT_RANGES = { strong: '7 ranges', rest: ', one store' };
 
 /**
  * Our solution (Bob picked the simple cards of direction C, then "Line on top, 3 x 2 grid"): one line across the top,
@@ -41,18 +43,22 @@ export const SOLUTION_CARDS: { title: string; line: string }[] = [
   { title: 'Your own power', line: "Your home makes its own power, so the island's blackouts do not stop your day." },
   { title: 'We fix what we sell', line: 'Even years after you bought it.' },
   { title: 'Prices hard to beat', line: 'For the same quality or better.' },
-  { title: 'More than solar', line: 'Solar, LED lighting, cooling, backup power, cameras and furniture, in one store.' },
+  { title: 'More than solar', line: 'Seven ranges in one store, from solar and LED lighting to cameras and furniture.' },
   { title: 'Every customer matters', line: 'Long after the sale, a person answers.' },
   { title: 'Always learning', line: "Our family keeps learning, to bring tomorrow's ideas home." },
 ];
 
 export const WHEEL_COPY = {
-  // Six ranges and Others (Bob: "maybe 6+ ranges isntead of just 6 ranges").
-  title: ['6+ ranges.', 'One store.'],
-  // Set as "A. The big number" (Bob: "6+ ranges, one store gotta be more prominent and creative shown"): the 6 the
-  // height of the screen, counted up on the page, a mint + after it, then "ranges." and "One store." beside it.
-  count: 6,
+  // Round 56 (Design 1): 7 ranges, Others the seventh. Round 54 had "6+" (Bob: "maybe 6+ ranges isntead of just 6
+  // ranges"); Bob's Design 1 counts Others as a range.
+  title: ['7 ranges.', 'One store.'],
+  // Set as "A. The big number" (Bob: "6+ ranges, one store gotta be more prominent and creative shown"): the 7 a third
+  // of the screen tall, counted up on the page, then "ranges." and "One store." under it. On the one stage it rolls to
+  // the 6 of the six promises and "promises." (round 56).
+  count: 7,
   ranges: 'ranges.',
+  promises: 'promises.',
+  kicker: 'What we sell',
   line: 'Every range, one at a time. Keep scrolling to go through them.',
   see: 'See all {0} products',
   seeOthers: 'See all other products',

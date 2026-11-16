@@ -241,3 +241,28 @@ committed).
   range in front's own line and its "See all N products" link, changing as the wheel turns. On the right the wheel of
   names turns as before, the names left-aligned and sized to the column. Phones stack the heading over the wheel. The
   still rows (reduced motion, no scripts) keep the heading on top and give each range its line.
+
+## Round 56 (2026-11-16): Design 1, What we sell and Our solution on one stage, and 7 ranges
+
+Bob approved "Design 1" (a prototype and a brief, kept outside the repo) over a second mock-up, a 3D walk through the
+store. Reference for the feel only: oryzo.ai, one thing stays on screen while the content changes around it.
+
+- **7 ranges.** Others counts as the seventh range, replacing round 54's "6+": the fact row "**7 ranges**, one
+  store", the heading "7 ranges. **One store.**", the big 7 with no plus, More than solar's line ("Seven ranges in one
+  store, from solar and LED lighting to cameras and furniture."), and the first view's lead, which now ends "furniture
+  and more" (proposed wording, for Bob to read). Spanish and Chinese match. "Six promises" stays: there are six.
+- **One held stage, no cut.** The left side stays the whole way: a small kicker, the big figure, "ranges. / **One
+  store.**", and under it the line for whatever rests in front. In scroll order: the drum of seven ranges as before
+  (75vh each, the same rest); the wheel opens into a still list of the seven with "Every product, **one by one.**" and
+  See all products (in place of the separate band); the handoff, where the names leave one after another while 7 rolls
+  to 6, ranges. to promises. and What we sell to Our solution in one move, "One store." staying, and the ground
+  deepens once from forest to #0e2219; the sentence lights word by word where the wheel was (Our solution's link lands
+  here); the six promise names turn on the same drum with the same rest (72vh each), each promise's line under the
+  heading; the wheel opens into a still list of the six with the store line and Visit the store. Then the reviews,
+  the hem now in the deep green. Everything follows the scroll; nothing new plays on a timer.
+- **Small parts.** A count above the line ("01 / 07", later "01 / 06") and a bar of ticks along the foot (seven, a gap,
+  six). Bob removed "a 02 / 06 bar" in round 55 for looking like a game, then approved Design 1 with these in it: they
+  live in one component (StoryMeter) so they can go in one edit. A soft warm light crosses the stage, highest at the
+  handoff.
+- **Still version** (reduced motion, no scripts, a screen under 34rem tall): the heading on top, the seven rows, the
+  "Every product" band, then the sentence and the six promise rows, all readable.

@@ -1,10 +1,11 @@
 /* What we sell (round 54, Bob picked "D. The wheel"; "maybe dark green background?"; then "maybe six ranges products
-   should not include the image? and include others"). One held screen on the forest green: the names of the six ranges
-   and Others stand on a drum like a phone's date picker. Round 55, "C. One screen with the wheel": the 6+ heading holds
-   on the left of that screen, the range in front's line and link under it, and the names turn on the right.
-   WheelMotion sets data-held while it runs; without it (no scripts, reduced motion) the heading stands on top and the
-   seven are still rows. As the block arrives it grows from a rounded card out to the edges (--sx, --sr). --n is how
-   many names there are. */
+   should not include the image? and include others"). The names of the six ranges and Others stand on a drum like a
+   phone's date picker. Round 55, "C. One screen with the wheel": the heading holds on the left, the range in front's
+   line and link under it, and the names turn on the right. Round 56 (Design 1): 7 ranges, and What we sell shares one
+   held stage with Our solution; story.css lays its parts into that screen while StoryMotion holds it. This file is What
+   we sell's own look, and its still version (no scripts, reduced motion, a short screen): the heading on top, then the
+   seven rows, then the band that ends it. As the block arrives it grows from a rounded card out to the edges (--sx,
+   --sr). */
 
 .sell {
   position: relative;
@@ -17,42 +18,64 @@
   clip-path: inset(0 var(--sx, 0px) 0 var(--sx, 0px) round var(--sr, 0px) var(--sr, 0px) 0 0);
 }
 
+/* ---------- Words that roll in place (round 56) ---------- */
+
+/* Two lines in a window one line tall (--rh): the first shows; at the handoff StoryMotion slides the strip up by half,
+   so the second takes its place, all three rolls in one move. The window is a block and its lines never break, so it
+   is as wide as the wider line in every language. */
+.roll {
+  display: block;
+  height: var(--rh);
+  overflow: hidden;
+}
+.roll__strip {
+  display: block;
+}
+.roll__strip > span {
+  display: block;
+  height: var(--rh);
+  line-height: var(--rh);
+  white-space: nowrap;
+}
+
 /* ---------- The heading ---------- */
 
-/* "A. The big number" (round 54, Bob: "6+ ranges, one store gotta be more prominent and creative shown"): the 6 with a
-   mint +, "ranges." light and "One store." bold. Still, it stands on top of the rows: the 6 on the left, the words and
-   the line beside it. */
+/* "A. The big number" (round 54, Bob: "6+ ranges, one store gotta be more prominent and creative shown"); 7 since round
+   56: the small kicker, the 7, "ranges." light and "One store." bold. Still, it stands on top of the rows: the kicker,
+   then the 7 on the left and the words and the line beside it. */
 .sell__head {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-areas:
+    'kick kick'
+    'num title'
+    'num line';
   align-content: center;
   column-gap: clamp(28px, 4vw, 64px);
-  padding: calc(var(--nav-h) + clamp(32px, 6vh, 72px)) 0 clamp(32px, 6vh, 64px);
+  padding: calc(var(--nav-h) + clamp(32px, 6vh, 72px)) var(--gutter) clamp(32px, 6vh, 64px);
+}
+.sell__kick {
+  --rh: 1.7em;
+  grid-area: kick;
+  margin: 0 0 clamp(6px, 1.4vh, 14px);
+  color: #8fd3a1;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
 }
 .sell__big {
-  grid-row: 1 / 3;
+  --rh: 0.84em;
+  grid-area: num;
   align-self: center;
+  margin-left: -0.03em;
   font-family: var(--font-display);
   font-size: min(36vh, 24vw);
   font-weight: 800;
-  line-height: 0.78;
   letter-spacing: -0.07em;
-  white-space: nowrap;
-}
-.sell__num {
-  display: inline-block;
   font-variant-numeric: tabular-nums;
 }
-.sell__plus {
-  display: inline-block;
-  margin-left: 0.02em;
-  color: #8fd3a1;
-  font-size: 0.42em;
-  font-weight: 700;
-  vertical-align: 0.95em;
-}
-/* For screen readers only: the heading reads "6+ ranges. One store." */
+/* For screen readers only: the heading reads "7 ranges. One store." */
 .sell__sr {
   position: absolute;
   width: 1px;
@@ -61,35 +84,34 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.sell__title,
-.sell__end-title {
+.sell__title {
+  grid-area: title;
+  align-self: end;
   margin: 0;
   font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 6rem);
   font-weight: 300;
   font-stretch: 112%;
-  letter-spacing: -0.03em;
-}
-.sell__title {
-  align-self: end;
-  font-size: clamp(2rem, 6vw, 6rem);
-  line-height: 0.92;
   letter-spacing: -0.04em;
+  line-height: 1.04;
 }
-.sell__ranges,
+.sell__ranges {
+  --rh: 1.04em;
+}
 .sell__store {
   display: block;
+  font-weight: 760;
+  font-stretch: 100%;
 }
 /* Chinese characters stand taller than Latin capitals: the two lines need more room, or they touch. */
 :lang(zh) .sell__title {
   line-height: 1.16;
 }
-.sell__title b,
-.sell__end-title b {
-  font-weight: 760;
-  font-stretch: 100%;
+:lang(zh) .sell__ranges {
+  --rh: 1.16em;
 }
 .sell__line {
-  grid-column: 2;
+  grid-area: line;
   align-self: start;
   max-width: 34ch;
   margin: clamp(20px, 3vh, 32px) 0 0;
@@ -100,102 +122,18 @@
   line-height: 1.5;
 }
 
-/* ---------- The wheel ---------- */
+/* ---------- The wheel (only while the stage holds, story.css) ---------- */
 
-.wheel {
-  /* Sized to the right-hand column; WheelMotion sets a name's own --wn-fit below 1 only when that name, in the
-     language shown, would not fit it. */
-  --wn-size: clamp(2.6rem, min(5.6vw, 10vh), 6.6rem);
-  position: relative;
-}
-/* Where the menu's and the footer's range links land: on each still row, or where the wheel rests on that range. */
-.wheel__anchor {
-  position: absolute;
-  left: 0;
-  top: calc(var(--k) * 100% / var(--n));
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
-}
-.wheel[data-held='true'] {
-  height: calc(100vh + var(--n) * 75vh);
-}
-.wheel[data-held='true'] .wheel__anchor {
-  top: calc(var(--rest) * (100% - 100vh));
-}
-.wheel[data-held='true'] .wheel__held {
-  height: 100%;
-}
-.wheel[data-held='true'] .wheel__still {
-  display: none;
-}
-
-.wheel__pin {
-  padding: 0 var(--gutter);
-  background: var(--color-forest);
-}
 /* The names and the range in front's line only show while the wheel turns. */
 .wheel__names,
 .wheel__feet {
   display: none;
 }
-
-/* Held: one screen, the heading on the left and the drum on the right. */
-.wheel[data-held='true'] .wheel__pin {
-  position: sticky;
-  top: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  align-items: center;
-  column-gap: clamp(24px, 4vw, 72px);
-  height: 100vh;
-  overflow: hidden;
-}
-.wheel[data-held='true'] .sell__head {
-  display: block;
-  padding: var(--nav-h) 0 0;
-}
-.wheel[data-held='true'] .sell__big {
-  display: block;
-  font-size: min(30vh, 15vw);
-}
-.wheel[data-held='true'] .sell__title {
-  margin-top: clamp(12px, 2.4vh, 22px);
-  font-size: min(clamp(2.2rem, 3.8vw, 4.2rem), 7.4vh);
-}
-.wheel[data-held='true'] .sell__line {
-  display: none;
-}
-
-/* Under a hairline, what the range in front is and the way to its products. The seven lie on top of each other in one
-   grid cell, so the block is as tall as the longest; only the one in front shows. */
-.wheel[data-held='true'] .wheel__feet {
-  display: grid;
-  margin-top: clamp(20px, 3.6vh, 34px);
-  padding-top: clamp(18px, 3vh, 28px);
-  border-top: 1px solid rgb(244 246 239 / 0.16);
-}
 .wheel__foot {
-  grid-area: 1 / 1;
   display: grid;
   align-content: start;
   justify-items: start;
   gap: clamp(12px, 2vh, 18px);
-  opacity: 0;
-  visibility: hidden;
-  translate: 0 10px;
-  transition:
-    opacity 400ms ease,
-    translate 500ms var(--ease-out),
-    visibility 0s linear 400ms;
-}
-.wheel__foot[data-on='true'] {
-  opacity: 1;
-  visibility: visible;
-  translate: 0 0;
-  transition:
-    opacity 400ms ease,
-    translate 500ms var(--ease-out);
 }
 .wheel__about {
   max-width: 40ch;
@@ -205,18 +143,7 @@
   line-height: 1.5;
 }
 
-/* The drum of names, down the right of the screen: the one in front between two hairlines; the rest tilt away on the
-   curve (WheelMotion). */
-.wheel[data-held='true'] .wheel__names {
-  position: relative;
-  display: block;
-  align-self: stretch;
-  perspective: 1300px;
-  perspective-origin: 50% 50%;
-  /* The outer names melt into the green at the drum's top and foot, clear of the header. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 9%, #000 24%, #000 76%, transparent 91%);
-  mask-image: linear-gradient(to bottom, transparent 9%, #000 24%, #000 76%, transparent 91%);
-}
+/* The drum of names: the one in front between two hairlines; the rest tilt away on the curve (StoryMotion). */
 .wheel__band {
   position: absolute;
   left: 0;
@@ -248,6 +175,8 @@
   text-align: left;
   cursor: pointer;
   backface-visibility: hidden;
+  /* Set down from the left edge as the wheel opens into its list (round 56). */
+  transform-origin: 0 50%;
   /* The button spans the column; only its words take the pointer (and show the hand), so the ground beside them is not
      a link. A click on the words still reaches the button. */
   pointer-events: none;
@@ -340,14 +269,27 @@
   padding: 0 var(--gutter) 40px;
   list-style: none;
 }
-/* The same three columns in every row, so the lines and the links line up down the list. */
+/* The same three columns in every row, so the lines and the links line up down the list. The menu's and the footer's
+   range links land on each row (its id), under the header. */
 .wrow {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 0.9fr);
   align-items: center;
   gap: 14px 4vw;
   padding: 30px 0;
   border-top: 1px solid rgb(244 246 239 / 0.14);
+  scroll-margin-top: var(--nav-h);
+}
+/* #delivery, on Furniture's row. */
+.wrow__anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  scroll-margin-top: var(--nav-h);
+  pointer-events: none;
 }
 .wrow__name {
   margin: 0;
@@ -385,7 +327,16 @@
   border-top: 1px solid rgb(244 246 239 / 0.14);
 }
 .sell__end-title {
+  margin: 0;
+  font-family: var(--font-display);
   font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 300;
+  font-stretch: 112%;
+  letter-spacing: -0.03em;
+}
+.sell__end-title b {
+  font-weight: 760;
+  font-stretch: 100%;
 }
 .btn.wheel__all {
   display: inline-flex;
@@ -399,7 +350,7 @@
   text-decoration: none;
 }
 
-/* ---------- Tablets and phones ---------- */
+/* ---------- Tablets and phones, still ---------- */
 
 /* The still rows: the name over its line and link. */
 @media (max-width: 60rem) {
@@ -411,31 +362,6 @@
     justify-self: start;
   }
 }
-/* Held on phones and upright tablets: the heading over the drum, both in one screen. */
-@media (max-width: 47.5rem), (max-aspect-ratio: 4/5) {
-  .wheel {
-    --wn-size: clamp(2.2rem, 10.5vw, 5.4rem);
-  }
-  .wheel[data-held='true'] .wheel__pin {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    align-items: start;
-  }
-  .wheel[data-held='true'] .sell__head {
-    padding-top: calc(var(--nav-h) + clamp(20px, 4vh, 48px));
-  }
-  .wheel[data-held='true'] .sell__big {
-    font-size: min(24vw, 15vh);
-  }
-  .wheel[data-held='true'] .sell__title {
-    margin-top: 8px;
-    font-size: clamp(2rem, 8.4vw, 3.6rem);
-  }
-  .wheel[data-held='true'] .wheel__feet {
-    margin-top: clamp(14px, 2.4vh, 28px);
-    padding-top: clamp(14px, 2.4vh, 24px);
-  }
-}
 @media (max-width: 47.5rem) {
   .wheel__about {
     font-size: 0.94rem;
@@ -444,39 +370,22 @@
     font-size: 1rem;
   }
 }
-/* Short screens (a phone on its side): the heading smaller, and only the link under it, so it all fits below the
-   header. */
-@media (max-height: 33.99rem) {
-  .wheel[data-held='true'] .sell__big {
-    font-size: min(20vh, 15vw);
-  }
-  .wheel[data-held='true'] .sell__title {
-    margin-top: 6px;
-  }
-  .wheel[data-held='true'] .wheel__feet {
-    margin-top: 12px;
-    padding-top: 12px;
-  }
-  .wheel[data-held='true'] .wheel__about {
-    display: none;
-  }
-}
-/* Phones, still: the big number on top, the words under it. */
+/* Phones, still: the kicker and the big number on top, the words under it. */
 @media (max-width: 40rem) {
   .sell__head {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    grid-template-areas:
+      'kick'
+      'num'
+      'title'
+      'line';
     padding-top: calc(var(--nav-h) + 48px);
   }
   .sell__big {
-    grid-row: auto;
     font-size: 52vw;
   }
   .sell__title {
     margin-top: 18px;
     font-size: clamp(2.4rem, 12vw, 3.6rem);
-  }
-  .sell__line {
-    grid-column: 1;
   }
 }
