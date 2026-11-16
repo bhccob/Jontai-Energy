@@ -1,0 +1,376 @@
+/* What we sell and Our solution on one stage (round 56, Design 1; Story, StoryMotion, lib/story). One track as long as
+   the beats (--len screens) and one held screen in it, with no cut between the two sections. StoryMotion sets
+   data-held where lib/story's SCENE_MEDIA matches; then the two sections lay their parts into this screen's grid
+   (display: contents): the heading on the left the whole way, the drum, the sentence and the promises on the right,
+   and under the heading the line for whatever rests in front, all those lines on top of each other in one place, only
+   one showing. A deep green layer and a soft warm light sit behind them. Without data-held the two sections stand one
+   after the other, still (wheel.css, air.css). */
+
+.story {
+  /* The drum's name size, sized to the right-hand column (a name too wide for it, in the language shown, gets its own
+     --wn-fit below 1), and the promises' a little smaller: their names are longer. */
+  --wn-size: clamp(2.6rem, min(5.6vw, 10vh), 6.6rem);
+  --sn-size: calc(var(--wn-size) * 0.62);
+}
+.story__pin {
+  position: relative;
+  background: var(--color-forest);
+}
+.story__deep,
+.story__glow,
+.meter,
+.solution__names {
+  display: none;
+}
+
+/* ---------- Held ---------- */
+
+.story[data-held='true'] {
+  height: calc(100vh + var(--len) * 100vh);
+}
+/* One screen: the heading, the count and the line under it in the middle of the left column; the wheel down the
+   right; the ticks along the foot of the left column, clear of the concept notice in the bottom right corner. As tall
+   as the largest viewport, so no strip of another green shows under it when a phone's bars slide away; its own words
+   keep above where those bars sit, and above the concept notice's strip on phones (--concept-h). */
+.story[data-held='true'] .story__pin {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  grid-template-rows: minmax(0, 1fr) auto auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    '. wheel'
+    'head wheel'
+    'count wheel'
+    'foot wheel'
+    '. wheel'
+    'rail wheel';
+  column-gap: clamp(24px, 4vw, 72px);
+  height: 100vh;
+  height: 100lvh;
+  padding: var(--nav-h) var(--gutter) calc(100lvh - 100svh + var(--concept-h, 0px) + clamp(16px, 3vh, 28px));
+  overflow: hidden;
+}
+.story[data-held='true'] .wheel,
+.story[data-held='true'] .solution {
+  display: contents;
+}
+.story[data-held='true'] .wheel__still,
+.story[data-held='true'] .sell__line {
+  display: none;
+}
+
+/* The ground deepens once, at the handoff (StoryMotion fades this layer in); the warm light, the sun's colour at a
+   very low strength, crosses the stage from lower left to lower right, highest at the handoff. Both only move or fade
+   (opacity, transform), so nothing repaints the screen as it scrolls. */
+.story[data-held='true'] .story__deep,
+.story[data-held='true'] .story__glow {
+  display: block;
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+.story[data-held='true'] .story__deep {
+  inset: 0;
+  background: #0e2219;
+  opacity: 0;
+}
+.story[data-held='true'] .story__glow {
+  top: 0;
+  left: 0;
+  width: 124vmax;
+  height: 124vmax;
+  background: radial-gradient(circle closest-side, rgb(243 197 107 / 0.17), rgb(184 216 168 / 0.07) 38%, transparent 70%);
+  will-change: transform;
+}
+
+/* ---------- The left side: the heading, the whole way ---------- */
+
+.story[data-held='true'] .sell__head {
+  grid-area: head;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'kick'
+    'num'
+    'title';
+  margin-bottom: clamp(16px, 3.4vh, 34px);
+  padding: 0;
+}
+.story[data-held='true'] .sell__big {
+  font-size: min(30vh, 15vw);
+}
+.story[data-held='true'] .sell__title {
+  align-self: start;
+  margin-top: clamp(10px, 2.2vh, 20px);
+  font-size: min(clamp(2.2rem, 3.8vw, 4.2rem), 7.4vh);
+}
+.story[data-held='true'] .sell__ranges {
+  --rh: 1.14em;
+}
+.story[data-held='true'] .sell__store {
+  line-height: 1.14;
+}
+:lang(zh) .story[data-held='true'] .sell__ranges {
+  --rh: 1.2em;
+}
+:lang(zh) .story[data-held='true'] .sell__store {
+  line-height: 1.2;
+}
+.story[data-held='true'] .roll__strip {
+  will-change: transform;
+}
+
+/* Under it, one line at a time (StoryMotion fades each in as it rests in front and out as the wheel turns on): the range
+   in front's line and link, "Every product, one by one." once the wheel has opened into its list, a promise's line,
+   then the store line at the end. They lie on top of each other in one place, so it is as tall as the longest; only
+   the one showing takes the pointer. */
+.story[data-held='true'] .wheel__feet,
+.story[data-held='true'] .sell__end,
+.story[data-held='true'] .solution__promises,
+.story[data-held='true'] .solution__foot {
+  grid-area: foot;
+  pointer-events: none;
+}
+.story[data-held='true'] .wheel__feet,
+.story[data-held='true'] .solution__promises {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.story[data-held='true'] .wheel__foot,
+.story[data-held='true'] .solution__promise {
+  grid-area: 1 / 1;
+}
+.story[data-held='true'] .wheel__foot,
+.story[data-held='true'] .sell__end,
+.story[data-held='true'] .solution__promise,
+.story[data-held='true'] .solution__foot {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.story[data-held='true'] .wheel__foot,
+.story[data-held='true'] .sell__end,
+.story[data-held='true'] .solution__foot {
+  visibility: hidden;
+}
+.story[data-held='true'] .wheel__foot[data-on='true'],
+.story[data-held='true'] .sell__end[data-on='true'],
+.story[data-held='true'] .solution__foot[data-on='true'] {
+  pointer-events: auto;
+}
+.story[data-held='true'] .sell__end,
+.story[data-held='true'] .solution__foot {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: clamp(12px, 2vh, 18px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.story[data-held='true'] .sell__end-title {
+  font-size: min(clamp(1.6rem, 2.6vw, 2.4rem), 5.6vh);
+  line-height: 1.08;
+}
+/* A promise's name turns on the wheel; here, its one line (the name stays in the page for a screen reader). */
+.story[data-held='true'] .solution__promise {
+  display: block;
+  padding: 0;
+  border: 0;
+}
+.story[data-held='true'] .solution__title,
+.story[data-held='true'] .solution__kick {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.story[data-held='true'] .solution__text,
+.story[data-held='true'] .solution__sub {
+  max-width: 40ch;
+  color: rgb(244 246 239 / 0.7);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* ---------- The right side: the drum, the sentence, the promises ---------- */
+
+.story[data-held='true'] .wheel__names,
+.story[data-held='true'] .solution__names,
+.story[data-held='true'] .solution__line {
+  grid-area: wheel;
+}
+/* The two drums in one place, the names on each tilting away on the curve; the outer ones melt into the green at the
+   top and the foot. */
+.story[data-held='true'] .wheel__names,
+.story[data-held='true'] .solution__names {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  min-height: 0;
+  perspective: 1300px;
+  perspective-origin: 50% 50%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+.story[data-held='true'] .wheel__names {
+  font-size: var(--wn-size);
+}
+/* The promises' drum lies over the ranges'; it is for the eye only, and lets a click through to the names under it. */
+.story[data-held='true'] .solution__names {
+  font-size: var(--sn-size);
+  pointer-events: none;
+}
+.wheel__band[data-side='promises'] {
+  font-size: var(--sn-size);
+}
+.story[data-held='true'] .wn,
+.story[data-held='true'] .sn {
+  will-change: transform, opacity;
+}
+.sn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  font-family: var(--font-display);
+  font-size: calc(var(--sn-size) * var(--sn-fit, 1));
+  font-weight: 760;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  white-space: nowrap;
+  backface-visibility: hidden;
+  transform-origin: 0 50%;
+}
+.sn > span {
+  display: inline-block;
+}
+
+/* "Your home makes its own power. We stand behind it.", where the wheel was: it comes in at the end of the handoff and
+   lights word by word with the scroll (StoryMotion), "its own power." in mint. */
+.story[data-held='true'] .solution__line {
+  align-self: center;
+  max-width: 15ch;
+  margin: 0;
+  font-size: min(5vw, 9.6vh);
+  line-height: 1.04;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.story[data-held='true'] .solution__then {
+  font-weight: 300;
+  font-stretch: 112%;
+}
+.story[data-held='true'] .solution__line .wi {
+  opacity: 0.14;
+}
+
+/* ---------- The count and the ticks (StoryMeter; one place, so they can go in one edit) ---------- */
+
+.story[data-held='true'] .meter {
+  display: contents;
+}
+.meter__count {
+  grid-area: count;
+  margin: 0 0 clamp(8px, 1.4vh, 12px);
+  color: #8fd3a1;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  font-variant-numeric: tabular-nums;
+}
+.meter__rail {
+  grid-area: rail;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 10px;
+  margin-top: clamp(10px, 2vh, 18px);
+}
+.meter__tick {
+  flex: 1 1 0;
+  height: 2px;
+  overflow: hidden;
+  background: rgb(244 246 239 / 0.17);
+}
+.meter__tick i {
+  display: block;
+  height: 100%;
+  background: #8fd3a1;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+.meter__gap {
+  flex: 0 0 16px;
+}
+
+/* The green hem over the reviews hangs from the stage's last colour, the deep green, while the stage holds. */
+main:has(.story[data-held='true']) [data-hem]::before {
+  background: #0e2219;
+}
+
+/* ---------- Phones and upright tablets ---------- */
+
+/* The figure and the words on top, the wheel in the middle, the line at the foot. */
+@media (max-width: 47.5rem), (max-aspect-ratio: 4/5) {
+  .story {
+    --wn-size: clamp(2.2rem, 10.5vw, 5.4rem);
+    --sn-size: calc(var(--wn-size) * 0.66);
+  }
+  .story[data-held='true'] .story__pin {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+    grid-template-areas:
+      'head'
+      'wheel'
+      'count'
+      'foot'
+      'rail';
+    row-gap: clamp(6px, 1.4vh, 14px);
+    padding-top: calc(var(--nav-h) + clamp(4px, 1.4vh, 16px));
+  }
+  .story[data-held='true'] .sell__head {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'kick kick'
+      'num title';
+    align-items: end;
+    column-gap: 14px;
+    margin: 0;
+  }
+  .story[data-held='true'] .sell__big {
+    font-size: min(24vw, 15vh);
+  }
+  .story[data-held='true'] .sell__title {
+    align-self: end;
+    margin: 0 0 0.12em;
+    font-size: clamp(1.7rem, 7.4vw, 3rem);
+  }
+  .story[data-held='true'] .solution__line {
+    font-size: min(10vw, 7.6vh);
+  }
+  .story[data-held='true'] .wheel__about,
+  .story[data-held='true'] .solution__text,
+  .story[data-held='true'] .solution__sub {
+    font-size: 0.94rem;
+  }
+  .story[data-held='true'] .sell__end-title {
+    font-size: clamp(1.5rem, 6vw, 2.4rem);
+  }
+}
+
+/* Upright tablets: the ticks run the full width, and the concept notice is a pill in the corner there, not a strip
+   (shell.css), so they keep above it. */
+@media (min-width: 40.01rem) and (max-width: 47.5rem), (min-width: 40.01rem) and (max-aspect-ratio: 4/5) {
+  .story[data-held='true'] .story__pin {
+    padding-bottom: calc(100lvh - 100svh + 3.5rem + clamp(16px, 3vh, 28px));
+  }
+}
+
+/* With reduced motion nothing holds (SCENE_MEDIA), so none of the above applies; nothing here plays on a timer. */

@@ -378,13 +378,13 @@ main.air {
   letter-spacing: -0.03em;
 }
 
-/* ---------- Our solution: one promise at a time (round 55) ---------- */
+/* ---------- Our solution (round 55; on the stage since round 56) ---------- */
 
 /* Bob: "Our solution section need better design it looks like a game" (the panels before: framed cards, icons in
    circles, outlined numbers, a 02 / 06 bar). Of three mock-ups without cards he picked "B. One promise at a time".
-   Still (reduced motion, a short screen, no scripts): the sentence, then the six promises as rows on hairlines, then the
-   store line. Held (SolutionScenes sets data-held where lib/solutionScenes' SCENE_MEDIA matches): a share of the scroll
-   for each scene, and one scene at a time on a held screen, the six names in a column on the right. */
+   Since round 56 (Design 1) it shares What we sell's held stage (story.css lays it into that screen). This is its
+   still version (reduced motion, a short screen, no scripts): the sentence, then the six promises as rows on
+   hairlines, then the store line. */
 .solution {
   position: relative;
   z-index: 2;
@@ -423,7 +423,7 @@ main.air {
   display: block;
 }
 
-/* The six promises, still: rows on hairlines, the number in narrow mint figures, the promise, its one line. */
+/* The six promises, still: rows on hairlines, the promise and its one line. */
 .solution__promises {
   margin: clamp(48px, 9vh, 96px) 0 0;
   padding: 0;
@@ -432,20 +432,11 @@ main.air {
 }
 .solution__promise {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   align-items: baseline;
   gap: 10px 24px;
   padding: clamp(28px, 5vh, 44px) 0;
   border-top: 1px solid rgb(242 246 239 / 0.16);
-}
-.solution__num {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-stretch: 62%;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: #8fd3a1;
-  font-variant-numeric: tabular-nums;
 }
 .solution__title {
   margin: 0;
@@ -461,10 +452,6 @@ main.air {
   color: rgb(242 246 239 / 0.72);
   font-size: 1.08rem;
   line-height: 1.5;
-}
-/* The column of names marks where you are, so it shows only while the section holds. */
-.solution__index {
-  display: none;
 }
 .solution__foot {
   display: flex;
@@ -482,156 +469,13 @@ main.air {
   line-height: 1.55;
 }
 
-/* Held: the stage stays under the header for a share of the scroll per scene (--scenes, from Solution). The scenes lie
-   on top of each other; the one shown (data-on) rises in from below as the one before it rises away (data-past), like
-   title cards in a film. Only opacity and movement change, so every scene stays in the page for a screen reader. */
-.solution[data-held='true'] {
-  padding: 0 var(--gutter);
-}
-.solution[data-held='true'] .solution__track {
-  height: calc(100vh + var(--scenes) * 72vh);
-}
-.solution[data-held='true'] .solution__stage {
-  position: sticky;
-  top: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  column-gap: clamp(32px, 5vw, 80px);
-  height: 100vh;
-  padding: calc(var(--nav-h) + clamp(16px, 3vh, 32px)) 0 clamp(20px, 4vh, 40px);
-}
-.solution[data-held='true'] .solution__kick {
-  grid-column: 1 / -1;
-  margin: 0;
-}
-.solution[data-held='true'] .solution__scenes {
-  position: relative;
-  grid-row: 2;
-}
-.solution[data-held='true'] .solution__promises {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  border: 0;
-}
-.solution[data-held='true'] .solution__open,
-.solution[data-held='true'] .solution__promise {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  translate: 0 8vh;
-  pointer-events: none;
-  transition:
-    opacity 600ms ease,
-    translate 900ms var(--ease-out);
-}
-.solution[data-held='true'] [data-past='true'] {
-  translate: 0 -8vh;
-}
-.solution[data-held='true'] [data-on='true'] {
-  opacity: 1;
-  translate: 0 0;
-}
-.solution[data-held='true'] .solution__line {
-  font-size: min(clamp(2.6rem, 6.4vw, 7rem), 11vh);
-}
-.solution[data-held='true'] .solution__num {
-  font-size: 1.15rem;
-}
-.solution[data-held='true'] .solution__title {
-  max-width: 11ch;
-  margin-top: clamp(10px, 2vh, 18px);
-  font-size: min(clamp(2.8rem, 7.4vw, 8.2rem), 13vh);
-  font-weight: 760;
-  line-height: 0.94;
-  letter-spacing: -0.05em;
-  text-wrap: balance;
-}
-.solution[data-held='true'] .solution__text {
-  margin-top: clamp(18px, 3.6vh, 32px);
-  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
-  line-height: 1.45;
-}
-.solution[data-held='true'] .solution__index {
-  grid-row: 2;
-  align-self: center;
-  display: grid;
-  gap: 14px;
-  min-width: 15rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.solution__index li {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  color: rgb(242 246 239 / 0.38);
-  font-size: 1rem;
-  font-weight: 600;
-  transition:
-    color 500ms ease,
-    gap 500ms var(--ease-out);
-}
-.solution__index li::before {
-  content: '';
-  width: 0;
-  height: 2px;
-  background: #8fd3a1;
-  transition: width 500ms var(--ease-out);
-}
-.solution__index li[data-on='true'] {
-  gap: 14px;
-  color: #f2f6ef;
-}
-.solution__index li[data-on='true']::before {
-  width: 26px;
-}
-.solution[data-held='true'] .solution__foot {
-  grid-column: 1 / -1;
-  margin: 0;
-  padding-top: clamp(14px, 2.4vh, 22px);
-  border-top: 1px solid rgb(242 246 239 / 0.16);
-}
-.solution[data-held='true'] .solution__sub {
-  max-width: 64ch;
-}
-
-/* Tablets: no room for the column of names beside a promise set large. */
-@media (max-width: 60rem) {
-  .solution[data-held='true'] .solution__stage {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .solution[data-held='true'] .solution__index {
-    display: none;
-  }
-  .solution[data-held='true'] .solution__title {
-    font-size: min(clamp(2.8rem, 10vw, 6rem), 12vh);
-  }
-}
 /* Phones. */
 @media (max-width: 40rem) {
   .solution__line {
     font-size: clamp(2.1rem, 9vw, 3rem);
   }
-  .solution[data-held='true'] .solution__line {
-    font-size: clamp(2.1rem, 10vw, 3.2rem);
-  }
   .solution__promise {
-    grid-template-columns: 2.6rem minmax(0, 1fr);
-  }
-  .solution__text {
-    grid-column: 2;
-  }
-  .solution[data-held='true'] .solution__title {
-    font-size: clamp(2.4rem, 11.5vw, 3.6rem);
+    grid-template-columns: minmax(0, 1fr);
   }
   .solution__sub {
     font-size: 1rem;

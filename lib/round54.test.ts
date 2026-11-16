@@ -347,12 +347,13 @@ test('round 54 menu: four big places, then the ranges and help, small', () => {
 });
 
 
-// Bob: "also maybe 6+ ranges isntead of just 6 ranges": there are six ranges and Others, so the page says 6+.
-test('round 54 copy: the ranges are 6+, wherever the page counts them', () => {
-  assert.deepEqual(copy.WHEEL_COPY.title, ['6+ ranges.', 'One store.']);
-  assert.equal(copy.FACT_RANGES.strong, '6+ ranges');
+// Bob: "also maybe 6+ ranges isntead of just 6 ranges": there were six ranges and Others, so the page said 6+. Round 56
+// (Design 1) counts Others as the seventh range: the page says 7 (lib/round56.test.ts).
+test('round 54 copy: the ranges are counted the same wherever the page counts them', () => {
+  assert.deepEqual(copy.WHEEL_COPY.title, ['7 ranges.', 'One store.']);
+  assert.equal(copy.FACT_RANGES.strong, '7 ranges');
   const said = JSON.stringify(Object.values(copy));
-  assert.doesNotMatch(said, /Six ranges/i, 'nowhere still says six');
+  assert.doesNotMatch(said, /Six ranges|6\+/i, 'nowhere still says six, or 6+');
 });
 
 // Bob: "i feel like loyalty program area gotta be bigger same with our solutions they gotta be more verticaly long(er)".
@@ -432,7 +433,9 @@ test('round 54 home page: one dark ground and one light ground', () => {
   assert.match(block(air, '.solution'), /background: var\(--color-forest\);/, 'Our solution on the forest green');
   assert.match(block(air, '[data-hem]::before'), /background: var\(--color-forest\);/, 'the hem in the same green');
   assert.match(block(wheel, '.sell'), /background: var\(--color-forest\);/, 'What we sell on the forest green');
-  assert.match(block(wheel, '.wheel__pin'), /background: var\(--color-forest\);/);
+  // Since round 56 What we sell and Our solution share one held screen (story.css), forest green until the handoff.
+  const story = readFileSync(join(root, 'app', 'styles', 'story.css'), 'utf8').replace(/\r\n/g, '\n');
+  assert.match(block(story, '.story__pin'), /background: var\(--color-forest\);/);
   assert.match(sky, /--veil: 23 61 44;/, 'the first view on it too');
   assert.doesNotMatch(block(air, '.loyal') + block(air, '.solution'), /#fff\b/, 'no second white');
 });
@@ -443,15 +446,15 @@ test('round 54 home page: one dark ground and one light ground', () => {
 // The faint products either side of the range in front were built, then: "remove the images behind". The wheel is
 // names only again.
 test('round 54 What we sell: the big number, and the wheel by name only', () => {
-  assert.equal(copy.WHEEL_COPY.count, 6, 'the number, counted up on the page');
+  assert.equal(copy.WHEEL_COPY.count, 7, 'the number, counted up on the page (7 since round 56)');
   assert.equal(copy.WHEEL_COPY.ranges, 'ranges.');
   const wheel = readFileSync(join(root, 'components', 'home', 'Wheel.tsx'), 'utf8');
-  const motion = readFileSync(join(root, 'components', 'home', 'WheelMotion.tsx'), 'utf8');
+  const motion = readFileSync(join(root, 'components', 'home', 'StoryMotion.tsx'), 'utf8');
   const css = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8');
   const lib = readFileSync(join(root, 'lib', 'wheel.ts'), 'utf8');
   assert.match(wheel, /className="sell__num"/, 'the big number');
   assert.match(motion, /\.sell__num/, 'it counts up');
-  for (const [name, src] of [['Wheel.tsx', wheel], ['WheelMotion.tsx', motion], ['wheel.css', css], ['wheel.ts', lib]]) {
+  for (const [name, src] of [['Wheel.tsx', wheel], ['StoryMotion.tsx', motion], ['wheel.css', css], ['wheel.ts', lib]]) {
     assert.doesNotMatch(src, /ghost|<img/i, `no images behind the names (${name})`);
   }
 });
