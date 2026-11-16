@@ -4,9 +4,26 @@ node_modules/
 out/
 *.tsbuildinfo
 next-env.d.ts
-.env*.local
 .next-3100/
 .hallmark/before/
+
+# Secrets: every env file stays local except the documented example (the repo is public).
+.env*
+!.env.example
+*.pem
+*.key
+.vercel/
+
+# Local tool state: Claude Code worktrees and settings, design reviews and mock-ups. public/mockups would be served
+# to anyone if it were committed.
+.claude/worktrees/
+.claude/settings.local.json
+.impeccable/review/
+public/mockups/
+
+# Python caches from the Blender scripts
+__pycache__/
+*.pyc
 
 # Blender film: renders and the working .blend are rebuilt by tools/blender/film (build.py, render-all.sh)
 tools/blender/film/out/
