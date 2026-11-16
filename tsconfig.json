@@ -39,9 +39,6 @@
     ".next-build/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "assets",
-    "pages",
-    "legacy"
+    "node_modules"
   ]
 }

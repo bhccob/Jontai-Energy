@@ -29,7 +29,7 @@ All datasheet figures (SPI-8K-UP, 3000W power station, ACDC solar AC) come from 
 
 ## Support page (`/support`, `lib/support.ts`)
 
-Drafted 2026-10-28 from the store's current site: `pages/warranty` (policy dated 19 March 2026), `pages/returns`, `pages/service` and `pages/faq`. Each line below is the store's own policy, shortened, unless it says otherwise. Confirm before launch.
+Drafted 2026-10-28 from the store's current site, as copied into the legacy static site (deleted 2026-11-16, still in the git history): `pages/warranty` (policy dated 19 March 2026), `pages/returns`, `pages/service` and `pages/faq`. Each line below is the store's own policy, shortened, unless it says otherwise. Confirm before launch.
 
 | What | On the page | Source, and what was left out |
 | --- | --- | --- |

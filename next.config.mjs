@@ -51,7 +51,7 @@ const nextConfig = {
   reactStrictMode: true,
   // No "X-Powered-By: Next.js" on every answer.
   poweredByHeader: false,
-  // The legacy static site still lives in /pages and /assets; keep Next from treating it as routes or lint targets.
+  // Only TypeScript files are routes, and lint covers the app's own folders.
   pageExtensions: ['tsx', 'ts'],
   eslint: { dirs: ['app', 'components', 'lib'] },
   transpilePackages: ['three'],
