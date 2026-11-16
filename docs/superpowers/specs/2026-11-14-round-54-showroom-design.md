@@ -39,7 +39,10 @@ the end".
    from the store hours, as today); **The store** "**Cumana 73**, Oranjestad"; **What we sell** "**6+ ranges**, one
    store"; **Jontai Rewards** "**Afl. 25 back** for every Afl. 500" (from `lib/loyalty.ts`). No big JONTAI, no scene, and
    no handover effect: the words rise in once as the page opens, and when you scroll the first view holds still while
-   Rewards slides up over it as a sheet with rounded top corners (Bob: "C and rewards slides over"). It fits one
+   the next section slides up over it: Rewards at first (Bob: "C and rewards slides over"), What we sell since Bob's
+   order of 2026-11-16 ("1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team 7. Visit the
+   store and the footer"), its deep green rising as a rounded card that grows to the edges. Our solution and Rewards
+   then share one white sheet, and the Team follows on the mist. It fits one
    screen; on phones the facts sit two by two. The soft sun behind the headline drifts slowly round the top of the
    screen and the green veil thins round it so the valley shows through there; the valley and the words lean a touch
    for depth. (It followed the pointer for a while; cursor effects were dropped, see 8.) With reduced motion it stays

@@ -449,3 +449,22 @@ test('round 54 first view: the forest green of Visit, with pale words', () => {
   assert.equal(veil.length, 4, 'four stops in the veil');
   for (const a of veil) assert.ok(a >= 0.94 && a < 1, `the valley barely shows: ${a}`);
 });
+
+// Bob: "make everything better ordered: 1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team
+// 7. Visit the store and the footer". What we sell now slides up over the held first view (as Rewards did, round 37);
+// Our solution and Rewards share one white sheet.
+test('round 54 home page: the sections in the order Bob gave', () => {
+  const page = readFileSync(join(root, 'app', 'page.tsx'), 'utf8');
+  const body = page.slice(page.indexOf('export default function Home'));
+  const order = [...body.matchAll(/<(Hero|Wheel|Reviews|Solution|Rewards|Team|Visit|Footer) \/>/g)].map((m) => m[1]);
+  assert.deepEqual(order, ['Hero', 'Wheel', 'Reviews', 'Solution', 'Rewards', 'Team', 'Visit', 'Footer']);
+  const cover = /<div className="cover">([\s\S]*?)\n        <\/div>/.exec(body)?.[1] ?? '';
+  assert.match(cover, /<Hero \/>[\s\S]*<Wheel \/>/, 'What we sell slides up over the held first view');
+  assert.doesNotMatch(cover, /<Rewards \/>/);
+  const sky = readFileSync(join(root, 'components', 'home', 'HeroSkyMotion.tsx'), 'utf8');
+  assert.doesNotMatch(sky, /getElementById\('rewards'\)/, 'whatever follows the first view in .cover covers it');
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
+  assert.doesNotMatch(/\n\.loyal \{([^}]*)\}/.exec(air)?.[1] ?? '', /border-radius|box-shadow/, 'Rewards is no longer a sheet over the first view');
+  const wheel = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8').replace(/\r\n/g, '\n');
+  assert.match(/\n\.sell \{([^}]*)\}/.exec(wheel)?.[1] ?? '', /z-index: 2;/, 'What we sell paints over the held first view');
+});

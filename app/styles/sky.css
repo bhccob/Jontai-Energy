@@ -41,7 +41,8 @@
   color: var(--sky-ink);
 }
 /* Round 37 (Bob: "just make it normal scroll ... like the loyalty page when scroll its on top of the first page"): the
-   first view holds still and Rewards slides up over it (.cover holds the two, so it holds only that long). A first
+   first view holds still and the next section slides up over it (.cover holds the two, so it holds only that long;
+   What we sell since round 54's order, Rewards before). A first
    view taller than the screen scrolls to its foot first (--cover-top, HeroSkyMotion). With scripts only, so a page
    without them is a plain scroll. As it goes under, it dims (--shade, scrubbed by HeroSkyMotion). */
 :root.js .sky-scope {

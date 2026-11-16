@@ -15,10 +15,11 @@ import { SkyScope } from '@/components/sky/SkyScope';
 export const viewport: Viewport = { themeColor: '#173d2c' };
 
 /**
- * The order (Bob, round 25; round 54's parts): the first view, which Jontai Rewards slides up over (round 37: the two
- * share .cover, so the first view holds still only while Rewards covers it); Our solution, the sentence; What we sell,
- * the wheel; what customers say on Google, right after the products; the people behind it; the visit; the footer. ("What we offer" is gone: it repeated what the page and the menu already show.) Each section has
- * its own character and its own way of arriving, in two greens and the same type. Bundle offers sit in the header.
+ * The order (round 54, Bob: "make everything better ordered"): 1. the first view, which What we sell slides up over
+ * (the two share .cover, so the first view holds still only while What we sell covers it; Rewards did this from round
+ * 37), 2. What we sell, the wheel, 3. what customers say on Google, under the wheel's green hem, 4. Our solution and
+ * 5. Rewards, one white sheet, 6. the people behind it, 7. the visit and the footer. Each section has its own character
+ * and its own way of arriving, in two greens and the same type.
  */
 export default function Home() {
   return (
@@ -29,11 +30,11 @@ export default function Home() {
           <SkyScope>
             <Hero />
           </SkyScope>
-          <Rewards />
+          <Wheel />
         </div>
-        <Solution />
-        <Wheel />
         <Reviews />
+        <Solution />
+        <Rewards />
         <Team />
         <Visit />
       </main>

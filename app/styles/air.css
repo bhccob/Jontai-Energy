@@ -38,23 +38,20 @@ main.air {
 
 /* ---------- Jontai Rewards: laid out like a price list, two programs side by side (round 15) ---------- */
 
-/* Rewards slides up over the first view like a sheet (round 37, Bob: "like the loyalty page when scroll its on top
-   of the first page"): plain white (round 21), its top corners rounded and a soft shadow above it, so it reads as
-   lying on top while the first view holds still under it (sky.css, .cover). */
+/* The first view and the section that slides up over it (sky.css, .cover): What we sell since round 54's order (Bob:
+   "1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team 7. Visit"); Rewards from round 37 to
+   54. Rewards now follows Our solution on the same white, as one sheet. */
 .cover {
   position: relative;
 }
 .loyal {
   position: relative;
   z-index: 2;
-  /* Starts just under the header (round 24), so once it has covered the first view the title and most of the cards
-     show. */
-  padding: calc(var(--nav-h) + clamp(12px, 2.4vh, 28px)) var(--gutter) clamp(96px, 16vh, 200px);
-  border-radius: clamp(20px, 2.4vw, 36px) clamp(20px, 2.4vw, 36px) 0 0;
-  /* Plain white (round 21); Our solution after it shares it (round 54, Bob: "the color background as our solution should
-     be the same as loyalty area"). */
+  /* After Our solution on the same white (round 54), so only a little room above it. */
+  padding: clamp(64px, 10vh, 120px) var(--gutter) clamp(96px, 16vh, 200px);
+  /* Plain white (round 21), shared with Our solution (round 54, Bob: "the color background as our solution should be
+     the same as loyalty area"). */
   background: #fff;
-  box-shadow: 0 -24px 60px -28px rgb(8 22 15 / 0.45);
   color: var(--leaf-ink);
 }
 /* Round 54, calmer: the line in light and bold with one sentence beside it, then the two plans one under the other
@@ -390,9 +387,8 @@ main.air {
    (design 3, the slide); tablets and phones stack them into a deck (SolutionDeck, lib/solutionDeck). */
 .solution {
   position: relative;
-  /* Over Rewards' shadow, which would otherwise draw a faint line where the two whites meet. */
   z-index: 2;
-  /* The same white as Rewards above it, so the two read as one sheet (round 54). */
+  /* The same white as Rewards after it, so the two read as one sheet (round 54). */
   background: #fff;
   color: var(--leaf-ink);
   padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(96px, 16vh, 200px);
@@ -990,7 +986,8 @@ main.air {
 .team {
   position: relative;
   z-index: 1;
-  padding: clamp(40px, 6vh, 70px) var(--gutter) clamp(100px, 15vh, 160px);
+  /* After the white of Rewards (round 54's order), so its own room at the top. */
+  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(100px, 15vh, 160px);
   background: var(--mist);
   color: var(--leaf-ink);
 }
@@ -1258,15 +1255,16 @@ main.air {
 }
 
 /* ---------- What customers say, on an arc after squared-media ----------
-   On the mist (Bob, round 16), now right after the ranges and before the team, which shares the mist (round 25), so
-   the two read as one field; the deep green cards sit on it like cut-outs, each with its own soft shadow. */
+   On the mist (Bob, round 16), right after the ranges and, since round 54's order, before Our solution; the deep green
+   cards sit on it like cut-outs, each with its own soft shadow. */
 
 .reviews {
   position: relative;
   z-index: 1;
   overflow: clip;
-  /* Room at the top for the green hem to lift out of before the title (round 44). */
-  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(40px, 6vh, 70px);
+  /* Room at the top for the green hem to lift out of before the title (round 44); the white of Our solution follows
+     (round 54's order), so room at the foot too. */
+  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(96px, 14vh, 160px);
   background: var(--mist);
   color: var(--leaf-ink);
   text-align: center;
