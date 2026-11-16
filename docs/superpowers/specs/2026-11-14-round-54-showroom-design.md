@@ -221,3 +221,23 @@ the end".
 Timings and easing; exact sizes and breakpoints; how the held screens are coded (one ScrollTrigger timeline per
 section is expected); component names and files; whether `Collection`, `Why`, `CollectionMotion`, `ProductRail` and the
 old footer's `FitText`/`FooterFocus` are deleted or kept; how the All products filters keep their state.
+
+## Round 55 (2026-11-16): Our solution without the game look, and the 6+ heading beside the wheel
+
+Bob: "Our solution section need better design it looks like a game" and "above six ranges products area gotta be better
+designed too". The C panels read as game cards: framed tiles, icons in circles, outlined numbers and a 02 / 06 progress
+bar. The 6+ heading was a screen of its own with half of it empty. Mock-ups: `public/mockups/r55/options.html` (not
+committed).
+
+- **Our solution: "B. One promise at a time".** The section holds for a few screens. First the sentence ("Your home
+  makes **its own power.** / We stand behind it."), then each promise fills the screen in turn: its number in narrow
+  mint figures, the promise very large, its one line under it. The outgoing one rises away as the next rises in. The
+  six promise names stand in a column on the right; the one shown is cream with a short mint dash, the rest pale. At
+  the foot, past a hairline, the store line and Visit the store. No frames, icons, outlined numbers or counters.
+  Narrow screens drop the column of names. Reduced motion, short screens and no scripts get a still version: the
+  sentence, then the six as ruled rows.
+- **What we sell: "C. One screen with the wheel".** No separate heading screen. The held screen is split: on the left
+  the big 6 with its mint + (still counting up as it arrives), "ranges. One store." under it, and under a hairline the
+  range in front's own line and its "See all N products" link, changing as the wheel turns. On the right the wheel of
+  names turns as before, the names left-aligned and sized to the column. Phones stack the heading over the wheel. The
+  still rows (reduced motion, no scripts) keep the heading on top and give each range its line.

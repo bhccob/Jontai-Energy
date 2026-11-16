@@ -9,7 +9,6 @@ import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { DEAL_MEDIA, STACK_MEDIA, cardCount, cardNumber, slideShape } from './solutionDeck.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -357,70 +356,12 @@ test('round 54 copy: the ranges are 6+, wherever the page counts them', () => {
 });
 
 // Bob: "i feel like loyalty program area gotta be bigger same with our solutions they gotta be more verticaly long(er)".
-// Rewards: the two plans one under the other, each a tall row with its card large. Our solution: no longer held on one
-// screen, so the sentence can run large down the page, its words filling in as they pass with the page's own fill
-// (PageMotion data-fill); a second fill of its own on the same words made them fill out of order.
-test('round 54 Rewards and Our solution: both run taller', () => {
+// Rewards: the two plans one under the other, each a tall row with its card large. (Our solution is held for a few
+// screens since round 55, one promise at a time: lib/round55.test.ts.)
+test('round 54 Rewards: the plans run taller', () => {
   const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8');
-  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
   assert.match(air, /\.plans \{[^}]*grid-template-columns: 1fr;/, 'the plans sit one under the other');
   assert.match(air, /\.plan \{[^}]*min-height: /, 'each plan is a tall row');
-  assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'no attribute set by a script decides the layout');
-  assert.doesNotMatch(air, /\.solution__side/, 'no column held beside the cards');
-  assert.match(solution, /className="solution__head"/, 'the line stays on top');
-});
-
-// Bob, after the 3 x 2 grid: "no i want more simple card design view, something like https://www.squared-media.nl/
-// where its more cinematic and have animation and seem more like business, do not copy exact". That became design 1
-// (the fan deal, 8b36495), then "maybe design 3": the slide. Then: "does the cards look professional enough for a solar
-// company"; of three mock-ups he picked "C. On the green": the section on the forest green, every card the same
-// panel (a hairline rim, a mint icon in a soft circle, the number in outline), standing straight. The strip still runs
-// across the held screen, a card only easing back a touch away from the middle; tablets and phones keep the deck,
-// upright.
-test('round 54 Our solution, C: six numbered panels, standing straight as they pass', () => {
-  const six = [0, 1, 2, 3, 4, 5];
-  assert.deepEqual(six.map(cardNumber), ['01', '02', '03', '04', '05', '06']);
-  assert.equal(cardCount(1, 6), '02 / 06');
-  assert.equal(cardCount(5, 6), '06 / 06');
-  assert.deepEqual(slideShape(0), { tilt: 0, drop: 0, scale: 1 }, 'full size in the middle of the screen');
-  for (const d of [-1, -0.5, 0.2, 0.6, 1, 3]) {
-    const s = slideShape(d);
-    assert.equal(s.tilt, 0, `no lean: ${d}`);
-    assert.equal(s.drop, 0, `no drop: ${d}`);
-    assert.ok(s.scale < 1 && s.scale >= 0.95, `only easing back a touch: ${s.scale}`);
-    assert.equal(s.scale, slideShape(-d).scale, 'the same either side');
-  }
-  assert.deepEqual(slideShape(3), slideShape(1), 'no further than a screen away');
-  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
-  assert.doesNotMatch(solution, /cardTone|--lean/, 'one panel for every card, upright in the deck too');
-  assert.match(solution, /className="solution__icon"/, 'each card has its icon');
-});
-
-test('round 54 Our solution deck: the deal, its CSS and its script share one screen rule', () => {
-  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
-  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
-  const deckPath = join(root, 'components', 'home', 'SolutionDeck.tsx');
-  assert.ok(existsSync(deckPath), 'the cards have their own motion');
-  const deck = readFileSync(deckPath, 'utf8');
-  assert.match(DEAL_MEDIA, /prefers-reduced-motion: no-preference/, 'reduced motion is never dealt');
-  assert.match(STACK_MEDIA, /prefers-reduced-motion: no-preference/);
-  assert.ok(air.includes(`@media ${DEAL_MEDIA} {`), 'the held stage is laid out in CSS for the screens the script deals on');
-  assert.match(air, /\.solution__stage \{[^}]*position: sticky;/, 'the stage holds while the cards are dealt');
-  // The deck's held cards are laid out for exactly the screens the script sinks them on, and never reach the strip.
-  const deckScreens = STACK_MEDIA.replaceAll('(prefers-reduced-motion: no-preference) and ', '');
-  assert.ok(air.includes(`@media ${deckScreens} {`), `the deck is laid out for ${deckScreens}`);
-  assert.match(deck, /DEAL_MEDIA/);
-  assert.match(deck, /STACK_MEDIA/);
-  assert.match(deck, /scrub/, 'the slide follows the scroll both ways');
-  assert.match(deck, /slideShape/);
-  assert.match(deck, /cardCount/);
-  assert.match(solution, /<ol className="solution__cards"/, 'the six promises in order');
-  assert.match(solution, /cardNumber\(i\)/);
-  assert.match(solution, /SOLUTION_CARDS\.map/);
-  assert.match(solution, /<SolutionDeck \/>/);
-  assert.match(solution, /className="solution__meter" aria-hidden="true"/, 'the count and the rule under the strip');
-  assert.match(air, /\.solution__meter \{[^}]*display: none;/, 'shown only while the strip runs');
-  assert.doesNotMatch(solution, /data-reveal style/, 'no fade of their own on top of the slide');
 });
 
 // Bob: "make the first view page background color to be darker green like above the footer color". Above the footer is

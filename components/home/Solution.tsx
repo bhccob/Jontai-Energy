@@ -1,84 +1,70 @@
 import type { CSSProperties } from 'react';
-import { Heart, LightbulbFilament, Lightning, SquaresFour, Tag, Wrench } from '@phosphor-icons/react/dist/ssr';
 import { Words } from '@/components/ui/Split';
-import { SolutionDeck } from '@/components/home/SolutionDeck';
+import { SolutionScenes } from '@/components/home/SolutionScenes';
 import { FIRST_VIEW, SOLUTION_CARDS, SOLUTION_KICKER, SOLUTION_SUB, solutionPieces } from '@/lib/homeCopy';
-import { cardCount, cardNumber } from '@/lib/solutionDeck';
-
-/** One icon for each promise, in the cards' order. */
-const ICONS = [Lightning, Wrench, Tag, SquaresFour, Heart, LightbulbFilament];
+import { promiseNumber } from '@/lib/solutionScenes';
 
 /**
- * Our solution (round 54). The line runs large across the top, "Your home makes **its own power.** / We stand behind
- * it.", rising word by word (data-words, PageMotion), with a short line and Visit the store beside it, as Rewards' top
- * is laid out (Bob: "Line on top"). Under it six tall cards (Bob: "more simple card design view, something like
- * squared-media ... more cinematic and have animation and seem more like business"). Bob then asked whether they looked
- * "professional enough for a solar company" and picked "C. On the green": the section carries on the forest green of
- * What we sell, and every card is the same panel with a hairline rim, a mint icon in a soft circle, the number in
- * outline, the promise and one plain line, standing straight. Design 3, the slide (Bob: "maybe design 3"): on wide
- * screens the section holds still while the cards run across the screen on a strip as the page scrolls, with a count and
- * a rule under them. On tablets and phones they stack into a deck, each new card sliding over the last (SolutionDeck,
- * lib/solutionDeck). Reduced motion: the cards in rows, or the deck, still. No people, names or photos (Bob: remove Bob
- * and Chakho).
+ * Our solution, one promise at a time (round 55). Bob said the panels "look like a game" (framed cards, icons in
+ * circles, outlined numbers, a 02 / 06 bar); of three mock-ups without cards he picked "B. One promise at a time".
+ * The section holds on the forest green while the sentence shows first, "Your home makes **its own power.** / We stand
+ * behind it.", and then each promise fills the screen in turn, like title cards in a film: its number in narrow mint
+ * figures, the promise very large, its one line under it. The six names stand in a column on the right and mark the one
+ * shown; the store line and Visit the store sit at the foot. SolutionScenes holds it (lib/solutionScenes); with
+ * reduced motion, on short screens or without scripts the sentence and the six rows stand still, all readable. No
+ * people, names or photos (Bob: remove Bob and Chakho).
  */
 export function Solution() {
-  const n = SOLUTION_CARDS.length;
   return (
-    <section id="solution" className="solution" data-tone="dark" aria-labelledby="solution-title">
+    <section
+      id="solution"
+      className="solution"
+      data-tone="dark"
+      aria-labelledby="solution-title"
+      style={{ '--scenes': SOLUTION_CARDS.length + 1 } as CSSProperties}
+    >
       <div className="solution__track">
         <div className="solution__stage">
-          <div className="solution__head">
-            <h2 id="solution-title" className="solution__kick">
-              {SOLUTION_KICKER}
-            </h2>
-            <p className="solution__line" data-words>
-              {solutionPieces().map((f) => (
-                <span key={f.text} className={f.key ? 'solution__key' : f.newLine ? 'solution__then' : undefined}>
-                  <Words text={f.text} />
-                </span>
+          <h2 id="solution-title" className="solution__kick">
+            {SOLUTION_KICKER}
+          </h2>
+          <div className="solution__scenes">
+            <div className="solution__open" data-on="true">
+              <p className="solution__line" data-words>
+                {solutionPieces().map((f) => (
+                  <span key={f.text} className={f.key ? 'solution__key' : f.newLine ? 'solution__then' : undefined}>
+                    <Words text={f.text} />
+                  </span>
+                ))}
+              </p>
+            </div>
+            <ol className="solution__promises">
+              {SOLUTION_CARDS.map((c, i) => (
+                <li key={c.title} className="solution__promise">
+                  <span className="solution__num" aria-hidden="true">
+                    {promiseNumber(i)}
+                  </span>
+                  <h3 className="solution__title">{c.title}</h3>
+                  <p className="solution__text">{c.line}</p>
+                </li>
               ))}
-            </p>
-            <div className="solution__aside" data-reveal>
-              <p className="solution__sub">{SOLUTION_SUB}</p>
-              <a href="#visit" className="textlink solution__visit">
-                {FIRST_VIEW.primary}
-              </a>
-            </div>
-          </div>
-          <div className="solution__deck">
-            <ol className="solution__cards">
-              {SOLUTION_CARDS.map((c, i) => {
-                const Icon = ICONS[i];
-                return (
-                  <li key={c.title} className="solution__slot" style={{ '--i': i } as CSSProperties}>
-                    <div className="solution__card">
-                      <div className="solution__top">
-                        <span className="solution__icon">
-                          <Icon weight="regular" aria-hidden="true" />
-                        </span>
-                        <span className="solution__num" aria-hidden="true">
-                          {cardNumber(i)}
-                        </span>
-                      </div>
-                      <div className="solution__body">
-                        <h3 className="solution__title">{c.title}</h3>
-                        <p className="solution__text">{c.line}</p>
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
             </ol>
-            <div className="solution__meter" aria-hidden="true">
-              <span className="solution__count">{cardCount(0, n)}</span>
-              <span className="solution__rule">
-                <span className="solution__fill" />
-              </span>
-            </div>
+          </div>
+          {/* Where you are: the six names, the one shown marked. For the eye only; the promises themselves are read. */}
+          <ol className="solution__index" aria-hidden="true">
+            {SOLUTION_CARDS.map((c) => (
+              <li key={c.title}>{c.title}</li>
+            ))}
+          </ol>
+          <div className="solution__foot">
+            <p className="solution__sub">{SOLUTION_SUB}</p>
+            <a href="#visit" className="textlink solution__visit">
+              {FIRST_VIEW.primary}
+            </a>
           </div>
         </div>
       </div>
-      <SolutionDeck />
+      <SolutionScenes />
     </section>
   );
 }
