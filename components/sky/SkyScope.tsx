@@ -3,14 +3,15 @@ import { SkyVideo } from './SkyVideo';
 
 /**
  * The first view's backdrop (round 12, Bob: the valley and grass made it "cluttered"): the moving valley at the back (the
- * still, then the loop), under a pale morning green that screens it to soft light with the faintest movement. Until
- * round 39 the letters of JONTAI were windows in that green onto the valley; the name is solid ink in the first view now
- * (Hero). Held still behind the first view while it scrolls (sticky), clipped to it. Phones get a portrait slice of the
- * valley.
+ * still, then the loop), under a green that screens it to the faintest movement: pale morning green from round 47, the
+ * forest green of Visit since round 54 (Bob: "darker green like above the footer color"), so it is a dark ground
+ * (data-tone: the header and the buttons turn pale-on-dark over it). Until round 39 the letters of JONTAI were windows in
+ * that green onto the valley. Held still behind the first view while it scrolls (sticky), clipped to it. Phones get a
+ * portrait slice of the valley.
  */
 export function SkyScope({ children }: { children: ReactNode }) {
   return (
-    <div className="sky-scope">
+    <div className="sky-scope" data-tone="dark">
       <div className="sky" aria-hidden="true">
         <div className="sky__media">
           <picture>

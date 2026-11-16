@@ -425,3 +425,21 @@ test('round 54 Our solution deck: the deal, its CSS and its script share one scr
   assert.match(air, /\.solution__meter \{[^}]*display: none;/, 'shown only while the strip runs');
   assert.doesNotMatch(solution, /data-reveal style/, 'no fade of their own on top of the slide');
 });
+
+// Bob: "make the first view page background color to be darker green like above the footer color". Above the footer is
+// Visit, on the forest green #173d2c; the first view's veil is that green now (it was a pale morning green since round
+// 47), the valley only a faint texture in it, with pale words. It counts as a dark ground, so the header turns deep
+// green over it and its buttons take the pale-on-dark look Visit's have, and the browser's own bars match it.
+test('round 54 first view: the forest green of Visit, with pale words', () => {
+  const sky = readFileSync(join(root, 'app', 'styles', 'sky.css'), 'utf8').replace(/\r\n/g, '\n');
+  const scope = readFileSync(join(root, 'components', 'sky', 'SkyScope.tsx'), 'utf8');
+  const header = readFileSync(join(root, 'components', 'ui', 'Header.tsx'), 'utf8');
+  const page = readFileSync(join(root, 'app', 'page.tsx'), 'utf8');
+  const block = /\n\.sky-scope \{([^}]*)\}/.exec(sky)?.[1] ?? '';
+  assert.match(block, /--veil: 23 61 44;/, 'the veil is #173d2c, the green above the footer');
+  assert.match(block, /--sky-ink: #f2f6ef;/, 'the words are pale on it');
+  assert.match(scope, /className="sky-scope" data-tone="dark"/, 'a dark ground: dark-ground buttons and header');
+  assert.match(header, /\[data-tone="dark"\]/, 'the header reads it as a dark ground');
+  assert.match(page, /themeColor: '#173d2c'/, "the browser's bars match the first view");
+  assert.doesNotMatch(sky, /\.sky-scope \.hero__actions \.btn--primary \{/, 'no light-ground button over the dark-ground one');
+});

@@ -15,8 +15,9 @@
   /* The brand's deep forest, for the shade at the top and the ground at the bottom. */
   --ground: 15 40 29;
 }
+/* The home page opens on forest green (round 54), so the page behind it (seen when a phone pulls past the top) is too. */
 :root:has(.sky-scope) {
-  background: var(--sky-top);
+  background: #173d2c;
 }
 
 
@@ -24,9 +25,15 @@
 
 /* Round 47 (Bob: "first view page should be light green the dark green and too visible background not the best"): a
    light green field with the valley only just showing through it, forest words on it (round 41 to 46 it was the valley
-   under deep green with cream words). --veil is the light green, as r g b. */
+   under deep green with cream words). Round 54 (Bob: "make the first view page background color to be darker green like
+   above the footer color"): the field is the forest green of Visit, #173d2c, the valley still only a faint texture in
+   it, the words pale. --veil is the field's green, as r g b; the --sky inks are the words on it (the header keeps the
+   root ones). */
 .sky-scope {
-  --veil: 218 233 205;
+  --veil: 23 61 44;
+  --sky-ink: #f2f6ef;
+  --sky-soft: rgb(242 246 239 / 0.8);
+  --sky-rule: rgb(242 246 239 / 0.22);
   position: relative;
   z-index: 1;
   overflow: clip;
@@ -89,12 +96,12 @@
     display: none;
   }
 }
-/* The light green veil over the valley (round 47): nearly solid, a touch thinner through the middle, so the hills and
-   the moving mist are only a faint texture in the green. */
+/* The veil over the valley (round 47, forest green since round 54): nearly solid, a touch thinner through the middle,
+   so the hills and the moving mist are only a faint texture in the green. */
 .sky__ink {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgb(var(--veil) / 0.92) 0%, rgb(var(--veil) / 0.86) 40%, rgb(var(--veil) / 0.86) 65%, rgb(var(--veil) / 0.92) 100%);
+  background: linear-gradient(to bottom, rgb(var(--veil) / 0.95) 0%, rgb(var(--veil) / 0.9) 40%, rgb(var(--veil) / 0.9) 65%, rgb(var(--veil) / 0.95) 100%);
   /* Round 54: where the sun shines (HeroLight) the veil thins, so the valley under it shows through. */
   /* Gentle: the valley stays a soft texture (rounds 42 to 47), only clearer round the light. */
   --sun-hole: radial-gradient(circle min(28vmax, 440px) at var(--sun-x, 50%) var(--sun-y, 30%), rgb(0 0 0 / calc(1 - 0.34 * var(--sun-on, 0))) 0%, rgb(0 0 0 / calc(1 - 0.15 * var(--sun-on, 0))) 50%, #000 100%);
@@ -117,7 +124,8 @@
 #hero .hero__top {
   translate: calc(var(--lean-x, 0) * 7px) calc(var(--lean-y, 0) * 6px);
 }
-/* The Aruba sun, rising behind the headline as the page opens: a warm soft light, never a disc with an edge. */
+/* The Aruba sun, rising behind the headline as the page opens: a soft light, never a disc with an edge. On the forest
+   green (round 54) it is a faint pale green glow, so the words keep their contrast. */
 .sky::after {
   content: '';
   position: absolute;
@@ -127,7 +135,7 @@
   width: min(120vw, 1500px);
   aspect-ratio: 1.6;
   translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(255 252 230 / 0.7), rgb(255 250 225 / 0.3) 45%, transparent);
+  background: radial-gradient(closest-side, rgb(208 236 200 / 0.16), rgb(208 236 200 / 0.06) 45%, transparent);
   pointer-events: none;
 }
 @keyframes sun-rise {
@@ -148,30 +156,10 @@
 
 /* ---------- Buttons on the sky ---------- */
 
-/* The main button: forest, with pale type, on the light green. */
-.sky-scope .hero__actions .btn--primary {
-  --btn-fill: #0e2219;
-  background: var(--color-forest);
-  color: #f4f6ef;
-  box-shadow: 0 14px 30px -16px rgb(14 34 25 / 0.55);
-}
-/* Over clouds an outline alone goes missing, so the outlined button floats on a little frosted glass. */
-.sky-scope .btn--ghost {
-  --btn-fill: var(--sky-ink);
-  background: rgb(15 40 29 / 0.18);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  color: var(--sky-ink);
-  box-shadow: inset 0 0 0 1.5px rgb(251 252 253 / 0.6);
-}
+/* On the forest green (round 54) the buttons are the dark-ground pair Visit uses (data-tone, glass.css): the main one
+   pale glass with forest type, the other clear glass with a pale rim. */
 .sky-scope :focus-visible {
   outline-color: var(--sky-ink);
-}
-@media (hover: hover) and (pointer: fine) {
-  .sky-scope .btn--ghost:hover {
-    color: var(--color-forest);
-    box-shadow: inset 0 0 0 1.5px var(--sky-ink);
-  }
 }
 
 
@@ -284,7 +272,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0 0 clamp(22px, 4.5vh, 44px);
-  border-top: 1px solid rgb(23 61 44 / 0.22);
+  border-top: 1px solid var(--sky-rule);
   text-align: left;
 }
 .hero__fact {
@@ -292,7 +280,7 @@
 }
 .hero__fact + .hero__fact {
   padding-left: 18px;
-  border-left: 1px solid rgb(23 61 44 / 0.1);
+  border-left: 1px solid rgb(242 246 239 / 0.1);
 }
 .hero__fact dt {
   color: var(--sky-soft);

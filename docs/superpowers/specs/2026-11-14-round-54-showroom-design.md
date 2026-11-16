@@ -28,10 +28,13 @@ the end".
    light wide type, sentence case and no rules (What we sell, Our solution, Rewards, Visit the store); beside them on
    wide screens and under them on phones, small, under quiet labels: Ranges (All products, then the six ranges, each
    straight to its products) and Help (Support, Send a message, Request a quote, Get directions); then the languages.
-2. **First view: still, light, four facts** (`site11.html`, look C, picked 2026-11-15). Light green over the faint,
-   slowly moving valley (as today, barely visible). Centred: "Aruba sunlight, **made useful.**" in the site's mix of
-   light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
-   family-owned store in Oranjestad."), and two buttons, "Visit the store" (forest) and "See what we sell" (glass pill).
+2. **First view: still, four facts** (`site11.html`, look C, picked 2026-11-15). Forest green over the faint, slowly
+   moving valley (barely visible): light green at first, then on 2026-11-16 Bob: "make the first view page background
+   color to be darker green like above the footer color", so the field is Visit's #173d2c with pale words, the header
+   turns deep green over it, and the browser's bars match. Centred: "Aruba sunlight, **made useful.**" in the site's
+   mix of light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
+   family-owned store in Oranjestad."), and two buttons, "Visit the store" (pale) and "See what we sell" (clear glass
+   with a pale rim), the pair Visit uses.
    Along the foot, four facts on one ruled line, each with a small label: **Hours** "**Open now**, until 7:00 PM" (live,
    from the store hours, as today); **The store** "**Cumana 73**, Oranjestad"; **What we sell** "**6+ ranges**, one
    store"; **Jontai Rewards** "**Afl. 25 back** for every Afl. 500" (from `lib/loyalty.ts`). No big JONTAI, no scene, and

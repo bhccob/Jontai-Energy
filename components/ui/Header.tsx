@@ -60,7 +60,9 @@ export function Header({ base = '', sky = false }: { base?: string; sky?: boolea
 
   // The page's dark sections, found once per page by the ground they paint.
   useEffect(() => {
-    darkGrounds.current = [...document.querySelectorAll<HTMLElement>('main section, main > div, footer')].filter(isDark);
+    darkGrounds.current = [
+      ...document.querySelectorAll<HTMLElement>('main section, main > div, main [data-tone="dark"], footer'),
+    ].filter(isDark);
     readGround();
   }, [pathname]);
 
