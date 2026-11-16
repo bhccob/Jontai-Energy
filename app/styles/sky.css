@@ -96,12 +96,13 @@
     display: none;
   }
 }
-/* The veil over the valley (round 47, forest green since round 54): nearly solid, a touch thinner through the middle,
-   so the hills and the moving mist are only a faint texture in the green. */
+/* The veil over the valley (round 47, forest green since round 54): thinner through the middle, so the hills and the
+   moving mist show through the green. Round 54, Bob: "make background image lighter": thinned from nearly solid (0.9
+   to 0.95), still thick enough for the pale words. */
 .sky__ink {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgb(var(--veil) / 0.95) 0%, rgb(var(--veil) / 0.9) 40%, rgb(var(--veil) / 0.9) 65%, rgb(var(--veil) / 0.95) 100%);
+  background: linear-gradient(to bottom, rgb(var(--veil) / 0.8) 0%, rgb(var(--veil) / 0.68) 40%, rgb(var(--veil) / 0.68) 65%, rgb(var(--veil) / 0.8) 100%);
   /* Round 54: where the sun shines (HeroLight) the veil thins, so the valley under it shows through. */
   /* Gentle: the valley stays a soft texture (rounds 42 to 47), only clearer round the light. */
   --sun-hole: radial-gradient(circle min(28vmax, 440px) at var(--sun-x, 50%) var(--sun-y, 30%), rgb(0 0 0 / calc(1 - 0.34 * var(--sun-on, 0))) 0%, rgb(0 0 0 / calc(1 - 0.15 * var(--sun-on, 0))) 50%, #000 100%);
