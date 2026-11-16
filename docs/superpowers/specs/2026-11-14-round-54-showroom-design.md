@@ -109,6 +109,15 @@ the end".
      way through a turn the page glides on to the next name the way it was going, like a phone's date picker, so one
      mouse-wheel notch turns one name.
    - After Others the screen lets go into the end band: "Every product, **one by one.**" with "See all products".
+   - 2026-11-16, Bob: "6+ ranges, one store gotta be more prominent and creative shown, and also maybe a transparent
+     or not very visible placed products for each product when scroll". Of three headings he picked **A. The big
+     number**: the heading has a screen of its own, a 6 the height of the screen with a mint +, counting up from 0 the
+     first time it comes into view, "ranges." light and "**One store.**" bold beside it, the line under them past a
+     hairline (on phones the number on top). And "Fainter than the mock-up": while the wheel turns, the range in front
+     shows two of its own products, faint (at most 0.1), either side of its name, fading in as the wheel reaches it and
+     out as it turns on, drifting with the turn (Solar: panel and inverter; LED lighting: pole lamp and bulb; Cooling:
+     air conditioner and standing fan; Backup power: power station and generator; Security: outdoor and indoor camera;
+     Furniture: sofa and lounge chair; Others: none).
 6. **All products page** at `/products`, to look at, not to shop (Bob: "i want them to not be like a site that you
    can shop but only to view so more minimal and better displayed"). Title "All **products**", one line ("Everything on
    the shelf at Cumana 73, one by one. Pick one to read what it is."), the ranges as a row of plain names between two

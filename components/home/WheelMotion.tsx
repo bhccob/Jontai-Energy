@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useLenis } from 'lenis/react';
 import { scrollTargets } from '@/components/providers/scrollTargets';
-import { heldPosition, rangeIndexFromHash, restProgress, settleOn } from '@/lib/wheel';
+import { GHOST_OPACITY, heldPosition, rangeIndexFromHash, restProgress, settleOn } from '@/lib/wheel';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -42,11 +42,30 @@ export function WheelMotion() {
     if (!sell || !wheel || !pin) return;
     const names = [...wheel.querySelectorAll<HTMLButtonElement>('.wn')];
     const feet = [...wheel.querySelectorAll<HTMLElement>('.wheel__foot')];
+    const ghosts = [...wheel.querySelectorAll<HTMLElement>('.wheel__ghost')];
+    const num = sell.querySelector<HTMLElement>('.sell__num');
     const ids = names.map((n) => n.dataset.id ?? '');
     const n = names.length;
 
     const mm = gsap.matchMedia();
     mm.add(MOTION, () => {
+      // "A. The big number": the 6 counts up from 0 the first time it comes into view (Bob: "more prominent and creative").
+      const final = Number(num?.textContent) || 0;
+      let counting: gsap.core.Tween | undefined;
+      if (num && final) {
+        const state = { v: 0 };
+        num.textContent = '0';
+        counting = gsap.to(state, {
+          v: final,
+          duration: 1.4,
+          ease: 'power2.out',
+          onUpdate: () => {
+            num.textContent = String(Math.round(state.v));
+          },
+          scrollTrigger: { trigger: num, start: 'top 80%', once: true },
+        });
+      }
+
       wheel.dataset.held = 'true';
       let front = -1;
       let em = 100;
@@ -75,6 +94,14 @@ export function WheelMotion() {
           el.style.visibility = a > 2.7 ? 'hidden' : '';
           el.style.transform = `translateY(-50%) translateZ(${-radius}px) rotateX(${(-d * step).toFixed(3)}deg) translateZ(${radius}px)`;
           el.style.opacity = Math.max(0, 1 - a * 0.4).toFixed(3);
+        });
+        // The range in front's two products, faint, either side: in as the wheel reaches it, out as it turns on, drifting
+        // with the turn (GHOST_OPACITY at most: Bob, "Fainter than the mock-up").
+        ghosts.forEach((g) => {
+          const d = Number(g.dataset.k) - pos;
+          const a = Math.abs(d);
+          g.style.opacity = (GHOST_OPACITY * Math.max(0, 1 - a * 1.6)).toFixed(3);
+          g.style.transform = `translateY(${(d * 9).toFixed(2)}vh) scale(${(1 - Math.min(1, a) * 0.06).toFixed(3)})`;
         });
         const now = Math.round(pos);
         if (now !== front) {
@@ -196,6 +223,10 @@ export function WheelMotion() {
         sell.style.removeProperty('--sx');
         sell.style.removeProperty('--sr');
         names.forEach((el) => el.removeAttribute('style'));
+        ghosts.forEach((el) => el.removeAttribute('style'));
+        counting?.scrollTrigger?.kill();
+        counting?.kill();
+        if (num && final) num.textContent = String(final);
       };
     });
     return () => mm.revert();

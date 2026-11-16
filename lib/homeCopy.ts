@@ -49,6 +49,10 @@ export const SOLUTION_CARDS: { title: string; line: string }[] = [
 export const WHEEL_COPY = {
   // Six ranges and Others (Bob: "maybe 6+ ranges isntead of just 6 ranges").
   title: ['6+ ranges.', 'One store.'],
+  // Set as "A. The big number" (Bob: "6+ ranges, one store gotta be more prominent and creative shown"): the 6 the
+  // height of the screen, counted up on the page, a mint + after it, then "ranges." and "One store." beside it.
+  count: 6,
+  ranges: 'ranges.',
   line: 'Every range, one at a time. Keep scrolling to go through them.',
   see: 'See all {0} products',
   seeOthers: 'See all other products',
