@@ -141,7 +141,7 @@ No secret was ever committed. No key needs rotating.
 - Vercel has no environment variables set, so the live site holds no key. Preview deployments need a Vercel login.
 - The live site serves only `public/`. `/.env`, `/.env.example`, `/audit.txt`, `/index.html`, `/pages/about/index.html`,
   `/assets/js/main.js`, `/package.json`, `/next.config.mjs`, `/.git/config` and `/tools/sky/prompts.md` all return 404.
-  The legacy static site, `tools/` and `docs/` are readable on GitHub but not served.
+  `tools/` and `docs/` are readable on GitHub but not served. (The legacy static site was deleted on 16 November 2026.)
 - No source maps ship (`/_next/static/chunks/*.js.map` returns 403). No key or local path is in the client bundles.
   `RESEND_API_KEY` is read only in the two route handlers, on the server.
 - `dangerouslySetInnerHTML` is used twice, with constants only (`app/layout.tsx:91`, `app/layout.tsx:106`).
@@ -171,8 +171,8 @@ These need your accounts. Nothing here is urgent: no key leaked.
    example 5 requests per 10 minutes per IP). This audit could not read the current firewall settings.
 5. **Vercel, Environment variables:** when the site goes official, add `RESEND_API_KEY` as a Sensitive variable,
    Production only. If it ever shows up anywhere public, rotate it in Resend at once.
-6. **Optional clean-up:** the old i18n scripts and `audit.txt` are deleted. The legacy static site (`index.html`,
-   `pages/`, `assets/`) is still there if you want it gone too. Your call.
+6. **Clean-up (done):** the old i18n scripts, `audit.txt` and the legacy static site (`index.html`, `pages/`,
+   `assets/`) were deleted on 16 November 2026.
 7. **History rewrite:** not needed, since no secret was committed. Only if you want the author emails gone from old
    commits. That means rewriting history and force-pushing every branch, which breaks every open clone and worktree.
    I did not do it.

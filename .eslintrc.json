@@ -1,7 +1,6 @@
 {
   "root": true,
   "extends": "next/core-web-vitals",
-  "ignorePatterns": ["assets/**", "pages/**", "legacy/**"],
   "rules": {
     "@next/next/no-html-link-for-pages": "off"
   }
