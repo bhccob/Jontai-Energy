@@ -7,14 +7,14 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const MOTION = '(prefers-reduced-motion: no-preference)';
-/** How dark the first view gets once Rewards covers it, 0 to 1. */
+/** How dark the first view gets once the section after it covers it, 0 to 1. */
 const SHADE = 0.32;
 
 /**
- * The first view and Rewards as one plain scroll (round 37, Bob: "redesign the transition of first page view to
- * loyalty just make it normal scroll ... like the loyalty page when scroll its on top of the first page"). The first
- * view stays where it is (sticky, sky.css) and Rewards slides up over it like a sheet, while the first view dims a
- * little under it; once covered it stops painting and the valley stops playing. It replaces round 26's camera flight
+ * The first view and the section after it as one plain scroll (round 37, Bob: "redesign the transition of first page
+ * view to loyalty just make it normal scroll ... like the loyalty page when scroll its on top of the first page"). The
+ * first view stays where it is (sticky, sky.css) and the next section in .cover slides up over it, while the first view
+ * dims a little under it: Rewards until round 54, What we sell since Bob's new order ("1. First view 2. What we sell"); once covered it stops painting and the valley stops playing. It replaces round 26's camera flight
  * into the card through the white mist. A first view taller than the screen first scrolls to its foot, then holds
  * (--cover-top). The islands that leaned toward the pointer are gone (round 38).
  */
@@ -22,7 +22,7 @@ export function HeroSkyMotion() {
   useGSAP(() => {
     const hero = document.getElementById('hero');
     const scope = hero?.closest<HTMLElement>('.sky-scope');
-    const rewards = document.getElementById('rewards');
+    const next = scope?.nextElementSibling as HTMLElement | null;
     if (!hero || !scope) return;
 
     // Where the first view holds: at the top, or, when it is taller than the screen, with its foot at the screen's foot.
@@ -37,9 +37,9 @@ export function HeroSkyMotion() {
       scope.dataset.covered = covered ? 'true' : 'false';
       scope.dispatchEvent(new CustomEvent('sky:cover', { detail: covered }));
     };
-    const covering = rewards
+    const covering = next
       ? ScrollTrigger.create({
-          trigger: rewards,
+          trigger: next,
           start: 'top bottom',
           end: 'top top',
           onLeave: () => cover(true),
@@ -48,13 +48,13 @@ export function HeroSkyMotion() {
       : null;
 
     const mm = gsap.matchMedia();
-    // Rewards rising over it: the first view darkens a little as it goes under.
+    // The next section rising over it: the first view darkens a little as it goes under.
     mm.add(MOTION, () => {
-      if (!rewards) return;
+      if (!next) return;
       gsap.fromTo(
         scope,
         { '--shade': 0 },
-        { '--shade': SHADE, ease: 'none', scrollTrigger: { trigger: rewards, start: 'top bottom', end: 'top top', scrub: true } },
+        { '--shade': SHADE, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: 'top top', scrub: true } },
       );
     });
 

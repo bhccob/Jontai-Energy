@@ -9,6 +9,7 @@ import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
+import { DEAL_MEDIA, STACK_MEDIA, cardCount, cardNumber, slideShape } from './solutionDeck.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -227,13 +228,18 @@ test('round 54 first view: every hours line splits into parts the dictionaries k
   }
 });
 
-test('round 54 sentence:the fragments read as the agreed sentence, with six promises in bold', () => {
-  assert.equal(
-    copy.solutionText(),
-    "At Jontai, your home makes its own power, so the island's blackouts do not stop your day. We fix what we sell, even years later. Our prices are hard to beat, for the same quality or better. We sell far more than solar. Every customer matters, long after the sale. And our family keeps learning, to bring tomorrow's ideas home.",
+// Bob picked C from three card directions for Our solution ("C is looking best but iwant more simple cards"): one line
+// on top and six cards, each a promise and one plain line.
+test('round 54 Our solution: one line, then six simple cards', () => {
+  assert.equal(copy.solutionText(), 'Your home makes its own power. We stand behind it.');
+  assert.equal(copy.SOLUTION.filter((f) => f.key).length, 1);
+  // Set on two lines, the second starting at "We stand behind it." (the full stop ends the green phrase).
+  assert.deepEqual(copy.SOLUTION.filter((f) => f.newLine).map((f) => f.text), ['We stand behind it.']);
+  assert.deepEqual(
+    copy.SOLUTION_CARDS.map((c) => c.title),
+    ['Your own power', 'We fix what we sell', 'Prices hard to beat', 'More than solar', 'Every customer matters', 'Always learning'],
   );
-  assert.equal(copy.SOLUTION.filter((f) => f.key).length, 6);
-  assert.equal(copy.SOLUTION_POINTS.length, 6);
+  for (const c of copy.SOLUTION_CARDS) assert.ok(c.line.length <= 90 && c.line.endsWith('.'), `one short line: ${c.line}`);
 });
 
 test('round 54: every new word is in both dictionaries', () => {
@@ -266,6 +272,13 @@ test('round 54 sentence: each Spanish fragment fills every English word slot, so
   const es = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'es.json'), 'utf8')).strings;
   const words = (t: string) => t.trim().split(/\s+/).length;
   for (const f of copy.SOLUTION) assert.ok(words(es[f.text.trim()]) >= words(f.text), `${f.text} -> ${es[f.text.trim()]}`);
+});
+
+// Each fragment's words are their own boxes, so a line can break between two fragments: a Chinese fragment that starts
+// with its full stop ("。我们…") put that full stop alone at the start of a line. The full stop ends the fragment before.
+test('round 54 Our solution: no Chinese fragment starts with punctuation, so none starts a line with it', () => {
+  const zh = JSON.parse(readFileSync(join(root, 'lib', 'i18n', 'zh.json'), 'utf8')).strings;
+  for (const f of copy.SOLUTION) assert.doesNotMatch(zh[f.text.trim()], /^[，。、：；！？]/, `${f.text} -> ${zh[f.text.trim()]}`);
 });
 
 test('round 54 sentence: the spaces between fragments sit inside the fragments, so Chinese can drop them', () => {
@@ -352,7 +365,152 @@ test('round 54 Rewards and Our solution: both run taller', () => {
   const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
   assert.match(air, /\.plans \{[^}]*grid-template-columns: 1fr;/, 'the plans sit one under the other');
   assert.match(air, /\.plan \{[^}]*min-height: /, 'each plan is a tall row');
-  assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'Our solution is not held on one screen');
-  assert.match(solution, /className="solution__text" data-fill/, "the sentence fills in with the page's own fill");
-  assert.ok(!existsSync(join(root, 'components', 'home', 'SolutionMotion.tsx')), 'and no second motion of its own');
+  assert.doesNotMatch(air, /\.solution\[data-(held|fill)/, 'no attribute set by a script decides the layout');
+  assert.doesNotMatch(air, /\.solution__side/, 'no column held beside the cards');
+  assert.match(solution, /className="solution__head"/, 'the line stays on top');
+});
+
+// Bob, after the 3 x 2 grid: "no i want more simple card design view, something like https://www.squared-media.nl/
+// where its more cinematic and have animation and seem more like business, do not copy exact". That became design 1
+// (the fan deal, 8b36495), then "maybe design 3": the slide. Then: "does the cards look professional enough for a solar
+// company"; of three mock-ups he picked "C. On the green": the section on the forest green, every card the same
+// panel (a hairline rim, a mint icon in a soft circle, the number in outline), standing straight. The strip still runs
+// across the held screen, a card only easing back a touch away from the middle; tablets and phones keep the deck,
+// upright.
+test('round 54 Our solution, C: six numbered panels, standing straight as they pass', () => {
+  const six = [0, 1, 2, 3, 4, 5];
+  assert.deepEqual(six.map(cardNumber), ['01', '02', '03', '04', '05', '06']);
+  assert.equal(cardCount(1, 6), '02 / 06');
+  assert.equal(cardCount(5, 6), '06 / 06');
+  assert.deepEqual(slideShape(0), { tilt: 0, drop: 0, scale: 1 }, 'full size in the middle of the screen');
+  for (const d of [-1, -0.5, 0.2, 0.6, 1, 3]) {
+    const s = slideShape(d);
+    assert.equal(s.tilt, 0, `no lean: ${d}`);
+    assert.equal(s.drop, 0, `no drop: ${d}`);
+    assert.ok(s.scale < 1 && s.scale >= 0.95, `only easing back a touch: ${s.scale}`);
+    assert.equal(s.scale, slideShape(-d).scale, 'the same either side');
+  }
+  assert.deepEqual(slideShape(3), slideShape(1), 'no further than a screen away');
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  assert.doesNotMatch(solution, /cardTone|--lean/, 'one panel for every card, upright in the deck too');
+  assert.match(solution, /className="solution__icon"/, 'each card has its icon');
+});
+
+test('round 54 Our solution deck: the deal, its CSS and its script share one screen rule', () => {
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  const deckPath = join(root, 'components', 'home', 'SolutionDeck.tsx');
+  assert.ok(existsSync(deckPath), 'the cards have their own motion');
+  const deck = readFileSync(deckPath, 'utf8');
+  assert.match(DEAL_MEDIA, /prefers-reduced-motion: no-preference/, 'reduced motion is never dealt');
+  assert.match(STACK_MEDIA, /prefers-reduced-motion: no-preference/);
+  assert.ok(air.includes(`@media ${DEAL_MEDIA} {`), 'the held stage is laid out in CSS for the screens the script deals on');
+  assert.match(air, /\.solution__stage \{[^}]*position: sticky;/, 'the stage holds while the cards are dealt');
+  // The deck's held cards are laid out for exactly the screens the script sinks them on, and never reach the strip.
+  const deckScreens = STACK_MEDIA.replaceAll('(prefers-reduced-motion: no-preference) and ', '');
+  assert.ok(air.includes(`@media ${deckScreens} {`), `the deck is laid out for ${deckScreens}`);
+  assert.match(deck, /DEAL_MEDIA/);
+  assert.match(deck, /STACK_MEDIA/);
+  assert.match(deck, /scrub/, 'the slide follows the scroll both ways');
+  assert.match(deck, /slideShape/);
+  assert.match(deck, /cardCount/);
+  assert.match(solution, /<ol className="solution__cards"/, 'the six promises in order');
+  assert.match(solution, /cardNumber\(i\)/);
+  assert.match(solution, /SOLUTION_CARDS\.map/);
+  assert.match(solution, /<SolutionDeck \/>/);
+  assert.match(solution, /className="solution__meter" aria-hidden="true"/, 'the count and the rule under the strip');
+  assert.match(air, /\.solution__meter \{[^}]*display: none;/, 'shown only while the strip runs');
+  assert.doesNotMatch(solution, /data-reveal style/, 'no fade of their own on top of the slide');
+});
+
+// Bob: "make the first view page background color to be darker green like above the footer color". Above the footer is
+// Visit, on the forest green #173d2c; the first view's veil is that green now (it was a pale morning green since round
+// 47), the valley only a faint texture in it, with pale words. It counts as a dark ground, so the header turns deep
+// green over it and its buttons take the pale-on-dark look Visit's have, and the browser's own bars match it.
+test('round 54 first view: the forest green of Visit, with pale words', () => {
+  const sky = readFileSync(join(root, 'app', 'styles', 'sky.css'), 'utf8').replace(/\r\n/g, '\n');
+  const scope = readFileSync(join(root, 'components', 'sky', 'SkyScope.tsx'), 'utf8');
+  const header = readFileSync(join(root, 'components', 'ui', 'Header.tsx'), 'utf8');
+  const page = readFileSync(join(root, 'app', 'page.tsx'), 'utf8');
+  const block = /\n\.sky-scope \{([^}]*)\}/.exec(sky)?.[1] ?? '';
+  assert.match(block, /--veil: 23 61 44;/, 'the veil is #173d2c, the green above the footer');
+  assert.match(block, /--sky-ink: #f2f6ef;/, 'the words are pale on it');
+  assert.match(scope, /className="sky-scope" data-tone="dark"/, 'a dark ground: dark-ground buttons and header');
+  assert.match(header, /\[data-tone="dark"\]/, 'the header reads it as a dark ground');
+  assert.match(page, /themeColor: '#173d2c'/, "the browser's bars match the first view");
+  assert.doesNotMatch(sky, /\.sky-scope \.hero__actions \.btn--primary \{/, 'no light-ground button over the dark-ground one');
+  // Then Bob: "make background image lighter", and after a thinner veil showed the valley more: "no im neat the
+  // background image should be less visible". The veil is thicker than at first (0.9 to 0.95), so the valley is only
+  // the faintest texture in the green.
+  const veil = [...(/\.sky__ink \{[^}]*?background: linear-gradient\(([^;]*)\);/.exec(sky)?.[1] ?? '').matchAll(/--veil\) \/ ([\d.]+)/g)].map((m) => Number(m[1]));
+  assert.equal(veil.length, 4, 'four stops in the veil');
+  for (const a of veil) assert.ok(a >= 0.94 && a < 1, `the valley barely shows: ${a}`);
+});
+
+// Bob: "make everything better ordered: 1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team
+// 7. Visit the store and the footer". Asked for my order, I swapped one pair (promise, then proof), and Bob: "do your
+// order". What we sell slides up over the held first view (as Rewards did, round 37), its green hem now hanging over
+// Our solution; then Reviews, Rewards, the Team and Visit.
+test('round 54 home page: the sections in order, Our solution before Reviews', () => {
+  const page = readFileSync(join(root, 'app', 'page.tsx'), 'utf8');
+  const body = page.slice(page.indexOf('export default function Home'));
+  const order = [...body.matchAll(/<(Hero|Wheel|Reviews|Solution|Rewards|Team|Visit|Footer) \/>/g)].map((m) => m[1]);
+  assert.deepEqual(order, ['Hero', 'Wheel', 'Solution', 'Reviews', 'Rewards', 'Team', 'Visit', 'Footer']);
+  const cover = /<div className="cover">([\s\S]*?)\n        <\/div>/.exec(body)?.[1] ?? '';
+  assert.match(cover, /<Hero \/>[\s\S]*<Wheel \/>/, 'What we sell slides up over the held first view');
+  assert.doesNotMatch(cover, /<Rewards \/>/);
+  const sky = readFileSync(join(root, 'components', 'home', 'HeroSkyMotion.tsx'), 'utf8');
+  assert.doesNotMatch(sky, /getElementById\('rewards'\)/, 'whatever follows the first view in .cover covers it');
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
+  assert.doesNotMatch(/\n\.loyal \{([^}]*)\}/.exec(air)?.[1] ?? '', /border-radius|box-shadow/, 'Rewards is no longer a sheet over the first view');
+  const wheel = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8').replace(/\r\n/g, '\n');
+  assert.match(/\n\.sell \{([^}]*)\}/.exec(wheel)?.[1] ?? '', /z-index: 2;/, 'What we sell paints over the held first view');
+  // The wheel's green hangs on as a curved hem over whatever follows it, and lifts flat as it comes up (round 44).
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  const reviews = readFileSync(join(root, 'components', 'home', 'Reviews.tsx'), 'utf8');
+  const motion = readFileSync(join(root, 'components', 'motion', 'PageMotion.tsx'), 'utf8');
+  // Our solution is on the same green as What we sell since Bob's "C. On the green", so the hem hangs from it over the
+  // reviews, where the light ground starts.
+  assert.match(reviews, /<section id="reviews" className="reviews" data-hem /, 'the hem hangs over the reviews');
+  assert.doesNotMatch(solution, /data-hem/);
+  assert.doesNotMatch(reviews, /--hem/, 'the page lifts it, not the reviews');
+  assert.match(air, /\[data-hem\]::before \{/);
+  assert.match(motion, /\[data-hem\]/, 'the page lifts it as it comes up');
+});
+
+// Bob: "background color doesnt match well"; he picked "Yes, one dark one light": four grounds (two greens, white and
+// mist) become one forest green for the dark parts and one soft green-white for the light parts, the footer alone a
+// shade deeper to close the page.
+test('round 54 home page: one dark ground and one light ground', () => {
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
+  const wheel = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8').replace(/\r\n/g, '\n');
+  const sky = readFileSync(join(root, 'app', 'styles', 'sky.css'), 'utf8').replace(/\r\n/g, '\n');
+  const block = (css: string, sel: string) => new RegExp(`\\n${sel.replace(/[.[\]:]/g, '\\$&')} \\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+  assert.match(air, /--mist: #f3f6f1;/, 'the one light ground');
+  for (const sel of ['.reviews', '.loyal', '.team']) assert.match(block(air, sel), /background: var\(--mist\);/, `${sel} on the light ground`);
+  assert.match(block(air, '.solution'), /background: var\(--color-forest\);/, 'Our solution on the forest green');
+  assert.match(block(air, '[data-hem]::before'), /background: var\(--color-forest\);/, 'the hem in the same green');
+  assert.match(block(wheel, '.sell'), /background: var\(--color-forest\);/, 'What we sell on the forest green');
+  assert.match(block(wheel, '.wheel__pin'), /background: var\(--color-forest\);/);
+  assert.match(sky, /--veil: 23 61 44;/, 'the first view on it too');
+  assert.doesNotMatch(block(air, '.loyal') + block(air, '.solution'), /#fff\b/, 'no second white');
+});
+
+// Bob: "6+ ranges, one store gotta be more prominent and creative shown, and also maybe a transparent or not very
+// visible placed products for each product when scroll". Of three headings he picked "A. The big number": a 6 the
+// height of the screen with a mint +, counting up from 0 as it comes in, "ranges." and "One store." stacked beside it.
+// The faint products either side of the range in front were built, then: "remove the images behind". The wheel is
+// names only again.
+test('round 54 What we sell: the big number, and the wheel by name only', () => {
+  assert.equal(copy.WHEEL_COPY.count, 6, 'the number, counted up on the page');
+  assert.equal(copy.WHEEL_COPY.ranges, 'ranges.');
+  const wheel = readFileSync(join(root, 'components', 'home', 'Wheel.tsx'), 'utf8');
+  const motion = readFileSync(join(root, 'components', 'home', 'WheelMotion.tsx'), 'utf8');
+  const css = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8');
+  const lib = readFileSync(join(root, 'lib', 'wheel.ts'), 'utf8');
+  assert.match(wheel, /className="sell__num"/, 'the big number');
+  assert.match(motion, /\.sell__num/, 'it counts up');
+  for (const [name, src] of [['Wheel.tsx', wheel], ['WheelMotion.tsx', motion], ['wheel.css', css], ['wheel.ts', lib]]) {
+    assert.doesNotMatch(src, /ghost|<img/i, `no images behind the names (${name})`);
+  }
 });

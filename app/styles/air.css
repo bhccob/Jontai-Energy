@@ -5,7 +5,8 @@
    read. No boxes: rules, colour fields and space; the loyalty card and the islands are the objects. */
 
 :root {
-  --mist: #e9efe3;
+  /* The page's one light ground (round 54, Bob: "Yes, one dark one light"; #e9efe3 before, beside a plain white). */
+  --mist: #f3f6f1;
   --deep: #0e2219;
   --leaf: var(--mist);
   --leaf-ink: #173d2c;
@@ -38,23 +39,19 @@ main.air {
 
 /* ---------- Jontai Rewards: laid out like a price list, two programs side by side (round 15) ---------- */
 
-/* Rewards slides up over the first view like a sheet (round 37, Bob: "like the loyalty page when scroll its on top
-   of the first page"): plain white (round 21), its top corners rounded and a soft shadow above it, so it reads as
-   lying on top while the first view holds still under it (sky.css, .cover). */
+/* The first view and the section that slides up over it (sky.css, .cover): What we sell since round 54's order (Bob:
+   "make everything better ordered", then "do your order": first view, What we sell, Our solution, Reviews, Rewards,
+   Team, Visit); Rewards from round 37 to 54. Rewards now follows the reviews' mist on its own white. */
 .cover {
   position: relative;
 }
 .loyal {
   position: relative;
   z-index: 2;
-  /* Starts just under the header (round 24), so once it has covered the first view the title and most of the cards
-     show. */
-  padding: calc(var(--nav-h) + clamp(12px, 2.4vh, 28px)) var(--gutter) clamp(96px, 16vh, 200px);
-  border-radius: clamp(20px, 2.4vw, 36px) clamp(20px, 2.4vw, 36px) 0 0;
-  /* Plain white (round 21); Our solution after it shares it (round 54, Bob: "the color background as our solution should
-     be the same as loyalty area"). */
-  background: #fff;
-  box-shadow: 0 -24px 60px -28px rgb(8 22 15 / 0.45);
+  /* After the reviews' mist (round 54's order), so its own room at the top. */
+  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(96px, 16vh, 200px);
+  /* The page's one light ground (round 54, Bob: "Yes, one dark one light"); plain white from round 21. */
+  background: var(--mist);
   color: var(--leaf-ink);
 }
 /* Round 54, calmer: the line in light and bold with one sentence beside it, then the two plans one under the other
@@ -381,86 +378,294 @@ main.air {
   letter-spacing: -0.03em;
 }
 
-/* ---------- Our solution: one sentence that fills in as you read it (round 54) ---------- */
+/* ---------- Our solution: the line on top, six panels sliding past under it (round 54) ---------- */
 
-/* Bob: "our solutions ... gotta be more verticaly long(er)". No longer held on one screen: the sentence runs large down
-   the page, longer than a screen, and its words fill in as they rise toward the middle (data-fill, PageMotion), the
-   points rising in after it (data-reveal); without scripts, or with reduced motion, the sentence shows full. */
+/* The top is laid out as Rewards' is (Bob: "Line on top"): the line large on the left, a short line and Visit the store
+   at its foot on the right. Under it six tall cards (Bob: "more simple card design view, something like squared-media
+   where its more cinematic and have animation and seem more like business, do not copy exact"). Then, asked whether
+   they looked "professional enough for a solar company", Bob picked "C. On the green": the section carries on the
+   forest green of What we sell, and every card is the same panel, a hairline rim, a mint icon in a soft circle, the
+   number in outline, standing straight. Wide screens run them across on a strip while the section holds (design 3, the
+   slide); tablets and phones stack them into a deck (SolutionDeck, lib/solutionDeck). */
 .solution {
   position: relative;
-  /* Over Rewards' shadow, which would otherwise draw a faint line where the two whites meet. */
   z-index: 2;
-  /* The same white as Rewards above it, so the two read as one sheet (round 54). */
-  background: #fff;
-  color: var(--leaf-ink);
-  padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(120px, 22vh, 260px);
+  /* The page's one dark ground (Bob: "Yes, one dark one light"), as What we sell above it, so the two read as one dark
+     chapter: what we sell, then why buy it here. */
+  background: var(--color-forest);
+  color: #f2f6ef;
+  padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(96px, 16vh, 200px);
+  /* Nothing scrolls sideways. */
+  overflow-x: clip;
 }
-.solution__body {
+.solution__head {
   display: grid;
-  gap: clamp(28px, 5vh, 56px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  align-items: end;
+  gap: 18px 48px;
+  margin-bottom: clamp(40px, 8vh, 96px);
 }
 .solution__kick {
-  margin: 0;
-  color: #2f8f55;
+  grid-column: 1 / -1;
+  margin: 0 0 6px;
+  color: #8fd3a1;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-/* Large, across the whole width (Bob: "maybe our solutions text area should be bigger"), and now free of the one-screen
-   fit, larger still, so it runs down the page. */
-.solution__text {
+.solution__line {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.4rem, 6.2vw, 7.6rem);
-  line-height: 1.06;
+  font-size: clamp(2.4rem, 5.4vw, 6.2rem);
+  line-height: 1.02;
   letter-spacing: -0.035em;
 }
+/* The mint phrase stays whole on one line ("its / own power." read badly). */
 .solution__key {
-  color: #2f8f55;
+  color: #8fd3a1;
   font-weight: 760;
+  white-space: nowrap;
 }
-.solution__points {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 32px;
-  margin: clamp(32px, 7vh, 96px) 0 0;
+/* "We stand behind it." starts a line of its own. */
+.solution__then {
+  display: block;
+}
+.solution__sub {
+  max-width: 34ch;
+  margin: 0;
+  color: rgb(242 246 239 / 0.72);
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+.solution__visit {
+  margin-top: 20px;
+}
+
+/* The cards: one panel for all six, a touch lighter than the green it sits on, with a hairline rim and a bright top
+   edge. Opaque (the same colours as white at 7% to 3% over the forest green), so a card under another in the deck
+   never shows through. Each slot is a size container, so a card's type scales with the card. */
+.solution__cards {
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.solution__points li {
+.solution__slot {
+  container-type: inline-size;
+}
+.solution__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6cqi;
+  aspect-ratio: 4 / 5;
+  padding: 9cqi;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #274b3b, #1e4332);
+  color: #f2f6ef;
+  box-shadow:
+    inset 0 0 0 1px rgb(242 246 239 / 0.14),
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 30px 60px -34px rgb(3 12 8 / 0.7);
+}
+/* The card being covered in the deck dims as it sinks back (SolutionDeck sets --dim). */
+.solution__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #0e2219;
+  opacity: calc(var(--dim, 0) * 0.35);
+  pointer-events: none;
+}
+.solution__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.solution__icon {
   display: grid;
-  align-content: start;
-  gap: 14px;
-  padding-top: 22px;
-  border-top: 1px solid var(--leaf-rule);
-  font-size: 1.1rem;
-  font-weight: 700;
+  place-items: center;
+  width: 16cqi;
+  height: 16cqi;
+  border-radius: 50%;
+  background: rgb(143 211 161 / 0.12);
+  color: #8fd3a1;
 }
-.solution__points svg {
-  width: 32px;
-  height: 32px;
-  color: #2f8f55;
+.solution__icon svg {
+  width: 52%;
+  height: 52%;
 }
-/* Narrow screens: the sentence as large as the width allows, the points two to a row. */
+/* The number in outline: there, but quiet beside the icon. */
+.solution__num {
+  font-family: var(--font-display);
+  font-size: 17cqi;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(242 246 239 / 0.36);
+}
+.solution__body {
+  display: grid;
+  gap: 3.4cqi;
+}
+.solution__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 9.2cqi;
+  font-weight: 720;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.solution__text {
+  margin: 0;
+  color: rgb(242 246 239 / 0.72);
+  font-size: max(0.9rem, 5cqi);
+  line-height: 1.5;
+}
+
+/* Tablets, phones and short wide screens: a deck. Each card stops a little lower than the one before, under the
+   header, and the next slides over it, standing straight (C). */
+.solution__cards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.solution__slot {
+  width: min(100%, 25rem, calc((100svh - var(--nav-h) - 120px) * 0.8));
+}
+@media (max-width: 74.99rem) and (min-height: 34rem), (max-height: 39.99rem) and (min-height: 34rem) {
+  .solution__slot {
+    position: sticky;
+    top: calc(var(--nav-h) + 20px + var(--i) * 12px);
+  }
+  .solution__slot + .solution__slot {
+    margin-top: clamp(40px, 10vh, 120px);
+  }
+}
+/* A phone on its side: no room to hold a card, so a plain column. */
+@media (max-height: 33.99rem) {
+  .solution__slot {
+    width: min(100%, 25rem);
+  }
+  .solution__slot + .solution__slot {
+    margin-top: 16px;
+  }
+  .solution__card {
+    aspect-ratio: auto;
+  }
+}
+
+/* Wide screens without motion: the cards stand in two rows of three under the line. */
+@media (min-width: 75rem) and (min-height: 40rem) {
+  .solution__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 21rem));
+    justify-content: center;
+    gap: 24px;
+  }
+  .solution__slot {
+    width: auto;
+  }
+}
+
+/* Design 3, the slide (SolutionDeck): the section becomes a tall track and its stage holds still under the header
+   while the strip of cards runs across the screen; a count and a rule under the strip follow it. Only with motion
+   allowed. */
+.solution__meter {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 75rem) and (min-height: 40rem) {
+  .solution {
+    padding-top: clamp(24px, 4vh, 48px);
+    padding-bottom: clamp(64px, 10vh, 120px);
+  }
+  .solution__track {
+    height: 340vh;
+  }
+  .solution__stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: calc(var(--nav-h) + clamp(16px, 4vh, 48px)) 0 clamp(24px, 5vh, 48px);
+  }
+  .solution__head {
+    flex: none;
+    margin-bottom: 0;
+  }
+  .solution__line {
+    font-size: min(clamp(2.4rem, 5.4vw, 6.2rem), 9vh);
+  }
+  /* The strip takes the room the line leaves (the line runs to four lines in Spanish), so the cards always fit, with
+     room under them for the lean and the count. */
+  .solution__deck {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    container-type: size;
+    --cw: min(23rem, 26vw, calc((100cqh - 96px) * 0.8));
+  }
+  .solution__cards {
+    position: absolute;
+    top: calc(50% - 16px);
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 28px;
+    translate: 0 -50%;
+  }
+  .solution__slot {
+    flex: none;
+    width: var(--cw);
+  }
+  .solution__meter {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: rgb(242 246 239 / 0.6);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .solution__rule {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    background: rgb(242 246 239 / 0.14);
+  }
+  .solution__fill {
+    position: absolute;
+    inset: 0;
+    background: #8fd3a1;
+    transform-origin: 0 50%;
+    scale: 0 1;
+  }
+}
+
+/* Tablets: the head stacks. */
 @media (max-width: 60rem) {
-  .solution__text {
-    font-size: clamp(2rem, 9.2vw, 4.2rem);
-    line-height: 1.08;
+  .solution__head {
+    grid-template-columns: 1fr;
   }
-  .solution__points {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 20px;
+}
+/* Phones. */
+@media (max-width: 36rem) {
+  .solution__line {
+    font-size: clamp(2.1rem, 9vw, 3rem);
   }
-  .solution__points li {
-    gap: 10px;
-    padding-top: 16px;
-    font-size: 0.98rem;
-  }
-  .solution__points svg {
-    width: 26px;
-    height: 26px;
+  .solution__sub {
+    font-size: 1.05rem;
   }
 }
 
@@ -789,7 +994,8 @@ main.air {
 .team {
   position: relative;
   z-index: 1;
-  padding: clamp(40px, 6vh, 70px) var(--gutter) clamp(100px, 15vh, 160px);
+  /* After the white of Rewards (round 54's order), so its own room at the top. */
+  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(100px, 15vh, 160px);
   background: var(--mist);
   color: var(--leaf-ink);
 }
@@ -1057,24 +1263,28 @@ main.air {
 }
 
 /* ---------- What customers say, on an arc after squared-media ----------
-   On the mist (Bob, round 16), now right after the ranges and before the team, which shares the mist (round 25), so
-   the two read as one field; the deep green cards sit on it like cut-outs, each with its own soft shadow. */
+   On the mist (Bob, round 16; the page's one light ground since round 54), between Our solution and Rewards since round
+   54's order (the proof after the promise);
+   the deep green cards sit on it like cut-outs, each with its own soft shadow. */
 
 .reviews {
   position: relative;
   z-index: 1;
   overflow: clip;
-  /* Room at the top for the green hem to lift out of before the title (round 44). */
-  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(40px, 6vh, 70px);
+  /* Room at the top for the green hem to lift out of before the title (round 44; it hangs from Our solution since round
+     54's order), and room at the foot before Rewards. */
+  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(96px, 14vh, 160px);
   background: var(--mist);
   color: var(--leaf-ink);
   text-align: center;
 }
-/* From the ranges into the reviews (round 44, Bob: "a seamless transition from end of product ranges to reviews a creative
-   way"): the ranges' deep green carries on over the top of the reviews like a curtain with a curved hem, the same curve
-   the reviews turn on, and as the reviews come up the hem lifts until the edge between them is straight (--hem,
-   scrubbed by Reviews). Without motion it rests as a gentle curve. Behind the reviews' own words and cards. */
-.reviews::before {
+/* Out of the ranges (round 44, Bob: "a seamless transition from end of product ranges to reviews a creative way"): the
+   ranges' deep green carries on over the top of the section after them like a curtain with a curved hem, and as that
+   section comes up the hem lifts until the edge between them is straight (--hem, scrubbed by PageMotion). Without
+   motion it rests as a gentle curve. Behind the section's own words. Over the reviews (data-hem), hanging from What we
+   sell and, since round 54's order and "C. On the green", from Our solution on the same forest green; the section is
+   positioned, raised and clipped at its sides. */
+[data-hem]::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -1083,7 +1293,7 @@ main.air {
   right: -15%;
   height: var(--hem, clamp(40px, 8vh, 90px));
   border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  background: var(--deep);
+  background: var(--color-forest);
   box-shadow: 0 34px 60px -34px rgb(3 12 8 / 0.55);
   pointer-events: none;
 }

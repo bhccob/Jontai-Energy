@@ -42,11 +42,29 @@ export function WheelMotion() {
     if (!sell || !wheel || !pin) return;
     const names = [...wheel.querySelectorAll<HTMLButtonElement>('.wn')];
     const feet = [...wheel.querySelectorAll<HTMLElement>('.wheel__foot')];
+    const num = sell.querySelector<HTMLElement>('.sell__num');
     const ids = names.map((n) => n.dataset.id ?? '');
     const n = names.length;
 
     const mm = gsap.matchMedia();
     mm.add(MOTION, () => {
+      // "A. The big number": the 6 counts up from 0 the first time it comes into view (Bob: "more prominent and creative").
+      const final = Number(num?.textContent) || 0;
+      let counting: gsap.core.Tween | undefined;
+      if (num && final) {
+        const state = { v: 0 };
+        num.textContent = '0';
+        counting = gsap.to(state, {
+          v: final,
+          duration: 1.4,
+          ease: 'power2.out',
+          onUpdate: () => {
+            num.textContent = String(Math.round(state.v));
+          },
+          scrollTrigger: { trigger: num, start: 'top 80%', once: true },
+        });
+      }
+
       wheel.dataset.held = 'true';
       let front = -1;
       let em = 100;
@@ -196,6 +214,9 @@ export function WheelMotion() {
         sell.style.removeProperty('--sx');
         sell.style.removeProperty('--sr');
         names.forEach((el) => el.removeAttribute('style'));
+        counting?.scrollTrigger?.kill();
+        counting?.kill();
+        if (num && final) num.textContent = String(final);
       };
     });
     return () => mm.revert();

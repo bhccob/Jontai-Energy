@@ -43,12 +43,20 @@ function Go({ item }: { item: WheelItem }) {
 export function Wheel() {
   return (
     <div id="products" className="sell">
+      {/* "A. The big number" (Bob: "6+ ranges, one store gotta be more prominent and creative shown"): the 6 the height
+          of the screen with a mint +, counted up as it comes in (WheelMotion), and the words beside it. The heading
+          itself says "6+ ranges. One store." to a screen reader; the big figure is for the eye. */}
       <header className="sell__head">
-        <h2 id="sell-title" className="sell__title" data-words>
-          <span>
-            <Words text={`${WHEEL_COPY.title[0]} `} />
-          </span>
-          <b>
+        <span className="sell__big" aria-hidden="true">
+          <span className="sell__num">{WHEEL_COPY.count}</span>
+          <span className="sell__plus">+</span>
+        </span>
+        <h2 id="sell-title" className="sell__title">
+          <span className="sell__sr">{`${WHEEL_COPY.count}+ `}</span>
+          <span className="sell__ranges" data-words>
+            <Words text={WHEEL_COPY.ranges} />
+          </span>{' '}
+          <b className="sell__store" data-words>
             <Words text={WHEEL_COPY.title[1]} />
           </b>
         </h2>

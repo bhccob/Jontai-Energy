@@ -28,15 +28,22 @@ the end".
    light wide type, sentence case and no rules (What we sell, Our solution, Rewards, Visit the store); beside them on
    wide screens and under them on phones, small, under quiet labels: Ranges (All products, then the six ranges, each
    straight to its products) and Help (Support, Send a message, Request a quote, Get directions); then the languages.
-2. **First view: still, light, four facts** (`site11.html`, look C, picked 2026-11-15). Light green over the faint,
-   slowly moving valley (as today, barely visible). Centred: "Aruba sunlight, **made useful.**" in the site's mix of
-   light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
-   family-owned store in Oranjestad."), and two buttons, "Visit the store" (forest) and "See what we sell" (glass pill).
+2. **First view: still, four facts** (`site11.html`, look C, picked 2026-11-15). Forest green over the faint, slowly
+   moving valley (barely visible): light green at first, then on 2026-11-16 Bob: "make the first view page background
+   color to be darker green like above the footer color", so the field is Visit's #173d2c with pale words, the header
+   turns deep green over it, and the browser's bars match. Centred: "Aruba sunlight, **made useful.**" in the site's
+   mix of light and bold, one line ("Solar, backup power, lighting, cooling, security cameras and furniture, from one
+   family-owned store in Oranjestad."), and two buttons, "Visit the store" (pale) and "See what we sell" (clear glass
+   with a pale rim), the pair Visit uses.
    Along the foot, four facts on one ruled line, each with a small label: **Hours** "**Open now**, until 7:00 PM" (live,
    from the store hours, as today); **The store** "**Cumana 73**, Oranjestad"; **What we sell** "**6+ ranges**, one
    store"; **Jontai Rewards** "**Afl. 25 back** for every Afl. 500" (from `lib/loyalty.ts`). No big JONTAI, no scene, and
    no handover effect: the words rise in once as the page opens, and when you scroll the first view holds still while
-   Rewards slides up over it as a sheet with rounded top corners (Bob: "C and rewards slides over"). It fits one
+   the next section slides up over it: Rewards at first (Bob: "C and rewards slides over"), What we sell since Bob's
+   order of 2026-11-16 ("1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team 7. Visit the
+   store and the footer"), its deep green rising as a rounded card that grows to the edges. Asked for my order, I
+   swapped one pair, promise before proof, and Bob: "do your order": first view, What we sell, Our solution (the
+   ranges' green hem now hangs over it), Reviews, Rewards, Team, Visit, so white and mist take turns. It fits one
    screen; on phones the facts sit two by two. The soft sun behind the headline drifts slowly round the top of the
    screen and the green veil thins round it so the valley shows through there; the valley and the words lean a touch
    for depth. (It followed the pointer for a while; cursor effects were dropped, see 8.) With reduced motion it stays
@@ -49,18 +56,35 @@ the end".
    text); then "See my points" and "Not sure which card fits? Ask us; a person answers." No pill or chip above the
    title (Bob, round 43). Motion: the heading rises into place line by line, the two cards float gently and lean toward
    the pointer, and the figures count up once when they come into view.
-4. **Our solution: the sentence.** It takes the place of the "Why Jontai" section. Its ground is the same plain white as
-   Rewards just above it (Bob: "the color background as our solution should be the same as loyalty area"). The sentence
-   is large and runs the full width (Bob: "maybe our solutions text area should be bigger"), and runs down the page,
-   longer than a screen, no longer held on one (Bob: "our solutions ... gotta be more verticaly long(er)"). One large
-   paragraph fills in word by word as it rises toward the middle of the screen, the key promises turning bold green:
-   "At Jontai, your home makes **its own power**, so the island's blackouts do not stop your day. We **fix what we
-   sell**, even years later. Our prices are **hard to beat**, for the same quality or better. We sell **far more than
-   solar**. **Every customer matters**, long after the sale. And our family **keeps learning**, to bring tomorrow's
-   ideas home."
-   After it, six icon points rise in: Your own power, We fix what we sell, Prices hard to beat, More than solar, Every
-   customer matters, Always learning (six across; two to a row on phones). **No people,
-   names or photos** (Bob: remove Bob and Chakho).
+4. **Our solution: a line and six cards** (picked 2026-11-15 from three card directions: Bob chose the simple cards of
+   direction C, "C is looking best but iwant more simple cards", then, with the line held beside the cards "not quite
+   right", the layout "Line on top, 3 x 2 grid"). It takes the place of the "Why Jontai" section. Its ground is the same
+   plain white as Rewards just above it (Bob: "the color background as our solution should be the same as loyalty
+   area"). The top is laid out like the top of Rewards: "Your home makes **its own power.**" / "We stand behind it."
+   large on two lines (rising word by word), and at its foot on the right "Six promises from one family-owned store at
+   Cumana 73, Oranjestad." and Visit the store. Under it six tall cards (after the 3 x 2 grid, Bob: "no i want more
+   simple card design view, something like https://www.squared-media.nl/ where its more cinematic and have animation
+   and seem more like business, do not copy exact"): each only a number (01 to 06), the promise and one plain line:
+   Your own power, We fix what we sell, Prices hard to beat, More than solar, Every customer matters, Always learning.
+   Three grounds in turn from the site's greens (deep, brand green, pale mint), larger corners, a soft shadow, nothing
+   to press. Design 1 (Bob's name for it, commit 8b36495) dealt the cards into a low fan. Bob: "this is good design is
+   there more option thats similair"; of three mock-ups (2 the spread, 3 the slide, 4 the turn) he said "maybe design
+   3". So, on wide screens, the section holds still under the header while the six cards run in from the right and
+   across the screen on a strip as the page scrolls; each leans away from the middle of the screen and sits back a
+   little, standing straight and full size as it passes the middle. Under the strip a count (01 / 06 to 06 / 06) and a
+   thin rule fill as it runs; scrolling back runs it back. The strip takes whatever room the line leaves (four lines in
+   Spanish). Wide screens with reduced motion show the cards in two rows of three. On tablets and phones the cards
+   stack into a deck: each stops under the header a little lower than the last and the next slides over it, the
+   covered one sinking back and dimming slightly (reduced motion: the deck, still). This replaced the long sentence
+   that filled in word by word, then the 3 x 2 grid. **No people, names or photos** (Bob: remove Bob and Chakho).
+   Then (2026-11-16) Bob asked whether the cards looked "professional enough for a solar company" and said the
+   "background color doesnt match well". Of three mock-ups (A spec sheet, B one deep panel, C on the green) he picked
+   **C. On the green**, and "Yes, one dark one light" for the page: Our solution now sits on the forest green #173d2c
+   like What we sell above it, every card the same panel (a touch lighter than the green, a hairline rim, a mint icon in
+   a soft circle, the number in outline, the promise and one line), standing straight on the strip and in the deck,
+   easing back only a touch away from the middle. The page has one dark ground (#173d2c: first view, What we sell, Our
+   solution, Visit; the footer a shade deeper, #0e2219) and one light ground (#f3f6f1: Reviews, Rewards, Team); the
+   green hangs as a curved hem over the reviews, where the light starts.
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home
    page's six range rows are replaced by one held screen, opened by the heading "6+ ranges. **One store.**" (Bob: "maybe 6+
@@ -85,6 +109,12 @@ the end".
      way through a turn the page glides on to the next name the way it was going, like a phone's date picker, so one
      mouse-wheel notch turns one name.
    - After Others the screen lets go into the end band: "Every product, **one by one.**" with "See all products".
+   - 2026-11-16, Bob: "6+ ranges, one store gotta be more prominent and creative shown, and also maybe a transparent
+     or not very visible placed products for each product when scroll". Of three headings he picked **A. The big
+     number**: the heading has a screen of its own, a 6 the height of the screen with a mint +, counting up from 0 the
+     first time it comes into view, "ranges." light and "**One store.**" bold beside it, the line under them past a
+     hairline (on phones the number on top). Faint products either side of the range in front were built ("Fainter
+     than the mock-up"), then Bob: "remove the images behind". The wheel stays names only.
 6. **All products page** at `/products`, to look at, not to shop (Bob: "i want them to not be like a site that you
    can shop but only to view so more minimal and better displayed"). Title "All **products**", one line ("Everything on
    the shelf at Cumana 73, one by one. Pick one to read what it is."), the ranges as a row of plain names between two
