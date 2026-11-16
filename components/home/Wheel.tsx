@@ -20,7 +20,7 @@ function Name({ name }: { name: string }) {
   );
 }
 
-/** "See Solar products" and a small arrow: all the foot says (Bob: "just have to say see .... products"). */
+/** "See all 9 Solar products" and a small arrow (Bob: "just have to say see .... products"). */
 function Go({ item }: { item: WheelItem }) {
   return (
     <a href={item.href} className="wheel__go">
@@ -32,48 +32,55 @@ function Go({ item }: { item: WheelItem }) {
 
 /**
  * What we sell (round 54, Bob picked "D. The wheel", then: "maybe six ranges products should not include the image? and
- * include others"): one held screen on deep green where the names of the six ranges and Others stand large on a drum,
- * like a phone's date picker, and turn one at a time as the page scrolls, resting on each. The name in front leads to
- * its products on the All products page (an arrow beside it says so), as does "See ... products" under it. One deep
- * green, no colour per range (Bob: "i dont want so much color pallete"). After Others the page lets go into "Every
- * product, one by one." Without scripts, or with reduced motion, they are still rows instead (wheel.css). The anchors
- * the menu and the footer use (#solar ... #upstairs, #delivery, #others) sit where the wheel rests on each; how
- * delivery works opens from Furniture's products on the All products page.
+ * include others"): one held screen on the forest green where the names of the six ranges and Others stand on a drum,
+ * like a phone's date picker, and turn one at a time as the page scrolls, resting on each. One deep green, no colour
+ * per range (Bob: "i dont want so much color pallete").
+ *
+ * Round 55, "C. One screen with the wheel" (Bob: "above six ranges products area gotta be better designed too"): the
+ * 6+ heading no longer has a screen of its own with half of it empty. It holds on the left of the wheel's screen, the 6
+ * the height of a third of it with a mint + (counted up as it arrives, WheelMotion), "ranges." and "One store." under
+ * it, and under a hairline the range in front says what it is and links to its products. The names turn on the right.
+ * Without scripts, or with reduced motion, the heading stands on top and the seven are still rows, each with its line
+ * (wheel.css). The anchors the menu and the footer use (#solar ... #upstairs, #delivery, #others) sit where the wheel
+ * rests on each; how delivery works opens from Furniture's products on the All products page.
  */
 export function Wheel() {
   return (
     <div id="products" className="sell">
-      {/* "A. The big number" (Bob: "6+ ranges, one store gotta be more prominent and creative shown"): the 6 the height
-          of the screen with a mint +, counted up as it comes in (WheelMotion), and the words beside it. The heading
-          itself says "6+ ranges. One store." to a screen reader; the big figure is for the eye. */}
-      <header className="sell__head">
-        <span className="sell__big" aria-hidden="true">
-          <span className="sell__num">{WHEEL_COPY.count}</span>
-          <span className="sell__plus">+</span>
-        </span>
-        <h2 id="sell-title" className="sell__title">
-          <span className="sell__sr">{`${WHEEL_COPY.count}+ `}</span>
-          <span className="sell__ranges" data-words>
-            <Words text={WHEEL_COPY.ranges} />
-          </span>{' '}
-          <b className="sell__store" data-words>
-            <Words text={WHEEL_COPY.title[1]} />
-          </b>
-        </h2>
-        <p className="sell__line" data-reveal>
-          {WHEEL_COPY.line}
-        </p>
-      </header>
-
       <section className="wheel" aria-labelledby="sell-title" style={{ '--n': N } as CSSProperties}>
         {ITEMS.map((it, k) => (
           <span key={it.id} id={it.id} className="wheel__anchor" style={{ '--k': k, '--rest': restProgress(k, N) } as CSSProperties} />
         ))}
         <span id="delivery" className="wheel__anchor" style={{ '--k': N - 2, '--rest': restProgress(N - 2, N) } as CSSProperties} />
 
-        {/* The held screen */}
+        {/* The held screen: the heading and the range in front on the left, the names on the right */}
         <div className="wheel__held">
           <div className="wheel__pin">
+            {/* The heading says "6+ ranges. One store." to a screen reader; the big figure is for the eye. */}
+            <header className="sell__head">
+              <span className="sell__big" aria-hidden="true">
+                <span className="sell__num">{WHEEL_COPY.count}</span>
+                <span className="sell__plus">+</span>
+              </span>
+              <h2 id="sell-title" className="sell__title">
+                <span className="sell__sr">{`${WHEEL_COPY.count}+ `}</span>
+                <span className="sell__ranges" data-words>
+                  <Words text={WHEEL_COPY.ranges} />
+                </span>{' '}
+                <b className="sell__store" data-words>
+                  <Words text={WHEEL_COPY.title[1]} />
+                </b>
+              </h2>
+              <p className="sell__line">{WHEEL_COPY.line}</p>
+              <div className="wheel__feet">
+                {ITEMS.map((it, k) => (
+                  <div key={it.id} className="wheel__foot" data-k={k} data-on={k === 0}>
+                    <p className="wheel__about">{it.line}</p>
+                    <Go item={it} />
+                  </div>
+                ))}
+              </div>
+            </header>
             <div className="wheel__names">
               <span className="wheel__band" aria-hidden="true" />
               {ITEMS.map((it, k) => (
@@ -87,13 +94,6 @@ export function Wheel() {
                 </button>
               ))}
             </div>
-            <div className="wheel__feet">
-              {ITEMS.map((it, k) => (
-                <div key={it.id} className="wheel__foot" data-k={k} data-on={k === 0}>
-                  <Go item={it} />
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
@@ -104,6 +104,7 @@ export function Wheel() {
               <h3 className="wrow__name">
                 <Name name={it.name} />
               </h3>
+              <p className="wrow__about">{it.line}</p>
               <Go item={it} />
             </li>
           ))}

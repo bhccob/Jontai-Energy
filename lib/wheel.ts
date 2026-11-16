@@ -1,6 +1,6 @@
 // The range wheel on the home page (round 54): the six ranges and Others by name (Bob: "maybe six ranges products should
 // not include the image? and include others"), turning on a drum as the page scrolls, resting on each before the next.
-import { WHEEL_COPY } from './homeCopy.ts';
+import { CATALOG_COPY, WHEEL_COPY } from './homeCopy.ts';
 import { ISLANDS, OTHERS, shownIn } from './islands.ts';
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
@@ -61,10 +61,12 @@ export function rangeIndexFromHash(hash: string, ids: string[]): number {
   return ids.indexOf(id === 'delivery' ? 'upstairs' : id);
 }
 
-/** One place on the wheel: a range, or Others at the end. `label` is its link, "See Solar products". */
+/** One place on the wheel: a range, or Others at the end. `label` is its link, "See Solar products"; `line` says what
+ *  it is, under the 6+ heading while it is in front (round 55, "C. One screen with the wheel"). */
 export interface WheelItem {
   id: string;
   name: string;
+  line: string;
   count: number;
   href: string;
   label: string;
@@ -77,8 +79,8 @@ export function wheelItems(): WheelItem[] {
   return [
     ...ISLANDS.map((r) => {
       const count = shownIn(r).length;
-      return { id: r.id, name: r.name, count, href: rangeHref(r.id), label: fill(WHEEL_COPY.see, r.name) };
+      return { id: r.id, name: r.name, line: r.line, count, href: rangeHref(r.id), label: fill(WHEEL_COPY.see, r.name) };
     }),
-    { id: 'others', name: 'Others', count: OTHERS.length, href: rangeHref('others'), label: WHEEL_COPY.seeOthers },
+    { id: 'others', name: 'Others', line: CATALOG_COPY.othersLine, count: OTHERS.length, href: rangeHref('others'), label: WHEEL_COPY.seeOthers },
   ];
 }

@@ -378,15 +378,13 @@ main.air {
   letter-spacing: -0.03em;
 }
 
-/* ---------- Our solution: the line on top, six panels sliding past under it (round 54) ---------- */
+/* ---------- Our solution: one promise at a time (round 55) ---------- */
 
-/* The top is laid out as Rewards' is (Bob: "Line on top"): the line large on the left, a short line and Visit the store
-   at its foot on the right. Under it six tall cards (Bob: "more simple card design view, something like squared-media
-   where its more cinematic and have animation and seem more like business, do not copy exact"). Then, asked whether
-   they looked "professional enough for a solar company", Bob picked "C. On the green": the section carries on the
-   forest green of What we sell, and every card is the same panel, a hairline rim, a mint icon in a soft circle, the
-   number in outline, standing straight. Wide screens run them across on a strip while the section holds (design 3, the
-   slide); tablets and phones stack them into a deck (SolutionDeck, lib/solutionDeck). */
+/* Bob: "Our solution section need better design it looks like a game" (the panels before: framed cards, icons in
+   circles, outlined numbers, a 02 / 06 bar). Of three mock-ups without cards he picked "B. One promise at a time".
+   Still (reduced motion, a short screen, no scripts): the sentence, then the six promises as rows on hairlines, then the
+   store line. Held (SolutionScenes sets data-held where lib/solutionScenes' SCENE_MEDIA matches): a share of the scroll
+   for each scene, and one scene at a time on a held screen, the six names in a column on the right. */
 .solution {
   position: relative;
   z-index: 2;
@@ -398,16 +396,8 @@ main.air {
   /* Nothing scrolls sideways. */
   overflow-x: clip;
 }
-.solution__head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
-  align-items: end;
-  gap: 18px 48px;
-  margin-bottom: clamp(40px, 8vh, 96px);
-}
 .solution__kick {
-  grid-column: 1 / -1;
-  margin: 0 0 6px;
+  margin: 0 0 clamp(18px, 3vh, 28px);
   color: #8fd3a1;
   font-size: 0.8rem;
   font-weight: 700;
@@ -432,240 +422,223 @@ main.air {
 .solution__then {
   display: block;
 }
-.solution__sub {
-  max-width: 34ch;
-  margin: 0;
-  color: rgb(242 246 239 / 0.72);
-  font-size: 1.15rem;
-  line-height: 1.55;
-}
-.solution__visit {
-  margin-top: 20px;
-}
 
-/* The cards: one panel for all six, a touch lighter than the green it sits on, with a hairline rim and a bright top
-   edge. Opaque (the same colours as white at 7% to 3% over the forest green), so a card under another in the deck
-   never shows through. Each slot is a size container, so a card's type scales with the card. */
-.solution__cards {
-  margin: 0;
+/* The six promises, still: rows on hairlines, the number in narrow mint figures, the promise, its one line. */
+.solution__promises {
+  margin: clamp(48px, 9vh, 96px) 0 0;
   padding: 0;
   list-style: none;
+  border-bottom: 1px solid rgb(242 246 239 / 0.16);
 }
-.solution__slot {
-  container-type: inline-size;
-}
-.solution__card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 6cqi;
-  aspect-ratio: 4 / 5;
-  padding: 9cqi;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #274b3b, #1e4332);
-  color: #f2f6ef;
-  box-shadow:
-    inset 0 0 0 1px rgb(242 246 239 / 0.14),
-    inset 0 1px 0 rgb(255 255 255 / 0.12),
-    0 30px 60px -34px rgb(3 12 8 / 0.7);
-}
-/* The card being covered in the deck dims as it sinks back (SolutionDeck sets --dim). */
-.solution__card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: #0e2219;
-  opacity: calc(var(--dim, 0) * 0.35);
-  pointer-events: none;
-}
-.solution__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-.solution__icon {
+.solution__promise {
   display: grid;
-  place-items: center;
-  width: 16cqi;
-  height: 16cqi;
-  border-radius: 50%;
-  background: rgb(143 211 161 / 0.12);
-  color: #8fd3a1;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: baseline;
+  gap: 10px 24px;
+  padding: clamp(28px, 5vh, 44px) 0;
+  border-top: 1px solid rgb(242 246 239 / 0.16);
 }
-.solution__icon svg {
-  width: 52%;
-  height: 52%;
-}
-/* The number in outline: there, but quiet beside the icon. */
 .solution__num {
   font-family: var(--font-display);
-  font-size: 17cqi;
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+  font-size: 1.05rem;
+  font-stretch: 62%;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #8fd3a1;
   font-variant-numeric: tabular-nums;
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(242 246 239 / 0.36);
-}
-.solution__body {
-  display: grid;
-  gap: 3.4cqi;
 }
 .solution__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 9.2cqi;
-  font-weight: 720;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  font-weight: 680;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 .solution__text {
+  max-width: 36ch;
   margin: 0;
   color: rgb(242 246 239 / 0.72);
-  font-size: max(0.9rem, 5cqi);
+  font-size: 1.08rem;
   line-height: 1.5;
 }
-
-/* Tablets, phones and short wide screens: a deck. Each card stops a little lower than the one before, under the
-   header, and the next slides over it, standing straight (C). */
-.solution__cards {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.solution__slot {
-  width: min(100%, 25rem, calc((100svh - var(--nav-h) - 120px) * 0.8));
-}
-@media (max-width: 74.99rem) and (min-height: 34rem), (max-height: 39.99rem) and (min-height: 34rem) {
-  .solution__slot {
-    position: sticky;
-    top: calc(var(--nav-h) + 20px + var(--i) * 12px);
-  }
-  .solution__slot + .solution__slot {
-    margin-top: clamp(40px, 10vh, 120px);
-  }
-}
-/* A phone on its side: no room to hold a card, so a plain column. */
-@media (max-height: 33.99rem) {
-  .solution__slot {
-    width: min(100%, 25rem);
-  }
-  .solution__slot + .solution__slot {
-    margin-top: 16px;
-  }
-  .solution__card {
-    aspect-ratio: auto;
-  }
-}
-
-/* Wide screens without motion: the cards stand in two rows of three under the line. */
-@media (min-width: 75rem) and (min-height: 40rem) {
-  .solution__cards {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 21rem));
-    justify-content: center;
-    gap: 24px;
-  }
-  .solution__slot {
-    width: auto;
-  }
-}
-
-/* Design 3, the slide (SolutionDeck): the section becomes a tall track and its stage holds still under the header
-   while the strip of cards runs across the screen; a count and a rule under the strip follow it. Only with motion
-   allowed. */
-.solution__meter {
+/* The column of names marks where you are, so it shows only while the section holds. */
+.solution__index {
   display: none;
 }
-@media (prefers-reduced-motion: no-preference) and (min-width: 75rem) and (min-height: 40rem) {
-  .solution {
-    padding-top: clamp(24px, 4vh, 48px);
-    padding-bottom: clamp(64px, 10vh, 120px);
-  }
-  .solution__track {
-    height: 340vh;
-  }
-  .solution__stage {
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    padding: calc(var(--nav-h) + clamp(16px, 4vh, 48px)) 0 clamp(24px, 5vh, 48px);
-  }
-  .solution__head {
-    flex: none;
-    margin-bottom: 0;
-  }
-  .solution__line {
-    font-size: min(clamp(2.4rem, 5.4vw, 6.2rem), 9vh);
-  }
-  /* The strip takes the room the line leaves (the line runs to four lines in Spanish), so the cards always fit, with
-     room under them for the lean and the count. */
-  .solution__deck {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    container-type: size;
-    --cw: min(23rem, 26vw, calc((100cqh - 96px) * 0.8));
-  }
-  .solution__cards {
-    position: absolute;
-    top: calc(50% - 16px);
-    left: 0;
-    display: flex;
-    flex-direction: row;
-    gap: 28px;
-    translate: 0 -50%;
-  }
-  .solution__slot {
-    flex: none;
-    width: var(--cw);
-  }
-  .solution__meter {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    color: rgb(242 246 239 / 0.6);
-    font-size: 0.85rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-  .solution__rule {
-    position: relative;
-    flex: 1;
-    height: 2px;
-    background: rgb(242 246 239 / 0.14);
-  }
-  .solution__fill {
-    position: absolute;
-    inset: 0;
-    background: #8fd3a1;
-    transform-origin: 0 50%;
-    scale: 0 1;
-  }
+.solution__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px 32px;
+  margin-top: clamp(32px, 6vh, 56px);
+}
+.solution__sub {
+  max-width: 44ch;
+  margin: 0;
+  color: rgb(242 246 239 / 0.72);
+  font-size: 1.08rem;
+  line-height: 1.55;
 }
 
-/* Tablets: the head stacks. */
+/* Held: the stage stays under the header for a share of the scroll per scene (--scenes, from Solution). The scenes lie
+   on top of each other; the one shown (data-on) rises in from below as the one before it rises away (data-past), like
+   title cards in a film. Only opacity and movement change, so every scene stays in the page for a screen reader. */
+.solution[data-held='true'] {
+  padding: 0 var(--gutter);
+}
+.solution[data-held='true'] .solution__track {
+  height: calc(100vh + var(--scenes) * 72vh);
+}
+.solution[data-held='true'] .solution__stage {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  column-gap: clamp(32px, 5vw, 80px);
+  height: 100vh;
+  padding: calc(var(--nav-h) + clamp(16px, 3vh, 32px)) 0 clamp(20px, 4vh, 40px);
+}
+.solution[data-held='true'] .solution__kick {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.solution[data-held='true'] .solution__scenes {
+  position: relative;
+  grid-row: 2;
+}
+.solution[data-held='true'] .solution__promises {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  border: 0;
+}
+.solution[data-held='true'] .solution__open,
+.solution[data-held='true'] .solution__promise {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  translate: 0 8vh;
+  pointer-events: none;
+  transition:
+    opacity 600ms ease,
+    translate 900ms var(--ease-out);
+}
+.solution[data-held='true'] [data-past='true'] {
+  translate: 0 -8vh;
+}
+.solution[data-held='true'] [data-on='true'] {
+  opacity: 1;
+  translate: 0 0;
+}
+.solution[data-held='true'] .solution__line {
+  font-size: min(clamp(2.6rem, 6.4vw, 7rem), 11vh);
+}
+.solution[data-held='true'] .solution__num {
+  font-size: 1.15rem;
+}
+.solution[data-held='true'] .solution__title {
+  max-width: 11ch;
+  margin-top: clamp(10px, 2vh, 18px);
+  font-size: min(clamp(2.8rem, 7.4vw, 8.2rem), 13vh);
+  font-weight: 760;
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+.solution[data-held='true'] .solution__text {
+  margin-top: clamp(18px, 3.6vh, 32px);
+  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+  line-height: 1.45;
+}
+.solution[data-held='true'] .solution__index {
+  grid-row: 2;
+  align-self: center;
+  display: grid;
+  gap: 14px;
+  min-width: 15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.solution__index li {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: rgb(242 246 239 / 0.38);
+  font-size: 1rem;
+  font-weight: 600;
+  transition:
+    color 500ms ease,
+    gap 500ms var(--ease-out);
+}
+.solution__index li::before {
+  content: '';
+  width: 0;
+  height: 2px;
+  background: #8fd3a1;
+  transition: width 500ms var(--ease-out);
+}
+.solution__index li[data-on='true'] {
+  gap: 14px;
+  color: #f2f6ef;
+}
+.solution__index li[data-on='true']::before {
+  width: 26px;
+}
+.solution[data-held='true'] .solution__foot {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: clamp(14px, 2.4vh, 22px);
+  border-top: 1px solid rgb(242 246 239 / 0.16);
+}
+.solution[data-held='true'] .solution__sub {
+  max-width: 64ch;
+}
+
+/* Tablets: no room for the column of names beside a promise set large. */
 @media (max-width: 60rem) {
-  .solution__head {
-    grid-template-columns: 1fr;
+  .solution[data-held='true'] .solution__stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .solution[data-held='true'] .solution__index {
+    display: none;
+  }
+  .solution[data-held='true'] .solution__title {
+    font-size: min(clamp(2.8rem, 10vw, 6rem), 12vh);
   }
 }
 /* Phones. */
-@media (max-width: 36rem) {
+@media (max-width: 40rem) {
   .solution__line {
     font-size: clamp(2.1rem, 9vw, 3rem);
   }
+  .solution[data-held='true'] .solution__line {
+    font-size: clamp(2.1rem, 10vw, 3.2rem);
+  }
+  .solution__promise {
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+  }
+  .solution__text {
+    grid-column: 2;
+  }
+  .solution[data-held='true'] .solution__title {
+    font-size: clamp(2.4rem, 11.5vw, 3.6rem);
+  }
   .solution__sub {
-    font-size: 1.05rem;
+    font-size: 1rem;
+  }
+  .solution__foot {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
