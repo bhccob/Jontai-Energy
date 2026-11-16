@@ -9,7 +9,7 @@ import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
 import { openState } from './store.ts';
 import * as copy from './homeCopy.ts';
-import { DEAL_MEDIA, STACK_MEDIA, cardCount, cardNumber, cardTone, slideShape, stackTilt } from './solutionDeck.ts';
+import { DEAL_MEDIA, STACK_MEDIA, cardCount, cardNumber, slideShape } from './solutionDeck.ts';
 import { makeTranslator } from './i18n/translate.ts';
 import { menuLinks } from './menu.ts';
 import { DIRECTIONS_URL } from './contact.ts';
@@ -372,31 +372,28 @@ test('round 54 Rewards and Our solution: both run taller', () => {
 
 // Bob, after the 3 x 2 grid: "no i want more simple card design view, something like https://www.squared-media.nl/
 // where its more cinematic and have animation and seem more like business, do not copy exact". That became design 1
-// (the fan deal, 8b36495). Bob asked for similar options and, of designs 2 to 4, said "maybe design 3": the slide. The
-// line stays on top; on wide screens the section holds while the six tall numbered cards run across the screen on a
-// strip, each leaning away from the middle and standing straight as it passes it, with a count and a rule under them.
-// Tablets and phones keep the deck.
-test('round 54 Our solution, design 3: six numbered cards, three tones, leaning as they pass', () => {
+// (the fan deal, 8b36495), then "maybe design 3": the slide. Then: "does the cards look professional enough for a solar
+// company"; of three mock-ups he picked "C. On the green": the section on the forest green, every card the same
+// panel (a hairline rim, a mint icon in a soft circle, the number in outline), standing straight. The strip still runs
+// across the held screen, a card only easing back a touch away from the middle; tablets and phones keep the deck,
+// upright.
+test('round 54 Our solution, C: six numbered panels, standing straight as they pass', () => {
   const six = [0, 1, 2, 3, 4, 5];
   assert.deepEqual(six.map(cardNumber), ['01', '02', '03', '04', '05', '06']);
-  assert.deepEqual(six.map(cardTone), ['deep', 'green', 'mint', 'deep', 'green', 'mint']);
   assert.equal(cardCount(1, 6), '02 / 06');
   assert.equal(cardCount(5, 6), '06 / 06');
-  assert.deepEqual(slideShape(0), { tilt: 0, drop: 0, scale: 1 }, 'straight and level in the middle of the screen');
-  for (const d of [0.1, 0.3, 0.6, 1]) {
-    const right = slideShape(d), left = slideShape(-d);
-    assert.equal(left.tilt, -right.tilt, `the lean mirrors at ${d}`);
-    assert.equal(left.drop, right.drop);
-    assert.equal(left.scale, right.scale);
-    assert.ok(right.tilt > 0 && right.tilt <= 7, `a card right of the middle leans right, a little: ${right.tilt}`);
-    assert.ok(right.drop > 0 && right.drop <= 46 && right.scale < 1 && right.scale >= 0.92, 'and sits back');
+  assert.deepEqual(slideShape(0), { tilt: 0, drop: 0, scale: 1 }, 'full size in the middle of the screen');
+  for (const d of [-1, -0.5, 0.2, 0.6, 1, 3]) {
+    const s = slideShape(d);
+    assert.equal(s.tilt, 0, `no lean: ${d}`);
+    assert.equal(s.drop, 0, `no drop: ${d}`);
+    assert.ok(s.scale < 1 && s.scale >= 0.95, `only easing back a touch: ${s.scale}`);
+    assert.equal(s.scale, slideShape(-d).scale, 'the same either side');
   }
   assert.deepEqual(slideShape(3), slideShape(1), 'no further than a screen away');
-  const stack = six.map(stackTilt);
-  stack.forEach((t, i) => {
-    assert.ok(Math.abs(t) > 0 && Math.abs(t) <= 2, `a slight lean in the deck: ${t}`);
-    if (i) assert.notEqual(Math.sign(t), Math.sign(stack[i - 1]), 'each card leans the other way from the one under it');
-  });
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  assert.doesNotMatch(solution, /cardTone|--lean/, 'one panel for every card, upright in the deck too');
+  assert.match(solution, /className="solution__icon"/, 'each card has its icon');
 });
 
 test('round 54 Our solution deck: the deal, its CSS and its script share one screen rule', () => {
@@ -472,8 +469,29 @@ test('round 54 home page: the sections in order, Our solution before Reviews', (
   const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
   const reviews = readFileSync(join(root, 'components', 'home', 'Reviews.tsx'), 'utf8');
   const motion = readFileSync(join(root, 'components', 'motion', 'PageMotion.tsx'), 'utf8');
-  assert.match(solution, /<section id="solution" className="solution" data-hem /, 'the hem hangs over Our solution');
-  assert.doesNotMatch(reviews, /--hem/, 'and no longer over the reviews');
+  // Our solution is on the same green as What we sell since Bob's "C. On the green", so the hem hangs from it over the
+  // reviews, where the light ground starts.
+  assert.match(reviews, /<section id="reviews" className="reviews" data-hem /, 'the hem hangs over the reviews');
+  assert.doesNotMatch(solution, /data-hem/);
+  assert.doesNotMatch(reviews, /--hem/, 'the page lifts it, not the reviews');
   assert.match(air, /\[data-hem\]::before \{/);
   assert.match(motion, /\[data-hem\]/, 'the page lifts it as it comes up');
+});
+
+// Bob: "background color doesnt match well"; he picked "Yes, one dark one light": four grounds (two greens, white and
+// mist) become one forest green for the dark parts and one soft green-white for the light parts, the footer alone a
+// shade deeper to close the page.
+test('round 54 home page: one dark ground and one light ground', () => {
+  const air = readFileSync(join(root, 'app', 'styles', 'air.css'), 'utf8').replace(/\r\n/g, '\n');
+  const wheel = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8').replace(/\r\n/g, '\n');
+  const sky = readFileSync(join(root, 'app', 'styles', 'sky.css'), 'utf8').replace(/\r\n/g, '\n');
+  const block = (css: string, sel: string) => new RegExp(`\\n${sel.replace(/[.[\]:]/g, '\\$&')} \\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+  assert.match(air, /--mist: #f3f6f1;/, 'the one light ground');
+  for (const sel of ['.reviews', '.loyal', '.team']) assert.match(block(air, sel), /background: var\(--mist\);/, `${sel} on the light ground`);
+  assert.match(block(air, '.solution'), /background: var\(--color-forest\);/, 'Our solution on the forest green');
+  assert.match(block(air, '[data-hem]::before'), /background: var\(--color-forest\);/, 'the hem in the same green');
+  assert.match(block(wheel, '.sell'), /background: var\(--color-forest\);/, 'What we sell on the forest green');
+  assert.match(block(wheel, '.wheel__pin'), /background: var\(--color-forest\);/);
+  assert.match(sky, /--veil: 23 61 44;/, 'the first view on it too');
+  assert.doesNotMatch(block(air, '.loyal') + block(air, '.solution'), /#fff\b/, 'no second white');
 });

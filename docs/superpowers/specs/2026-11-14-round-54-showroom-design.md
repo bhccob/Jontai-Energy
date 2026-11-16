@@ -77,6 +77,14 @@ the end".
    stack into a deck: each stops under the header a little lower than the last and the next slides over it, the
    covered one sinking back and dimming slightly (reduced motion: the deck, still). This replaced the long sentence
    that filled in word by word, then the 3 x 2 grid. **No people, names or photos** (Bob: remove Bob and Chakho).
+   Then (2026-11-16) Bob asked whether the cards looked "professional enough for a solar company" and said the
+   "background color doesnt match well". Of three mock-ups (A spec sheet, B one deep panel, C on the green) he picked
+   **C. On the green**, and "Yes, one dark one light" for the page: Our solution now sits on the forest green #173d2c
+   like What we sell above it, every card the same panel (a touch lighter than the green, a hairline rim, a mint icon in
+   a soft circle, the number in outline, the promise and one line), standing straight on the strip and in the deck,
+   easing back only a touch away from the middle. The page has one dark ground (#173d2c: first view, What we sell, Our
+   solution, Visit; the footer a shade deeper, #0e2219) and one light ground (#f3f6f1: Reviews, Rewards, Team); the
+   green hangs as a curved hem over the reviews, where the light starts.
 5. **The ranges: the wheel**, on **dark green**, by name only (picked 2026-11-15 over Posters, The walk and The index;
    after the build Bob asked: "maybe six ranges products should not include the image? and include others"). The home
    page's six range rows are replaced by one held screen, opened by the heading "6+ ranges. **One store.**" (Bob: "maybe 6+

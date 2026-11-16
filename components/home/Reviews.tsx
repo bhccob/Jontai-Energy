@@ -181,7 +181,7 @@ export function Reviews() {
   };
 
   return (
-    <section id="reviews" className="reviews" aria-labelledby="reviews-title">
+    <section id="reviews" className="reviews" data-hem aria-labelledby="reviews-title">
       <h2 id="reviews-title" className="reviews__title" data-words>
         <span>
           <Words text="What customers say." />

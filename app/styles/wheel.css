@@ -9,7 +9,8 @@
   /* Right after the first view (round 54, Bob's order), it slides up over it while the first view holds (.cover, as
      Rewards did from round 37): it paints above it, the rounded card growing to the edges as it rises. */
   z-index: 2;
-  background: #0e2219;
+  /* The page's one dark ground (round 54, Bob: "Yes, one dark one light"; #0e2219 before). */
+  background: var(--color-forest);
   color: #f4f6ef;
   clip-path: inset(0 var(--sx, 0px) 0 var(--sx, 0px) round var(--sr, 0px) var(--sr, 0px) 0 0);
 }
@@ -85,7 +86,7 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: #0e2219;
+  background: var(--color-forest);
 }
 
 /* The drum of names, across the middle of the screen: the one in front between two hairlines; the rest tilt away on

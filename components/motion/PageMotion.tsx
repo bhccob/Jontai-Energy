@@ -85,9 +85,9 @@ export function PageMotion() {
           );
         });
 
-        // The ranges' green hangs on over the section after them as a curved hem (air.css, [data-hem]) and lifts flat as
-        // that section comes up the screen, faster at first, so it is well clear of the words by the time they show
-        // (round 44, then over Our solution since round 54's order). Without motion it rests as a gentle curve.
+        // The forest green hangs on over the first light section as a curved hem (air.css, [data-hem]: the reviews) and
+        // lifts flat as that section comes up the screen, faster at first, so it is well clear of the words by the time
+        // they show (round 44). Without motion it rests as a gentle curve.
         gsap.utils.toArray<HTMLElement>('[data-hem]').forEach((el) => {
           const deep = Math.round(Math.min(320, Math.max(140, window.innerHeight * 0.32)));
           gsap.fromTo(
