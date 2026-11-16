@@ -14,11 +14,12 @@ export function generateStaticParams() {
  * from, so going back closes the sheet and never reloads the home page (ProductSheet). A product's link opened directly
  * gets app/products/[slug] instead.
  */
-export default function ProductSheetPage({ params }: { params: { slug: string } }) {
-  if (!pageOf(params.slug)) notFound();
+export default async function ProductSheetPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!pageOf(slug)) notFound();
   return (
     <ProductSheet>
-      <ProductDetail slug={params.slug} />
+      <ProductDetail slug={slug} />
     </ProductSheet>
   );
 }

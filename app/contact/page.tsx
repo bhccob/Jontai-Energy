@@ -12,12 +12,13 @@ export const metadata: Metadata = {
 };
 
 /** A message to the store by email (Bob, round 18). `?about=` preselects the topic (Rewards, Team and the offers link here). */
-export default function ContactPage({ searchParams }: { searchParams: { about?: string | string[] } }) {
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ about?: string | string[] }> }) {
+  const { about } = await searchParams;
   return (
     <CatalogProvider>
       <Header base="/" />
       <Letter kicker="(Contact)" title={['Send us', 'a message.']} lead="A question, your rewards card, an order, or a place on the team. A person at the store reads it and replies by email.">
-        <ContactForm initial={topicFrom(searchParams.about)} />
+        <ContactForm initial={topicFrom(about)} />
       </Letter>
       <Footer base="/" />
     </CatalogProvider>
