@@ -85,6 +85,19 @@ export function PageMotion() {
           );
         });
 
+        // The ranges' green hangs on over the section after them as a curved hem (air.css, [data-hem]) and lifts flat as
+        // that section comes up the screen, faster at first, so it is well clear of the words by the time they show
+        // (round 44, then over Our solution since round 54's order). Without motion it rests as a gentle curve.
+        gsap.utils.toArray<HTMLElement>('[data-hem]').forEach((el) => {
+          const deep = Math.round(Math.min(320, Math.max(140, window.innerHeight * 0.32)));
+          gsap.fromTo(
+            el,
+            { '--hem': `${deep}px` },
+            { '--hem': '0px', ease: 'power1.out', scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 25%', scrub: true } },
+          );
+          undo.push(() => el.style.removeProperty('--hem'));
+        });
+
         // Figures count up the first time they are seen, holding their final width so nothing shifts.
         gsap.utils.toArray<HTMLElement>('[data-count]').forEach((el) => {
           const original = el.textContent ?? '';

@@ -41,8 +41,9 @@ the end".
    no handover effect: the words rise in once as the page opens, and when you scroll the first view holds still while
    the next section slides up over it: Rewards at first (Bob: "C and rewards slides over"), What we sell since Bob's
    order of 2026-11-16 ("1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team 7. Visit the
-   store and the footer"), its deep green rising as a rounded card that grows to the edges. Our solution and Rewards
-   then share one white sheet, and the Team follows on the mist. It fits one
+   store and the footer"), its deep green rising as a rounded card that grows to the edges. Asked for my order, I
+   swapped one pair, promise before proof, and Bob: "do your order": first view, What we sell, Our solution (the
+   ranges' green hem now hangs over it), Reviews, Rewards, Team, Visit, so white and mist take turns. It fits one
    screen; on phones the facts sit two by two. The soft sun behind the headline drifts slowly round the top of the
    screen and the green veil thins round it so the valley shows through there; the valley and the words lean a touch
    for depth. (It followed the pointer for a while; cursor effects were dropped, see 8.) With reduced motion it stays

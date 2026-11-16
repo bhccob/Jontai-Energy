@@ -18,7 +18,7 @@ import { cardCount, cardNumber, cardTone, stackTilt } from '@/lib/solutionDeck';
 export function Solution() {
   const n = SOLUTION_CARDS.length;
   return (
-    <section id="solution" className="solution" aria-labelledby="solution-title">
+    <section id="solution" className="solution" data-hem aria-labelledby="solution-title">
       <div className="solution__track">
         <div className="solution__stage">
           <div className="solution__head">

@@ -451,13 +451,14 @@ test('round 54 first view: the forest green of Visit, with pale words', () => {
 });
 
 // Bob: "make everything better ordered: 1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team
-// 7. Visit the store and the footer". What we sell now slides up over the held first view (as Rewards did, round 37);
-// Our solution and Rewards share one white sheet.
-test('round 54 home page: the sections in the order Bob gave', () => {
+// 7. Visit the store and the footer". Asked for my order, I swapped one pair (promise, then proof), and Bob: "do your
+// order". What we sell slides up over the held first view (as Rewards did, round 37), its green hem now hanging over
+// Our solution; then Reviews, Rewards, the Team and Visit.
+test('round 54 home page: the sections in order, Our solution before Reviews', () => {
   const page = readFileSync(join(root, 'app', 'page.tsx'), 'utf8');
   const body = page.slice(page.indexOf('export default function Home'));
   const order = [...body.matchAll(/<(Hero|Wheel|Reviews|Solution|Rewards|Team|Visit|Footer) \/>/g)].map((m) => m[1]);
-  assert.deepEqual(order, ['Hero', 'Wheel', 'Reviews', 'Solution', 'Rewards', 'Team', 'Visit', 'Footer']);
+  assert.deepEqual(order, ['Hero', 'Wheel', 'Solution', 'Reviews', 'Rewards', 'Team', 'Visit', 'Footer']);
   const cover = /<div className="cover">([\s\S]*?)\n        <\/div>/.exec(body)?.[1] ?? '';
   assert.match(cover, /<Hero \/>[\s\S]*<Wheel \/>/, 'What we sell slides up over the held first view');
   assert.doesNotMatch(cover, /<Rewards \/>/);
@@ -467,4 +468,12 @@ test('round 54 home page: the sections in the order Bob gave', () => {
   assert.doesNotMatch(/\n\.loyal \{([^}]*)\}/.exec(air)?.[1] ?? '', /border-radius|box-shadow/, 'Rewards is no longer a sheet over the first view');
   const wheel = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8').replace(/\r\n/g, '\n');
   assert.match(/\n\.sell \{([^}]*)\}/.exec(wheel)?.[1] ?? '', /z-index: 2;/, 'What we sell paints over the held first view');
+  // The wheel's green hangs on as a curved hem over whatever follows it, and lifts flat as it comes up (round 44).
+  const solution = readFileSync(join(root, 'components', 'home', 'Solution.tsx'), 'utf8');
+  const reviews = readFileSync(join(root, 'components', 'home', 'Reviews.tsx'), 'utf8');
+  const motion = readFileSync(join(root, 'components', 'motion', 'PageMotion.tsx'), 'utf8');
+  assert.match(solution, /<section id="solution" className="solution" data-hem /, 'the hem hangs over Our solution');
+  assert.doesNotMatch(reviews, /--hem/, 'and no longer over the reviews');
+  assert.match(air, /\[data-hem\]::before \{/);
+  assert.match(motion, /\[data-hem\]/, 'the page lifts it as it comes up');
 });

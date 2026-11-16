@@ -175,32 +175,13 @@ export function Reviews() {
     };
   }, []);
 
-  // From the ranges into the reviews (round 44): the deep green hangs over the top as a curved hem and lifts flat as the
-  // reviews come up the screen, faster at first, so the hem is well clear of the title by the time it shows (air.css).
-  const section = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = section.current;
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const deep = Math.round(Math.min(320, Math.max(140, window.innerHeight * 0.32)));
-    const lift = gsap.fromTo(
-      el,
-      { '--hem': `${deep}px` },
-      { '--hem': '0px', ease: 'power1.out', scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 25%', scrub: true } },
-    );
-    return () => {
-      lift.scrollTrigger?.kill();
-      lift.kill();
-      el.style.removeProperty('--hem');
-    };
-  }, []);
-
   const onKey = (e: KeyboardEvent) => {
     if (e.key === 'ArrowRight') turn.current(-1);
     if (e.key === 'ArrowLeft') turn.current(1);
   };
 
   return (
-    <section ref={section} id="reviews" className="reviews" aria-labelledby="reviews-title">
+    <section id="reviews" className="reviews" aria-labelledby="reviews-title">
       <h2 id="reviews-title" className="reviews__title" data-words>
         <span>
           <Words text="What customers say." />

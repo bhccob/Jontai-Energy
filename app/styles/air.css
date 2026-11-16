@@ -39,16 +39,16 @@ main.air {
 /* ---------- Jontai Rewards: laid out like a price list, two programs side by side (round 15) ---------- */
 
 /* The first view and the section that slides up over it (sky.css, .cover): What we sell since round 54's order (Bob:
-   "1. First view 2. What we sell 3. Reviews 4. Our solution 5. Rewards 6. Team 7. Visit"); Rewards from round 37 to
-   54. Rewards now follows Our solution on the same white, as one sheet. */
+   "make everything better ordered", then "do your order": first view, What we sell, Our solution, Reviews, Rewards,
+   Team, Visit); Rewards from round 37 to 54. Rewards now follows the reviews' mist on its own white. */
 .cover {
   position: relative;
 }
 .loyal {
   position: relative;
   z-index: 2;
-  /* After Our solution on the same white (round 54), so only a little room above it. */
-  padding: clamp(64px, 10vh, 120px) var(--gutter) clamp(96px, 16vh, 200px);
+  /* After the reviews' mist (round 54's order), so its own room at the top. */
+  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(96px, 16vh, 200px);
   /* Plain white (round 21), shared with Our solution (round 54, Bob: "the color background as our solution should be
      the same as loyalty area"). */
   background: #fff;
@@ -388,10 +388,11 @@ main.air {
 .solution {
   position: relative;
   z-index: 2;
-  /* The same white as Rewards after it, so the two read as one sheet (round 54). */
+  /* Plain white, as Rewards (round 54). Right after What we sell (round 54's order): the ranges' green hangs over its
+     top as a curved hem and lifts as it comes up ([data-hem]), so there is room at the top for it. */
   background: #fff;
   color: var(--leaf-ink);
-  padding: clamp(72px, 12vh, 160px) var(--gutter) clamp(96px, 16vh, 200px);
+  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(96px, 16vh, 200px);
   /* The fan's outer cards lean a little past the gutter; nothing scrolls sideways. */
   overflow-x: clip;
 }
@@ -574,8 +575,8 @@ main.air {
 }
 @media (prefers-reduced-motion: no-preference) and (min-width: 75rem) and (min-height: 40rem) {
   .solution {
-    padding-top: 0;
-    padding-bottom: clamp(48px, 8vh, 96px);
+    padding-top: clamp(64px, 10vh, 120px);
+    padding-bottom: clamp(64px, 10vh, 120px);
   }
   .solution__track {
     height: 340vh;
@@ -1255,25 +1256,25 @@ main.air {
 }
 
 /* ---------- What customers say, on an arc after squared-media ----------
-   On the mist (Bob, round 16), right after the ranges and, since round 54's order, before Our solution; the deep green
-   cards sit on it like cut-outs, each with its own soft shadow. */
+   On the mist (Bob, round 16), between Our solution and Rewards since round 54's order (the proof after the promise);
+   the deep green cards sit on it like cut-outs, each with its own soft shadow. */
 
 .reviews {
   position: relative;
   z-index: 1;
   overflow: clip;
-  /* Room at the top for the green hem to lift out of before the title (round 44); the white of Our solution follows
-     (round 54's order), so room at the foot too. */
-  padding: clamp(150px, 24vh, 260px) var(--gutter) clamp(96px, 14vh, 160px);
+  /* White on both sides of it since round 54's order, so room at the top and the foot. */
+  padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(96px, 14vh, 160px);
   background: var(--mist);
   color: var(--leaf-ink);
   text-align: center;
 }
-/* From the ranges into the reviews (round 44, Bob: "a seamless transition from end of product ranges to reviews a creative
-   way"): the ranges' deep green carries on over the top of the reviews like a curtain with a curved hem, the same curve
-   the reviews turn on, and as the reviews come up the hem lifts until the edge between them is straight (--hem,
-   scrubbed by Reviews). Without motion it rests as a gentle curve. Behind the reviews' own words and cards. */
-.reviews::before {
+/* Out of the ranges (round 44, Bob: "a seamless transition from end of product ranges to reviews a creative way"): the
+   ranges' deep green carries on over the top of the section after them like a curtain with a curved hem, and as that
+   section comes up the hem lifts until the edge between them is straight (--hem, scrubbed by PageMotion). Without
+   motion it rests as a gentle curve. Behind the section's own words. Over the reviews until round 54's order, over Our
+   solution since (data-hem); the section is positioned, raised and clipped at its sides. */
+[data-hem]::before {
   content: '';
   position: absolute;
   z-index: -1;
