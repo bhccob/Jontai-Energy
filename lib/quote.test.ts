@@ -98,3 +98,18 @@ test('the email-app fallback is addressed to the store, encoded', () => {
   assert.match(link, /&body=/);
   assert.doesNotMatch(link, /\+/);
 });
+
+test('an email that could carry a second address or a display name is refused (it becomes the Reply-To)', () => {
+  assert.ok(!checkQuote({ ...valid, email: 'Evil<ana@example.com>' }).ok);
+  assert.ok(!checkQuote({ ...valid, email: 'ana@example.com,bob' }).ok);
+  assert.ok(checkQuote({ ...valid, email: 'ana.croes+shop@mail.example.aw' }).ok);
+});
+
+test('control and direction-override characters are taken out of a quote', () => {
+  const r = checkQuote({ ...valid, name: 'Ana\u0000‮', details: 'Two\u0007 panels⁦' });
+  assert.ok(r.ok);
+  if (r.ok) {
+    assert.equal(r.value.name, 'Ana');
+    assert.equal(r.value.details, 'Two panels');
+  }
+});

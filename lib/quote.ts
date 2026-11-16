@@ -1,4 +1,5 @@
 import { whatsappLink } from './contact.ts';
+import { EMAIL, plain } from './fields.ts';
 import { STORE } from './store.ts';
 
 // Quote requests: what they can be for, how they are checked (the same rules on the page and on the server), and the
@@ -58,7 +59,6 @@ export type QuoteErrors = Partial<Record<QuoteField, string>>;
 
 const isTopic = (v: unknown): v is QuoteTopic => QUOTE_TOPICS.some((t) => t.id === v);
 const labelOf = (id: QuoteTopic) => QUOTE_TOPICS.find((t) => t.id === id)!.label;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** A phone number with at least seven digits, in any common format. */
 const PHONE = /^\+?[\d\s().-]{7,}$/;
 
@@ -77,10 +77,10 @@ export function quoteHref(topic?: QuoteTopic) {
 export function checkQuote(input: unknown): { ok: true; value: QuoteRequest } | { ok: false; errors: QuoteErrors } {
   if (!input || typeof input !== 'object') return { ok: false, errors: { name: 'Add your name so we know who to reply to.' } };
   const raw = input as Record<string, unknown>;
-  const line = (k: QuoteField) => (typeof raw[k] === 'string' ? (raw[k] as string).replace(/\s+/g, ' ').trim() : '');
+  const line = (k: QuoteField) => (typeof raw[k] === 'string' ? plain(raw[k] as string).replace(/\s+/g, ' ').trim() : '');
   const value: QuoteRequest = {
     topics: Array.isArray(raw.topics) ? [...new Set(raw.topics.filter(isTopic))] : [],
-    details: typeof raw.details === 'string' ? raw.details.trim() : '',
+    details: typeof raw.details === 'string' ? plain(raw.details).trim() : '',
     area: line('area'),
     name: line('name'),
     email: line('email'),

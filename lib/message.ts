@@ -1,3 +1,4 @@
+import { EMAIL, plain } from './fields.ts';
 import { STORE } from './store.ts';
 
 // General messages to the store from the contact page (Bob, round 18: a message form on the website instead of sending
@@ -30,7 +31,6 @@ export type MessageErrors = Partial<Record<MessageField, string>>;
 
 const isTopic = (v: unknown): v is MessageTopic => MESSAGE_TOPICS.some((t) => t.id === v);
 const labelOf = (id: MessageTopic) => MESSAGE_TOPICS.find((t) => t.id === id)!.label;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** The topic from an ?about= value; anything unknown is a question. */
 export function topicFrom(value: string | string[] | undefined): MessageTopic {
@@ -47,10 +47,10 @@ export function contactHref(topic?: MessageTopic) {
 export function checkMessage(input: unknown): { ok: true; value: Message } | { ok: false; errors: MessageErrors } {
   if (!input || typeof input !== 'object') return { ok: false, errors: { message: 'Write your message here.' } };
   const raw = input as Record<string, unknown>;
-  const line = (k: MessageField) => (typeof raw[k] === 'string' ? (raw[k] as string).replace(/\s+/g, ' ').trim() : '');
+  const line = (k: MessageField) => (typeof raw[k] === 'string' ? plain(raw[k] as string).replace(/\s+/g, ' ').trim() : '');
   const value: Message = {
     topic: isTopic(raw.topic) ? raw.topic : 'question',
-    message: typeof raw.message === 'string' ? raw.message.trim() : '',
+    message: typeof raw.message === 'string' ? plain(raw.message).trim() : '',
     name: line('name'),
     email: line('email'),
     phone: line('phone'),
