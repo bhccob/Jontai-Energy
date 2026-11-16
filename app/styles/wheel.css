@@ -138,40 +138,6 @@
   background: var(--color-forest);
 }
 
-/* Two of the range in front's own products, faint, either side of its name (round 54, Bob: "a transparent or not very
-   visible placed products for each product when scroll", then "Fainter than the mock-up"). WheelMotion fades each
-   pair in as the wheel reaches its range and out as it turns on, drifting with the turn; hidden until then. */
-.wheel__ghosts {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.wheel__ghost {
-  position: absolute;
-  inset: 10vh 4vw 16vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  opacity: 0;
-}
-.wheel__ghost img {
-  width: auto;
-  height: auto;
-  max-width: 30vw;
-  max-height: 64vh;
-  object-fit: contain;
-  filter: saturate(0.6);
-}
-@media (max-width: 40rem) {
-  .wheel__ghost {
-    inset: 18vh 0 22vh;
-  }
-  .wheel__ghost img {
-    max-width: 44vw;
-    max-height: 34vh;
-  }
-}
-
 /* The drum of names, across the middle of the screen: the one in front between two hairlines; the rest tilt away on
    the curve (WheelMotion). */
 .wheel__names {

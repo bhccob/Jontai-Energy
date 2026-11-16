@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { ArrowUpRight } from '@phosphor-icons/react/dist/ssr';
 import { Words } from '@/components/ui/Split';
 import { WHEEL_COPY } from '@/lib/homeCopy';
-import { nameParts, restProgress, wheelGhosts, wheelItems, type WheelItem } from '@/lib/wheel';
+import { nameParts, restProgress, wheelItems, type WheelItem } from '@/lib/wheel';
 import { WheelMotion } from './WheelMotion';
 
 const ITEMS = wheelItems();
@@ -74,36 +74,6 @@ export function Wheel() {
         {/* The held screen */}
         <div className="wheel__held">
           <div className="wheel__pin">
-            {/* Two of the range in front's own products, faint, either side of its name, changing as the wheel turns
-                (Bob: "a transparent or not very visible placed products for each product when scroll"; WheelMotion). */}
-            <div className="wheel__ghosts" aria-hidden="true">
-              {ITEMS.map((it, k) => {
-                const ghosts = wheelGhosts(it.id);
-                if (!ghosts.length) return null;
-                return (
-                  <div key={it.id} className="wheel__ghost" data-k={k}>
-                    {ghosts.map((g) => {
-                      const [small, large] = g.files ?? [640, 1200];
-                      const src = (w: number) => `/sky/range-${g.image}-${w}.webp`;
-                      return (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          key={g.id}
-                          src={src(large)}
-                          srcSet={`${src(small)} ${small}w, ${src(large)} ${large}w`}
-                          sizes="(max-width: 40rem) 40vw, 30vw"
-                          width={g.size[0]}
-                          height={g.size[1]}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
             <div className="wheel__names">
               <span className="wheel__band" aria-hidden="true" />
               {ITEMS.map((it, k) => (

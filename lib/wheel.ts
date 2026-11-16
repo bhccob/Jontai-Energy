@@ -1,7 +1,7 @@
 // The range wheel on the home page (round 54): the six ranges and Others by name (Bob: "maybe six ranges products should
 // not include the image? and include others"), turning on a drum as the page scrolls, resting on each before the next.
 import { WHEEL_COPY } from './homeCopy.ts';
-import { ISLANDS, OTHERS, hasPicture, shownIn, type Pictured } from './islands.ts';
+import { ISLANDS, OTHERS, shownIn } from './islands.ts';
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const easeInOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
@@ -81,28 +81,4 @@ export function wheelItems(): WheelItem[] {
     }),
     { id: 'others', name: 'Others', count: OTHERS.length, href: rangeHref('others'), label: WHEEL_COPY.seeOthers },
   ];
-}
-
-/**
- * The two products the range in front shows, faint, either side of its name as the wheel turns (round 54, Bob: "maybe a
- * transparent or not very visible placed products for each product when scroll"), left then right, by product id: one
- * of the range's mainstays and one more. Each is one of the range's own, with its picture. Others has none.
- */
-const GHOSTS: Record<string, [string, string]> = {
-  solar: ['solar-panels', 'hybrid-inverters'],
-  light: ['solar-street-lamps', 'bulbs'],
-  cooling: ['solar-air-conditioners', 'solar-fans'],
-  backup: ['portable-power-stations', 'generators'],
-  security: ['outdoor-cameras', 'indoor-cameras'],
-  upstairs: ['sofas', 'lounge-chairs'],
-};
-
-/** How visible a faint product is at most (Bob: "Fainter than the mock-up", which showed them at 0.2). */
-export const GHOST_OPACITY = 0.1;
-
-/** A range's two faint products, with their pictures, or none (Others). */
-export function wheelGhosts(id: string): Pictured[] {
-  const range = ISLANDS.find((r) => r.id === id);
-  if (!range) return [];
-  return (GHOSTS[id] ?? []).map((pid) => shownIn(range).find((p) => p.id === pid)).filter((p): p is Pictured => Boolean(p && hasPicture(p)));
 }

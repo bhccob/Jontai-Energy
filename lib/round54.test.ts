@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ISLANDS, OTHERS, PRODUCTS, hasPicture, shownIn } from './islands.ts';
-import { GHOST_OPACITY, WHEEL_REST, heldPosition, nameParts, rangeHref, settleOn, rangeIndexFromHash, restProgress, wheelGhosts, wheelItems } from './wheel.ts';
+import { WHEEL_REST, heldPosition, nameParts, rangeHref, settleOn, rangeIndexFromHash, restProgress, wheelItems } from './wheel.ts';
 import { CATALOG_FILTERS, DETAILED_RANGES, catalogProducts, filterFromParam, itemFromParam, neighbours, rangeActions, rangeNote, shortInfo } from './catalog.ts';
 import { DETAILS } from './productPages.ts';
 import { REWARDS_FACT, hoursFact } from './firstView.ts';
@@ -499,28 +499,18 @@ test('round 54 home page: one dark ground and one light ground', () => {
 // Bob: "6+ ranges, one store gotta be more prominent and creative shown, and also maybe a transparent or not very
 // visible placed products for each product when scroll". Of three headings he picked "A. The big number": a 6 the
 // height of the screen with a mint +, counting up from 0 as it comes in, "ranges." and "One store." stacked beside it.
-// And "Fainter than the mock-up": while the wheel turns, the range in front shows two of its own products, faint,
-// either side of its name, changing with it; Others has none.
-test('round 54 What we sell: the big number, and two faint products for the range in front', () => {
+// The faint products either side of the range in front were built, then: "remove the images behind". The wheel is
+// names only again.
+test('round 54 What we sell: the big number, and the wheel by name only', () => {
   assert.equal(copy.WHEEL_COPY.count, 6, 'the number, counted up on the page');
   assert.equal(copy.WHEEL_COPY.ranges, 'ranges.');
-  for (const r of ISLANDS) {
-    const ghosts = wheelGhosts(r.id);
-    assert.equal(ghosts.length, 2, `${r.id}: two products`);
-    for (const g of ghosts) {
-      assert.ok(shownIn(r).some((p) => p.id === g.id), `${g.id} is one of ${r.id}'s own`);
-      assert.ok(hasPicture(g), `${g.id} has its picture`);
-      for (const w of g.files ?? [640, 1200]) assert.ok(existsSync(join(root, 'public', 'sky', `range-${g.image}-${w}.webp`)), `${g.image} at ${w}`);
-    }
-  }
-  assert.deepEqual(wheelGhosts('others'), [], 'Others has no pictures');
-  assert.ok(GHOST_OPACITY > 0 && GHOST_OPACITY <= 0.12, `fainter than the mock-up's 0.2: ${GHOST_OPACITY}`);
   const wheel = readFileSync(join(root, 'components', 'home', 'Wheel.tsx'), 'utf8');
   const motion = readFileSync(join(root, 'components', 'home', 'WheelMotion.tsx'), 'utf8');
-  const css = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8').replace(/\r\n/g, '\n');
+  const css = readFileSync(join(root, 'app', 'styles', 'wheel.css'), 'utf8');
+  const lib = readFileSync(join(root, 'lib', 'wheel.ts'), 'utf8');
   assert.match(wheel, /className="sell__num"/, 'the big number');
-  assert.match(wheel, /className="wheel__ghost"/, 'the faint products, in the held screen');
   assert.match(motion, /\.sell__num/, 'it counts up');
-  assert.match(motion, /GHOST_OPACITY/, 'the products follow the wheel');
-  assert.match(css, /\.wheel__ghost \{[^}]*opacity: 0;/, 'hidden until the wheel shows them');
+  for (const [name, src] of [['Wheel.tsx', wheel], ['WheelMotion.tsx', motion], ['wheel.css', css], ['wheel.ts', lib]]) {
+    assert.doesNotMatch(src, /ghost|<img/i, `no images behind the names (${name})`);
+  }
 });
