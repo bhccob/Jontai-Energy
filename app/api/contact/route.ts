@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { checkMessage, messageEmail } from '@/lib/message';
+import { RATE, guardPost, rateLimiter } from '@/lib/guard';
 import { CONCEPT, STORE } from '@/lib/store';
+
+/** Posts per address (lib/guard): a few per ten minutes is plenty for a person and slows a script down. */
+const allow = rateLimiter(RATE);
 
 /**
  * Sends a message from the contact page to the store's inbox through Resend, with Reply-To set to the visitor; the
@@ -9,8 +13,13 @@ import { CONCEPT, STORE } from '@/lib/store';
  */
 export async function POST(request: Request) {
   if (CONCEPT) return NextResponse.json({ ok: false, reason: 'concept' }, { status: 403 });
-  if (Number(request.headers.get('content-length') ?? 0) > 20_000) return NextResponse.json({ ok: false }, { status: 413 });
-  const body: unknown = await request.json().catch(() => null);
+  // Same site, JSON, not too often, not too big (lib/guard). The page answers any refusal with the email-app fallback.
+  const guarded = await guardPost(request, allow);
+  if (!guarded.ok) {
+    const headers = guarded.status === 429 ? { 'Retry-After': String(RATE.windowMs / 1000) } : undefined;
+    return NextResponse.json({ ok: false }, { status: guarded.status, headers });
+  }
+  const body = guarded.body;
 
   // The hidden "website" field is only ever filled in by bots: answer as if sent, send nothing.
   if (body && typeof body === 'object' && (body as { website?: unknown }).website) return NextResponse.json({ ok: true });

@@ -51,3 +51,19 @@ test('the store gets the topic in the subject and can reply to the visitor', () 
   assert.match(text, /Can I join for my shop\?/);
   assert.match(messageMailto(r.value, 'shop@example.com'), /^mailto:shop@example\.com\?subject=Message/);
 });
+
+test('an email that could carry a second address or a display name is refused (it becomes the Reply-To)', () => {
+  for (const email of ['Evil<ana@example.com>', 'ana@example.com>', 'ana@example.com,bob', '"ana"@example.com', 'ana@exa_mple.com', 'ana@-example.com'])
+    assert.ok(!checkMessage({ ...good, email }).ok, email);
+  for (const email of ['ana@example.com', 'ana.croes+shop@mail.example.aw', "o'neil@example.co.uk", '123@qq.com'])
+    assert.ok(checkMessage({ ...good, email }).ok, email);
+});
+
+test('control and direction-override characters are taken out of what the store receives', () => {
+  const r = checkMessage({ ...good, name: 'Ana\u0000 ‮Croes', message: 'Hi\u0007 there\nsecond line‏' });
+  assert.ok(r.ok);
+  if (r.ok) {
+    assert.equal(r.value.name, 'Ana Croes');
+    assert.equal(r.value.message, 'Hi there\nsecond line');
+  }
+});

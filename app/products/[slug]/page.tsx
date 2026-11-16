@@ -13,8 +13,8 @@ export function generateStaticParams() {
   return PRODUCTS.map((p) => ({ slug: p.id }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const page = pageOf(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const page = pageOf((await params).slug);
   if (!page) return {};
   const { title, product } = page;
   return { title: `${title}${title === product.name ? '' : `, ${product.name.toLowerCase()}`} | Jontai Energy`, description: page.intro };
@@ -25,14 +25,15 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
  * reloads. From the home page the same product opens in a sheet over it instead (app/@modal, round 44). It always
  * opens at its top (ScrollToTop): the smooth scroll would otherwise keep the place the last page was scrolled to.
  */
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  if (!pageOf(params.slug)) notFound();
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!pageOf(slug)) notFound();
   return (
     <CatalogProvider>
       <ScrollToTop />
       <Header base="/" />
       <main id="main" className="pp" data-tone="dark">
-        <ProductDetail slug={params.slug} />
+        <ProductDetail slug={slug} />
       </main>
       <Footer base="/" />
     </CatalogProvider>
